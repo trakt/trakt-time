@@ -6,7 +6,7 @@ import { InvalidateAction } from '../../models/InvalidateAction.ts';
 
 type UserListsParams = ApiParams;
 
-const UserListSchema = z.object({
+export const UserListSchema = z.object({
   id: z.number(),
   name: z.string(),
   count: z.number(),

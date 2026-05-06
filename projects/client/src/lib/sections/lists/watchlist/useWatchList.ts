@@ -11,6 +11,7 @@ import type { SortBy } from '../user/models/SortBy.ts';
 import type { SortDirection } from '../user/models/SortDirection.ts';
 
 export type WatchListStoreProps = PaginationParams & FilterParams & {
+  slug?: string;
   type?: DiscoverMode;
   sortBy?: SortBy;
   sortHow?: SortDirection;
@@ -23,6 +24,7 @@ export function useWatchList(params: WatchListStoreProps) {
 
   const { list: items, ...rest } = usePaginatedListQuery(
     watchlistQuery({
+      slug: params.slug,
       limit: params.limit ?? DEFAULT_PAGE_SIZE,
       type: params.type === 'media' ? undefined : params.type,
       sortBy: params.sortBy ?? defaultSort,
