@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { useAuth } from "$lib/features/auth/stores/useAuth";
   import { useUser } from "$lib/features/auth/stores/useUser";
   import { iffy } from "$lib/utils/function/iffy";
   import { BehaviorSubject } from "rxjs";
@@ -19,8 +20,10 @@
 
   const { color, set, theme } = useTheme();
   const { user } = useUser();
+  const { isAuthorized } = useAuth();
 
   $effect(() => {
+    if (!$isAuthorized) return;
     if (!$user) return;
 
     if ($theme !== $user.preferredTheme) {

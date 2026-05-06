@@ -26,3 +26,9 @@ import './states/index.css';
 
 import './theme/seasonal/christmas.css';
 import './theme/seasonal/halloween.css';
+
+// Trakt Time mobile-first overrides — must be last so variables win
+import './overrides.css';
+
+// Trakt Time shared component classes (consume tokens above)
+import './components.css';

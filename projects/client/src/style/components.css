@@ -1,0 +1,52 @@
+/* Trakt Time shared component classes ---------------------------------------
+ *
+ * Pieces that more than one Svelte component renders into. Defining them here
+ * (instead of duplicating `:global(...)` blocks across components) keeps the
+ * tokens in `overrides.css` the single source of truth for theming.
+ */
+
+/* Pill rendered above media cards linking back to the parent show. */
+.show-title-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ni-2);
+  background-color: var(--trakttime-tag-background);
+  color: var(--trakttime-tag-foreground);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px var(--ni-8);
+  border-radius: var(--border-radius-xxl);
+  text-decoration: none;
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: background-color var(--transition-increment) ease-in-out;
+}
+
+.show-title-pill:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--trakttime-tag-background) 88%,
+    var(--color-background)
+  );
+}
+
+.show-title-chevron {
+  opacity: 0.6;
+}
+
+/* Section divider used to label rows ("WATCH NEXT", "WATCHED HISTORY", …). */
+.group-header-pill {
+  background-color: var(--trakttime-tag-background);
+  color: var(--trakttime-tag-foreground);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: var(--ni-4) var(--ni-12);
+  border-radius: var(--border-radius-xxl);
+}

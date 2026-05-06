@@ -30,7 +30,7 @@
     overflow: hidden;
 
     width: 100%;
-    background: var(--shade-900);
+    background: var(--color-floating-background);
 
     opacity: 0.25;
 

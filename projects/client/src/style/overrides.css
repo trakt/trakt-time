@@ -1,0 +1,119 @@
+/* Trakt Time: dark-first, mobile-native skin -------------------------------- */
+
+/* Trakt Time design tokens */
+:root {
+  --trakttime-bottom-nav-height: 56px;
+  --trakttime-accent: var(--purple-500);
+  --trakttime-accent-foreground: var(--shade-10);
+  --trakttime-tag-background: var(--shade-800);
+  --trakttime-tag-foreground: var(--shade-50);
+
+  /* Always-light overlay text — sits on top of poster art, theme-invariant. */
+  --trakttime-overlay-text-primary: var(--shade-10);
+  --trakttime-overlay-text-secondary: var(--shade-300);
+
+  /* Dimensional tokens */
+  --trakttime-max-width: 1024px;
+  --trakttime-cover-height: 280px;
+  --trakttime-cover-offset: -80px;
+  --trakttime-profile-cover-height: 140px;
+  --trakttime-profile-offset: -40px;
+  --trakttime-avatar-size: 80px;
+  --trakttime-poster-card-width: 100px;
+  --trakttime-list-poster-width: 60px;
+  --trakttime-upcoming-thumb-width: 80px;
+  --trakttime-watched-btn-size: 36px;
+  --trakttime-watchlist-btn-size: 24px;
+  --trakttime-icon-sm: 18px;
+  --trakttime-icon-md: 20px;
+  --trakttime-loading-top: 120px;
+}
+
+/* Dark theme — near-black base like TVTime */
+[data-theme='dark'] {
+  --color-background: var(--shade-1000);
+  --color-floating-background: var(--shade-930);
+  --color-card-background: var(--shade-940);
+  --color-foreground: var(--shade-10);
+  --color-text-primary: var(--shade-10);
+  --color-text-secondary: var(--shade-300);
+  --color-text-emphasis: var(--purple-400);
+  --color-border: var(--shade-800);
+  --trakttime-tag-background: var(--shade-800);
+  --trakttime-tag-foreground: var(--shade-50);
+  --trakttime-navbar-blur-bg: color-mix(
+    in srgb,
+    var(--shade-930) 90%,
+    transparent
+  );
+}
+
+/* Light theme */
+[data-theme='light'] {
+  --color-background: var(--shade-50);
+  --color-floating-background: var(--shade-10);
+  --color-card-background: var(--shade-10);
+  --color-foreground: var(--shade-940);
+  --color-text-primary: var(--shade-940);
+  --color-text-secondary: var(--shade-600);
+  --color-text-emphasis: var(--purple-700);
+  --color-border: var(--shade-200);
+  --trakttime-tag-background: var(--shade-800);
+  --trakttime-tag-foreground: var(--shade-50);
+  --trakttime-navbar-blur-bg: color-mix(
+    in srgb,
+    var(--shade-10) 90%,
+    transparent
+  );
+}
+
+/* System theme */
+[data-theme='system'] {
+  @media (prefers-color-scheme: dark) {
+    --color-background: var(--shade-1000);
+    --color-floating-background: var(--shade-930);
+    --color-card-background: var(--shade-940);
+    --color-foreground: var(--shade-10);
+    --color-text-primary: var(--shade-10);
+    --color-text-secondary: var(--shade-300);
+    --color-text-emphasis: var(--purple-400);
+    --color-border: var(--shade-800);
+    --trakttime-tag-background: var(--shade-800);
+    --trakttime-tag-foreground: var(--shade-50);
+    --trakttime-navbar-blur-bg: color-mix(
+      in srgb,
+      var(--shade-930) 90%,
+      transparent
+    );
+  }
+
+  @media (prefers-color-scheme: light) {
+    --color-background: var(--shade-50);
+    --color-floating-background: var(--shade-10);
+    --color-card-background: var(--shade-10);
+    --color-foreground: var(--shade-940);
+    --color-text-primary: var(--shade-940);
+    --color-text-secondary: var(--shade-600);
+    --color-text-emphasis: var(--purple-700);
+    --color-border: var(--shade-200);
+    --trakttime-tag-background: var(--shade-800);
+    --trakttime-tag-foreground: var(--shade-50);
+    --trakttime-navbar-blur-bg: color-mix(
+      in srgb,
+      var(--shade-10) 90%,
+      transparent
+    );
+  }
+}
+
+/* Remove top navbar spacing — Trakt Time is mobile-bottom-nav only */
+:root {
+  --mobile-navbar-height: 0px;
+}
+
+/* Smooth pull-to-refresh / momentum scroll on iOS */
+html,
+body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}

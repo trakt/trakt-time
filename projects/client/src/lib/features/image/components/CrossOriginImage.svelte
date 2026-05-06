@@ -61,6 +61,6 @@
   }
 
   img.image-placeholder {
-    background-color: var(--shade-800);
+    background-color: var(--color-card-background);
   }
 </style>
