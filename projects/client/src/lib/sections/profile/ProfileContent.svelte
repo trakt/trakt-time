@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as m from '$lib/paraglide/messages.js';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
+  import SettingsIcon from '$lib/components/icons/SettingsIcon.svelte';
   import ProfileImage from './_internal/ProfileImage.svelte';
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import { userProfileQuery } from '$lib/requests/queries/users/userProfileQuery.ts';
@@ -120,7 +121,19 @@
         />
       </div>
       <div class="profile-meta">
-        <h1 class="profile-username">{profile.username}</h1>
+        <div class="profile-username-row">
+          <h1 class="profile-username">{profile.username}</h1>
+          {#if isOwner}
+            <a
+              href="/settings"
+              class="profile-settings-btn"
+              aria-label={m.page_title_settings()}
+              data-sveltekit-preload-data="hover"
+            >
+              <SettingsIcon />
+            </a>
+          {/if}
+        </div>
         {#if profile.name?.full}
           <p class="profile-name">{profile.name.full}</p>
         {/if}
@@ -411,6 +424,13 @@
     min-width: 0;
   }
 
+  .profile-username-row {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    min-width: 0;
+  }
+
   .profile-username {
     font-size: 1.1rem;
     font-weight: 700;
@@ -419,6 +439,35 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .profile-settings-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      background: color-mix(
+        in srgb,
+        var(--color-text-primary) 8%,
+        transparent
+      );
+      color: var(--color-text-primary);
+    }
+
+    :global(svg) {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
   }
 
   .profile-name {
