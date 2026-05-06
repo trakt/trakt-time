@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as m from '$lib/paraglide/messages.js';
-  import CrossOriginImage from '$lib/features/image/components/CrossOriginImage.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
+  import ProfileImage from './_internal/ProfileImage.svelte';
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import { userProfileQuery } from '$lib/requests/queries/users/userProfileQuery.ts';
   import { userStatsQuery } from '$lib/requests/queries/users/userStatsQuery.ts';
@@ -113,7 +113,11 @@
     <div class="profile-cover"></div>
     <div class="profile-identity">
       <div class="profile-avatar">
-        <CrossOriginImage src={profile.avatar.url} alt={profile.username} />
+        <ProfileImage
+          name={profile.username}
+          src={profile.avatar.url}
+          isEditable={isOwner}
+        />
       </div>
       <div class="profile-meta">
         <h1 class="profile-username">{profile.username}</h1>
@@ -397,16 +401,9 @@
   .profile-avatar {
     width: var(--trakttime-avatar-size);
     height: var(--trakttime-avatar-size);
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid var(--color-background);
     flex-shrink: 0;
-
-    :global(img) {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px var(--color-background);
   }
 
   .profile-meta {
