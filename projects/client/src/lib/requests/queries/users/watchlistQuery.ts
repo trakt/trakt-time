@@ -16,6 +16,7 @@ import { ListItemSchema } from '../../models/ListItem.ts';
 
 type WatchlistParams =
   & {
+    slug?: string;
     sortBy: SortBy;
     sortHow?: SortDirection | Nil;
     type?: MediaType;
@@ -41,7 +42,7 @@ function typeToWatchlistMethod(type?: MediaType) {
 }
 
 const watchlistRequest = (
-  { fetch, sortBy, sortHow, type, limit, page, filter, hide }: WatchlistParams,
+  { fetch, slug, sortBy, sortHow, type, limit, page, filter, hide }: WatchlistParams,
 ) => {
   const method = typeToWatchlistMethod(type);
 
@@ -49,7 +50,7 @@ const watchlistRequest = (
     .users
     .watchlist[method]({
       params: {
-        id: 'me',
+        id: slug ?? 'me',
       },
       query: {
         extended: 'full,images,colors',
@@ -75,6 +76,7 @@ export const watchlistQuery = defineInfiniteQuery({
   dependencies: (
     params: WatchlistParams,
   ) => [
+    params.slug ?? 'me',
     params.type,
     params.sortBy,
     params.sortHow,

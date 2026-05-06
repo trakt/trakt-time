@@ -1,47 +1,28 @@
 <script lang="ts">
-  import CoverImageSetter from "$lib/components/background/CoverImageSetter.svelte";
-  import * as m from "$lib/features/i18n/messages.ts";
-  import RenderFor from "$lib/guards/RenderFor.svelte";
-  import DiscoverToggles from "$lib/sections/discover/DiscoverToggles.svelte";
-  import TraktPage from "$lib/sections/layout/TraktPage.svelte";
-  import NavbarStateSetter from "$lib/sections/navbar/NavbarStateSetter.svelte";
-  import PrivateProfile from "$lib/sections/profile/PrivateProfile.svelte";
-  import Profile from "$lib/sections/profile/Profile.svelte";
-  import { DEFAULT_SHARE_COVER } from "$lib/utils/assets";
-  import type { PageProps } from "./$types";
-  import { useProfile } from "./useProfile";
+  import { useUser } from '$lib/features/auth/stores/useUser.ts';
+  import ProfileContent from '$lib/sections/profile/ProfileContent.svelte';
+  import type { PageProps } from './$types.ts';
 
   const { params }: PageProps = $props();
 
-  const { user, isLoading } = $derived(useProfile(params.slug));
-
-  const title = $derived(
-    $user?.username
-      ? m.page_title_user_profile({ username: $user.username })
-      : m.page_title_profile(),
+  const { user } = useUser();
+  const isOwner = $derived(
+    Boolean($user?.username) && $user.username === params.slug,
   );
 </script>
 
-<TraktPage
-  audience="all"
-  image={DEFAULT_SHARE_COVER}
-  {title}
-  hasDynamicContent={true}
->
-  <RenderFor audience="authenticated">
-    <NavbarStateSetter>
-      {#snippet actions()}
-        <DiscoverToggles />
-      {/snippet}
-    </NavbarStateSetter>
-  </RenderFor>
+<svelte:head>
+  <title>{params.slug} - Trakt Time</title>
+</svelte:head>
 
-  {#if !$isLoading && $user}
-    <CoverImageSetter src={$user.cover?.url} type="main" />
-    {#if $user.private}
-      <PrivateProfile profile={$user} slug={$user.slug ?? ""} />
-    {:else}
-      <Profile profile={$user} slug={$user.slug ?? ""} />
-    {/if}
-  {/if}
-</TraktPage>
+<div class="profile-page">
+  <ProfileContent slug={params.slug} {isOwner} />
+</div>
+
+<style lang="scss">
+  .profile-page {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: var(--trakttime-bottom-nav-height);
+  }
+</style>

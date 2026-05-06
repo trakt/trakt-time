@@ -1,0 +1,43 @@
+import { defineQuery } from '$lib/features/query/defineQuery.ts';
+import { api, type ApiParams } from '$lib/requests/api.ts';
+import { time } from '$lib/utils/timing/time.ts';
+import { InvalidateAction } from '../../models/InvalidateAction.ts';
+import {
+  type UserList,
+  UserListSchema,
+} from './userListsQuery.ts';
+
+type PersonalListsParams = { slug: string } & ApiParams;
+
+const personalListsRequest = ({ fetch, slug }: PersonalListsParams) =>
+  api({ fetch })
+    .users
+    .lists
+    .personal({
+      params: { id: slug },
+      query: {
+        extended: 'images',
+      },
+    });
+
+export const personalListsQuery = defineQuery({
+  key: 'personalLists',
+  invalidations: [
+    InvalidateAction.List.Edited,
+    InvalidateAction.List.Deleted,
+    InvalidateAction.List.Created,
+    InvalidateAction.Listed('movie'),
+    InvalidateAction.Listed('show'),
+  ],
+  dependencies: (params) => [params.slug],
+  request: personalListsRequest,
+  mapper: (response): UserList[] =>
+    response.body.map((list) => ({
+      id: list.ids.trakt,
+      name: list.name,
+      count: list.item_count,
+      ownerId: list.user.ids.trakt,
+    })),
+  schema: UserListSchema.array(),
+  ttl: time.minutes(30),
+});
