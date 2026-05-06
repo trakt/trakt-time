@@ -158,6 +158,7 @@
   "filter_label_this_year": "This year",
   "button_text_remove_from_watchlist": "Remove from watchlist",
   "button_text_stop_check_in": "Stop check in",
+  "button_text_delete": "Delete",
   "button_text_delete_comment": "Delete Review",
   "warning_prompt_delete_comment": "Are you sure you want to delete your review?",
   "warning_prompt_log_out": "Are you sure you want to log out?",
