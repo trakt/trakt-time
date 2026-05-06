@@ -1,4 +1,5 @@
 <script lang="ts">
+  import CrossOriginImage from '$lib/features/image/components/CrossOriginImage.svelte';
   import MarkAsWatchedIcon from '$lib/components/icons/MarkAsWatchedIcon.svelte';
   import type { EpisodeEntry } from '$lib/requests/models/EpisodeEntry.ts';
   import { useMarkAsWatched } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
@@ -38,8 +39,23 @@
     class="episode-link"
     href={UrlBuilder.episode(slug, episode.season, episode.number)}
   >
-    <span class="episode-number">{episode.number}</span>
-    <span class="episode-title">{episode.title}</span>
+    <div class="episode-thumb">
+      {#if episode.cover.url}
+        <CrossOriginImage
+          src={episode.cover.url}
+          alt={episode.title}
+          loading="lazy"
+        />
+      {:else}
+        <span class="episode-thumb-fallback" aria-hidden="true">
+          {episode.number}
+        </span>
+      {/if}
+    </div>
+    <div class="episode-text">
+      <span class="episode-number">E{episode.number}</span>
+      <span class="episode-title">{episode.title}</span>
+    </div>
   </a>
   {#if isWatchable}
     <button
@@ -80,18 +96,49 @@
     min-width: 0;
   }
 
-  .episode-number {
+  .episode-thumb {
     flex-shrink: 0;
-    font-size: 0.75rem;
+    width: 4.5rem;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--border-radius-s);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    :global(img) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .episode-thumb-fallback {
+    font-size: 0.875rem;
     font-weight: 700;
     color: var(--color-text-secondary);
-    width: 1.5rem;
-    text-align: right;
+  }
+
+  .episode-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .episode-number {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.04em;
   }
 
   .episode-title {
-    flex: 1;
     font-size: 0.875rem;
+    color: var(--color-text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
