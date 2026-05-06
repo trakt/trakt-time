@@ -18,15 +18,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Vitest split across 4 shards so PRs come back fast.
+  # Vitest in a single job. Sharding only earns its keep once the suite
+  # is large enough that the per-job startup cost is small relative to
+  # total runtime; we'll re-introduce the matrix when we get there.
   unit-tests:
-    name: 'Unit tests · shard ${{ matrix.shard }} / 4'
+    name: Unit tests
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3, 4]
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
@@ -34,38 +32,17 @@ jobs:
       - name: Set up Deno
         uses: ./.github/actions/setup-deno
 
-      - name: Run vitest (shard ${{ matrix.shard }} of 4)
+      - name: Run vitest
         working-directory: projects/client
-        run: >
-          deno run -A npm:vitest
-          --shard=${{ matrix.shard }}/4
-          --reporter=dot
-          --reporter=github-actions
-
-  # Aggregates the matrix above into a single required check the deploy can
-  # gate on without enumerating every shard.
-  unit-tests-gate:
-    name: Unit tests passed
-    needs: unit-tests
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Verify all shards
-        run: |
-          if [[ "${{ needs.unit-tests.result }}" == "success" ]]; then
-            echo "All shards passed."
-          else
-            echo "Unit-test shards failed with result: ${{ needs.unit-tests.result }}"
-            exit 1
-          fi
+        run: deno run -A npm:vitest --reporter=dot --reporter=github-actions
 
   # Builds the SvelteKit client and ships the worker bundle to Cloudflare.
   # Only on `main`, only after tests pass.
   deploy:
     name: Build & deploy to Cloudflare Workers
-    needs: unit-tests-gate
+    needs: unit-tests
     if: |
-      needs.unit-tests-gate.result == 'success' &&
+      needs.unit-tests.result == 'success' &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
