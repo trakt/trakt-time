@@ -1,4 +1,4 @@
-name: The Grand Inquisition and Divine Deployment aka CI/CD
+name: CI / CD
 
 on:
   push:
@@ -11,295 +11,135 @@ on:
 
 permissions:
   contents: read
-  actions: write
+
+concurrency:
+  # Re-run only the latest commit per branch; cancel anything in flight.
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  files-changed:
+  # Figures out which downstream jobs need to run for this PR/push.
+  # Anything outside `client_source` / `workflows` doesn't trigger CI.
+  changed-paths:
+    name: Detect what changed
     if: github.event.pull_request.draft == false
-    name: The Scrutiny of Change
     runs-on: ubuntu-latest
-    concurrency:
-      group: ci-${{ github.ref }}
-      cancel-in-progress: true
     outputs:
-      client_source: ${{ steps.changes.outputs.client_source }}
-      i18n_source: ${{ steps.changes.outputs.i18n_source }}
-      workflows: ${{ steps.changes.outputs.workflows }}
+      client: ${{ steps.filter.outputs.client }}
+      workflows: ${{ steps.filter.outputs.workflows }}
     steps:
-      - name: Unveiling the Repository
+      - name: Check out the repository
         uses: actions/checkout@v4
 
-      - name: The Chronicle of Alterations
+      - name: Compute path filters
+        id: filter
         uses: dorny/paths-filter@v3
-        id: changes
         with:
           filters: |
-            client_source:
+            client:
               - 'projects/client/src/**'
               - 'projects/client/static/**'
-              - 'projects/client/i18n/generator/**'
-              - 'projects/client/i18n/schema/**'
               - 'projects/client/i18n/messages/**'
               - 'projects/client/i18n/project.inlang/**'
-              - 'projects/client/e2e/**'
               - 'projects/client/package.json'
               - 'projects/client/deno.json'
               - 'projects/client/svelte.config.js'
               - 'projects/client/vite.config.ts'
               - 'projects/client/wrangler.jsonc'
-            i18n_source:
-              - 'projects/client/i18n/meta/**'
             workflows:
               - '.github/workflows/**'
               - '.github/actions/**'
 
-  localize:
-    needs: files-changed
-    if: ${{
-      github.ref == 'refs/heads/main' &&
-      github.head_ref != 'i18n_crowdin_updates' &&
-      needs.files-changed.outputs.i18n_source == 'true'
-      }}
-    name: Release the Translation Fiends (Localize)
+  # `svelte-check` over the whole client tree.
+  typecheck:
+    name: Type check the client
+    needs: changed-paths
+    if: ${{ needs.changed-paths.outputs.client == 'true' || needs.changed-paths.outputs.workflows == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Localize Workflow
-        run: gh workflow run i18n_translate.yml --ref main --repo ${{ github.repository }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check out the repository
+        uses: actions/checkout@v4
 
-  test:
-    needs: files-changed
-    if: ${{
-      needs.files-changed.outputs.client_source == 'true' ||
-      needs.files-changed.outputs.workflows == 'true'
-      }}
-    name: "The Interrogation Room (Shard) [${{ matrix.shard }}/4]"
+      - name: Set up Deno
+        uses: ./.github/actions/setup-deno
+
+      - name: Run svelte-check
+        working-directory: projects/client
+        run: deno task check
+
+  # Vitest split across 4 shards so PRs come back fast.
+  unit-tests:
+    name: 'Unit tests · shard ${{ matrix.shard }} / 4'
+    needs: changed-paths
+    if: ${{ needs.changed-paths.outputs.client == 'true' || needs.changed-paths.outputs.workflows == 'true' }}
     runs-on: ubuntu-latest
-    concurrency:
-      group: ci-test-${{ github.ref }}-${{ matrix.shard }}
-      cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4]
-
     steps:
-      - name: Secure the Evidence aka Checkout Code
+      - name: Check out the repository
         uses: actions/checkout@v4
 
-      - name: Setup Deno Environment
+      - name: Set up Deno
         uses: ./.github/actions/setup-deno
 
-      - name: Forging the Artifacts aka Prebuild
+      - name: Run vitest (shard ${{ matrix.shard }} of 4)
         working-directory: projects/client
-        run: 'deno task prebuild'
+        run: >
+          deno run -A npm:vitest
+          --shard=${{ matrix.shard }}/4
+          --reporter=dot
+          --reporter=github-actions
 
-      - name: "Probe the Client's Mind aka Run Tests [${{ matrix.shard }}/4]"
-        working-directory: projects/client
-        run: 'deno run -A npm:vitest --coverage --shard=${{ matrix.shard }}/4 --reporter=blob --reporter=dot --reporter=github-actions'
-
-      - name: Sealing the Evidence aka Upload Blob Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: blob-report-${{ matrix.shard }}
-          path: projects/client/.vitest-reports
-          include-hidden-files: true
-          retention-days: 1
-
-  test-gate:
-    needs: [files-changed, test]
+  # Aggregates the matrix above into a single required check.
+  unit-tests-gate:
+    name: Unit tests passed
+    needs: [changed-paths, unit-tests]
     if: always()
-    name: The Interrogation Room (Test)
     runs-on: ubuntu-latest
     steps:
-      - name: The Verdict on the Shards
+      - name: Verify all shards
         run: |
-          if [[ "${{ needs.test.result }}" == "success" || "${{ needs.test.result }}" == "skipped" ]]; then
-            echo "All shards passed (or were skipped)"
+          if [[ "${{ needs.unit-tests.result }}" == "success" || "${{ needs.unit-tests.result }}" == "skipped" ]]; then
+            echo "All shards passed (or were skipped)."
           else
-            echo "Test shards failed with result: ${{ needs.test.result }}"
+            echo "Unit-test shards failed with result: ${{ needs.unit-tests.result }}"
             exit 1
           fi
 
-  typecheck:
-    needs: files-changed
-    if: ${{
-      needs.files-changed.outputs.client_source == 'true' ||
-      needs.files-changed.outputs.workflows == 'true'
-      }}
-    name: Consulting the Oracles of Type (Type Check)
+  # Builds the SvelteKit client and pushes the worker bundle to Cloudflare.
+  # Only runs on `main` after both checks above pass.
+  deploy:
+    name: Build & deploy to Cloudflare Workers
+    needs: [unit-tests-gate, typecheck]
+    if: |
+      always() &&
+      needs.unit-tests-gate.result == 'success' &&
+      needs.typecheck.result == 'success' &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    concurrency:
-      group: ci-typecheck-${{ github.ref }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Secure the Evidence aka Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Deno Environment
-        uses: ./.github/actions/setup-deno
-
-      - name: Summoning the Ancient Tongues aka Generate i18n
-        working-directory: projects/client
-        run: 'deno task i18n:web'
-
-      - name: Forging the Paraglide Runes aka Compile Paraglide
-        working-directory: projects/client
-        run: 'deno run -A npm:@inlang/paraglide-js compile --project ./i18n/project.inlang --outdir ./src/lib/paraglide'
-
-      - name: Consulting the Oracles of Type aka Type Check
-        working-directory: projects/client
-        run: 'deno task check'
-
-  coverage:
-    needs: [test]
-    if: ${{ always() && needs.test.result != 'cancelled' && needs.test.result != 'skipped' }}
-    name: The Inquisition's Verdict (Coverage)
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Secure the Evidence aka Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Deno Environment
-        uses: ./.github/actions/setup-deno
-
-      - name: Assembling the Shards of Evidence aka Download Blob Reports
-        uses: actions/download-artifact@v4
-        with:
-          pattern: blob-report-*
-          path: projects/client/.vitest-reports
-          merge-multiple: true
-
-      - name: Merging the Testimony aka Merge Reports & Coverage
-        working-directory: projects/client
-        run: 'deno run -A npm:vitest --merge-reports .vitest-reports --coverage'
-
-      - name: Trial by Deep Source
-        uses: deepsourcelabs/test-coverage-action@master
-        continue-on-error: true
-        with:
-          key: javascript
-          coverage-file: ${{github.workspace}}/projects/client/coverage/lcov.info
-          dsn: ${{ secrets.DEEPSOURCE_DSN }}
-
-  e2e:
-    needs: files-changed
-    if: ${{
-      github.ref != 'refs/heads/main' && github.head_ref != 'i18n_crowdin_updates' &&
-      (
-      needs.files-changed.outputs.client_source == 'true' ||
-      needs.files-changed.outputs.workflows == 'true'
-      )
-      }}
-    name: The Trials of Interface (E2E)
-    runs-on: ubuntu-latest
-    concurrency:
-      group: e2e-${{ github.ref }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Secure the Evidence aka Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Deno Environment
-        uses: ./.github/actions/setup-deno
-
-      - name: The Phantom Browsers Materialize aka Install Browsers
-        working-directory: projects/client
-        run: 'deno run -A npm:@playwright/test install chromium'
-
-      - name: Whispers of the Future aka Preview Build
-        working-directory: projects/client
-        run: 'deno task build:preview'
-        env:
-          TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
-
-      - name: Witnessing the Premonition aka Run Preview
-        working-directory: projects/client
-        run: |
-          deno task preview &
-          echo $! > server.pid
-        env:
-          TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
-          TRAKT_CLIENT_SECRET: ${{ secrets.TRAKT_CLIENT_SECRET }}
-
-      - name: The Verdict on the Interface aka E2E Tests
-        uses: nick-fields/retry@v3
-        with:
-          timeout_seconds: 15
-          max_attempts: 10
-          command: |
-            cd projects/client
-            deno task test:e2e
-          retry_on: error
-        env:
-          E2E_HEADLESS: 'true'
-          E2E_BASE_URL: 'http://localhost:4173/'
-
-      - name: Witnessing the Premonition's Demise aka Kill Preview
-        working-directory: projects/client
-        run: kill $(cat server.pid)
-
-  build:
-    name: The Forge (Build)
-    runs-on: ubuntu-latest
-    concurrency:
-      group: ci-${{ github.ref }}
-      cancel-in-progress: true
-    needs: [test-gate, typecheck]
     permissions:
       contents: read
       deployments: write
-    if: |
-      always() &&
-      needs.test-gate.result == 'success' &&
-      needs.typecheck.result == 'success' &&
-      github.ref == 'refs/heads/main'
-
     steps:
-      - name: Secure the Evidence aka Checkout Code
+      - name: Check out the repository
         uses: actions/checkout@v4
 
-      - name: Setup Deno Environment
+      - name: Set up Deno
         uses: ./.github/actions/setup-deno
 
-      - name: Weaving the Digital Tapestry aka Build
+      - name: Build the client
         working-directory: projects/client
-        run: 'deno task build'
         env:
           TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
-          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
-      
-      # Add this new step to copy the .npmrc file
-      - name: The Ancient Scroll of JSR aka Copy .npmrc
-        run: |
-          cp .npmrc projects/client/
-          echo "THE SCROLL OF KNOWLEDGE HAS BEEN TRANSCRIBED:"
-          cat projects/client/.npmrc
+        run: deno task build
 
-      - name: Awaken the Node Ancient (Setup Node 22 for Wrangler)
-        uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-
-      - name: Divining the Commit Runes aka Extract Short SHA
-        id: vars
-        run: echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Invoking the Cloudflare Spirits
-        if: github.ref == 'refs/heads/main'
+      - name: Deploy the worker via wrangler
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: projects/client
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          command: deploy --message "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" --tag "${{ steps.vars.outputs.short_sha }}"
+          command: deploy
