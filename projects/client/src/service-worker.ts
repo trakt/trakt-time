@@ -32,7 +32,14 @@ self.__WB_DISABLE_DEV_LOGS = true;
 
 // Global error and unhandledrejection event listeners for debugging
 self.addEventListener('error', (event) => {
-  console.error('Service Worker error event:', event.message, event.filename, event.lineno, event.colno, event.error);
+  console.error(
+    'Service Worker error event:',
+    event.message,
+    event.filename,
+    event.lineno,
+    event.colno,
+    event.error,
+  );
 });
 
 self.addEventListener('unhandledrejection', (event) => {
@@ -80,7 +87,7 @@ self.addEventListener('activate', (event) => {
       if (self.clients && self.clients.claim) {
         await self.clients.claim();
       }
-    })()
+    })(),
   );
 });
 

@@ -4,13 +4,7 @@ import { isBotAgent } from '$lib/utils/devices/isBotAgent.ts';
 import type { LayoutServerLoad } from '$types/$types.d.ts';
 
 const getAuth = (auth: Nil | OidcAuthToken) => {
-  if (!auth) {
-    return {
-      token: null,
-      expiresAt: null,
-      isAuthorized: false,
-    };
-  }
+  if (!auth) return { token: null, expiresAt: null, isAuthorized: false };
 
   return {
     token: auth.token,
@@ -19,18 +13,12 @@ const getAuth = (auth: Nil | OidcAuthToken) => {
   };
 };
 
-export const load: LayoutServerLoad = (
-  { request, locals },
-) => {
-  const defaultResponse = {
-    theme: locals.theme,
-    oidcAuth: getAuth(locals.oidcAuth),
-    isLegitimateBot: locals.isLegitimateBot,
-    isBot: isBotAgent(request.headers.get('user-agent')),
-    device: getDeviceType(request.headers.get('user-agent')),
-    cookieConsent: locals.cookieConsent,
-    typesense: locals.typesense,
-  };
-
-  return defaultResponse;
-};
+export const load: LayoutServerLoad = ({ request, locals }) => ({
+  theme: locals.theme,
+  oidcAuth: getAuth(locals.oidcAuth),
+  isLegitimateBot: locals.isLegitimateBot,
+  isBot: isBotAgent(request.headers.get('user-agent')),
+  device: getDeviceType(request.headers.get('user-agent')),
+  cookieConsent: locals.cookieConsent,
+  typesense: locals.typesense,
+});

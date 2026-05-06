@@ -99,6 +99,8 @@ function reloadOnceForStaleDeploy(error: unknown): void {
 }
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
-export const handleError = handleErrorWithSentry(({ error }: { error: unknown }) => {
-  reloadOnceForStaleDeploy(error);
-});
+export const handleError = handleErrorWithSentry(
+  ({ error }: { error: unknown }) => {
+    reloadOnceForStaleDeploy(error);
+  },
+);
