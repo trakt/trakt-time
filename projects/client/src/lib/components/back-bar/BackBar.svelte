@@ -1,5 +1,5 @@
 <script lang="ts">
-  import * as m from '$lib/paraglide/messages.js';
+  import * as m from "$lib/paraglide/messages.js";
 
   type Props = {
     label: string;
@@ -46,6 +46,7 @@
     z-index: var(--layer-floating);
     padding: var(--gap-s) var(--gap-m);
     pointer-events: none;
+    margin-left: var(--gap-m);
   }
 
   .back-btn {
