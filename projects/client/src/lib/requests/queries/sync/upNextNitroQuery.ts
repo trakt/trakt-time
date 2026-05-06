@@ -54,7 +54,7 @@ export const upNextNitroRequest = (
       query: {
         page,
         limit,
-        intent: 'continue',
+        intent: 'all',
         ...filter,
         ...(sortBy ? { sort_by: sortBy } : {}),
         ...(sortHow ? { sort_how: sortHow } : {}),
