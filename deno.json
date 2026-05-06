@@ -7,8 +7,7 @@
     "install": "deno install --allow-scripts --frozen",
     "format": "deno fmt && deno lint --fix",
     "client:dev": "cd projects/client && deno task dev",
-    "client:dev:contrib": "cd projects/client && deno task dev:contrib",
-    "client:i18n:resolve": "cd projects/client && deno task i18n:resolve"
+    "client:dev:contrib": "cd projects/client && deno task dev:contrib"
   },
   "unstable": [
     "broadcast-channel",
@@ -34,5 +33,17 @@
     "strict": true,
     "verbatimModuleSyntax": true
   },
-  "allowScripts": ["npm:@firebase/util@1.13.0", "npm:@sentry/cli@2.58.2", "npm:core-js@3.46.0", "npm:esbuild@0.25.12", "npm:esbuild@0.27.0", "npm:fsevents@2.3.2", "npm:fsevents@2.3.3", "npm:msw@2.7.3", "npm:protobufjs@7.5.4", "npm:sharp@0.33.5", "npm:workerd@1.20251202.0"]
+  "allowScripts": [
+    "npm:@firebase/util@1.13.0",
+    "npm:@sentry/cli@2.58.2",
+    "npm:core-js@3.46.0",
+    "npm:esbuild@0.25.12",
+    "npm:esbuild@0.27.0",
+    "npm:fsevents@2.3.2",
+    "npm:fsevents@2.3.3",
+    "npm:msw@2.7.3",
+    "npm:protobufjs@7.5.4",
+    "npm:sharp@0.33.5",
+    "npm:workerd@1.20251202.0"
+  ]
 }
