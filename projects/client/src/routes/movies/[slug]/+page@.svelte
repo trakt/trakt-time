@@ -347,16 +347,18 @@
   .media-header {
     display: flex;
     gap: var(--gap-m);
-    align-items: flex-end;
+    align-items: stretch;
   }
 
   .poster-wrap {
     flex-shrink: 0;
-    width: var(--trakttime-poster-card-width);
+    aspect-ratio: 2 / 3;
+    min-width: var(--trakttime-poster-card-width);
+    max-width: calc(var(--trakttime-poster-card-width) * 1.6);
     border-radius: var(--border-radius-m);
     overflow: hidden;
     box-shadow: 0 var(--ni-4) var(--ni-16) rgba(0, 0, 0, 0.4);
-    aspect-ratio: 2 / 3;
+    align-self: stretch;
 
     :global(img) {
       width: 100%;
