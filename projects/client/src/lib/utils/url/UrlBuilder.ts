@@ -257,8 +257,8 @@ export const UrlBuilder = {
     ios: () => 'https://trakt.tv/a/trakt-ios',
   },
   github: {
-    web: () => 'https://github.com/trakt/trakt-web',
-    reportIssue: () => 'https://github.com/trakt/trakt-web/issues/new',
+    web: () => 'https://github.com/trakt/trakt-time',
+    reportIssue: () => 'https://github.com/trakt/trakt-time/issues/new',
   },
   socialMedia: {
     reddit: () => 'https://www.reddit.com/r/trakt',

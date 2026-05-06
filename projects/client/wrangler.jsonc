@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "trakt-web",
+  "name": "trakt-time",
   "main": ".svelte-kit/cloudflare/_worker.js",
   "compatibility_date": "2026-03-30",
   "compatibility_flags": [
@@ -20,11 +20,5 @@
   "vars": {
     "TYPESENSE_SERVER": "search.trakt.tv"
   },
-  "upload_source_maps": true,
-  "r2_buckets": [
-    {
-      "binding": "R2_WALTER",
-      "bucket_name": "walter"
-    }
-  ]
+  "upload_source_maps": true
 }

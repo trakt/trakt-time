@@ -1,29 +1,14 @@
 import type { ManifestOptions } from 'vite-plugin-pwa';
 
 export const manifest: Partial<ManifestOptions> = {
-  id: 'trakt-web-pwa',
-  name: 'Trakt Lite',
-  short_name: 'Trakt',
-  description: 'A lightweight Trakt.tv client',
+  id: 'trakt-time-pwa',
+  name: 'Trakt Time',
+  short_name: 'Trakt Time',
+  description: 'An experimental Trakt client built for fun & learning.',
   dir: 'ltr',
   lang: 'en',
   prefer_related_applications: false,
-  related_applications: [
-    {
-      platform: 'play',
-      url: 'https://play.google.com/store/apps/details?id=tv.trakt.trakt',
-      id: 'tv.trakt.trakt',
-    },
-  ],
   scope: '/',
-  scope_extensions: [
-    {
-      origin: 'https://app.trakt.tv',
-    },
-    {
-      origin: 'https://trakt.tv',
-    },
-  ],
   launch_handler: {
     client_mode: ['navigate-existing', 'auto'],
   },

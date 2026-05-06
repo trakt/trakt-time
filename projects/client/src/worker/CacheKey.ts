@@ -1,4 +1,4 @@
-const CACHE_PREFIX = 'trakt-web';
+const CACHE_PREFIX = 'trakt-time';
 
 function buildCacheKey(key: string) {
   return `${CACHE_PREFIX}-${key}`;

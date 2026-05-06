@@ -1,7 +1,7 @@
 {
   "servers": {
     "Sentry": {
-      "url": "https://mcp.sentry.dev/mcp/trakt-tv/trakt-web",
+      "url": "https://mcp.sentry.dev/mcp/trakt-tv/trakt-time",
       "type": "http"
     }
   }
