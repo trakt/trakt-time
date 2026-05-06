@@ -1,41 +1,29 @@
 <script lang="ts">
   import "../style";
 
-  import { page } from "$app/state";
   import CoverImage from "$lib/components/background/CoverImage.svelte";
   import CoverProvider from "$lib/components/background/CoverProvider.svelte";
-  import ListScrollHistoryProvider from "$lib/components/lists/section-list/ListScrollHistoryProvider.svelte";
-  import AnalyticsProvider from "$lib/features/analytics/AnalyticsProvider.svelte";
-  import PageView from "$lib/features/analytics/PageView.svelte";
   import AuthProvider from "$lib/features/auth/components/AuthProvider.svelte";
   import BotProvider from "$lib/features/bot-verification/BotProvider.svelte";
   import ConfirmationProvider from "$lib/features/confirmation/ConfirmationProvider.svelte";
   import CookieConsentProvider from "$lib/features/cookie-consent/CookieConsentProvider.svelte";
   import { DeploymentEndpoint } from "$lib/features/deployment/DeploymentEndpoint.js";
-  import DiscoverProvider from "$lib/features/discover/DiscoverProvider.svelte";
   import ErrorProvider from "$lib/features/errors/ErrorProvider.svelte";
   import FeatureFlagProvider from "$lib/features/feature-flag/FeatureFlagProvider.svelte";
   import FilterProvider from "$lib/features/filters/FilterProvider.svelte";
   import LocaleProvider from "$lib/features/i18n/components/LocaleProvider.svelte";
   import NavigationHistoryProvider from "$lib/features/navigation-history/NavigationHistoryProvider.svelte";
   import NavigationProvider from "$lib/features/navigation/NavigationProvider.svelte";
-  import AddNoteDrawerProvider from "$lib/features/notes/AddNoteDrawerProvider.svelte";
   import GlobalParameterProvider from "$lib/features/parameters/GlobalParameterProvider.svelte";
-  import PlayerProvider from "$lib/features/player/YoutubePlayerProvider.svelte";
   import QueryClientProvider from "$lib/features/query/QueryClientProvider.svelte";
   import RedirectProvider from "$lib/features/redirect/RedirectProvider.svelte";
-  import ReportDialogProvider from "$lib/features/report/ReportDialogProvider.svelte";
   import SearchProvider from "$lib/features/search/SearchProvider.svelte";
-  import SeasonalFlair from "$lib/features/theme/components/SeasonalFlair.svelte";
   import ThemeProvider from "$lib/features/theme/components/ThemeProvider.svelte";
-  import { initializeSeasonalThemes } from "$lib/features/theme/initializeSeasonalThemes.js";
   import ToastProvider from "$lib/features/toast/ToastProvider.svelte";
   import WSInvalidator from "$lib/features/websocket/WSInvalidator.svelte";
   import RenderFor from "$lib/guards/RenderFor.svelte";
+  import BottomNav from "$lib/sections/bottom-nav/BottomNav.svelte";
   import MarkAsWatchedDrawerProvider from "$lib/sections/media-actions/mark-as-watched/MarkAsWatchedDrawerProvider.svelte";
-  import MobileNavbar from "$lib/sections/navbar/MobileNavbar.svelte";
-  import SideNavbar from "$lib/sections/navbar/SideNavbar.svelte";
-  import TopNavbar from "$lib/sections/navbar/TopNavbar.svelte";
   import NavbarToastContent from "$lib/sections/toast/NavbarToastContent.svelte";
   import { isPWA } from "$lib/utils/devices/isPWA.ts";
   import { retry } from "$lib/utils/retry/retry.js";
@@ -45,8 +33,6 @@
   import { onMount } from "svelte";
 
   const { data, children } = $props();
-
-  $effect.pre(initializeSeasonalThemes);
 
   onMount(async () => {
     if (isPWA()) {
@@ -67,14 +53,13 @@
 </script>
 
 <svelte:head>
-  <title>Trakt Web</title>
+  <title>Trakt Time</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     rel="preconnect"
     href="https://fonts.gstatic.com"
     crossorigin="anonymous"
   />
-  <!-- FIXME: remove walter when all sources are from media.trakt.tv -->
   <link
     rel="preconnect"
     href="https://walter-r2.trakt.tv"
@@ -85,23 +70,16 @@
     href="https://media.trakt.tv"
     crossorigin="anonymous"
   />
-  <link rel="preconnect" href="https://cdn.plyr.io" crossorigin="anonymous" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300..700&family=Roboto+Mono:wght@400;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300..700&display=swap"
     rel="stylesheet"
   />
-  <!-- Plyr CSS -->
-  <link rel="stylesheet" href="https://cdn.plyr.io/3.8.3/plyr.css" />
-  <!-- Plyr JS -->
-  <script src="https://cdn.plyr.io/3.8.3/plyr.js"></script>
   <style>
     html,
     body {
       margin: 0;
       padding: 0;
-
       width: 100%;
-      height: -moz-available;
       height: -webkit-fill-available;
       height: fill-available;
     }
@@ -110,25 +88,18 @@
       content: "";
       height: 100vh;
       width: 100vw;
-      z-index: calc(var(--layer-background) - 1);
-
+      z-index: var(--layer-background);
       display: block;
       position: fixed;
-
       background-color: var(--color-background);
     }
 
     body {
+      max-width: var(--trakttime-max-width);
+      margin: 0 auto;
       background-color: var(--color-background);
       color: var(--color-foreground);
       font-family: "Roboto", Arial, sans-serif;
-    }
-
-    code,
-    pre,
-    kbd,
-    samp {
-      font-family: "Roboto Mono", "Courier New", monospace;
     }
 
     body:has(dialog[open]),
@@ -152,78 +123,42 @@
               consent={data.cookieConsent}
               isBot={data.isBot}
             >
-              <PlayerProvider>
-                <AnalyticsProvider>
-                  <RedirectProvider>
-                    <NavigationProvider>
-                      <NavigationHistoryProvider>
-                        <LocaleProvider>
-                          <SearchProvider config={data.typesense}>
-                            <FilterProvider>
-                              <CoverProvider>
-                                <ToastProvider>
-                                  <DiscoverProvider>
-                                    <ConfirmationProvider>
-                                      <MarkAsWatchedDrawerProvider />
-                                      <AddNoteDrawerProvider />
-                                      <ReportDialogProvider />
-                                      <CoverImage />
-                                      <SeasonalFlair />
+              <RedirectProvider>
+                <NavigationProvider>
+                  <NavigationHistoryProvider>
+                    <LocaleProvider>
+                      <SearchProvider config={data.typesense}>
+                        <FilterProvider>
+                          <CoverProvider>
+                            <ToastProvider>
+                              <ConfirmationProvider>
+                                <MarkAsWatchedDrawerProvider />
+                                <CoverImage />
 
-                                      <ThemeProvider theme={data.theme}>
-                                        <ListScrollHistoryProvider>
-                                          <!--
-                                        All navbars are added in the layout to make sure they can
-                                        persist during navigation. The state is set on a page level.
-                                      -->
-                                          <RenderFor
-                                            audience="all"
-                                            device={["mobile", "tablet-sm"]}
-                                          >
-                                            <TopNavbar />
-                                          </RenderFor>
+                                <ThemeProvider theme={data.theme}>
+                                  {@render children()}
 
-                                          <RenderFor
-                                            audience="all"
-                                            device={["desktop", "tablet-lg"]}
-                                          >
-                                            <SideNavbar />
-                                          </RenderFor>
+                                  <RenderFor audience="all">
+                                    <BottomNav />
+                                  </RenderFor>
 
-                                          {@render children()}
-
-                                          <RenderFor
-                                            audience="all"
-                                            device={["mobile", "tablet-sm"]}
-                                          >
-                                            <MobileNavbar />
-                                          </RenderFor>
-
-                                          <RenderFor audience="authenticated">
-                                            <NavbarToastContent />
-                                          </RenderFor>
-                                          <SvelteQueryDevtools
-                                            buttonPosition="bottom-right"
-                                            styleNonce="opacity: 0.5"
-                                          />
-                                        </ListScrollHistoryProvider>
-                                      </ThemeProvider>
-                                    </ConfirmationProvider>
-                                  </DiscoverProvider>
-                                </ToastProvider>
-                              </CoverProvider>
-                            </FilterProvider>
-                          </SearchProvider>
-                        </LocaleProvider>
-                      </NavigationHistoryProvider>
-                    </NavigationProvider>
-
-                    {#key page.url.pathname}
-                      <PageView />
-                    {/key}
-                  </RedirectProvider>
-                </AnalyticsProvider>
-              </PlayerProvider>
+                                  <RenderFor audience="authenticated">
+                                    <NavbarToastContent />
+                                  </RenderFor>
+                                  <SvelteQueryDevtools
+                                    buttonPosition="bottom-right"
+                                    styleNonce="opacity: 0.5"
+                                  />
+                                </ThemeProvider>
+                              </ConfirmationProvider>
+                            </ToastProvider>
+                          </CoverProvider>
+                        </FilterProvider>
+                      </SearchProvider>
+                    </LocaleProvider>
+                  </NavigationHistoryProvider>
+                </NavigationProvider>
+              </RedirectProvider>
             </CookieConsentProvider>
           </FeatureFlagProvider>
         </AuthProvider>
@@ -237,65 +172,5 @@
 
   :global(.tsqd-open-btn-container) {
     opacity: 0.25;
-  }
-
-  @include for-mouse {
-    :global(::-webkit-scrollbar) {
-      width: var(--ni-8);
-      height: var(--ni-8);
-    }
-
-    :global(body),
-    :global(html) {
-      &::-webkit-scrollbar-thumb {
-        background-color: var(--cm-color-foreground-30);
-      }
-    }
-
-    :global(::-webkit-scrollbar-thumb) {
-      background-color: transparent;
-      border-radius: var(--border-radius-xs);
-      opacity: 0;
-
-      backdrop-filter: blur(var(--ni-4));
-    }
-
-    :global(:hover::-webkit-scrollbar-thumb) {
-      background-color: var(--cm-color-foreground-50);
-    }
-
-    :global(::-webkit-scrollbar-thumb:hover) {
-      background-color: var(--color-foreground);
-    }
-  }
-
-  @mixin pwa-navbar-shadow($position) {
-    content: "";
-    z-index: var(--layer-floating);
-    pointer-events: none;
-
-    position: $position;
-    top: 0;
-
-    width: 100%;
-    height: var(--ni-48);
-
-    background: linear-gradient(
-      180deg,
-      var(--color-background-navbar-base) 0%,
-      var(--color-background-navbar-base) 10%,
-      transparent 100%
-    );
-  }
-
-  :global([data-mobile-os="android"] body.trakt-pwa) {
-    &::after {
-      @include pwa-navbar-shadow(fixed);
-    }
-  }
-
-  :global([data-mobile-os="ios"]:has(body.trakt-pwa)),
-  :global([data-mobile-os="ios"] body.trakt-pwa) {
-    overscroll-behavior-y: none;
   }
 </style>
