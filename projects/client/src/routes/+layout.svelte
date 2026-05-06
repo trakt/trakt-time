@@ -36,7 +36,7 @@
 
   const shareTitle = "Trakt Time";
   const shareDescription = "Track your shows & movies.";
-  const shareImage = `${data.origin}/og.jpg`;
+  const shareImage = $derived(`${data.origin}/og.jpg`);
 
   onMount(async () => {
     if (isPWA()) {
