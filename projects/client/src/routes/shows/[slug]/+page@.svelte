@@ -3,7 +3,6 @@
   import CrossOriginImage from '$lib/features/image/components/CrossOriginImage.svelte';
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
-  import LoadMoreButton from '$lib/components/load-more-button/LoadMoreButton.svelte';
   import PosterSkeleton from '$lib/components/poster-card/PosterSkeleton.svelte';
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import { showSummaryQuery } from '$lib/requests/queries/shows/showSummaryQuery.ts';
@@ -12,17 +11,12 @@
   import { showSeasonsQuery } from '$lib/requests/queries/shows/showSeasonsQuery.ts';
   import SeasonEpisodes from './_internal/SeasonEpisodes.svelte';
   import { useRelatedList } from '$lib/sections/lists/stores/useRelatedList.ts';
-  import { useComments } from '$lib/sections/summary/components/comments/_internal/useComments.ts';
+  import CastSection from '$lib/sections/summary/_internal/CastSection.svelte';
+  import CommentsSection from '$lib/sections/summary/_internal/CommentsSection.svelte';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
-  import CommentCard from '$lib/components/comment-card/CommentCard.svelte';
-  import CommentThreadDrawer from '$lib/components/comment-drawer/CommentThreadDrawer.svelte';
-  import type { MediaComment } from '$lib/requests/models/MediaComment.ts';
-  import { useCommentDeleteAction } from '$lib/sections/summary/components/comments/_internal/useCommentDeleteAction.ts';
   import PosterCard from '$lib/components/poster-card/PosterCard.svelte';
   import MediaActionsSheet from '$lib/components/media-actions-sheet/MediaActionsSheet.svelte';
-  import AddCommentDrawer from '$lib/components/comment-drawer/AddCommentDrawer.svelte';
   import WatchedRow from '$lib/components/watched-row/WatchedRow.svelte';
-  import RenderFor from '$lib/guards/RenderFor.svelte';
   import { hasAired } from '$lib/utils/media/hasAired.ts';
   import { toTranslatedGenre } from '$lib/utils/formatting/string/toTranslatedGenre.ts';
   import { findRegionalIntl } from '$lib/utils/media/findRegionalIntl.ts';
@@ -32,13 +26,9 @@
   const slug = $derived(page.params.slug ?? '');
 
   let actionsOpen = $state(false);
-  let commentsOpen = $state(false);
-  let threadComment = $state<MediaComment | null>(null);
   $effect(() => {
     slug;
     actionsOpen = false;
-    commentsOpen = false;
-    threadComment = null;
   });
 
   const query = $derived(useQuery(showSummaryQuery({ slug })));
@@ -90,14 +80,6 @@
   const relatedResult = $derived(useRelatedList({ type: 'show', slug, page: 1, limit: 12 }));
   const relatedList = $derived(relatedResult.list);
   const relatedLoading = $derived(relatedResult.isLoading);
-
-  const commentsResult = $derived(useComments({ type: 'show', slug, sort: 'likes', limit: 5 }));
-  const commentList = $derived(commentsResult.list);
-  const commentsLoading = $derived(commentsResult.isLoading);
-  const commentsHasNextPage = $derived(commentsResult.hasNextPage);
-  const commentsFetchNext = $derived(commentsResult.fetchNextPage);
-
-  const { onDelete: onDeleteComment } = useCommentDeleteAction({ type: 'show' });
 
   const showHasAired = $derived(
     show
@@ -241,36 +223,7 @@
         </section>
       {/if}
 
-      <section class="media-section">
-        <h2 class="section-title">{m.header_cast()}</h2>
-        {#if castLoading && cast.length === 0}
-          <div class="cast-row" aria-hidden="true">
-            {#each Array(6) as _, i (`csk-${i}`)}
-              <div class="cast-skeleton">
-                <div class="cast-skeleton-avatar"></div>
-                <div class="cast-skeleton-line cast-skeleton-line--name"></div>
-                <div class="cast-skeleton-line cast-skeleton-line--char"></div>
-              </div>
-            {/each}
-          </div>
-        {:else if cast.length > 0}
-          <div class="cast-row" role="list">
-            {#each cast as member (member.key)}
-              <a href="/people/{member.key}" class="cast-member">
-                <div class="cast-avatar">
-                  {#if member.headshot.url.thumb}
-                    <CrossOriginImage src={member.headshot.url.thumb} alt={member.name} />
-                  {:else}
-                    <div class="cast-avatar-placeholder">{member.name.charAt(0)}</div>
-                  {/if}
-                </div>
-                <p class="cast-name">{member.name}</p>
-                <p class="cast-character">{member.characterName}</p>
-              </a>
-            {/each}
-          </div>
-        {/if}
-      </section>
+      <CastSection {cast} isLoading={castLoading} />
 
       <section class="media-section">
         <h2 class="section-title">{m.header_more_like_this()}</h2>
@@ -295,58 +248,13 @@
         {/if}
       </section>
 
-      <section class="media-section">
-        <div class="section-header-row">
-          <h2 class="section-title">{m.list_title_comments()}</h2>
-          <RenderFor audience="authenticated">
-            <button
-              type="button"
-              class="add-comment-btn"
-              onclick={() => (commentsOpen = true)}
-              aria-label={m.button_label_add_new_comment()}
-            >
-              + {m.button_text_add_comment_short()}
-            </button>
-          </RenderFor>
-        </div>
-        {#if $commentsLoading && $commentList.length === 0}
-          <div class="section-loading"><LoadingIndicator /></div>
-        {:else if $commentList.length > 0}
-          <div class="comments-list">
-            {#each $commentList as comment (comment.key)}
-              <CommentCard
-                {comment}
-                onOpenThread={(c) => (threadComment = c)}
-                onDelete={onDeleteComment}
-              />
-            {/each}
-          </div>
-          {#if $commentsHasNextPage}
-            <LoadMoreButton
-              loading={$commentsLoading}
-              onclick={commentsFetchNext}
-              label={m.button_text_load_more()}
-            />
-          {/if}
-        {/if}
-      </section>
-    </div>
-
-    <AddCommentDrawer
-      type="show"
-      mediaId={show.id}
-      title={intl?.title ?? show.title}
-      isOpen={commentsOpen}
-      onClose={() => (commentsOpen = false)}
-    />
-
-    {#if threadComment}
-      <CommentThreadDrawer
+      <CommentsSection
         type="show"
-        comment={threadComment}
-        onClose={() => (threadComment = null)}
+        {slug}
+        mediaId={show.id}
+        mediaTitle={intl?.title ?? show.title}
       />
-    {/if}
+    </div>
 
     <MediaActionsSheet
       type="show"
@@ -362,25 +270,6 @@
 
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
-
-  .section-header-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--gap-s);
-  }
-
-  .add-comment-btn {
-    background: none;
-    border: var(--ni-1) solid var(--trakttime-accent);
-    color: var(--trakttime-accent);
-    border-radius: var(--border-radius-xxl);
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: var(--ni-4) var(--ni-10);
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
 
   .seasons-list {
     list-style: none;
@@ -652,12 +541,6 @@
   }
 
 
-  .section-loading {
-    display: flex;
-    justify-content: center;
-    padding: var(--gap-m) 0;
-  }
-
   .media-section {
     display: flex;
     flex-direction: column;
@@ -671,111 +554,10 @@
     margin: 0;
   }
 
-  .cast-row {
-    @include scrollable-row(var(--gap-m));
-    margin: 0 calc(-1 * var(--gap-m));
-    padding: 0 var(--gap-m);
-  }
-
-  .cast-member {
-    flex-shrink: 0;
-    width: 68px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    text-decoration: none;
-  }
-
-  .cast-avatar {
-    width: 68px;
-    height: 68px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: var(--color-card-background);
-    border: var(--ni-1) solid var(--color-border);
-
-    :global(img) {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-  }
-
-  .cast-avatar-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-text-secondary);
-  }
-
-  .cast-name {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin: 0;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .cast-character {
-    font-size: 0.625rem;
-    color: var(--color-text-secondary);
-    margin: 0;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .cast-skeleton {
-    flex-shrink: 0;
-    width: 68px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-  }
-
-  .cast-skeleton-avatar {
-    width: 68px;
-    height: 68px;
-    border-radius: 50%;
-    @include shimmer-bg;
-  }
-
-  .cast-skeleton-line {
-    border-radius: var(--border-radius-s);
-    @include shimmer-bg;
-
-    &--name {
-      width: var(--ni-56);
-      height: 0.6875rem;
-      animation-delay: 0.1s;
-    }
-
-    &--char {
-      width: var(--ni-44);
-      height: 0.625rem;
-      animation-delay: 0.2s;
-    }
-  }
-
   .poster-row {
     @include scrollable-row;
     margin: 0 calc(-1 * var(--gap-m));
     padding: 0 var(--gap-m);
-  }
-
-  .comments-list {
-    display: flex;
-    flex-direction: column;
   }
 
 </style>
