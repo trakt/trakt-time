@@ -1,47 +1,30 @@
-name: The Gatekeeper's Grimoire aka PR Gate
+name: PR Gate
 
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+  pull-requests: read
 
 jobs:
+  # Validates commit messages against commitlint.config.js and refuses any
+  # leftover `fixup!` commits that didn't get squashed.
   commitlint:
+    name: Lint commit messages
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
-      - name: Unveiling the Code Codex
+      - name: Check out the repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Scrutinizing the Commit Chronicle
+      - name: Run commitlint
         uses: wagoid/commitlint-github-action@v3
 
-      - name: Exterminating the Fixup Fiends
+      - name: Refuse fixup commits
         uses: vladjerca/no-fixups-action@main
         with:
           skip-checkout: true
-
-  merge:
-    if: github.event.pull_request.draft == false && github.event.pull_request.base.ref == 'main'
-    name: The Convergence of Realms (Enable Auto Merge)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Summoning the GitHub App Token
-        uses: actions/create-github-app-token@v2
-        id: generate-token
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-
-      - name: Unveiling the Repository
-        uses: actions/checkout@v4
-
-      - name: Use the Power of GitHub CLI
-        run: gh pr merge --rebase --auto ${{ github.event.pull_request.number }}
-        env:
-          GH_TOKEN: ${{ steps.generate-token.outputs.token }}

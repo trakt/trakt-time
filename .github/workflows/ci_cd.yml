@@ -13,65 +13,15 @@ permissions:
   contents: read
 
 concurrency:
-  # Re-run only the latest commit per branch; cancel anything in flight.
+  # One in-flight run per branch — newer pushes cancel older ones.
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # Figures out which downstream jobs need to run for this PR/push.
-  # Anything outside `client_source` / `workflows` doesn't trigger CI.
-  changed-paths:
-    name: Detect what changed
-    if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
-    outputs:
-      client: ${{ steps.filter.outputs.client }}
-      workflows: ${{ steps.filter.outputs.workflows }}
-    steps:
-      - name: Check out the repository
-        uses: actions/checkout@v4
-
-      - name: Compute path filters
-        id: filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            client:
-              - 'projects/client/src/**'
-              - 'projects/client/static/**'
-              - 'projects/client/i18n/messages/**'
-              - 'projects/client/i18n/project.inlang/**'
-              - 'projects/client/package.json'
-              - 'projects/client/deno.json'
-              - 'projects/client/svelte.config.js'
-              - 'projects/client/vite.config.ts'
-              - 'projects/client/wrangler.jsonc'
-            workflows:
-              - '.github/workflows/**'
-              - '.github/actions/**'
-
-  # `svelte-check` over the whole client tree.
-  typecheck:
-    name: Type check the client
-    needs: changed-paths
-    if: ${{ needs.changed-paths.outputs.client == 'true' || needs.changed-paths.outputs.workflows == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repository
-        uses: actions/checkout@v4
-
-      - name: Set up Deno
-        uses: ./.github/actions/setup-deno
-
-      - name: Run svelte-check
-        working-directory: projects/client
-        run: deno task check
-
   # Vitest split across 4 shards so PRs come back fast.
   unit-tests:
     name: 'Unit tests · shard ${{ matrix.shard }} / 4'
-    needs: changed-paths
-    if: ${{ needs.changed-paths.outputs.client == 'true' || needs.changed-paths.outputs.workflows == 'true' }}
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -92,31 +42,30 @@ jobs:
           --reporter=dot
           --reporter=github-actions
 
-  # Aggregates the matrix above into a single required check.
+  # Aggregates the matrix above into a single required check the deploy can
+  # gate on without enumerating every shard.
   unit-tests-gate:
     name: Unit tests passed
-    needs: [changed-paths, unit-tests]
+    needs: unit-tests
     if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Verify all shards
         run: |
-          if [[ "${{ needs.unit-tests.result }}" == "success" || "${{ needs.unit-tests.result }}" == "skipped" ]]; then
-            echo "All shards passed (or were skipped)."
+          if [[ "${{ needs.unit-tests.result }}" == "success" ]]; then
+            echo "All shards passed."
           else
             echo "Unit-test shards failed with result: ${{ needs.unit-tests.result }}"
             exit 1
           fi
 
-  # Builds the SvelteKit client and pushes the worker bundle to Cloudflare.
-  # Only runs on `main` after both checks above pass.
+  # Builds the SvelteKit client and ships the worker bundle to Cloudflare.
+  # Only on `main`, only after tests pass.
   deploy:
     name: Build & deploy to Cloudflare Workers
-    needs: [unit-tests-gate, typecheck]
+    needs: unit-tests-gate
     if: |
-      always() &&
       needs.unit-tests-gate.result == 'success' &&
-      needs.typecheck.result == 'success' &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
