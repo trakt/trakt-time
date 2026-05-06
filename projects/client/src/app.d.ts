@@ -1,7 +1,6 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 /// <reference lib="dom" />
-/// <reference types="plyr" />
 
 import type { CookieConsent } from '$lib/features/cookie-consent/models/CookieConsent.ts';
 import { Environment } from '@trakt/api';
