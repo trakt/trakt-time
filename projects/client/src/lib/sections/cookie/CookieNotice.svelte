@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { TestId } from "$e2e/models/TestId";
   import Button from "$lib/components/buttons/Button.svelte";
   import MessageWithLink from "$lib/components/link/MessageWithLink.svelte";
   import { CookieConsentEndpoint } from "$lib/features/cookie-consent/CookieConsentEndpoint";
@@ -61,7 +60,6 @@
         size="small"
         label={m.button_label_cookie_accept()}
         onclick={() => giveConsent("all")}
-        data-testid={TestId.ConsentButton}
       >
         {m.button_text_cookie_accept()}
       </Button>

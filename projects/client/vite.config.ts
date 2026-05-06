@@ -132,7 +132,6 @@ export default defineConfig(({ mode }) => ({
       exclude: [
         '.svelte-kit/**',
         '.vite/**',
-        'e2e/**',
         'test/**',
         'static/**',
         'src/routes/_design_system/**',
