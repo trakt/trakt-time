@@ -384,18 +384,32 @@
     text-transform: none;
   }
 
+  /* bits-ui's RatingGroup renders <div>s, not <button>s — disabled state
+     comes through as `data-disabled=""` rather than the native attr.
+     Selectors are fully wrapped in :global so Svelte's analyser doesn't
+     mark them dead (and so the attribute selector survives scoping). */
   :global(.stars-row) {
     display: flex;
     gap: var(--gap-xs);
     align-items: center;
     justify-content: flex-start;
+  }
 
-    :global(svg) {
-      width: var(--ni-32);
-      height: var(--ni-32);
-      color: var(--trakttime-accent);
-      transition: color 0.15s ease;
-    }
+  :global(.stars-row svg) {
+    width: var(--ni-32);
+    height: var(--ni-32);
+    color: var(--trakttime-accent);
+    transition: color 0.15s ease;
+  }
+
+  :global(.stars-row[data-disabled]),
+  :global(.star-btn[data-disabled]) {
+    opacity: 0.4;
+  }
+
+  :global(.stars-row[data-disabled] svg),
+  :global(.star-btn[data-disabled] svg) {
+    color: color-mix(in srgb, var(--color-text-secondary) 70%, transparent);
   }
 
   :global(.star-btn) {
@@ -406,18 +420,14 @@
     display: flex;
     align-items: center;
     transition: transform 0.1s ease;
+  }
 
-    &:disabled {
-      cursor: not-allowed;
-    }
+  :global(.star-btn[data-disabled]) {
+    cursor: not-allowed;
+  }
 
-    &:disabled :global(svg) {
-      color: var(--color-border);
-    }
-
-    &:active:not(:disabled) {
-      transform: scale(0.9);
-    }
+  :global(.star-btn:active:not([data-disabled])) {
+    transform: scale(0.9);
   }
 
   .action-pills {
