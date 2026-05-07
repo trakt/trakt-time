@@ -371,13 +371,6 @@
     {/if}
   </section>
 
-  {#if isOwner}
-    <div class="profile-actions">
-      <a href={UrlBuilder.settings.general()} class="profile-action-btn">
-        {m.page_title_settings()}
-      </a>
-    </div>
-  {/if}
 {/if}
 
 <style lang="scss">
@@ -713,20 +706,4 @@
     }
   }
 
-  .profile-actions {
-    display: flex;
-    gap: var(--gap-s);
-    padding: var(--gap-m);
-  }
-
-  :global(.profile-action-btn) {
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: var(--gap-xs) var(--gap-m);
-    border-radius: var(--border-radius-m);
-    background: var(--color-card-background);
-    color: var(--color-text-primary);
-    text-decoration: none;
-    border: var(--ni-1) solid var(--color-border);
-  }
 </style>
