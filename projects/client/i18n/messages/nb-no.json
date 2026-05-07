@@ -303,5 +303,12 @@
   "button_text_import_more": "Importer en annen fil",
   "button_text_try_again": "Prøv igjen",
   "hint_mark_as_watched_to_rate": "Merk som sett for å gi rangering eller legge til som favoritt",
-  "text_no_cast": "Ingen rolleliste for denne episoden."
+  "text_no_cast": "Ingen rolleliste for denne episoden.",
+  "header_quick_actions": "Hurtighandlinger",
+  "button_text_added_to_favorites": "Favoritt",
+  "button_text_on_watchlist": "På watchlist",
+  "button_text_new_list": "Ny liste",
+  "button_label_create_list": "Opprett en ny liste",
+  "button_text_create": "Opprett",
+  "placeholder_list_name": "Listenavn"
 }

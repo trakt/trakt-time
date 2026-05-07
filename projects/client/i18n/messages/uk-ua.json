@@ -303,5 +303,12 @@
   "button_text_import_more": "Імпортувати інший файл",
   "button_text_try_again": "Спробувати знову",
   "hint_mark_as_watched_to_rate": "Позначте як переглянуте, щоб оцінити або додати в улюблене",
-  "text_no_cast": "Немає інформації про акторський склад цього епізоду."
+  "text_no_cast": "Немає інформації про акторський склад цього епізоду.",
+  "header_quick_actions": "Швидкі дії",
+  "button_text_added_to_favorites": "Улюблене",
+  "button_text_on_watchlist": "У watchlist",
+  "button_text_new_list": "Новий список",
+  "button_label_create_list": "Створити новий список",
+  "button_text_create": "Створити",
+  "placeholder_list_name": "Назва списку"
 }

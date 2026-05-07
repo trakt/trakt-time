@@ -303,5 +303,12 @@
   "button_text_import_more": "Импортировать ещё файл",
   "button_text_try_again": "Попробовать снова",
   "hint_mark_as_watched_to_rate": "Отметьте как просмотренное, чтобы оценить или добавить в избранное",
-  "text_no_cast": "Информация об актёрском составе для этого эпизода отсутствует."
+  "text_no_cast": "Информация об актёрском составе для этого эпизода отсутствует.",
+  "header_quick_actions": "Быстрые действия",
+  "button_text_added_to_favorites": "В избранном",
+  "button_text_on_watchlist": "В watchlist",
+  "button_text_new_list": "Новый список",
+  "button_label_create_list": "Создать новый список",
+  "button_text_create": "Создать",
+  "placeholder_list_name": "Название списка"
 }

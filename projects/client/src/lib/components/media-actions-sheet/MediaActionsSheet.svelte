@@ -7,8 +7,10 @@
   import { useRatings } from '$lib/sections/summary/components/rating/useRatings.ts';
   import { useWatchlist } from '$lib/sections/media-actions/watchlist/useWatchlist.ts';
   import { userListsQuery } from '$lib/requests/queries/users/userListsQuery.ts';
+  import CloseIcon from '$lib/components/icons/CloseIcon.svelte';
   import HeartIcon from '$lib/components/icons/HeartIcon.svelte';
   import StarIcon from '$lib/components/icons/StarIcon.svelte';
+  import CreateListPill from './CreateListPill.svelte';
   import ListToggleItem from './ListToggleItem.svelte';
   import * as m from '$lib/paraglide/messages.js';
 
@@ -44,7 +46,11 @@
 
   // Trakt uses 1–10; bits-ui RatingGroup uses 0–5 with 0.5 steps (allowHalf).
   // Divide by 2 to convert in, multiply by 2 to convert out.
-  const ratingValue = $derived((($pendingRating ?? $current?.rating) ?? 0) / 2);
+  const traktRating = $derived($pendingRating ?? $current?.rating ?? 0);
+  const ratingValue = $derived(traktRating / 2);
+  const ratingLabel = $derived(
+    traktRating > 0 ? `${traktRating} / 10` : null,
+  );
 
   function onRatingChange(value: number) {
     if (value === 0) {
@@ -67,6 +73,9 @@
   function onBackdropClick(e: MouseEvent) {
     if (e.target === e.currentTarget) onClose();
   }
+
+  const ratingDisabled = $derived($pendingRating !== null || !$hasWatched);
+  const favoriteDisabled = $derived($isUpdatingFavorite || !$hasWatched);
 </script>
 
 {#if isOpen}
@@ -81,97 +90,122 @@
   >
     <div class="sheet">
       <div class="sheet-handle"></div>
-      <p class="sheet-title">{title}</p>
 
-      <div class="actions-row" class:no-rating={!isRateable}>
-        {#if isRateable}
-          <div class="action-group action-group--rating">
-            <span class="action-label">{m.header_rate_now()}</span>
-            <RatingGroup.Root
-              class="stars-row"
-              value={ratingValue}
-              onValueChange={onRatingChange}
-              allowHalf
-              max={5}
-              disabled={$pendingRating !== null || !$hasWatched}
-            >
-              {#snippet children({ items })}
-                {#each items as item (item.index)}
-                  <RatingGroup.Item index={item.index} class="star-btn">
-                    <StarIcon
-                      fill={item.state === 'active'
-                        ? 'full'
-                        : item.state === 'partial'
-                          ? 'half'
-                          : 'none'}
-                    />
-                  </RatingGroup.Item>
-                {/each}
-              {/snippet}
-            </RatingGroup.Root>
+      <header class="sheet-header">
+        <p class="sheet-title">{title}</p>
+        <button
+          type="button"
+          class="sheet-close"
+          onclick={onClose}
+          aria-label={m.button_text_done()}
+        >
+          <CloseIcon />
+        </button>
+      </header>
+
+      {#if isRateable}
+        <section class="sheet-section">
+          <div class="section-heading">
+            <span class="section-label">{m.header_rate_now()}</span>
+            {#if ratingLabel}
+              <span class="rating-tally">{ratingLabel}</span>
+            {/if}
           </div>
-        {/if}
+          <RatingGroup.Root
+            class="stars-row"
+            value={ratingValue}
+            onValueChange={onRatingChange}
+            allowHalf
+            max={5}
+            disabled={ratingDisabled}
+          >
+            {#snippet children({ items })}
+              {#each items as item (item.index)}
+                <RatingGroup.Item index={item.index} class="star-btn">
+                  <StarIcon
+                    fill={item.state === 'active'
+                      ? 'full'
+                      : item.state === 'partial'
+                        ? 'half'
+                        : 'none'}
+                  />
+                </RatingGroup.Item>
+              {/each}
+            {/snippet}
+          </RatingGroup.Root>
+        </section>
+      {/if}
 
-        <div class="action-group action-group--icon">
+      <section class="sheet-section">
+        <span class="section-label">{m.header_quick_actions()}</span>
+        <div class="action-pills">
           <button
-            class="icon-action-btn"
+            type="button"
+            class="action-pill"
             class:is-active={$isFavorited}
-            disabled={$isUpdatingFavorite || !$hasWatched}
+            disabled={favoriteDisabled}
             onclick={toggleFavorite}
+            aria-pressed={$isFavorited}
             aria-label={$isFavorited
               ? m.button_label_remove_from_favorites({ title })
               : m.button_label_add_to_favorites({ title })}
           >
             <HeartIcon />
+            <span>
+              {$isFavorited
+                ? m.button_text_added_to_favorites()
+                : m.button_text_add_to_favorites()}
+            </span>
           </button>
-          <span class="action-label">{m.button_text_add_to_favorites()}</span>
-        </div>
 
-        <div class="action-group action-group--icon">
           <button
-            class="icon-action-btn"
+            type="button"
+            class="action-pill"
             class:is-active={$isWatchlisted}
             disabled={$isWatchlistUpdating}
             onclick={toggleWatchlist}
+            aria-pressed={$isWatchlisted}
             aria-label={$isWatchlisted
               ? m.button_label_remove_from_watchlist({ title })
               : m.button_label_add_to_watchlist({ title })}
           >
             {#if $isWatchlisted}
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                <path
+                  d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"
+                />
               </svg>
             {:else}
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
               </svg>
             {/if}
+            <span>
+              {$isWatchlisted
+                ? m.button_text_on_watchlist()
+                : m.button_text_watchlist()}
+            </span>
           </button>
-          <span class="action-label">{m.button_text_watchlist()}</span>
         </div>
-      </div>
+        {#if !$hasWatched}
+          <p class="watch-first-hint">{m.hint_mark_as_watched_to_rate()}</p>
+        {/if}
+      </section>
 
-      {#if !$hasWatched}
-        <p class="watch-first-hint">{m.hint_mark_as_watched_to_rate()}</p>
-      {/if}
-
-      {#if lists.length > 0}
-        <div class="lists-section">
-          <span class="action-label">{m.page_title_lists()}</span>
-          <div class="lists-row">
-            {#each lists as list (list.id)}
-              <ListToggleItem
-                {list}
-                {type}
-                {id}
-                isAdded={$listedOnIds.includes(list.id)}
-              />
-            {/each}
-          </div>
+      <section class="sheet-section">
+        <span class="section-label">{m.page_title_lists()}</span>
+        <div class="lists-row">
+          {#each lists as list (list.id)}
+            <ListToggleItem
+              {list}
+              {type}
+              {id}
+              isAdded={$listedOnIds.includes(list.id)}
+            />
+          {/each}
+          <CreateListPill />
         </div>
-      {/if}
-
-      <button class="close-btn" onclick={onClose} aria-label={m.button_text_done()}>{m.button_text_done()}</button>
+      </section>
     </div>
   </div>
 {/if}
@@ -211,7 +245,7 @@
       );
     display: flex;
     flex-direction: column;
-    gap: var(--gap-m);
+    gap: var(--gap-l);
     animation: slide-up 0.25s cubic-bezier(0.32, 0.72, 0, 1);
   }
 
@@ -233,53 +267,90 @@
     margin-bottom: var(--gap-xs);
   }
 
+  .sheet-header {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-s);
+    margin: 0;
+  }
+
   .sheet-title {
-    font-size: 1rem;
+    flex: 1;
+    min-width: 0;
+    font-size: 1.125rem;
     font-weight: 700;
     color: var(--color-text-primary);
     margin: 0;
-    text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .actions-row {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--gap-m);
+  .sheet-close {
+    flex-shrink: 0;
+    width: var(--ni-32);
+    height: var(--ni-32);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+    border: none;
+    color: var(--color-text-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
 
-    &.no-rating {
-      justify-content: space-around;
+    :global(svg) {
+      width: var(--ni-16);
+      height: var(--ni-16);
+    }
+
+    &:hover,
+    &:focus-visible {
+      background: color-mix(in srgb, var(--color-text-primary) 12%, transparent);
+      color: var(--color-text-primary);
     }
   }
 
-  .action-group {
+  .sheet-section {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-xs);
+    gap: var(--gap-s);
   }
 
-  .action-group--rating {
-    flex: 1;
+  .section-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--gap-s);
   }
 
-  .action-label {
+  .section-label {
     font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-text-secondary);
   }
 
+  .rating-tally {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--trakttime-accent);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
   :global(.stars-row) {
     display: flex;
-    gap: var(--gap-xs);
+    gap: var(--gap-s);
     align-items: center;
+    justify-content: space-between;
 
     :global(svg) {
-      width: var(--ni-28);
-      height: var(--ni-28);
+      width: var(--ni-32);
+      height: var(--ni-32);
       color: var(--trakttime-accent);
     }
   }
@@ -295,7 +366,8 @@
     transition: transform 0.1s ease;
 
     &:disabled {
-      opacity: 0.6;
+      opacity: 0.4;
+      cursor: not-allowed;
     }
 
     &:active:not(:disabled) {
@@ -303,28 +375,33 @@
     }
   }
 
-  .action-group--icon {
-    align-items: center;
-    gap: var(--gap-xs);
+  .action-pills {
+    display: flex;
+    gap: var(--gap-s);
   }
 
-  .icon-action-btn {
-    width: var(--ni-48);
-    height: var(--ni-48);
+  .action-pill {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-xs);
+    padding: var(--gap-s) var(--gap-m);
     border-radius: var(--border-radius-m);
     border: 1.5px solid var(--color-border);
     background: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     color: var(--color-text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
     transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
 
     svg,
     :global(svg) {
-      width: var(--ni-22);
-      height: var(--ni-22);
+      width: var(--ni-18);
+      height: var(--ni-18);
+      flex-shrink: 0;
     }
 
     &.is-active {
@@ -334,7 +411,8 @@
     }
 
     &:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   }
 
@@ -346,28 +424,9 @@
     font-style: italic;
   }
 
-  .lists-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-xs);
-  }
-
   .lists-row {
     display: flex;
     flex-wrap: wrap;
     gap: var(--gap-xs);
-  }
-
-  .close-btn {
-    background: var(--trakttime-accent);
-    border: none;
-    border-radius: var(--border-radius-m);
-    color: var(--color-background);
-    font-size: 0.9375rem;
-    font-weight: 700;
-    padding: var(--gap-m);
-    cursor: pointer;
-    width: 100%;
-    margin-top: var(--gap-xs);
   }
 </style>

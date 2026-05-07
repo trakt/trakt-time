@@ -303,5 +303,12 @@
   "button_text_import_more": "Başka bir dosya içe aktar",
   "button_text_try_again": "Tekrar dene",
   "hint_mark_as_watched_to_rate": "Puanlamak veya favorilere eklemek için izlendi olarak işaretle",
-  "text_no_cast": "Bu bölüm için oyuncu bilgisi yok."
+  "text_no_cast": "Bu bölüm için oyuncu bilgisi yok.",
+  "header_quick_actions": "Hızlı işlemler",
+  "button_text_added_to_favorites": "Favori",
+  "button_text_on_watchlist": "İzleme listesinde",
+  "button_text_new_list": "Yeni liste",
+  "button_label_create_list": "Yeni bir liste oluştur",
+  "button_text_create": "Oluştur",
+  "placeholder_list_name": "Liste adı"
 }

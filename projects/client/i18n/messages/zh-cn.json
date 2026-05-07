@@ -303,5 +303,12 @@
   "button_text_import_more": "导入另一个文件",
   "button_text_try_again": "重试",
   "hint_mark_as_watched_to_rate": "标记为已观看以进行评分或添加到收藏",
-  "text_no_cast": "本集暂无演员信息。"
+  "text_no_cast": "本集暂无演员信息。",
+  "header_quick_actions": "快速操作",
+  "button_text_added_to_favorites": "已收藏",
+  "button_text_on_watchlist": "在 watchlist 中",
+  "button_text_new_list": "新建列表",
+  "button_label_create_list": "新建列表",
+  "button_text_create": "创建",
+  "placeholder_list_name": "列表名称"
 }

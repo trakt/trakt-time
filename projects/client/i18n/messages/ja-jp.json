@@ -303,5 +303,12 @@
   "button_text_import_more": "別のファイルをインポート",
   "button_text_try_again": "再試行",
   "hint_mark_as_watched_to_rate": "視聴済みにマークして評価やお気に入り追加ができます",
-  "text_no_cast": "このエピソードのキャスト情報はありません。"
+  "text_no_cast": "このエピソードのキャスト情報はありません。",
+  "header_quick_actions": "クイックアクション",
+  "button_text_added_to_favorites": "お気に入り",
+  "button_text_on_watchlist": "ウォッチリスト登録済み",
+  "button_text_new_list": "新規リスト",
+  "button_label_create_list": "新しいリストを作成",
+  "button_text_create": "作成",
+  "placeholder_list_name": "リスト名"
 }

@@ -303,5 +303,12 @@
   "button_text_import_more": "Import another file",
   "button_text_try_again": "Try again",
   "hint_mark_as_watched_to_rate": "Mark as watched to rate or favourite",
-  "text_no_cast": "No cast information for this episode."
+  "text_no_cast": "No cast information for this episode.",
+  "header_quick_actions": "Quick actions",
+  "button_text_added_to_favorites": "Favourite",
+  "button_text_on_watchlist": "On watchlist",
+  "button_text_new_list": "New list",
+  "button_label_create_list": "Create a new list",
+  "button_text_create": "Create",
+  "placeholder_list_name": "List name"
 }

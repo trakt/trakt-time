@@ -303,5 +303,12 @@
   "button_text_import_more": "Importă alt fișier",
   "button_text_try_again": "Încearcă din nou",
   "hint_mark_as_watched_to_rate": "Marchează ca vizionat pentru a evalua sau adăuga la favorite",
-  "text_no_cast": "Nicio informație despre distribuție pentru acest episod."
+  "text_no_cast": "Nicio informație despre distribuție pentru acest episod.",
+  "header_quick_actions": "Acțiuni rapide",
+  "button_text_added_to_favorites": "Favorit",
+  "button_text_on_watchlist": "În watchlist",
+  "button_text_new_list": "Listă nouă",
+  "button_label_create_list": "Creează o listă nouă",
+  "button_text_create": "Creează",
+  "placeholder_list_name": "Numele listei"
 }

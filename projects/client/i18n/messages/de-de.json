@@ -303,5 +303,12 @@
   "button_text_import_more": "Weitere Datei importieren",
   "button_text_try_again": "Erneut versuchen",
   "hint_mark_as_watched_to_rate": "Markiere als gesehen, um zu bewerten oder zu favorisieren",
-  "text_no_cast": "Keine Besetzungsinformationen für diese Episode."
+  "text_no_cast": "Keine Besetzungsinformationen für diese Episode.",
+  "header_quick_actions": "Schnellaktionen",
+  "button_text_added_to_favorites": "Favorit",
+  "button_text_on_watchlist": "Auf der Watchlist",
+  "button_text_new_list": "Neue Liste",
+  "button_label_create_list": "Eine neue Liste erstellen",
+  "button_text_create": "Erstellen",
+  "placeholder_list_name": "Listenname"
 }

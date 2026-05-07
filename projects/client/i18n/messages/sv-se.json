@@ -303,5 +303,12 @@
   "button_text_import_more": "Importera en annan fil",
   "button_text_try_again": "Försök igen",
   "hint_mark_as_watched_to_rate": "Markera som sedd för att betygsätta eller favoritmarkera",
-  "text_no_cast": "Ingen rollistinformation för det här avsnittet."
+  "text_no_cast": "Ingen rollistinformation för det här avsnittet.",
+  "header_quick_actions": "Snabbåtgärder",
+  "button_text_added_to_favorites": "Favorit",
+  "button_text_on_watchlist": "På watchlist",
+  "button_text_new_list": "Ny lista",
+  "button_label_create_list": "Skapa en ny lista",
+  "button_text_create": "Skapa",
+  "placeholder_list_name": "Listnamn"
 }

@@ -303,5 +303,12 @@
   "button_text_import_more": "Импортиране на друг файл",
   "button_text_try_again": "Опитай отново",
   "hint_mark_as_watched_to_rate": "Маркирайте като гледано, за да оцените или добавите към любими",
-  "text_no_cast": "Няма информация за актьорския състав на този епизод."
+  "text_no_cast": "Няма информация за актьорския състав на този епизод.",
+  "header_quick_actions": "Бързи действия",
+  "button_text_added_to_favorites": "Любим",
+  "button_text_on_watchlist": "В watchlist",
+  "button_text_new_list": "Нов списък",
+  "button_label_create_list": "Създай нов списък",
+  "button_text_create": "Създай",
+  "placeholder_list_name": "Име на списъка"
 }

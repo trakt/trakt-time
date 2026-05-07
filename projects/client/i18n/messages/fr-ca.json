@@ -303,5 +303,12 @@
   "button_text_import_more": "Importer un autre fichier",
   "button_text_try_again": "Réessayer",
   "hint_mark_as_watched_to_rate": "Marquez comme vu pour noter ou ajouter aux favoris",
-  "text_no_cast": "Aucune distribution pour cet épisode."
+  "text_no_cast": "Aucune distribution pour cet épisode.",
+  "header_quick_actions": "Actions rapides",
+  "button_text_added_to_favorites": "Favori",
+  "button_text_on_watchlist": "Dans la watchlist",
+  "button_text_new_list": "Nouvelle liste",
+  "button_label_create_list": "Créer une nouvelle liste",
+  "button_text_create": "Créer",
+  "placeholder_list_name": "Nom de la liste"
 }

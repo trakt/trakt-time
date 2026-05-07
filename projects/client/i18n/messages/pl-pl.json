@@ -303,5 +303,12 @@
   "button_text_import_more": "Importuj inny plik",
   "button_text_try_again": "Spróbuj ponownie",
   "hint_mark_as_watched_to_rate": "Oznacz jako obejrzane, aby ocenić lub dodać do ulubionych",
-  "text_no_cast": "Brak informacji o obsadzie tego odcinka."
+  "text_no_cast": "Brak informacji o obsadzie tego odcinka.",
+  "header_quick_actions": "Szybkie akcje",
+  "button_text_added_to_favorites": "Ulubione",
+  "button_text_on_watchlist": "Na watchliście",
+  "button_text_new_list": "Nowa lista",
+  "button_label_create_list": "Utwórz nową listę",
+  "button_text_create": "Utwórz",
+  "placeholder_list_name": "Nazwa listy"
 }

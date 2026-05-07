@@ -303,5 +303,12 @@
   "button_text_import_more": "Importer en anden fil",
   "button_text_try_again": "Prøv igen",
   "hint_mark_as_watched_to_rate": "Marker som set for at bedømme eller markere som favorit",
-  "text_no_cast": "Ingen rolleliste for dette afsnit."
+  "text_no_cast": "Ingen rolleliste for dette afsnit.",
+  "header_quick_actions": "Hurtige handlinger",
+  "button_text_added_to_favorites": "Favorit",
+  "button_text_on_watchlist": "På watchlist",
+  "button_text_new_list": "Ny liste",
+  "button_label_create_list": "Opret en ny liste",
+  "button_text_create": "Opret",
+  "placeholder_list_name": "Listenavn"
 }

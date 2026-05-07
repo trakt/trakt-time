@@ -303,5 +303,12 @@
   "button_text_import_more": "Importar outro arquivo",
   "button_text_try_again": "Tentar novamente",
   "hint_mark_as_watched_to_rate": "Marque como assistido para avaliar ou favoritar",
-  "text_no_cast": "Sem informação de elenco para este episódio."
+  "text_no_cast": "Sem informação de elenco para este episódio.",
+  "header_quick_actions": "Ações rápidas",
+  "button_text_added_to_favorites": "Favorito",
+  "button_text_on_watchlist": "Na watchlist",
+  "button_text_new_list": "Nova lista",
+  "button_label_create_list": "Criar uma nova lista",
+  "button_text_create": "Criar",
+  "placeholder_list_name": "Nome da lista"
 }
