@@ -313,5 +313,8 @@
   "placeholder_list_name": "列表名称",
   "header_more_options": "更多选项",
   "button_text_more": "更多",
-  "button_label_more_actions": "{title} 的更多操作"
+  "button_label_more_actions": "{title} 的更多操作",
+  "header_tv_time_liberator": "从 TV Time 转过来？",
+  "text_tv_time_liberator": "使用 TV Time Liberator Chrome 扩展导出完整的观看记录。",
+  "button_text_get_extension": "获取扩展"
 }

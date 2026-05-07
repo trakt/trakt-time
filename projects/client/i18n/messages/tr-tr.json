@@ -313,5 +313,8 @@
   "placeholder_list_name": "Liste adı",
   "header_more_options": "Daha fazla seçenek",
   "button_text_more": "Daha fazla",
-  "button_label_more_actions": "{title} için daha fazla işlem"
+  "button_label_more_actions": "{title} için daha fazla işlem",
+  "header_tv_time_liberator": "TV Time'dan mı geliyorsun?",
+  "text_tv_time_liberator": "Tüm kitaplığını dışa aktarmak için TV Time Liberator Chrome uzantısını kullan.",
+  "button_text_get_extension": "Uzantıyı al"
 }

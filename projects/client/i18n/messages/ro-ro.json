@@ -313,5 +313,8 @@
   "placeholder_list_name": "Numele listei",
   "header_more_options": "Mai multe opțiuni",
   "button_text_more": "Mai mult",
-  "button_label_more_actions": "Mai multe acțiuni pentru {title}"
+  "button_label_more_actions": "Mai multe acțiuni pentru {title}",
+  "header_tv_time_liberator": "Vii de la TV Time?",
+  "text_tv_time_liberator": "Folosește extensia Chrome TV Time Liberator pentru a-ți exporta întreaga bibliotecă.",
+  "button_text_get_extension": "Ia extensia"
 }

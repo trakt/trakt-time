@@ -313,5 +313,8 @@
   "placeholder_list_name": "Название списка",
   "header_more_options": "Другие действия",
   "button_text_more": "Ещё",
-  "button_label_more_actions": "Другие действия для {title}"
+  "button_label_more_actions": "Другие действия для {title}",
+  "header_tv_time_liberator": "Переходите с TV Time?",
+  "text_tv_time_liberator": "Используйте расширение TV Time Liberator для Chrome, чтобы выгрузить всю вашу библиотеку.",
+  "button_text_get_extension": "Установить расширение"
 }

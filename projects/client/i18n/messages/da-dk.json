@@ -313,5 +313,8 @@
   "placeholder_list_name": "Listenavn",
   "header_more_options": "Flere indstillinger",
   "button_text_more": "Mere",
-  "button_label_more_actions": "Flere handlinger for {title}"
+  "button_label_more_actions": "Flere handlinger for {title}",
+  "header_tv_time_liberator": "Kommer du fra TV Time?",
+  "text_tv_time_liberator": "Brug Chrome-udvidelsen TV Time Liberator til at eksportere hele dit bibliotek.",
+  "button_text_get_extension": "Hent udvidelsen"
 }

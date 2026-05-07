@@ -1,5 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment';
+  import TvTimeLiberatorCta from '$lib/components/tv-time-liberator-cta/TvTimeLiberatorCta.svelte';
   import * as m from '$lib/paraglide/messages.js';
 
   const { login }: { login: () => void } = $props();
@@ -13,6 +14,9 @@
     <button class="login-gate-btn" onclick={login}>
       {m.button_text_sign_in_with_trakt()}
     </button>
+    <div class="login-gate-cta">
+      <TvTimeLiberatorCta />
+    </div>
   </div>
 {/if}
 
@@ -47,6 +51,12 @@
     color: var(--color-text-secondary);
     margin: 0;
     max-width: var(--ni-240);
+  }
+
+  .login-gate-cta {
+    width: 100%;
+    max-width: 22rem;
+    margin-top: var(--gap-l);
   }
 
   .login-gate-btn {

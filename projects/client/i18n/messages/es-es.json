@@ -313,5 +313,8 @@
   "placeholder_list_name": "Nombre de la lista",
   "header_more_options": "Más opciones",
   "button_text_more": "Más",
-  "button_label_more_actions": "Más acciones para {title}"
+  "button_label_more_actions": "Más acciones para {title}",
+  "header_tv_time_liberator": "¿Vienes de TV Time?",
+  "text_tv_time_liberator": "Usa la extensión TV Time Liberator de Chrome para exportar tu biblioteca completa.",
+  "button_text_get_extension": "Obtener la extensión"
 }

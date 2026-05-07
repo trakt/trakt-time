@@ -1,5 +1,6 @@
 <script lang="ts">
   import LoaderIcon from '$lib/components/icons/LoaderIcon.svelte';
+  import TvTimeLiberatorCta from '$lib/components/tv-time-liberator-cta/TvTimeLiberatorCta.svelte';
   import { useImportInProgress } from '$lib/stores/useImportInProgress.ts';
   import { dropzone } from '$lib/utils/actions/dropzone.ts';
   import { slide } from 'svelte/transition';
@@ -109,6 +110,8 @@
   title={m.header_import_tv_time()}
   description={m.description_import_tv_time()}
 >
+  <TvTimeLiberatorCta />
+
   <ol class="tv-time-import-steps">
     <li>{m.import_tv_time_step_export()}</li>
     <li>{m.import_tv_time_step_drop()}</li>
