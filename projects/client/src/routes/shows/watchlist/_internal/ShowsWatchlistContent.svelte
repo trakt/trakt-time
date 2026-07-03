@@ -3,8 +3,8 @@
   import EpisodeCard from '$lib/components/media-card/EpisodeCard.svelte';
   import WatchedHistoryRow from '$lib/components/media-card/WatchedHistoryRow.svelte';
   import GroupHeader from '$lib/components/group-header/GroupHeader.svelte';
-  import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
   import LoadMoreButton from '$lib/components/load-more-button/LoadMoreButton.svelte';
+  import WatchlistSkeleton from '$lib/sections/lists/components/WatchlistSkeleton.svelte';
   import { useUpNextList } from '$lib/sections/lists/progress/useUpNextList.ts';
   import { useAnchoredHistoryLoad } from '$lib/sections/lists/stores/useAnchoredHistoryLoad.svelte.ts';
   import { useRecentlyWatchedList } from '$lib/sections/lists/stores/useRecentlyWatchedList.ts';
@@ -91,7 +91,7 @@
 <div class="watchlist-page" class:ready={reveal.isReady}>
   {#if ($isLoading || $historyLoading) && $list.length === 0 && historyEntries.length === 0}
     <div class="loading-state">
-      <LoadingIndicator />
+      <WatchlistSkeleton />
     </div>
   {:else if groups.length === 0 && historyEntries.length === 0}
     <div class="empty-state">
@@ -159,7 +159,12 @@
     }
   }
 
-  .loading-state,
+  /* The skeleton previews the post-reveal viewport, so it stays visible
+     while the rest of the page hides behind the reveal. */
+  .loading-state {
+    visibility: visible;
+  }
+
   .empty-state {
     display: flex;
     flex-direction: column;
