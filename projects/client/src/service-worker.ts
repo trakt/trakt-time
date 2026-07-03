@@ -13,12 +13,17 @@ import {
   NetworkFirst,
   StaleWhileRevalidate,
 } from 'workbox-strategies';
+import { LOCALE_COOKIE_NAME } from './lib/features/i18n/constants.ts';
 import { time } from './lib/utils/timing/time.ts';
 import { CacheKey } from './worker/CacheKey.ts';
 
 declare global {
   interface ServiceWorkerGlobalScope {
     __WB_DISABLE_DEV_LOGS: boolean;
+    // Cookie Store API: present on Chromium, absent on Safari/Firefox.
+    cookieStore?: {
+      get(name: string): Promise<{ value: string } | null>;
+    };
   }
 }
 
@@ -100,9 +105,34 @@ addEventListener('message', (event) => {
 // Precache static assets
 precacheAndRoute(self.__WB_MANIFEST);
 
-// Navigation routes
+// Vary the navigation cache key by locale so a document rendered for one
+// locale is never served to a request for another (the SSR HTML is
+// locale-specific). Falls back to the plain key where the Cookie Store API is
+// unavailable (Safari/Firefox), which stay covered by the CacheBust message
+// and the activate-time purge.
+const localeAwareCacheKey = {
+  cacheKeyWillBeUsed: async ({ request }: { request: Request }) => {
+    const cookie = await self.cookieStore?.get(LOCALE_COOKIE_NAME).catch(
+      () => null,
+    );
+
+    if (!cookie?.value) {
+      return request;
+    }
+
+    const url = new URL(request.url);
+    url.searchParams.set('__locale', cookie.value);
+    return url.href;
+  },
+};
+
+// Navigation routes: StaleWhileRevalidate for fast cold loads, keyed per locale
+// to avoid cross-locale poisoning.
 const navigationHandler = new StaleWhileRevalidate({
   cacheName: CacheKey.navigation,
+  plugins: [
+    localeAwareCacheKey,
+  ],
 });
 
 registerRoute(
