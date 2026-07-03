@@ -1,9 +1,9 @@
 <script lang="ts">
   import CtaLink from '$lib/components/link/CtaLink.svelte';
   import * as m from '$lib/paraglide/messages.js';
-  import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
   import SettingsIcon from '$lib/components/icons/SettingsIcon.svelte';
   import ProfileImage from './_internal/ProfileImage.svelte';
+  import ProfileHeaderSkeleton from './_internal/ProfileHeaderSkeleton.svelte';
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import { userProfileQuery } from '$lib/requests/queries/users/userProfileQuery.ts';
   import { userStatsQuery } from '$lib/requests/queries/users/userStatsQuery.ts';
@@ -117,9 +117,7 @@
 {/snippet}
 
 {#if !profile}
-  <div class="loading-state">
-    <LoadingIndicator />
-  </div>
+  <ProfileHeaderSkeleton />
 {:else}
   <div
     class="profile-header"
@@ -158,245 +156,251 @@
       </div>
     </div>
   </div>
+{/if}
 
-  <div class="profile-counts">
-    <div class="count-cell">
-      <span class="count-value">{stats?.network.following ?? 0}</span>
-      <span class="count-label">{m.text_count_following()}</span>
+{#snippet countCell(value: number | undefined, label: string)}
+  <div class="count-cell">
+    {#if value != null}
+      <span class="count-value">{value}</span>
+    {:else}
+      <span class="count-value count-value--skeleton" aria-hidden="true"></span>
+    {/if}
+    <span class="count-label">{label}</span>
+  </div>
+{/snippet}
+
+<div class="profile-counts">
+  {@render countCell(stats?.network.following, m.text_count_following())}
+  <div class="count-divider"></div>
+  {@render countCell(stats?.network.followers, m.text_count_followers())}
+  <div class="count-divider"></div>
+  {@render countCell(stats?.episodes.plays, m.text_count_plays())}
+</div>
+
+<section class="profile-section">
+  <div class="section-header">
+    <h2 class="section-title">{m.header_stats()}</h2>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z" />
+      </svg>
+      <span class="stat-card-label">{m.stat_label_tv_time()}</span>
+      <div class="tv-time">
+        {#if tvTime}
+          {#if tvTime.months > 0}
+            <span class="tv-unit"><strong>{tvTime.months}</strong> {m.text_unit_months()}</span>
+          {/if}
+          {#if tvTime.days > 0 || tvTime.months > 0}
+            <span class="tv-unit"><strong>{tvTime.days}</strong> {m.text_unit_days()}</span>
+          {/if}
+          <span class="tv-unit"><strong>{tvTime.hours}</strong> {m.text_unit_hours()}</span>
+        {:else}
+          <span class="stat-skeleton stat-skeleton--time" aria-hidden="true"></span>
+        {/if}
+      </div>
     </div>
-    <div class="count-divider"></div>
-    <div class="count-cell">
-      <span class="count-value">{stats?.network.followers ?? 0}</span>
-      <span class="count-label">{m.text_count_followers()}</span>
+    <div class="stat-card">
+      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z" />
+      </svg>
+      <span class="stat-card-label">{m.stat_label_episodes_watched()}</span>
+      {#if stats}
+        <span class="stat-big">{stats.episodes.plays.toLocaleString()}</span>
+      {:else}
+        <span class="stat-skeleton stat-skeleton--big" aria-hidden="true"></span>
+      {/if}
     </div>
-    <div class="count-divider"></div>
-    <div class="count-cell">
-      <span class="count-value">{stats?.episodes.plays ?? 0}</span>
-      <span class="count-label">{m.text_count_plays()}</span>
+    <div class="stat-card">
+      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z" />
+      </svg>
+      <span class="stat-card-label">{m.stat_label_movies_watched()}</span>
+      {#if stats}
+        <span class="stat-big">{stats.movies.plays.toLocaleString()}</span>
+      {:else}
+        <span class="stat-skeleton stat-skeleton--big" aria-hidden="true"></span>
+      {/if}
+    </div>
+    <div class="stat-card">
+      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM10 9h8v2h-8zm0-3h8v2h-8zm0 6h4v2h-4z" />
+      </svg>
+      <span class="stat-card-label">{m.stat_label_shows_watched()}</span>
+      {#if stats}
+        <span class="stat-big">{stats.shows.watched.toLocaleString()}</span>
+      {:else}
+        <span class="stat-skeleton stat-skeleton--big" aria-hidden="true"></span>
+      {/if}
     </div>
   </div>
+</section>
 
-  <section class="profile-section">
+<section class="profile-section">
+  {#if lists.length > LISTS_PREVIEW_COUNT}
+    <a
+      href={listsHref}
+      class="section-header"
+      aria-label={m.button_label_view_all_lists()}
+    >
+      <h2 class="section-title">
+        {isOwner ? m.header_my_lists() : m.page_title_lists()}
+      </h2>
+      <span class="chevron"><ChevronRightIcon /></span>
+    </a>
+  {:else}
     <div class="section-header">
-      <h2 class="section-title">{m.header_stats()}</h2>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card">
-        <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z" />
-        </svg>
-        <span class="stat-card-label">{m.stat_label_tv_time()}</span>
-        <div class="tv-time">
-          {#if tvTime}
-            {#if tvTime.months > 0}
-              <span class="tv-unit"><strong>{tvTime.months}</strong> {m.text_unit_months()}</span>
-            {/if}
-            {#if tvTime.days > 0 || tvTime.months > 0}
-              <span class="tv-unit"><strong>{tvTime.days}</strong> {m.text_unit_days()}</span>
-            {/if}
-            <span class="tv-unit"><strong>{tvTime.hours}</strong> {m.text_unit_hours()}</span>
-          {:else}
-            <span class="tv-unit stat-placeholder" aria-hidden="true">&mdash;</span>
-          {/if}
-        </div>
-      </div>
-      <div class="stat-card">
-        <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z" />
-        </svg>
-        <span class="stat-card-label">{m.stat_label_episodes_watched()}</span>
-        <span class="stat-big">{stats?.episodes.plays.toLocaleString() ?? '0'}</span>
-      </div>
-      <div class="stat-card">
-        <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z" />
-        </svg>
-        <span class="stat-card-label">{m.stat_label_movies_watched()}</span>
-        <span class="stat-big">{stats?.movies.plays.toLocaleString() ?? '0'}</span>
-      </div>
-      <div class="stat-card">
-        <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM10 9h8v2h-8zm0-3h8v2h-8zm0 6h4v2h-4z" />
-        </svg>
-        <span class="stat-card-label">{m.stat_label_shows_watched()}</span>
-        <span class="stat-big">{stats?.shows.watched.toLocaleString() ?? '0'}</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="profile-section">
-    {#if lists.length > LISTS_PREVIEW_COUNT}
-      <a
-        href={listsHref}
-        class="section-header"
-        aria-label={m.button_label_view_all_lists()}
-      >
-        <h2 class="section-title">
-          {isOwner ? m.header_my_lists() : m.page_title_lists()}
-        </h2>
-        <span class="chevron"><ChevronRightIcon /></span>
-      </a>
-    {:else}
-      <div class="section-header">
-        <h2 class="section-title">
-          {isOwner ? m.header_my_lists() : m.page_title_lists()}
-        </h2>
-      </div>
-    {/if}
-    {#if listsLoading && lists.length === 0}
-      <div class="lists-grid" aria-hidden="true">
-        {#each Array(3) as _, i (`l-${i}`)}
-          <div class="list-card list-card-skeleton"></div>
-        {/each}
-      </div>
-    {:else if lists.length === 0}
-      <div class="lists-empty">
-        <p>{m.text_no_lists()}</p>
-      </div>
-    {:else}
-      <div class="lists-grid">
-        {#each lists.slice(0, LISTS_PREVIEW_COUNT) as list (list.id)}
-          <a
-            href="/lists/{list.id}?name={encodeURIComponent(list.name)}"
-            class="list-card"
-          >
-            <span class="list-name">{list.name}</span>
-            <span class="list-count">{list.count} {m.text_items_unit()}</span>
-          </a>
-        {/each}
-      </div>
-    {/if}
-  </section>
-
-  <section class="profile-section">
-    {#if showsWatchlistHref}
-      <a href={showsWatchlistHref} class="section-header" aria-label={m.button_label_view_all_watchlisted_shows()}>
-        <h2 class="section-title">{m.page_title_shows()}</h2>
-        <span class="chevron"><ChevronRightIcon /></span>
-      </a>
-    {:else}
-      <div class="section-header">
-        <h2 class="section-title">{m.page_title_shows()}</h2>
-      </div>
-    {/if}
-    {#if $watchlistShowsLoading && $watchlistShows.length === 0}
-      {@render skeletonRow('s')}
-    {:else if $watchlistShows.length === 0}
-      {@render emptyRow(m.text_empty_show_watchlist(), true)}
-    {:else}
-      <div class="poster-row" role="list">
-        {#each $watchlistShows as item (item.key)}
-          {#if item.type === 'show'}
-            <PosterCard
-              type="show"
-              href={UrlBuilder.show(item.entry.slug)}
-              id={item.entry.id}
-              title={item.entry.title}
-              posterUrl={item.entry.poster.url.thumb}
-            />
-          {/if}
-        {/each}
-      </div>
-    {/if}
-  </section>
-
-  <section class="profile-section">
-    <div class="section-header">
-      <h2 class="section-title section-title--heart">
-        <span class="heart-icon"><HeartIcon /></span>
-        {m.header_favorite_shows()}
+      <h2 class="section-title">
+        {isOwner ? m.header_my_lists() : m.page_title_lists()}
       </h2>
     </div>
-    {#if $favoriteShowsLoading && $favoriteShows.length === 0}
-      {@render skeletonRow('fs')}
-    {:else if $favoriteShows.length === 0}
-      {@render emptyRow(m.text_no_favorite_shows())}
-    {:else}
-      <div class="poster-row" role="list">
-        {#each $favoriteShows as item (item.key)}
-          <PosterCard
-            type={item.item.type}
-            href={item.item.type === 'show' ? UrlBuilder.show(item.item.slug) : UrlBuilder.movie(item.item.slug)}
-            id={item.item.id}
-            title={item.item.title}
-            posterUrl={item.item.poster.url.thumb}
-            mode="favorite"
-          />
-        {/each}
-      </div>
-    {/if}
-  </section>
-
-  <section class="profile-section">
-    {#if moviesWatchlistHref}
-      <a href={moviesWatchlistHref} class="section-header" aria-label={m.button_label_view_all_watchlisted_movies()}>
-        <h2 class="section-title">{m.page_title_movies()}</h2>
-        <span class="chevron"><ChevronRightIcon /></span>
-      </a>
-    {:else}
-      <div class="section-header">
-        <h2 class="section-title">{m.page_title_movies()}</h2>
-      </div>
-    {/if}
-    {#if $watchlistMoviesLoading && $watchlistMovies.length === 0}
-      {@render skeletonRow('m')}
-    {:else if $watchlistMovies.length === 0}
-      {@render emptyRow(m.text_empty_movie_watchlist(), true)}
-    {:else}
-      <div class="poster-row" role="list">
-        {#each $watchlistMovies as item (item.key)}
-          {#if item.type === 'movie'}
-            <PosterCard
-              type="movie"
-              href={UrlBuilder.movie(item.entry.slug)}
-              id={item.entry.id}
-              title={item.entry.title}
-              posterUrl={item.entry.poster.url.thumb}
-            />
-          {/if}
-        {/each}
-      </div>
-    {/if}
-  </section>
-
-  <section class="profile-section">
-    <div class="section-header">
-      <h2 class="section-title section-title--heart">
-        <span class="heart-icon"><HeartIcon /></span>
-        {m.header_favorite_movies()}
-      </h2>
+  {/if}
+  {#if listsLoading && lists.length === 0}
+    <div class="lists-grid" aria-hidden="true">
+      {#each Array(3) as _, i (`l-${i}`)}
+        <div class="list-card list-card-skeleton"></div>
+      {/each}
     </div>
-    {#if $favoriteMoviesLoading && $favoriteMovies.length === 0}
-      {@render skeletonRow('fm')}
-    {:else if $favoriteMovies.length === 0}
-      {@render emptyRow(m.text_no_favorite_movies())}
-    {:else}
-      <div class="poster-row" role="list">
-        {#each $favoriteMovies as item (item.key)}
-          <PosterCard
-            type={item.item.type}
-            href={item.item.type === 'show' ? UrlBuilder.show(item.item.slug) : UrlBuilder.movie(item.item.slug)}
-            id={item.item.id}
-            title={item.item.title}
-            posterUrl={item.item.poster.url.thumb}
-            mode="favorite"
-          />
-        {/each}
-      </div>
-    {/if}
-  </section>
+  {:else if lists.length === 0}
+    <div class="lists-empty">
+      <p>{m.text_no_lists()}</p>
+    </div>
+  {:else}
+    <div class="lists-grid">
+      {#each lists.slice(0, LISTS_PREVIEW_COUNT) as list (list.id)}
+        <a
+          href="/lists/{list.id}?name={encodeURIComponent(list.name)}"
+          class="list-card"
+        >
+          <span class="list-name">{list.name}</span>
+          <span class="list-count">{list.count} {m.text_items_unit()}</span>
+        </a>
+      {/each}
+    </div>
+  {/if}
+</section>
 
-{/if}
+<section class="profile-section">
+  {#if showsWatchlistHref}
+    <a href={showsWatchlistHref} class="section-header" aria-label={m.button_label_view_all_watchlisted_shows()}>
+      <h2 class="section-title">{m.page_title_shows()}</h2>
+      <span class="chevron"><ChevronRightIcon /></span>
+    </a>
+  {:else}
+    <div class="section-header">
+      <h2 class="section-title">{m.page_title_shows()}</h2>
+    </div>
+  {/if}
+  {#if $watchlistShowsLoading && $watchlistShows.length === 0}
+    {@render skeletonRow('s')}
+  {:else if $watchlistShows.length === 0}
+    {@render emptyRow(m.text_empty_show_watchlist(), true)}
+  {:else}
+    <div class="poster-row" role="list">
+      {#each $watchlistShows as item (item.key)}
+        {#if item.type === 'show'}
+          <PosterCard
+            type="show"
+            href={UrlBuilder.show(item.entry.slug)}
+            id={item.entry.id}
+            title={item.entry.title}
+            posterUrl={item.entry.poster.url.thumb}
+          />
+        {/if}
+      {/each}
+    </div>
+  {/if}
+</section>
+
+<section class="profile-section">
+  <div class="section-header">
+    <h2 class="section-title section-title--heart">
+      <span class="heart-icon"><HeartIcon /></span>
+      {m.header_favorite_shows()}
+    </h2>
+  </div>
+  {#if $favoriteShowsLoading && $favoriteShows.length === 0}
+    {@render skeletonRow('fs')}
+  {:else if $favoriteShows.length === 0}
+    {@render emptyRow(m.text_no_favorite_shows())}
+  {:else}
+    <div class="poster-row" role="list">
+      {#each $favoriteShows as item (item.key)}
+        <PosterCard
+          type={item.item.type}
+          href={item.item.type === 'show' ? UrlBuilder.show(item.item.slug) : UrlBuilder.movie(item.item.slug)}
+          id={item.item.id}
+          title={item.item.title}
+          posterUrl={item.item.poster.url.thumb}
+          mode="favorite"
+        />
+      {/each}
+    </div>
+  {/if}
+</section>
+
+<section class="profile-section">
+  {#if moviesWatchlistHref}
+    <a href={moviesWatchlistHref} class="section-header" aria-label={m.button_label_view_all_watchlisted_movies()}>
+      <h2 class="section-title">{m.page_title_movies()}</h2>
+      <span class="chevron"><ChevronRightIcon /></span>
+    </a>
+  {:else}
+    <div class="section-header">
+      <h2 class="section-title">{m.page_title_movies()}</h2>
+    </div>
+  {/if}
+  {#if $watchlistMoviesLoading && $watchlistMovies.length === 0}
+    {@render skeletonRow('m')}
+  {:else if $watchlistMovies.length === 0}
+    {@render emptyRow(m.text_empty_movie_watchlist(), true)}
+  {:else}
+    <div class="poster-row" role="list">
+      {#each $watchlistMovies as item (item.key)}
+        {#if item.type === 'movie'}
+          <PosterCard
+            type="movie"
+            href={UrlBuilder.movie(item.entry.slug)}
+            id={item.entry.id}
+            title={item.entry.title}
+            posterUrl={item.entry.poster.url.thumb}
+          />
+        {/if}
+      {/each}
+    </div>
+  {/if}
+</section>
+
+<section class="profile-section">
+  <div class="section-header">
+    <h2 class="section-title section-title--heart">
+      <span class="heart-icon"><HeartIcon /></span>
+      {m.header_favorite_movies()}
+    </h2>
+  </div>
+  {#if $favoriteMoviesLoading && $favoriteMovies.length === 0}
+    {@render skeletonRow('fm')}
+  {:else if $favoriteMovies.length === 0}
+    {@render emptyRow(m.text_no_favorite_movies())}
+  {:else}
+    <div class="poster-row" role="list">
+      {#each $favoriteMovies as item (item.key)}
+        <PosterCard
+          type={item.item.type}
+          href={item.item.type === 'show' ? UrlBuilder.show(item.item.slug) : UrlBuilder.movie(item.item.slug)}
+          id={item.item.id}
+          title={item.item.title}
+          posterUrl={item.item.poster.url.thumb}
+          mode="favorite"
+        />
+      {/each}
+    </div>
+  {/if}
+</section>
 
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
-
-  .loading-state {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--gap-xxl) var(--gap-m);
-  }
 
   .profile-header {
     display: flex;
@@ -553,6 +557,14 @@
     color: var(--color-text-primary);
   }
 
+  /* Sized to the .count-value line box so the row never shifts. */
+  .count-value--skeleton {
+    width: var(--ni-28);
+    height: 1.5rem;
+    border-radius: var(--border-radius-s);
+    @include shimmer-bg;
+  }
+
   .count-label {
     font-size: 0.625rem;
     color: var(--color-text-secondary);
@@ -663,9 +675,20 @@
     color: var(--color-text-primary);
   }
 
-  .stat-placeholder {
-    color: var(--color-text-secondary);
-    opacity: 0.45;
+  .stat-skeleton {
+    border-radius: var(--border-radius-s);
+    @include shimmer-bg-elevated;
+
+    /* Heights track the tv-time strong / .stat-big line boxes. */
+    &--time {
+      width: var(--ni-96);
+      height: 1.5rem;
+    }
+
+    &--big {
+      width: var(--ni-64);
+      height: var(--ni-28);
+    }
   }
 
   .lists-grid {
@@ -703,7 +726,8 @@
   }
 
   .list-card-skeleton {
-    height: var(--ni-40);
+    /* Line box of .list-name; padding + border come from .list-card. */
+    height: 1rem;
     @include shimmer-bg;
   }
 
@@ -711,8 +735,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Reserve same footprint as 3 list-card skeletons + their gaps */
-    min-height: calc(var(--ni-40) * 3 + var(--gap-xs) * 2);
+    /* Reserve same footprint as 3 list cards + their gaps */
+    min-height: calc(var(--ni-42) * 3 + var(--gap-xs) * 2);
     padding: 0 var(--gap-m);
     color: var(--color-text-secondary);
     font-size: 0.875rem;

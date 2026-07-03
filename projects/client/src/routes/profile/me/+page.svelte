@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as m from '$lib/paraglide/messages.js';
-  import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
+  import ProfileHeaderSkeleton from '$lib/sections/profile/_internal/ProfileHeaderSkeleton.svelte';
   import { useAuth } from '$lib/features/auth/stores/useAuth.ts';
   import { useUser } from '$lib/features/auth/stores/useUser.ts';
   import LoginGate from '$lib/components/auth/LoginGate.svelte';
@@ -20,9 +20,7 @@
   {#if !$isAuthorized}
     <LoginGate {login} />
   {:else if !slug}
-    <div class="loading-state">
-      <LoadingIndicator />
-    </div>
+    <ProfileHeaderSkeleton />
   {:else}
     <ProfileContent {slug} isOwner={true} />
   {/if}
@@ -33,12 +31,5 @@
     display: flex;
     flex-direction: column;
     padding-bottom: var(--trakttime-bottom-nav-height);
-  }
-
-  .loading-state {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--gap-xxl) var(--gap-m);
   }
 </style>
