@@ -14,8 +14,8 @@
     "npm:@sveltejs/adapter-cloudflare@7.2.9": "7.2.9_@sveltejs+kit@2.69.1__@sveltejs+vite-plugin-svelte@7.1.2___svelte@5.56.4___vite@8.1.3____esbuild@0.28.1____sass-embedded@1.100.0___esbuild@0.28.1___sass-embedded@1.100.0__svelte@5.56.4__typescript@5.8.3__vite@8.1.3___esbuild@0.28.1___sass-embedded@1.100.0__esbuild@0.28.1__sass-embedded@1.100.0_esbuild@0.28.1_sass-embedded@1.100.0_vite@8.1.3__esbuild@0.28.1__sass-embedded@1.100.0",
     "npm:@sveltejs/kit@2.69.1": "2.69.1_@sveltejs+vite-plugin-svelte@7.1.2__svelte@5.56.4__vite@8.1.3___esbuild@0.28.1___sass-embedded@1.100.0__esbuild@0.28.1__sass-embedded@1.100.0_svelte@5.56.4_typescript@5.8.3_vite@8.1.3__esbuild@0.28.1__sass-embedded@1.100.0_esbuild@0.28.1_sass-embedded@1.100.0",
     "npm:@sveltejs/vite-plugin-svelte@7.1.2": "7.1.2_svelte@5.56.4_vite@8.1.3__esbuild@0.28.1__sass-embedded@1.100.0_esbuild@0.28.1_sass-embedded@1.100.0",
-    "npm:@tanstack/svelte-query-devtools@6.1.36": "6.1.36_@tanstack+svelte-query@5.90.2__svelte@5.56.4_svelte@5.56.4",
-    "npm:@tanstack/svelte-query-persist-client@6.1.36": "6.1.36_@tanstack+svelte-query@5.90.2__svelte@5.56.4_svelte@5.56.4",
+    "npm:@tanstack/svelte-query-devtools@5.90.2": "5.90.2_@tanstack+svelte-query@5.90.2__svelte@5.56.4_svelte@5.56.4",
+    "npm:@tanstack/svelte-query-persist-client@5.90.2": "5.90.2_@tanstack+svelte-query@5.90.2__svelte@5.56.4_svelte@5.56.4",
     "npm:@tanstack/svelte-query@5.90.2": "5.90.2_svelte@5.56.4",
     "npm:@testing-library/jest-dom@6.9.1": "6.9.1",
     "npm:@testing-library/svelte@5.4.2": "5.4.2_svelte@5.56.4_vite@8.1.3__esbuild@0.28.1__sass-embedded@1.100.0_vitest@4.1.9__@vitest+coverage-istanbul@4.1.9__jsdom@29.1.1__vite@8.1.3___esbuild@0.28.1___sass-embedded@1.100.0__esbuild@0.28.1__sass-embedded@1.100.0_esbuild@0.28.1_sass-embedded@1.100.0",
@@ -26,7 +26,7 @@
     "npm:@types/serviceworker@0.0.199": "0.0.199",
     "npm:@use-gesture/vanilla@10.3.1": "10.3.1",
     "npm:@vite-pwa/sveltekit@1.1.0": "1.1.0_@sveltejs+kit@2.69.1__@sveltejs+vite-plugin-svelte@7.1.2___svelte@5.56.4___vite@8.1.3____esbuild@0.28.1____sass-embedded@1.100.0___esbuild@0.28.1___sass-embedded@1.100.0__svelte@5.56.4__typescript@5.8.3__vite@8.1.3___esbuild@0.28.1___sass-embedded@1.100.0__esbuild@0.28.1__sass-embedded@1.100.0_esbuild@0.28.1_sass-embedded@1.100.0_vite@8.1.3__esbuild@0.28.1__sass-embedded@1.100.0_workbox-build@7.4.1_workbox-window@7.4.1",
-    "npm:@vitest/coverage-istanbul@4.1.9": "4.1.9_vitest@4.1.9_esbuild@0.28.1_sass-embedded@1.100.0",
+    "npm:@vitest/coverage-istanbul@4.1.9": "4.1.9_vitest@4.1.9_@opentelemetry+api@1.9.1_jsdom@29.1.1_vite@8.1.3__esbuild@0.28.1__sass-embedded@1.100.0",
     "npm:bits-ui@2.18.1": "2.18.1_svelte@5.56.4_esbuild@0.28.1_sass-embedded@1.100.0_vite@8.1.3__esbuild@0.28.1__sass-embedded@1.100.0",
     "npm:concurrently@9.2.1": "9.2.1",
     "npm:cross-env@10.1.0": "10.1.0",
@@ -2323,23 +2323,20 @@
         "tslib"
       ]
     },
-    "@tanstack/query-core@5.101.2": {
-      "integrity": "sha512-hH5MLoJhF7KaIGd7q3xTXGXvslI+GYlM1Z/35aSHHWaCJWB7XvTSHYuV3eM7tw+aE0mT/xMro4M4Q9rCGHT0lw=="
-    },
     "@tanstack/query-core@5.90.2": {
       "integrity": "sha512-k/TcR3YalnzibscALLwxeiLUub6jN5EDLwKDiO7q5f4ICEoptJ+n9+7vcEFy5/x/i6Q+Lb/tXrsKCggf5uQJXQ=="
     },
-    "@tanstack/query-devtools@5.101.2": {
-      "integrity": "sha512-o+wHcqgN7Pp0s8v1i0UGq/ZrrEKrxdIiMQmKRdYb2w7NPtylYSJ4+wg/tIn71m9DLstwUwdEGAvROdly6HXP6w=="
+    "@tanstack/query-devtools@5.90.1": {
+      "integrity": "sha512-GtINOPjPUH0OegJExZ70UahT9ykmAhmtNVcmtdnOZbxLwT7R5OmRztR5Ahe3/Cu7LArEmR6/588tAycuaWb1xQ=="
     },
-    "@tanstack/query-persist-client-core@5.101.2": {
-      "integrity": "sha512-rgMsbvBVpSPDUsprC9FYxojdG0Q1LH6yq1i3DXz2aps4VEqv2l4Msj3YDqIifU3xkl/DrYe9YWntZAJLrM6xTg==",
+    "@tanstack/query-persist-client-core@5.90.2": {
+      "integrity": "sha512-rgJRgqqziPc3KgK2mav2HNR4PoI5e7fkiIrkg85xZ5j29mHPzTp3A0QcceQXVaV9qcPp/SMDJA48A6BpGJGHZg==",
       "dependencies": [
-        "@tanstack/query-core@5.101.2"
+        "@tanstack/query-core"
       ]
     },
-    "@tanstack/svelte-query-devtools@6.1.36_@tanstack+svelte-query@5.90.2__svelte@5.56.4_svelte@5.56.4": {
-      "integrity": "sha512-OZb7AEccWtH1tOjpQBYlBe51JeBPNa8NbEfOiiOKape0n2fT0Hcv2HB599NvHnly41Npf3vRjJWNM/fgAedujg==",
+    "@tanstack/svelte-query-devtools@5.90.2_@tanstack+svelte-query@5.90.2__svelte@5.56.4_svelte@5.56.4": {
+      "integrity": "sha512-Mk6FWRz7rBr1zFlX2aBmRM8RIehCwE3VBE5/SX3L/pG5mFIBOCQqIUeyw+eNIW8RBbPvWDv9MrLohi/8cj9J4A==",
       "dependencies": [
         "@tanstack/query-devtools",
         "@tanstack/svelte-query",
@@ -2347,8 +2344,8 @@
         "svelte"
       ]
     },
-    "@tanstack/svelte-query-persist-client@6.1.36_@tanstack+svelte-query@5.90.2__svelte@5.56.4_svelte@5.56.4": {
-      "integrity": "sha512-U4NX0CwFxLZxKTJVWgV9iEBZI7gb4S5qwVVDks1NrnDBEIvTh5RBaA8td4LJ+ZcjGKQUOWFFdnfCUyn0DtjY7g==",
+    "@tanstack/svelte-query-persist-client@5.90.2_@tanstack+svelte-query@5.90.2__svelte@5.56.4_svelte@5.56.4": {
+      "integrity": "sha512-Q5FrwAR1KPh+yWL+hlldqakjR76vz4exRumhldaroowUKp8suV2mPbo4uYJz1CskRECzn5fKrRYOMEQsHxDRtg==",
       "dependencies": [
         "@tanstack/query-persist-client-core",
         "@tanstack/svelte-query",
@@ -2358,7 +2355,7 @@
     "@tanstack/svelte-query@5.90.2_svelte@5.56.4": {
       "integrity": "sha512-owjnp0w8sOXlMhLZhucHrsYvCjgjHrVyII/wlqMGefxKFyroZS3xCwTee+IUx7UHbL+QmKr/HQTeTqhgxmxPQw==",
       "dependencies": [
-        "@tanstack/query-core@5.90.2",
+        "@tanstack/query-core",
         "svelte"
       ]
     },
@@ -2615,22 +2612,6 @@
       ]
     },
     "@vitest/coverage-istanbul@4.1.9_vitest@4.1.9_@opentelemetry+api@1.9.1_jsdom@29.1.1_vite@8.1.3__esbuild@0.28.1__sass-embedded@1.100.0": {
-      "integrity": "sha512-4a7DsIwycTf4eYwEDtnMfMV8H80KSKH9PuMHhqL5SwPZzDyUKq2X/TPCVZ7NqIuSz7UbZckmEmkip6iZBI/gEA==",
-      "dependencies": [
-        "@babel/core",
-        "@istanbuljs/schema",
-        "@jridgewell/gen-mapping",
-        "@jridgewell/trace-mapping@0.3.31",
-        "istanbul-lib-coverage",
-        "istanbul-lib-report",
-        "istanbul-reports",
-        "magicast",
-        "obug",
-        "tinyrainbow",
-        "vitest"
-      ]
-    },
-    "@vitest/coverage-istanbul@4.1.9_vitest@4.1.9_esbuild@0.28.1_sass-embedded@1.100.0": {
       "integrity": "sha512-4a7DsIwycTf4eYwEDtnMfMV8H80KSKH9PuMHhqL5SwPZzDyUKq2X/TPCVZ7NqIuSz7UbZckmEmkip6iZBI/gEA==",
       "dependencies": [
         "@babel/core",
@@ -5603,7 +5584,7 @@
       "integrity": "sha512-nE3/LEyc0z87uHYLZebqCUOaJr2hdtuPp7BQ4BosVFnfltxgAvMG08NyrSGlPpOUWvR27c5flSmYFTNr78L9GQ==",
       "dependencies": [
         "@opentelemetry/api",
-        "@vitest/coverage-istanbul@4.1.9_vitest@4.1.9_@opentelemetry+api@1.9.1_jsdom@29.1.1_vite@8.1.3__esbuild@0.28.1__sass-embedded@1.100.0",
+        "@vitest/coverage-istanbul",
         "@vitest/expect",
         "@vitest/mocker",
         "@vitest/pretty-format",
@@ -5628,7 +5609,7 @@
       ],
       "optionalPeers": [
         "@opentelemetry/api",
-        "@vitest/coverage-istanbul@4.1.9_vitest@4.1.9_@opentelemetry+api@1.9.1_jsdom@29.1.1_vite@8.1.3__esbuild@0.28.1__sass-embedded@1.100.0",
+        "@vitest/coverage-istanbul",
         "jsdom"
       ],
       "bin": true
@@ -6021,8 +6002,8 @@
             "npm:@sveltejs/adapter-cloudflare@7.2.9",
             "npm:@sveltejs/kit@2.69.1",
             "npm:@sveltejs/vite-plugin-svelte@7.1.2",
-            "npm:@tanstack/svelte-query-devtools@6.1.36",
-            "npm:@tanstack/svelte-query-persist-client@6.1.36",
+            "npm:@tanstack/svelte-query-devtools@5.90.2",
+            "npm:@tanstack/svelte-query-persist-client@5.90.2",
             "npm:@tanstack/svelte-query@5.90.2",
             "npm:@testing-library/jest-dom@6.9.1",
             "npm:@testing-library/svelte@5.4.2",
