@@ -5,6 +5,7 @@
   import type { MediaType } from '$lib/requests/models/MediaType.ts';
   import { Marked } from 'marked';
   import TriviaDrawer from './_internal/TriviaDrawer.svelte';
+  import TriviaSummaryCardSkeleton from './_internal/TriviaSummaryCardSkeleton.svelte';
   import { useTrivia } from './_internal/useTrivia.ts';
 
   const MAX_SUMMARY_FACTS = 3;
@@ -19,11 +20,16 @@
 
   const marked = new Marked();
 
-  const { items, summary } = $derived(useTrivia({ slug, type }));
+  const { items, summary, isLoading } = $derived(useTrivia({ slug, type }));
   const visibleFacts = $derived($summary.slice(0, MAX_SUMMARY_FACTS));
 </script>
 
-{#if visibleFacts.length > 0}
+{#if $isLoading}
+  <section class="summary-section" aria-hidden="true">
+    <h2 class="summary-section-title">{m.list_title_trivia()}</h2>
+    <TriviaSummaryCardSkeleton />
+  </section>
+{:else if visibleFacts.length > 0}
   <section class="summary-section">
     <h2 class="summary-section-title">{m.list_title_trivia()}</h2>
 

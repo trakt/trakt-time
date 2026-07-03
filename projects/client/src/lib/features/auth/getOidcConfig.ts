@@ -5,7 +5,6 @@ import { resolveOidcAuthority } from './resolveOidcAuthority.ts';
 
 export function getOidcConfig(): UserManagerSettings {
   const referrer = getReferrer();
-  console.log("[dbg-cid]", TRAKT_CLIENT_ID);
 
   return {
     authority: resolveOidcAuthority(),
