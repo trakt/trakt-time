@@ -55,6 +55,8 @@ const TRAKT_API_PROXY_TARGET = process.env.IS_LOCAL
   ? 'http://localhost:8787'
   : TRAKT_TARGET_ENVIRONMENT;
 
+const IS_DOCTOR = process.env.IS_DOCTOR === 'true';
+
 export default defineConfig(({ mode }) => ({
   define: {
     'TRAKT_CLIENT_ID': `"${process.env.TRAKT_CLIENT_ID}"`,
@@ -78,7 +80,9 @@ export default defineConfig(({ mode }) => ({
   },
 
   plugins: [
-    sentrySvelteKit({
+    // Sentry source map upload requires SENTRY_AUTH_TOKEN; skipped under
+    // IS_DOCTOR so the dep-update loop runs without that secret.
+    !IS_DOCTOR && sentrySvelteKit({
       sourceMapsUploadOptions: {
         org: 'trakt-tv',
         project: 'trakt-time',
@@ -108,7 +112,8 @@ export default defineConfig(({ mode }) => ({
   ],
 
   build: {
-    sourcemap: true,
+    sourcemap: !IS_DOCTOR,
+    minify: IS_DOCTOR ? false : undefined,
   },
 
   //TODO enable globals when typings are fixed
