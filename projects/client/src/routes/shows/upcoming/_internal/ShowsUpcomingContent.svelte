@@ -1,5 +1,6 @@
 <script lang="ts">
   import { languageTag } from '$lib/features/i18n/index.ts';
+  import { daysFromToday, toLocalDayKey } from '$lib/utils/date/toLocalDayKey.ts';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
   import GroupHeader from '$lib/components/group-header/GroupHeader.svelte';
   import UpcomingEpisodeCard from '$lib/components/media-card/UpcomingEpisodeCard.svelte';
@@ -8,24 +9,17 @@
   import type { UpcomingEpisodeEntry } from '$lib/requests/queries/calendars/upcomingEpisodesQuery.ts';
 
   const DAYS_TO_FETCH = 90;
-  const [startDate] = new Date().toISOString().split('T') as [string];
+  const startDate = toLocalDayKey(new Date());
   const locale = languageTag();
 
   const query = useQuery(upcomingEpisodesQuery({ startDate, days: DAYS_TO_FETCH, filter: {} }));
 
-  function toDateKey(date: Date): string {
-    return date.toISOString().split('T')[0] ?? '';
-  }
-
   function toGroupLabel(dateKey: string): string {
-    const today = toDateKey(new Date());
+    const diffDays = daysFromToday(dateKey);
 
-    if (dateKey === today) return 'TODAY';
+    if (diffDays <= 0) return 'TODAY';
 
     const date = new Date(dateKey + 'T12:00:00');
-    const todayDate = new Date();
-    const diffMs = date.getTime() - todayDate.setHours(0, 0, 0, 0);
-    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
     if (diffDays <= 7) {
       return new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(date).toUpperCase();
@@ -41,7 +35,7 @@
     const grouped = new Map<string, UpcomingEpisodeEntry[]>();
 
     for (const entry of entries) {
-      const key = toDateKey(entry.airDate);
+      const key = toLocalDayKey(entry.airDate);
       const bucket = grouped.get(key) ?? [];
       bucket.push(entry);
       grouped.set(key, bucket);

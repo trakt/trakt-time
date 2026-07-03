@@ -19,8 +19,8 @@ describe('multiEpisodeLabel', () => {
     ).toBe('S3 • E1-2 of The Wire');
   });
 
-  it('labels a single episode as a degenerate range', () => {
-    expect(multiEpisodeLabel([episode(5)], 1)).toBe('S1 • E5-5');
+  it('labels a single episode without a degenerate range', () => {
+    expect(multiEpisodeLabel([episode(5)], 1)).toBe('S1 • E5');
   });
 
   it('falls back to an episode count for non sequential runs', () => {
