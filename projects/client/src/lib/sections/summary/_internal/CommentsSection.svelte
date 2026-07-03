@@ -1,8 +1,8 @@
 <script lang="ts">
   import CommentCard from '$lib/components/comment-card/CommentCard.svelte';
+  import CommentCardSkeleton from '$lib/components/comment-card/CommentCardSkeleton.svelte';
   import AddCommentDrawer from '$lib/components/comment-drawer/AddCommentDrawer.svelte';
   import CommentThreadDrawer from '$lib/components/comment-drawer/CommentThreadDrawer.svelte';
-  import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
   import LoadMoreButton from '$lib/components/load-more-button/LoadMoreButton.svelte';
   import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
@@ -74,7 +74,11 @@
     </RenderFor>
   </div>
   {#if $commentsLoading && $commentList.length === 0}
-    <div class="section-loading"><LoadingIndicator /></div>
+    <div class="comments-list" aria-hidden="true">
+      {#each Array(3) as _, i (`cs-${i}`)}
+        <CommentCardSkeleton />
+      {/each}
+    </div>
   {:else if $commentList.length > 0}
     <div class="comments-list">
       {#each $commentList as comment (comment.key)}
@@ -130,12 +134,6 @@
     font-weight: 700;
     color: var(--color-text-primary);
     margin: 0;
-  }
-
-  .section-loading {
-    display: flex;
-    justify-content: center;
-    padding: var(--gap-m);
   }
 
   .add-comment-btn {
