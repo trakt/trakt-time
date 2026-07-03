@@ -17,7 +17,7 @@ set -euo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 PORT="${SSR_SMOKE_PORT:-4173}"
 SMOKE_PATH="${SSR_SMOKE_PATH:-/shows/watchlist}"
-LOG_FILE="$(mktemp -t ssr-smoke)"
+LOG_FILE="$(mktemp "${TMPDIR:-/tmp}/ssr-smoke.XXXXXX")"
 
 cd "$ROOT/projects/client"
 
