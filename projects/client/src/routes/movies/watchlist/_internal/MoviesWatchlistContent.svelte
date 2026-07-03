@@ -1,7 +1,5 @@
 <script lang="ts">
   import CtaLink from '$lib/components/link/CtaLink.svelte';
-  import { afterNavigate } from '$app/navigation';
-  import { tick } from 'svelte';
   import GroupHeader from '$lib/components/group-header/GroupHeader.svelte';
   import MovieCard from '$lib/components/media-card/MovieCard.svelte';
   import WatchedMovieHistoryRow from '$lib/components/media-card/WatchedMovieHistoryRow.svelte';
@@ -10,6 +8,7 @@
   import { useWatchList } from '$lib/sections/lists/watchlist/useWatchList.ts';
   import { useAnchoredHistoryLoad } from '$lib/sections/lists/stores/useAnchoredHistoryLoad.svelte.ts';
   import { useRecentlyWatchedList } from '$lib/sections/lists/stores/useRecentlyWatchedList.ts';
+  import { useWatchlistReveal } from '$lib/sections/lists/stores/useWatchlistReveal.svelte.ts';
   import type { MovieActivityHistory } from '$lib/requests/queries/users/movieActivityHistoryQuery.ts';
   import * as m from '$lib/paraglide/messages.js';
 
@@ -41,42 +40,17 @@
     fetchOlder: fetchOlderHistory,
   });
 
+  // Land the viewport on the WATCHLIST divider before revealing the page.
   let watchlistAnchor = $state<HTMLElement | null>(null);
-  let isReady = $state(false);
-  let pendingScroll = $state(true);
-
-  afterNavigate(async () => {
-    pendingScroll = true;
-    isReady = false;
-    await tick();
-  });
-
-  $effect(() => {
-    if (!pendingScroll) return;
-
-    // Wait until both queries have settled. Without this guard, the
-    // effect can fire mid-load (history loaded, watchlist still pending),
-    // skip the scroll because the anchor isn't bound yet, and reveal
-    // the page at the top.
-    if ($isLoading || $historyLoading) return;
-
-    // If we expect to scroll past the history block, the anchor must
-    // already exist. If it doesn't yet (DOM hasn't reflected the
-    // just-loaded list), defer one tick; the effect re-runs when
-    // watchlistAnchor binds.
-    if (historyEntries.length > 0 && $list.length > 0 && !watchlistAnchor) {
-      return;
-    }
-
-    pendingScroll = false;
-    if (watchlistAnchor && historyEntries.length > 0) {
-      watchlistAnchor.scrollIntoView({ block: 'start' });
-    }
-    isReady = true;
+  const reveal = useWatchlistReveal({
+    loading: () => $isLoading || $historyLoading,
+    hasHistory: () => historyEntries.length > 0,
+    hasContent: () => $list.length > 0,
+    anchor: () => watchlistAnchor,
   });
 </script>
 
-<div class="watchlist-page" class:ready={isReady}>
+<div class="watchlist-page" class:ready={reveal.isReady}>
   {#if ($isLoading || $historyLoading) && $list.length === 0 && historyEntries.length === 0}
     <div class="loading-state">
       <LoadingIndicator />

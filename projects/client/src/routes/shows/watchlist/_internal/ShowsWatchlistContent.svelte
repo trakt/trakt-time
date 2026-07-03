@@ -1,7 +1,5 @@
 <script lang="ts">
   import CtaLink from '$lib/components/link/CtaLink.svelte';
-  import { afterNavigate } from '$app/navigation';
-  import { tick } from 'svelte';
   import EpisodeCard from '$lib/components/media-card/EpisodeCard.svelte';
   import WatchedHistoryRow from '$lib/components/media-card/WatchedHistoryRow.svelte';
   import GroupHeader from '$lib/components/group-header/GroupHeader.svelte';
@@ -10,6 +8,7 @@
   import { useUpNextList } from '$lib/sections/lists/progress/useUpNextList.ts';
   import { useAnchoredHistoryLoad } from '$lib/sections/lists/stores/useAnchoredHistoryLoad.svelte.ts';
   import { useRecentlyWatchedList } from '$lib/sections/lists/stores/useRecentlyWatchedList.ts';
+  import { useWatchlistReveal } from '$lib/sections/lists/stores/useWatchlistReveal.svelte.ts';
   import type { UpNextEntry } from '$lib/requests/models/UpNextEntry.ts';
   import type { EpisodeActivityHistory } from '$lib/requests/queries/users/episodeActivityHistoryQuery.ts';
   import * as m from '$lib/paraglide/messages.js';
@@ -79,46 +78,17 @@
     fetchOlder: fetchOlderHistory,
   });
 
-  // The page is rendered with visibility:hidden until we've landed the
-  // viewport on the WATCH NEXT divider so the user never sees a scroll
-  // jump. Re-runs on every navigation (afterNavigate fires on initial
-  // mount + every subsequent client-side navigation).
+  // Land the viewport on the WATCH NEXT divider before revealing the page.
   let watchNextAnchor = $state<HTMLElement | null>(null);
-  let isReady = $state(false);
-  let pendingScroll = $state(true);
-
-  afterNavigate(async () => {
-    pendingScroll = true;
-    isReady = false;
-    await tick();
-  });
-
-  $effect(() => {
-    if (!pendingScroll) return;
-
-    // Wait until both queries have settled. Without this guard, the
-    // effect can fire mid-load (history loaded, up-next still pending),
-    // skip the scroll because the anchor isn't bound yet, and reveal
-    // the page at the top — which is exactly the first-load bug.
-    if ($isLoading || $historyLoading) return;
-
-    // Final composition is decided. If we expect to scroll past the
-    // history block, the anchor must already exist. If it doesn't yet
-    // (DOM hasn't reflected the just-loaded groups), defer one tick;
-    // the effect re-runs when watchNextAnchor binds.
-    if (historyEntries.length > 0 && groups.length > 0 && !watchNextAnchor) {
-      return;
-    }
-
-    pendingScroll = false;
-    if (watchNextAnchor && historyEntries.length > 0) {
-      watchNextAnchor.scrollIntoView({ block: 'start' });
-    }
-    isReady = true;
+  const reveal = useWatchlistReveal({
+    loading: () => $isLoading || $historyLoading,
+    hasHistory: () => historyEntries.length > 0,
+    hasContent: () => groups.length > 0,
+    anchor: () => watchNextAnchor,
   });
 </script>
 
-<div class="watchlist-page" class:ready={isReady}>
+<div class="watchlist-page" class:ready={reveal.isReady}>
   {#if ($isLoading || $historyLoading) && $list.length === 0 && historyEntries.length === 0}
     <div class="loading-state">
       <LoadingIndicator />
