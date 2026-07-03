@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "Liste personale",
   "limit_title_total_list_items": "Total elemente listă",
   "limit_title_watchlist_items": "Elemente listă de vizionare",
-  "limit_title_digital_library": "Bibliotecă digitală"
+  "limit_title_digital_library": "Bibliotecă digitală",
+  "badge_text_get_vip": "Ia VIP",
+  "link_label_get_vip": "Deblochează funcții VIP",
+  "text_vip_upsell_dive_deeper": "Aprofundează.",
+  "text_vip_upsell_sentiment": "Treci la VIP pentru a debloca mai multe informații.",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "Îmbunătățește-ți experiența Trakt",
+  "button_label_manage_subscription": "Gestionează abonamentul VIP"
 }

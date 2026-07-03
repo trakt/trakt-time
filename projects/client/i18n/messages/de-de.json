@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "Persönliche Listen",
   "limit_title_total_list_items": "Gesamte Listenelemente",
   "limit_title_watchlist_items": "Watchlist-Elemente",
-  "limit_title_digital_library": "Digitale Bibliothek"
+  "limit_title_digital_library": "Digitale Bibliothek",
+  "badge_text_get_vip": "VIP holen",
+  "link_label_get_vip": "VIP-Funktionen freischalten",
+  "text_vip_upsell_dive_deeper": "Tauchen Sie tiefer ein.",
+  "text_vip_upsell_sentiment": "Upgraden Sie auf VIP, um mehr Einblicke freizuschalten.",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "Verbessern Sie Ihr Trakt-Erlebnis",
+  "button_label_manage_subscription": "VIP-Abonnement verwalten"
 }

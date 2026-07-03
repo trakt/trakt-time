@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "Liste personali",
   "limit_title_total_list_items": "Elementi totali nelle liste",
   "limit_title_watchlist_items": "Elementi nella Watchlist",
-  "limit_title_digital_library": "Libreria digitale"
+  "limit_title_digital_library": "Libreria digitale",
+  "badge_text_get_vip": "Ottieni VIP",
+  "link_label_get_vip": "Sblocca funzionalità VIP",
+  "text_vip_upsell_dive_deeper": "Approfondisci.",
+  "text_vip_upsell_sentiment": "Passa a VIP per sbloccare più approfondimenti.",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "Migliora la tua esperienza Trakt",
+  "button_label_manage_subscription": "Gestisci abbonamento VIP"
 }

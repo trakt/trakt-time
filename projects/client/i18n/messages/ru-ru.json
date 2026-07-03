@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "Личные списки",
   "limit_title_total_list_items": "Всего элементов списка",
   "limit_title_watchlist_items": "Элементы списка просмотра",
-  "limit_title_digital_library": "Цифровая библиотека"
+  "limit_title_digital_library": "Цифровая библиотека",
+  "badge_text_get_vip": "VIP",
+  "link_label_get_vip": "Разблокировать VIP-функции",
+  "text_vip_upsell_dive_deeper": "Погрузитесь глубже.",
+  "text_vip_upsell_sentiment": "Обновите до VIP, чтобы получить больше информации.",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "Улучшите свой опыт Trakt",
+  "button_label_manage_subscription": "Управление VIP-подпиской"
 }

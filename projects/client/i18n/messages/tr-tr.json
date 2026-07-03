@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "Kişisel Listeler",
   "limit_title_total_list_items": "Toplam Liste Öğeleri",
   "limit_title_watchlist_items": "İzleme Listesi Öğeleri",
-  "limit_title_digital_library": "Dijital Kütüphane"
+  "limit_title_digital_library": "Dijital Kütüphane",
+  "badge_text_get_vip": "VIP Ol",
+  "link_label_get_vip": "VIP özelliklerini aç",
+  "text_vip_upsell_dive_deeper": "Daha derine inin.",
+  "text_vip_upsell_sentiment": "Daha fazla bilgi edinmek için VIP'e yükseltin.",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "Trakt deneyiminizi geliştirin",
+  "button_label_manage_subscription": "VIP Aboneliğini Yönet"
 }

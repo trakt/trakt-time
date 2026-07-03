@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "Особисті списки",
   "limit_title_total_list_items": "Всього елементів списку",
   "limit_title_watchlist_items": "Елементи списку перегляду",
-  "limit_title_digital_library": "Цифрова бібліотека"
+  "limit_title_digital_library": "Цифрова бібліотека",
+  "badge_text_get_vip": "Отримати VIP",
+  "link_label_get_vip": "Розблокувати VIP-функції",
+  "text_vip_upsell_dive_deeper": "Зануртеся глибше.",
+  "text_vip_upsell_sentiment": "Оновіть до VIP, щоб розблокувати більше аналітичних даних.",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "Покращте свій досвід Trakt",
+  "button_label_manage_subscription": "Керувати VIP-підпискою"
 }

@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "個人リスト",
   "limit_title_total_list_items": "リスト項目合計",
   "limit_title_watchlist_items": "ウォッチリスト項目",
-  "limit_title_digital_library": "デジタルライブラリ"
+  "limit_title_digital_library": "デジタルライブラリ",
+  "badge_text_get_vip": "VIPをゲット",
+  "link_label_get_vip": "VIP機能をアンロック",
+  "text_vip_upsell_dive_deeper": "さらに深く掘り下げましょう。",
+  "text_vip_upsell_sentiment": "より多くのインサイトをアンロックするにはVIPにアップグレードしてください。",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "Trakt体験を向上させる",
+  "button_label_manage_subscription": "VIPサブスクリプションを管理"
 }

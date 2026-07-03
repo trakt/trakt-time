@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "Listy osobiste",
   "limit_title_total_list_items": "Wszystkie elementy list",
   "limit_title_watchlist_items": "Lista obserwowanych",
-  "limit_title_digital_library": "Biblioteka cyfrowa"
+  "limit_title_digital_library": "Biblioteka cyfrowa",
+  "badge_text_get_vip": "Zostań VIP",
+  "link_label_get_vip": "Odblokuj funkcje VIP",
+  "text_vip_upsell_dive_deeper": "Zobacz więcej.",
+  "text_vip_upsell_sentiment": "Zostań VIP, aby odblokować więcej informacji.",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "Wzbogać swoje doświadczenia z Trakt",
+  "button_label_manage_subscription": "Zarządzaj subskrypcją VIP"
 }

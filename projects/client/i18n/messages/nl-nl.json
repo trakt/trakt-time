@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "Persoonlijke lijsten",
   "limit_title_total_list_items": "Totaal aantal lijstitems",
   "limit_title_watchlist_items": "Kijklijstitems",
-  "limit_title_digital_library": "Digitale bibliotheek"
+  "limit_title_digital_library": "Digitale bibliotheek",
+  "badge_text_get_vip": "Word VIP",
+  "link_label_get_vip": "VIP-functies ontgrendelen",
+  "text_vip_upsell_dive_deeper": "Duik dieper.",
+  "text_vip_upsell_sentiment": "Upgrade naar VIP om meer inzichten te ontgrendelen.",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "Verbeter je Trakt-ervaring",
+  "button_label_manage_subscription": "VIP-abonnement beheren"
 }

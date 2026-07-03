@@ -10,6 +10,7 @@
   import SeasonEpisodes from './_internal/SeasonEpisodes.svelte';
   import SeasonListSkeleton from './_internal/SeasonListSkeleton.svelte';
   import RenderFor from '$lib/guards/RenderFor.svelte';
+  import UpsellCta from '$lib/features/upsell/UpsellCta.svelte';
   import { useRelatedList } from '$lib/sections/lists/stores/useRelatedList.ts';
   import SentimentSection from '$lib/sections/summary/components/sentiment/SentimentSection.svelte';
   import TriviaSection from '$lib/sections/summary/components/trivia/TriviaSection.svelte';
@@ -180,6 +181,14 @@
       <RenderFor audience="vip">
         <SentimentSection type="show" {slug} />
         <TriviaSection type="show" {slug} />
+
+        {#snippet fallback()}
+          <RenderFor audience="free">
+            <UpsellCta source="show-summary">
+              {m.text_vip_upsell_sentiment()}
+            </UpsellCta>
+          </RenderFor>
+        {/snippet}
       </RenderFor>
 
       {#if seasonsLoading && seasons.length === 0}

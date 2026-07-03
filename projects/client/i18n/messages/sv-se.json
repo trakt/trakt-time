@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "Personliga listor",
   "limit_title_total_list_items": "Totalt antal listobjekt",
   "limit_title_watchlist_items": "Objekt på tittarlista",
-  "limit_title_digital_library": "Digitalt bibliotek"
+  "limit_title_digital_library": "Digitalt bibliotek",
+  "badge_text_get_vip": "Skaffa VIP",
+  "link_label_get_vip": "Lås upp VIP-funktioner",
+  "text_vip_upsell_dive_deeper": "Gå djupare.",
+  "text_vip_upsell_sentiment": "Uppgradera till VIP för att låsa upp fler insikter.",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "Förbättra din Trakt-upplevelse",
+  "button_label_manage_subscription": "Hantera VIP-prenumeration"
 }

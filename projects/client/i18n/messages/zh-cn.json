@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "个人列表",
   "limit_title_total_list_items": "列表总数",
   "limit_title_watchlist_items": "待看列表项目",
-  "limit_title_digital_library": "数字媒体库"
+  "limit_title_digital_library": "数字媒体库",
+  "badge_text_get_vip": "获取VIP",
+  "link_label_get_vip": "解锁VIP功能",
+  "text_vip_upsell_dive_deeper": "深入探索。",
+  "text_vip_upsell_sentiment": "升级到 VIP 以解锁更多见解。",
+  "tag_text_vip": "VIP",
+  "text_vip_upsell_default": "提升你的 Trakt 体验",
+  "button_label_manage_subscription": "管理VIP订阅"
 }

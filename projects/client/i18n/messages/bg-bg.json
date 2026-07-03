@@ -394,5 +394,12 @@
   "limit_title_personal_lists": "Лични списъци",
   "limit_title_total_list_items": "Общ брой елементи в списъците",
   "limit_title_watchlist_items": "Елементи в списъка за гледане",
-  "limit_title_digital_library": "Дигитална библиотека"
+  "limit_title_digital_library": "Дигитална библиотека",
+  "badge_text_get_vip": "Вземи VIP",
+  "link_label_get_vip": "Отключи VIP функции",
+  "text_vip_upsell_dive_deeper": "Потопете се по-дълбоко.",
+  "text_vip_upsell_sentiment": "Надградете до VIP, за да отключите повече прозрения.",
+  "tag_text_vip": "ВИП",
+  "text_vip_upsell_default": "Подобрете вашето Trakt изживяване",
+  "button_label_manage_subscription": "Управление на VIP абонамент"
 }

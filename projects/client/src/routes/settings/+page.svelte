@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as m from '$lib/paraglide/messages.js';
   import Appearance from '$lib/sections/settings/_internal/Appearance.svelte';
+  import VipSettings from '$lib/sections/settings/_internal/VipSettings.svelte';
   import TvTimeImport from '$lib/sections/settings/_internal/import/TvTimeImport.svelte';
   import LogoutButton from '$lib/components/buttons/logout/LogoutButton.svelte';
   import { useAuth } from '$lib/features/auth/stores/useAuth.ts';
@@ -18,6 +19,7 @@
     <LoginGate {login} />
   {:else}
     <Appearance />
+    <VipSettings />
     <TvTimeImport />
     <div class="settings-logout">
       <LogoutButton />
