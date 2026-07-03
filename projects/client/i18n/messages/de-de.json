@@ -316,5 +316,20 @@
   "button_label_more_actions": "Weitere Aktionen für {title}",
   "header_tv_time_liberator": "Wechsel von TV Time?",
   "text_tv_time_liberator": "Nutze die TV Time Liberator Chrome-Erweiterung, um deine vollständige Bibliothek zu exportieren.",
-  "button_text_get_extension": "Erweiterung holen"
+  "button_text_get_extension": "Erweiterung holen",
+  "button_label_download_unresolved": "Laden Sie eine CSV-Datei mit den Elementen herunter, die während des Imports übersprungen wurden.",
+  "button_label_import_more": "Zurücksetzen und einen neuen Import starten.",
+  "button_label_import_selected": "Importieren Sie die oben ausgewählten Film-Treffer.",
+  "button_label_pick_match": "Importieren Sie {option}.",
+  "button_text_download_unresolved": "Übersprungene Elemente herunterladen",
+  "button_text_import_selected": "Ausgewählte importieren",
+  "import_ambiguous_skip": "Nicht importieren",
+  "import_complete_ambiguous": "{count} Filme passten zu mehr als einem Titel. Wählen Sie die richtigen aus und importieren Sie sie:",
+  "import_complete_unresolved": "{count} Filme konnten nicht zugeordnet werden und wurden übersprungen:",
+  "import_tab_ambiguous": "Mehrere Übereinstimmungen",
+  "import_tab_unresolved": "Übersprungen",
+  "import_status_matching": "Filme werden abgeglichen {processed} / {total}…",
+  "import_status_syncing": "{processed} / {total} Elemente werden synchronisiert…",
+  "import_summary_ratings": "{count} Bewertungen",
+  "import_drop_zip": "Ziehen Sie eine ZIP-Datei hierher oder klicken Sie zum Hochladen."
 }

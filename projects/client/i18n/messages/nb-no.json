@@ -316,5 +316,20 @@
   "button_label_more_actions": "Flere handlinger for {title}",
   "header_tv_time_liberator": "Kommer du fra TV Time?",
   "text_tv_time_liberator": "Bruk Chrome-utvidelsen TV Time Liberator for å eksportere hele biblioteket.",
-  "button_text_get_extension": "Hent utvidelsen"
+  "button_text_get_extension": "Hent utvidelsen",
+  "button_label_download_unresolved": "Last ned en CSV-fil som viser elementene som ble hoppet over under importen.",
+  "button_label_import_more": "Tilbakestill og start en ny import.",
+  "button_label_import_selected": "Importer filmmatchene du valgte ovenfor.",
+  "button_label_pick_match": "Importer {option}.",
+  "button_text_download_unresolved": "Last ned oversprungne elementer",
+  "button_text_import_selected": "Importer valgte",
+  "import_ambiguous_skip": "Ikke importer",
+  "import_complete_ambiguous": "{count} filmer matchet mer enn én tittel. Velg de riktige og importer dem:",
+  "import_complete_unresolved": "{count} filmer kunne ikke matches og ble hoppet over:",
+  "import_tab_ambiguous": "Flere treff",
+  "import_tab_unresolved": "Hoppet over",
+  "import_status_matching": "Matcher filmer {processed} / {total}…",
+  "import_status_syncing": "Synkroniserer {processed} / {total} elementer…",
+  "import_summary_ratings": "{count} vurderinger",
+  "import_drop_zip": "Dra en ZIP-fil hit eller klikk for å laste opp."
 }

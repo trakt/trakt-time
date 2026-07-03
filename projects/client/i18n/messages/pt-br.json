@@ -316,5 +316,20 @@
   "button_label_more_actions": "Mais ações para {title}",
   "header_tv_time_liberator": "Vindo do TV Time?",
   "text_tv_time_liberator": "Use a extensão TV Time Liberator do Chrome para exportar sua biblioteca completa.",
-  "button_text_get_extension": "Obter a extensão"
+  "button_text_get_extension": "Obter a extensão",
+  "button_label_download_unresolved": "Baixe um arquivo CSV listando os itens que foram ignorados durante a importação.",
+  "button_label_import_more": "Redefinir e iniciar uma nova importação.",
+  "button_label_import_selected": "Importe as correspondências de filmes que você escolheu acima.",
+  "button_label_pick_match": "Importar {option}.",
+  "button_text_download_unresolved": "Baixar itens ignorados",
+  "button_text_import_selected": "Importar selecionados",
+  "import_ambiguous_skip": "Não importar",
+  "import_complete_ambiguous": "{count} filmes corresponderam a mais de um título. Escolha os corretos e importe-os:",
+  "import_complete_unresolved": "{count} filmes não puderam ser combinados e foram ignorados:",
+  "import_tab_ambiguous": "Múltiplas correspondências",
+  "import_tab_unresolved": "Ignorados",
+  "import_status_matching": "Localizando filmes {processed} / {total}…",
+  "import_status_syncing": "Sincronizando {processed} / {total} itens…",
+  "import_summary_ratings": "{count} avaliações",
+  "import_drop_zip": "Arraste um arquivo ZIP aqui ou clique para enviar."
 }

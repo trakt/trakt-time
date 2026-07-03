@@ -316,5 +316,20 @@
   "button_label_more_actions": "{title} のその他のアクション",
   "header_tv_time_liberator": "TV Time から移行ですか？",
   "text_tv_time_liberator": "Chrome 拡張機能 TV Time Liberator を使ってライブラリを丸ごとエクスポートできます。",
-  "button_text_get_extension": "拡張機能を入手"
+  "button_text_get_extension": "拡張機能を入手",
+  "button_label_download_unresolved": "インポート中にスキップされた項目を一覧表示するCSVファイルをダウンロードします。",
+  "button_label_import_more": "リセットして新しいインポートを開始します。",
+  "button_label_import_selected": "上で選択した映画の一致項目をインポートします。",
+  "button_label_pick_match": "{option}をインポートする。",
+  "button_text_download_unresolved": "スキップされた項目をダウンロード",
+  "button_text_import_selected": "選択した項目をインポート",
+  "import_ambiguous_skip": "インポートしない",
+  "import_complete_ambiguous": "{count}本の映画が複数のタイトルに一致しました。正しいものを選んでインポートしてください:",
+  "import_complete_unresolved": "{count}本の映画は一致せず、スキップされました:",
+  "import_tab_ambiguous": "複数の一致",
+  "import_tab_unresolved": "スキップ済み",
+  "import_status_matching": "映画を照合中 {processed} / {total}…",
+  "import_status_syncing": "{processed} / {total}項目を同期中…",
+  "import_summary_ratings": "{count}件の評価",
+  "import_drop_zip": "ZIPファイルをここにドロップするか、クリックしてアップロードしてください。"
 }

@@ -316,5 +316,20 @@
   "button_label_more_actions": "Другие действия для {title}",
   "header_tv_time_liberator": "Переходите с TV Time?",
   "text_tv_time_liberator": "Используйте расширение TV Time Liberator для Chrome, чтобы выгрузить всю вашу библиотеку.",
-  "button_text_get_extension": "Установить расширение"
+  "button_text_get_extension": "Установить расширение",
+  "button_label_download_unresolved": "Скачать CSV-файл со списком элементов, пропущенных во время импорта.",
+  "button_label_import_more": "Сбросить и начать новый импорт.",
+  "button_label_import_selected": "Импортировать выбранные вами совпадения фильмов.",
+  "button_label_pick_match": "Импортировать {option}.",
+  "button_text_download_unresolved": "Скачать пропущенные элементы",
+  "button_text_import_selected": "Импортировать выбранное",
+  "import_ambiguous_skip": "Не импортировать",
+  "import_complete_ambiguous": "{count} фильмов сопоставлены более чем с одним заголовком. Выберите правильные и импортируйте их:",
+  "import_complete_unresolved": "{count} фильмов не удалось сопоставить и они были пропущены:",
+  "import_tab_ambiguous": "Несколько совпадений",
+  "import_tab_unresolved": "Пропущено",
+  "import_status_matching": "Сопоставление фильмов {processed} / {total}…",
+  "import_status_syncing": "Синхронизация {processed} / {total} элементов…",
+  "import_summary_ratings": "{count} оценок",
+  "import_drop_zip": "Перетащите ZIP-файл сюда или нажмите, чтобы загрузить."
 }

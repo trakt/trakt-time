@@ -316,5 +316,20 @@
   "button_label_more_actions": "Fler åtgärder för {title}",
   "header_tv_time_liberator": "Kommer du från TV Time?",
   "text_tv_time_liberator": "Använd Chrome-tillägget TV Time Liberator för att exportera hela ditt bibliotek.",
-  "button_text_get_extension": "Hämta tillägget"
+  "button_text_get_extension": "Hämta tillägget",
+  "button_label_download_unresolved": "Ladda ner en CSV-fil som listar de objekt som hoppades över under importen.",
+  "button_label_import_more": "Återställ och starta en ny import.",
+  "button_label_import_selected": "Importera de filmmatchningar du valde ovan.",
+  "button_label_pick_match": "Importera {option}.",
+  "button_text_download_unresolved": "Ladda ner överhoppade objekt",
+  "button_text_import_selected": "Importera valda",
+  "import_ambiguous_skip": "Importera inte",
+  "import_complete_ambiguous": "{count} filmer matchade mer än en titel. Välj rätt och importera dem:",
+  "import_complete_unresolved": "{count} filmer kunde inte matchas och hoppades över:",
+  "import_tab_ambiguous": "Flera matchningar",
+  "import_tab_unresolved": "Överhoppade",
+  "import_status_matching": "Matchar filmer {processed} / {total}…",
+  "import_status_syncing": "Synkroniserar {processed} / {total} objekt…",
+  "import_summary_ratings": "{count} betyg",
+  "import_drop_zip": "Släpp en ZIP-fil här eller klicka för att ladda upp."
 }

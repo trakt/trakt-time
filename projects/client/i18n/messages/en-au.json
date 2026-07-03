@@ -316,5 +316,20 @@
   "button_label_more_actions": "More actions for {title}",
   "header_tv_time_liberator": "Coming from TV Time?",
   "text_tv_time_liberator": "Use the TV Time Liberator Chrome extension to export your full library.",
-  "button_text_get_extension": "Get the extension"
+  "button_text_get_extension": "Get the extension",
+  "button_label_download_unresolved": "Download a CSV file listing the items that were skipped during the import.",
+  "button_label_import_more": "Reset and start a new import.",
+  "button_label_import_selected": "Import the movie matches you picked above.",
+  "button_label_pick_match": "Import {option}.",
+  "button_text_download_unresolved": "Download skipped items",
+  "button_text_import_selected": "Import selected",
+  "import_ambiguous_skip": "Don't import",
+  "import_complete_ambiguous": "{count} movies matched more than one title. Pick the right ones and import them:",
+  "import_complete_unresolved": "{count} movies couldn't be matched and were skipped:",
+  "import_tab_ambiguous": "Multiple matches",
+  "import_tab_unresolved": "Skipped",
+  "import_status_matching": "Matching movies {processed} / {total}…",
+  "import_status_syncing": "Syncing {processed} / {total} items…",
+  "import_summary_ratings": "{count} ratings",
+  "import_drop_zip": "Drop a ZIP file here or click to upload."
 }

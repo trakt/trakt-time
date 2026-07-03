@@ -4,21 +4,58 @@ import { createSyncRunner } from '$lib/sections/settings/sync/createSyncRunner.t
 import { chunk } from '$lib/utils/array/chunk.ts';
 import type { SyncEngineCallbacks } from '../sync/models/SyncEngineCallbacks.ts';
 import { buildHistoryPayload } from './engine/buildHistoryPayload.ts';
+import { buildRatingsPayload } from './engine/buildRatingsPayload.ts';
 import { buildWatchlistPayload } from './engine/buildWatchlistPayload.ts';
-import type { UniversalImportItem } from './ImportTypes.ts';
+import { matchMovies } from './engine/matchMovies.ts';
+import { MOVIE_IDS, pickIds } from './engine/pickIds.ts';
+import { resolveMovieIds } from './engine/resolveMovieIds.ts';
+import type { ImportSyncResult, UniversalImportItem } from './ImportTypes.ts';
+
+type SyncToTraktCallbacks = SyncEngineCallbacks & {
+  onMatchProgress?: (processed: number, total: number) => void;
+};
 
 export async function syncToTrakt(
   items: ReadonlyArray<UniversalImportItem>,
-  { onProgress, onError, onStart, onComplete }: SyncEngineCallbacks,
-): Promise<number> {
+  {
+    onProgress,
+    onError,
+    onStart,
+    onComplete,
+    onMatchProgress,
+    signal,
+  }: SyncToTraktCallbacks,
+): Promise<ImportSyncResult> {
   onStart?.();
 
   try {
-    const historyItems = items.filter((i) => i.action === 'history');
-    const watchlistItems = items.filter((i) => i.action === 'watchlist');
+    const { items: resolvedItems, ambiguous } = await resolveMovieIds({
+      items,
+      match: matchMovies,
+      onProgress: onMatchProgress,
+      signal,
+    });
+
+    const ambiguousItems = new Set(ambiguous.map((entry) => entry.item));
+    const unresolved = resolvedItems.filter(
+      (item) =>
+        item.type === 'movie' &&
+        !pickIds(item.ids, MOVIE_IDS) &&
+        !ambiguousItems.has(item),
+    );
+
+    const historyItems = resolvedItems.filter((i) => i.action === 'history');
+    const watchlistItems = resolvedItems.filter((i) =>
+      i.action === 'watchlist'
+    );
+    const ratingItems = resolvedItems.filter((i) => i.action === 'ratings');
 
     const client = api();
-    const { run, getErrorCount } = createSyncRunner({ onProgress, onError });
+    const { run, getErrorCount } = createSyncRunner({
+      onProgress,
+      onError,
+      signal,
+    });
 
     if (historyItems.length > 0) {
       await run(
@@ -36,8 +73,16 @@ export async function syncToTrakt(
       );
     }
 
-    onComplete?.(true);
-    return getErrorCount();
+    if (ratingItems.length > 0) {
+      await run(
+        chunk(ratingItems, SYNC_CHUNK_SIZE),
+        (batch) => buildRatingsPayload([...batch]),
+        (payload) => client.sync.ratings.add({ body: payload }),
+      );
+    }
+
+    onComplete?.(!signal?.aborted);
+    return { errorCount: getErrorCount(), unresolved, ambiguous };
   } catch (err) {
     onComplete?.(false);
     throw err;

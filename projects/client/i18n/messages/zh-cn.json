@@ -316,5 +316,20 @@
   "button_label_more_actions": "{title} 的更多操作",
   "header_tv_time_liberator": "从 TV Time 转过来？",
   "text_tv_time_liberator": "使用 TV Time Liberator Chrome 扩展导出完整的观看记录。",
-  "button_text_get_extension": "获取扩展"
+  "button_text_get_extension": "获取扩展",
+  "button_label_download_unresolved": "下载一个 CSV 文件，其中列出了导入期间跳过的项目。",
+  "button_label_import_more": "重置并开始新的导入。",
+  "button_label_import_selected": "导入您在上方选择的电影匹配项。",
+  "button_label_pick_match": "导入 {option}。",
+  "button_text_download_unresolved": "下载已跳过项目",
+  "button_text_import_selected": "导入所选",
+  "import_ambiguous_skip": "不导入",
+  "import_complete_ambiguous": "{count} 部电影匹配到多个标题。请选择正确的并导入它们：",
+  "import_complete_unresolved": "{count} 部电影无法匹配并已跳过：",
+  "import_tab_ambiguous": "多重匹配",
+  "import_tab_unresolved": "已跳过",
+  "import_status_matching": "正在匹配电影 {processed} / {total}…",
+  "import_status_syncing": "正在同步 {processed} / {total} 个项目…",
+  "import_summary_ratings": "{count} 个评分",
+  "import_drop_zip": "将 ZIP 文件拖放到此处或点击上传。"
 }

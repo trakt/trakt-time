@@ -1,20 +1,32 @@
 <script lang="ts">
+  import NavigationGuard from '$lib/components/NavigationGuard.svelte';
   import LoaderIcon from '$lib/components/icons/LoaderIcon.svelte';
   import TvTimeLiberatorCta from '$lib/components/tv-time-liberator-cta/TvTimeLiberatorCta.svelte';
+  import { ConfirmationType } from '$lib/features/confirmation/models/ConfirmationType.ts';
+  import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
   import { useImportInProgress } from '$lib/stores/useImportInProgress.ts';
+  import { useInvalidator } from '$lib/stores/useInvalidator.ts';
   import { dropzone } from '$lib/utils/actions/dropzone.ts';
   import { slide } from 'svelte/transition';
+  import * as m from '$lib/paraglide/messages.js';
   import {
+    type AmbiguousImportItem,
+    IMPORT_SOURCE_CONFIGS,
     type ImportCounts,
     type ImportStatus,
     type UniversalImportItem,
   } from '../../import/ImportTypes.ts';
   import { TvTimeCsvParser } from '../../import/parsers/TvTimeCsvParser.ts';
   import { syncToTrakt } from '../../import/syncToTrakt.ts';
-  import * as m from '$lib/paraglide/messages.js';
+  import ImportComplete from './ImportComplete.svelte';
   import SettingsBlock from '../SettingsBlock.svelte';
 
   const { importInProgress } = useImportInProgress();
+  const { invalidate } = useInvalidator();
+
+  const sourceConfig = IMPORT_SOURCE_CONFIGS.tvtime;
+
+  let abortController: AbortController | null = null;
 
   type State = {
     status: ImportStatus;
@@ -22,21 +34,32 @@
     processedCount: number;
     totalCount: number;
     errorCount: number;
+    unresolved: ReadonlyArray<UniversalImportItem>;
+    ambiguous: ReadonlyArray<AmbiguousImportItem>;
+    matchProcessedCount: number;
+    matchTotalCount: number;
     error: string | null;
   };
 
-  let state = $state<State>({
+  const initialState: State = {
     status: 'idle',
     items: [],
     processedCount: 0,
     totalCount: 0,
     errorCount: 0,
+    unresolved: [],
+    ambiguous: [],
+    matchProcessedCount: 0,
+    matchTotalCount: 0,
     error: null,
-  });
+  };
+
+  let state = $state<State>({ ...initialState });
 
   const counts = $derived<ImportCounts>({
     history: state.items.filter((i) => i.action === 'history').length,
     watchlist: state.items.filter((i) => i.action === 'watchlist').length,
+    ratings: state.items.filter((i) => i.action === 'ratings').length,
   });
 
   const progressPercent = $derived(
@@ -48,15 +71,19 @@
       ),
   );
 
+  const matchPercent = $derived(
+    state.matchTotalCount === 0
+      ? 0
+      : Math.min(
+        100,
+        Math.round((state.matchProcessedCount / state.matchTotalCount) * 100),
+      ),
+  );
+
   function reset() {
-    state = {
-      status: 'idle',
-      items: [],
-      processedCount: 0,
-      totalCount: 0,
-      errorCount: 0,
-      error: null,
-    };
+    abortController?.abort();
+    abortController = null;
+    state = { ...initialState };
   }
 
   async function handleFiles(ev: Event) {
@@ -67,7 +94,8 @@
     state.error = null;
 
     try {
-      const items = await TvTimeCsvParser.parse(Array.from(files));
+      const fileArray = Array.from(files).slice(0, sourceConfig.maxFiles);
+      const items = await TvTimeCsvParser.parse(fileArray);
       state.items = items;
       state.totalCount = items.length;
       state.status = items.length === 0 ? 'error' : 'review';
@@ -80,29 +108,80 @@
     }
   }
 
+  async function invalidateImported(success: boolean) {
+    importInProgress.next(false);
+
+    if (success) {
+      await invalidate(InvalidateAction.Watchlisted('show'));
+      await invalidate(InvalidateAction.Watchlisted('movie'));
+      await invalidate(InvalidateAction.MarkAsWatched('show'));
+      await invalidate(InvalidateAction.MarkAsWatched('movie'));
+      await invalidate(InvalidateAction.Rated('show'));
+      await invalidate(InvalidateAction.Rated('movie'));
+    }
+  }
+
   async function startImport() {
+    abortController = new AbortController();
     state.status = 'syncing';
     state.processedCount = 0;
     state.errorCount = 0;
+    state.matchProcessedCount = 0;
+    state.matchTotalCount = 0;
 
     try {
-      const failures = await syncToTrakt(state.items, {
-        onProgress: (n) => {
-          state.processedCount = n;
+      const { errorCount, unresolved, ambiguous } = await syncToTrakt(
+        state.items,
+        {
+          signal: abortController.signal,
+          onMatchProgress: (processed, total) => {
+            state.matchProcessedCount = processed;
+            state.matchTotalCount = total;
+            state.status = total > 0 ? 'matching' : 'syncing';
+          },
+          onProgress: (n) => {
+            state.status = 'syncing';
+            state.processedCount = n;
+          },
+          onError: (msg) => {
+            // Per-chunk errors are surfaced via errorCount; log for diagnostics.
+            console.error('[tv-time import]', msg);
+          },
+          onStart: () => importInProgress.next(true),
+          onComplete: invalidateImported,
         },
-        onError: (msg) => {
-          // Per-chunk errors are surfaced via errorCount; log for diagnostics.
-          console.error('[tv-time import]', msg);
-        },
-        onStart: () => importInProgress.next(true),
-        onComplete: () => importInProgress.next(false),
-      });
-      state.errorCount = failures;
+      );
+      state.errorCount = errorCount;
+      state.unresolved = unresolved;
+      state.ambiguous = ambiguous;
       state.status = 'complete';
     } catch (err) {
       state.error = err instanceof Error ? err.message : String(err);
       state.status = 'error';
     }
+  }
+
+  async function importPicked(
+    picked: UniversalImportItem[],
+    skipped: UniversalImportItem[],
+  ) {
+    if (picked.length > 0) {
+      abortController = new AbortController();
+      const { errorCount } = await syncToTrakt(picked, {
+        signal: abortController.signal,
+        onProgress: () => {},
+        onError: (msg) => {
+          console.error('[tv-time import]', msg);
+        },
+        onStart: () => importInProgress.next(true),
+        onComplete: invalidateImported,
+      });
+
+      state.errorCount += errorCount;
+    }
+
+    state.unresolved = [...state.unresolved, ...skipped];
+    state.ambiguous = [];
   }
 </script>
 
@@ -118,98 +197,116 @@
     <li>{m.import_tv_time_step_review()}</li>
   </ol>
 
-  {#if state.status === 'idle' || state.status === 'parsing'}
-    <div
-      class="tv-time-dropzone"
-      transition:slide={{ duration: 150, axis: 'y' }}
-      use:dropzone={{ accept: '.csv', multiple: false }}
-      onfiles={handleFiles}
-    >
-      {#if state.status === 'parsing'}
-        <LoaderIcon />
-        <p class="tv-time-secondary">{m.import_status_parsing()}</p>
-      {:else}
-        <p class="tv-time-prompt">{m.import_drop_csv()}</p>
-        <p class="tv-time-secondary">{m.import_max_files({ count: 1 })}</p>
-      {/if}
-    </div>
-  {/if}
-
-  {#if state.status === 'review'}
-    <div
-      class="tv-time-summary"
-      transition:slide={{ duration: 150, axis: 'y' }}
-    >
-      <div class="tv-time-counts">
-        <p>{m.import_summary_history({ count: counts.history })}</p>
-        {#if counts.watchlist > 0}
-          <p>{m.import_summary_watchlist({ count: counts.watchlist })}</p>
+  <NavigationGuard
+    isActive={state.status === 'matching' || state.status === 'syncing'}
+    confirmationParams={{ type: ConfirmationType.CancelImport }}
+    onreset={reset}
+  >
+    {#if state.status === 'idle' || state.status === 'parsing'}
+      <div
+        class="tv-time-dropzone"
+        transition:slide={{ duration: 150, axis: 'y' }}
+        use:dropzone={{ accept: sourceConfig.accept, multiple: true }}
+        onfiles={handleFiles}
+      >
+        {#if state.status === 'parsing'}
+          <LoaderIcon />
+          <p class="tv-time-secondary">{m.import_status_parsing()}</p>
+        {:else}
+          <p class="tv-time-prompt">{m.import_drop_zip()}</p>
+          <p class="tv-time-secondary">
+            {m.import_max_files({ count: sourceConfig.maxFiles })}
+          </p>
         {/if}
       </div>
-      <div class="tv-time-actions">
-        <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
-          {m.button_text_cancel()}
-        </button>
-        <button class="tv-time-btn tv-time-btn--primary" onclick={startImport}>
-          {m.button_text_start_import()}
-        </button>
-      </div>
-    </div>
-  {/if}
+    {/if}
 
-  {#if state.status === 'syncing'}
-    <div
-      class="tv-time-syncing"
-      transition:slide={{ duration: 150, axis: 'y' }}
-    >
-      <p class="tv-time-secondary">
-        {m.import_progress({
-          processed: state.processedCount,
-          total: state.totalCount,
-        })}
-      </p>
-      <div class="tv-time-progress">
-        <div class="tv-time-progress-fill" style:width="{progressPercent}%"></div>
+    {#if state.status === 'review'}
+      <div
+        class="tv-time-summary"
+        transition:slide={{ duration: 150, axis: 'y' }}
+      >
+        <div class="tv-time-counts">
+          <p>{m.import_summary_history({ count: counts.history })}</p>
+          {#if counts.watchlist > 0}
+            <p>{m.import_summary_watchlist({ count: counts.watchlist })}</p>
+          {/if}
+          {#if counts.ratings > 0}
+            <p>{m.import_summary_ratings({ count: counts.ratings })}</p>
+          {/if}
+        </div>
+        <div class="tv-time-actions">
+          <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
+            {m.button_text_cancel()}
+          </button>
+          <button class="tv-time-btn tv-time-btn--primary" onclick={startImport}>
+            {m.button_text_start_import()}
+          </button>
+        </div>
       </div>
-    </div>
-  {/if}
+    {/if}
 
-  {#if state.status === 'complete'}
-    <div
-      class="tv-time-complete"
-      transition:slide={{ duration: 150, axis: 'y' }}
-    >
-      <p>
-        {m.import_complete_synced({
-          count: state.processedCount - state.errorCount,
-        })}
-      </p>
-      {#if state.errorCount > 0}
+    {#if state.status === 'matching'}
+      <div
+        class="tv-time-syncing"
+        transition:slide={{ duration: 150, axis: 'y' }}
+      >
         <p class="tv-time-secondary">
-          {m.import_complete_errors({ count: state.errorCount })}
+          {m.import_status_matching({
+            processed: state.matchProcessedCount,
+            total: state.matchTotalCount,
+          })}
         </p>
-      {/if}
-      <div class="tv-time-actions">
-        <button class="tv-time-btn tv-time-btn--primary" onclick={reset}>
-          {m.button_text_import_more()}
-        </button>
+        <div class="tv-time-progress">
+          <div class="tv-time-progress-fill" style:width="{matchPercent}%"></div>
+        </div>
       </div>
-    </div>
-  {/if}
+    {/if}
 
-  {#if state.status === 'error'}
-    <div
-      class="tv-time-error"
-      transition:slide={{ duration: 150, axis: 'y' }}
-    >
-      <p>{state.error ?? m.import_error_generic()}</p>
-      <div class="tv-time-actions">
-        <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
-          {m.button_text_try_again()}
-        </button>
+    {#if state.status === 'syncing'}
+      <div
+        class="tv-time-syncing"
+        transition:slide={{ duration: 150, axis: 'y' }}
+      >
+        <p class="tv-time-secondary">
+          {m.import_progress({
+            processed: state.processedCount,
+            total: state.totalCount,
+          })}
+        </p>
+        <div class="tv-time-progress">
+          <div class="tv-time-progress-fill" style:width="{progressPercent}%"></div>
+        </div>
       </div>
-    </div>
-  {/if}
+    {/if}
+
+    {#if state.status === 'complete'}
+      <div transition:slide={{ duration: 150, axis: 'y' }}>
+        <ImportComplete
+          processedCount={state.processedCount}
+          errorCount={state.errorCount}
+          unresolved={state.unresolved}
+          ambiguous={state.ambiguous}
+          onimportpicked={importPicked}
+          onreset={reset}
+        />
+      </div>
+    {/if}
+
+    {#if state.status === 'error'}
+      <div
+        class="tv-time-error"
+        transition:slide={{ duration: 150, axis: 'y' }}
+      >
+        <p>{state.error ?? m.import_error_generic()}</p>
+        <div class="tv-time-actions">
+          <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
+            {m.button_text_try_again()}
+          </button>
+        </div>
+      </div>
+    {/if}
+  </NavigationGuard>
 </SettingsBlock>
 
 <style lang="scss">
@@ -255,7 +352,6 @@
 
   .tv-time-summary,
   .tv-time-syncing,
-  .tv-time-complete,
   .tv-time-error {
     display: flex;
     flex-direction: column;

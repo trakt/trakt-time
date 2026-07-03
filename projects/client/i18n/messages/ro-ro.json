@@ -316,5 +316,20 @@
   "button_label_more_actions": "Mai multe acțiuni pentru {title}",
   "header_tv_time_liberator": "Vii de la TV Time?",
   "text_tv_time_liberator": "Folosește extensia Chrome TV Time Liberator pentru a-ți exporta întreaga bibliotecă.",
-  "button_text_get_extension": "Ia extensia"
+  "button_text_get_extension": "Ia extensia",
+  "button_label_download_unresolved": "Descarcă un fișier CSV cu elementele omise în timpul importului.",
+  "button_label_import_more": "Resetează și începe un nou import.",
+  "button_label_import_selected": "Importă filmele selectate mai sus.",
+  "button_label_pick_match": "Importă {option}.",
+  "button_text_download_unresolved": "Descarcă elementele omise",
+  "button_text_import_selected": "Importă selectate",
+  "import_ambiguous_skip": "Nu importa",
+  "import_complete_ambiguous": "{count} filme au fost găsite în mai mult de un titlu. Alege-le pe cele corecte și importă-le:",
+  "import_complete_unresolved": "{count} filme nu au putut fi găsite și au fost omise:",
+  "import_tab_ambiguous": "Potriviri multiple",
+  "import_tab_unresolved": "Omise",
+  "import_status_matching": "Se potrivesc filme {processed} / {total}…",
+  "import_status_syncing": "Se sincronizează {processed} / {total} elemente…",
+  "import_summary_ratings": "{count} evaluări",
+  "import_drop_zip": "Trage un fișier ZIP aici sau apasă pentru a încărca."
 }

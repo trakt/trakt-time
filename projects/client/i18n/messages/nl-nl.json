@@ -316,5 +316,20 @@
   "button_label_more_actions": "Meer acties voor {title}",
   "header_tv_time_liberator": "Kom je van TV Time?",
   "text_tv_time_liberator": "Gebruik de TV Time Liberator Chrome-extensie om je volledige bibliotheek te exporteren.",
-  "button_text_get_extension": "Haal de extensie"
+  "button_text_get_extension": "Haal de extensie",
+  "button_label_download_unresolved": "Download een CSV-bestand met de items die tijdens het importeren zijn overgeslagen.",
+  "button_label_import_more": "Reset en start een nieuwe import.",
+  "button_label_import_selected": "Importeer de filmmatches die je hierboven hebt gekozen.",
+  "button_label_pick_match": "Importeer {option}.",
+  "button_text_download_unresolved": "Overgeslagen items downloaden",
+  "button_text_import_selected": "Geselecteerde importeren",
+  "import_ambiguous_skip": "Niet importeren",
+  "import_complete_ambiguous": "{count} films kwamen overeen met meer dan één titel. Kies de juiste en importeer ze:",
+  "import_complete_unresolved": "{count} films konden niet worden gematcht en zijn overgeslagen:",
+  "import_tab_ambiguous": "Meerdere overeenkomsten",
+  "import_tab_unresolved": "Overgeslagen",
+  "import_status_matching": "Films matchen {processed} / {total}…",
+  "import_status_syncing": "{processed} / {total} items worden gesynchroniseerd…",
+  "import_summary_ratings": "{count} beoordelingen",
+  "import_drop_zip": "Sleep een ZIP-bestand hierheen of klik om te uploaden."
 }

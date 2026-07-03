@@ -316,5 +316,20 @@
   "button_label_more_actions": "{title} için daha fazla işlem",
   "header_tv_time_liberator": "TV Time'dan mı geliyorsun?",
   "text_tv_time_liberator": "Tüm kitaplığını dışa aktarmak için TV Time Liberator Chrome uzantısını kullan.",
-  "button_text_get_extension": "Uzantıyı al"
+  "button_text_get_extension": "Uzantıyı al",
+  "button_label_download_unresolved": "İçe aktarma sırasında atlanan öğeleri listeleyen bir CSV dosyasını indirin.",
+  "button_label_import_more": "Sıfırla ve yeni bir içe aktarma başlat.",
+  "button_label_import_selected": "Yukarıda seçtiğiniz film eşleşmelerini içe aktarın.",
+  "button_label_pick_match": "{option} İçe Aktar.",
+  "button_text_download_unresolved": "Atlanan öğeleri indir",
+  "button_text_import_selected": "Seçilenleri içe aktar",
+  "import_ambiguous_skip": "Atla",
+  "import_complete_ambiguous": "{count} film birden fazla başlıkla eşleşti. Doğru olanları seçin ve içe aktarın:",
+  "import_complete_unresolved": "{count} film eşleştirilemedi ve atlandı:",
+  "import_tab_ambiguous": "Çoklu eşleşmeler",
+  "import_tab_unresolved": "Atlandı",
+  "import_status_matching": "Eşleşen filmler {processed} / {total}…",
+  "import_status_syncing": "{processed} / {total} öğe senkronize ediliyor…",
+  "import_summary_ratings": "{count} derecelendirme",
+  "import_drop_zip": "Bir ZIP dosyasını buraya sürükleyin veya yüklemek için tıklayın."
 }
