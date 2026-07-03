@@ -14,8 +14,8 @@
     "npm:@sveltejs/adapter-cloudflare@7.2.8": "7.2.8_@sveltejs+kit@2.59.1__@sveltejs+vite-plugin-svelte@7.0.0___svelte@5.55.5___vite@8.0.10____esbuild@0.28.0____sass-embedded@1.99.0__svelte@5.55.5__typescript@5.8.3__vite@8.0.10___esbuild@0.28.0___sass-embedded@1.99.0__acorn@8.17.0_acorn@8.17.0",
     "npm:@sveltejs/kit@2.59.1": "2.59.1_@sveltejs+vite-plugin-svelte@7.0.0__svelte@5.55.5__vite@8.0.10___esbuild@0.28.0___sass-embedded@1.99.0_svelte@5.55.5_typescript@5.8.3_vite@8.0.10__esbuild@0.28.0__sass-embedded@1.99.0",
     "npm:@sveltejs/vite-plugin-svelte@7.0.0": "7.0.0_svelte@5.55.5_vite@8.0.10__esbuild@0.28.0__sass-embedded@1.99.0",
-    "npm:@tanstack/svelte-query-devtools@5.90.2": "5.90.2_@tanstack+svelte-query@5.90.2__svelte@5.55.5_svelte@5.55.5",
-    "npm:@tanstack/svelte-query-persist-client@5.90.2": "5.90.2_@tanstack+svelte-query@5.90.2__svelte@5.55.5_svelte@5.55.5",
+    "npm:@tanstack/svelte-query-devtools@6.1.36": "6.1.36_@tanstack+svelte-query@5.90.2__svelte@5.55.5_svelte@5.55.5",
+    "npm:@tanstack/svelte-query-persist-client@6.1.36": "6.1.36_@tanstack+svelte-query@5.90.2__svelte@5.55.5_svelte@5.55.5",
     "npm:@tanstack/svelte-query@5.90.2": "5.90.2_svelte@5.55.5",
     "npm:@testing-library/jest-dom@6.9.1": "6.9.1",
     "npm:@testing-library/svelte@5.3.1": "5.3.1_svelte@5.55.5_vite@8.0.10__esbuild@0.28.0__sass-embedded@1.99.0_vitest@4.1.9__@vitest+coverage-istanbul@4.1.9__jsdom@29.1.1__vite@8.0.10___esbuild@0.28.0___sass-embedded@1.99.0__msw@2.14.3___typescript@5.8.3_@vitest+coverage-istanbul@4.1.9__vitest@4.1.9__jsdom@29.1.1__vite@8.0.10___esbuild@0.28.0___sass-embedded@1.99.0_jsdom@29.1.1_msw@2.14.3__typescript@5.8.3",
@@ -51,7 +51,7 @@
     "npm:svelte-check@4.4.8": "4.4.8_svelte@5.55.5_typescript@5.8.3",
     "npm:svelte-confetti@2.3.2": "2.3.2_svelte@5.55.5",
     "npm:svelte@5.55.5": "5.55.5",
-    "npm:ts-retry@6.0.0": "6.0.0",
+    "npm:ts-retry@7.0.3": "7.0.3",
     "npm:typescript-eslint@8.59.2": "8.59.2_eslint@10.3.0_typescript@5.8.3",
     "npm:typescript@5.8.3": "5.8.3",
     "npm:typesense@3.0.6": "3.0.6_@babel+runtime@7.29.7",
@@ -2657,20 +2657,23 @@
         "tslib"
       ]
     },
+    "@tanstack/query-core@5.101.2": {
+      "integrity": "sha512-hH5MLoJhF7KaIGd7q3xTXGXvslI+GYlM1Z/35aSHHWaCJWB7XvTSHYuV3eM7tw+aE0mT/xMro4M4Q9rCGHT0lw=="
+    },
     "@tanstack/query-core@5.90.2": {
       "integrity": "sha512-k/TcR3YalnzibscALLwxeiLUub6jN5EDLwKDiO7q5f4ICEoptJ+n9+7vcEFy5/x/i6Q+Lb/tXrsKCggf5uQJXQ=="
     },
-    "@tanstack/query-devtools@5.90.1": {
-      "integrity": "sha512-GtINOPjPUH0OegJExZ70UahT9ykmAhmtNVcmtdnOZbxLwT7R5OmRztR5Ahe3/Cu7LArEmR6/588tAycuaWb1xQ=="
+    "@tanstack/query-devtools@5.101.2": {
+      "integrity": "sha512-o+wHcqgN7Pp0s8v1i0UGq/ZrrEKrxdIiMQmKRdYb2w7NPtylYSJ4+wg/tIn71m9DLstwUwdEGAvROdly6HXP6w=="
     },
-    "@tanstack/query-persist-client-core@5.90.2": {
-      "integrity": "sha512-rgJRgqqziPc3KgK2mav2HNR4PoI5e7fkiIrkg85xZ5j29mHPzTp3A0QcceQXVaV9qcPp/SMDJA48A6BpGJGHZg==",
+    "@tanstack/query-persist-client-core@5.101.2": {
+      "integrity": "sha512-rgMsbvBVpSPDUsprC9FYxojdG0Q1LH6yq1i3DXz2aps4VEqv2l4Msj3YDqIifU3xkl/DrYe9YWntZAJLrM6xTg==",
       "dependencies": [
-        "@tanstack/query-core"
+        "@tanstack/query-core@5.101.2"
       ]
     },
-    "@tanstack/svelte-query-devtools@5.90.2_@tanstack+svelte-query@5.90.2__svelte@5.55.5_svelte@5.55.5": {
-      "integrity": "sha512-Mk6FWRz7rBr1zFlX2aBmRM8RIehCwE3VBE5/SX3L/pG5mFIBOCQqIUeyw+eNIW8RBbPvWDv9MrLohi/8cj9J4A==",
+    "@tanstack/svelte-query-devtools@6.1.36_@tanstack+svelte-query@5.90.2__svelte@5.55.5_svelte@5.55.5": {
+      "integrity": "sha512-OZb7AEccWtH1tOjpQBYlBe51JeBPNa8NbEfOiiOKape0n2fT0Hcv2HB599NvHnly41Npf3vRjJWNM/fgAedujg==",
       "dependencies": [
         "@tanstack/query-devtools",
         "@tanstack/svelte-query",
@@ -2678,8 +2681,8 @@
         "svelte"
       ]
     },
-    "@tanstack/svelte-query-persist-client@5.90.2_@tanstack+svelte-query@5.90.2__svelte@5.55.5_svelte@5.55.5": {
-      "integrity": "sha512-Q5FrwAR1KPh+yWL+hlldqakjR76vz4exRumhldaroowUKp8suV2mPbo4uYJz1CskRECzn5fKrRYOMEQsHxDRtg==",
+    "@tanstack/svelte-query-persist-client@6.1.36_@tanstack+svelte-query@5.90.2__svelte@5.55.5_svelte@5.55.5": {
+      "integrity": "sha512-U4NX0CwFxLZxKTJVWgV9iEBZI7gb4S5qwVVDks1NrnDBEIvTh5RBaA8td4LJ+ZcjGKQUOWFFdnfCUyn0DtjY7g==",
       "dependencies": [
         "@tanstack/query-persist-client-core",
         "@tanstack/svelte-query",
@@ -2689,7 +2692,7 @@
     "@tanstack/svelte-query@5.90.2_svelte@5.55.5": {
       "integrity": "sha512-owjnp0w8sOXlMhLZhucHrsYvCjgjHrVyII/wlqMGefxKFyroZS3xCwTee+IUx7UHbL+QmKr/HQTeTqhgxmxPQw==",
       "dependencies": [
-        "@tanstack/query-core",
+        "@tanstack/query-core@5.90.2",
         "svelte"
       ]
     },
@@ -5802,8 +5805,8 @@
     "ts-deepmerge@6.2.1": {
       "integrity": "sha512-8CYSLazCyj0DJDpPIxOFzJG46r93uh6EynYjuey+bxcLltBeqZL7DMfaE5ZPzZNFlav7wx+2TDa/mBl8gkTYzw=="
     },
-    "ts-retry@6.0.0": {
-      "integrity": "sha512-WsVRE/P+VNYbiQC3E6TeIXBRCQj7vzjN4MlXd84AC88K7WwuWShN7A3Q/QSV/yd1hjO8qn2Cevdqny2HMwKUaA=="
+    "ts-retry@7.0.3": {
+      "integrity": "sha512-sEaLD4RaKmEDvLeki2qQsJgqc50cdmBhQJ90I6V0ur/g1iO6P9PxU2dP52SF87dHEtb1jwb/BJWH5gCx6IfqgQ=="
     },
     "tslib@2.8.1": {
       "integrity": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="
@@ -6486,8 +6489,8 @@
             "npm:@sveltejs/adapter-cloudflare@7.2.8",
             "npm:@sveltejs/kit@2.59.1",
             "npm:@sveltejs/vite-plugin-svelte@7.0.0",
-            "npm:@tanstack/svelte-query-devtools@5.90.2",
-            "npm:@tanstack/svelte-query-persist-client@5.90.2",
+            "npm:@tanstack/svelte-query-devtools@6.1.36",
+            "npm:@tanstack/svelte-query-persist-client@6.1.36",
             "npm:@tanstack/svelte-query@5.90.2",
             "npm:@testing-library/jest-dom@6.9.1",
             "npm:@testing-library/svelte@5.3.1",
@@ -6523,7 +6526,7 @@
             "npm:svelte-check@4.4.8",
             "npm:svelte-confetti@2.3.2",
             "npm:svelte@5.55.5",
-            "npm:ts-retry@6.0.0",
+            "npm:ts-retry@7.0.3",
             "npm:typescript-eslint@8.59.2",
             "npm:typescript@5.8.3",
             "npm:typesense@3.0.6",
