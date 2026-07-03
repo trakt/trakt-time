@@ -20,5 +20,12 @@
   "vars": {
     "TYPESENSE_SERVER": "search.trakt.tv"
   },
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "tvtime.trakt.tv",
+      "custom_domain": true
+    }
+  ],
   "upload_source_maps": true
 }
