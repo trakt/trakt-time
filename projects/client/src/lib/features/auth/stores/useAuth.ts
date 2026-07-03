@@ -14,7 +14,6 @@ export function useAuth() {
     const manager = getUserManager();
 
     await manager?.revokeTokens();
-    await manager?.removeUser();
 
     setToken(null);
     isAuthorized.next(false);
@@ -22,7 +21,12 @@ export function useAuth() {
     await invalidate(InvalidateAction.Auth);
     await workerRequest(WorkerMessage.CacheBust);
 
-    globalThis.window.location.href = 'https://trakt.tv/logout';
+    // End the session at the provider (RP-initiated logout) so it's a real
+    // logout, not just a local token revoke. signoutRedirect clears the local
+    // user and navigates, returning to this origin.
+    await manager?.signoutRedirect({
+      post_logout_redirect_uri: globalThis.window?.location?.origin,
+    });
   };
 
   const login = async () => {
