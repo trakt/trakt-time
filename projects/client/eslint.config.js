@@ -23,6 +23,13 @@ export default ts.config(
         parser: ts.parser,
       },
     },
+
+    rules: {
+      // TS script blocks resolve symbols through svelte-check; eslint's
+      // no-undef cannot see ambient types from app.d.ts and false-flags
+      // them (ChildrenProps, Nil, ...).
+      'no-undef': 'off',
+    },
   },
   {
     ignores: ['build/', '.svelte-kit/', 'dist/', 'node_modules/'],
