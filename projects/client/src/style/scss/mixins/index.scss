@@ -129,15 +129,23 @@
   }
 }
 
-@mixin shimmer-bg {
+@mixin shimmer-bg($base: var(--color-card-background)) {
   background: linear-gradient(
     90deg,
-    var(--color-card-background) 25%,
-    color-mix(in srgb, var(--color-card-background) 60%, var(--color-border)) 50%,
-    var(--color-card-background) 75%
+    #{$base} 25%,
+    color-mix(in srgb, #{$base} 60%, var(--color-border)) 50%,
+    #{$base} 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+
+/* Shimmer for skeleton parts sitting ON a card surface — the default base
+   equals the card color and would be invisible there. */
+@mixin shimmer-bg-elevated {
+  @include shimmer-bg(
+    color-mix(in srgb, var(--color-card-background) 55%, var(--color-border)),
+  );
 }
 
 @mixin scrollable-row($gap: var(--gap-s)) {
