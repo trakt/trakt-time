@@ -1,3 +1,5 @@
+import '$lib/polyfills/at.ts';
+import '$lib/polyfills/toSorted.ts';
 import { SENTRY_DSN } from '$lib/utils/constants.ts';
 import { safeSessionStorage } from '$lib/utils/storage/safeStorage.ts';
 import * as Sentry from '@sentry/sveltekit';
