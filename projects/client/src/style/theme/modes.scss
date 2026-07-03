@@ -235,7 +235,7 @@
     color-mix(in srgb, var(--red-950) 10%, var(--shade-10)) 100%
   );
   --color-vip-popular-tag: #fdc700;
-  --color-vip-border-accent: var(--red-600);
+  --color-vip-border-accent: var(--trakttime-accent);
   --color-vip-surface-muted: var(--red-50);
   --background-vip-elevated-card: radial-gradient(
     167.08% 143.09% at 7.82% 100%,
@@ -536,7 +536,7 @@
     var(--shade-1000) 100%
   );
   --color-vip-popular-tag: #fdc700;
-  --color-vip-border-accent: #b31818;
+  --color-vip-border-accent: var(--trakttime-accent);
   --color-vip-surface-muted: #490105;
   --background-vip-elevated-card: radial-gradient(
     167.08% 143.09% at 7.82% 100%,
