@@ -32,7 +32,14 @@ export default ts.config(
     },
   },
   {
-    ignores: ['build/', '.svelte-kit/', 'dist/', 'node_modules/'],
+    ignores: [
+      'build/',
+      '.svelte-kit/',
+      'dist/',
+      'node_modules/',
+      // Generated paraglide output - never lint generated code.
+      'src/lib/paraglide/',
+    ],
   },
   {
     'rules': {
