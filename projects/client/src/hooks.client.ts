@@ -1,4 +1,5 @@
 import { SENTRY_DSN } from '$lib/utils/constants.ts';
+import { safeSessionStorage } from '$lib/utils/storage/safeStorage.ts';
 import * as Sentry from '@sentry/sveltekit';
 import { handleErrorWithSentry, replayIntegration } from '@sentry/sveltekit';
 
@@ -92,9 +93,9 @@ function isDynamicImportError(error: unknown): boolean {
 
 function reloadOnceForStaleDeploy(error: unknown): void {
   if (!isDynamicImportError(error)) return;
-  if (sessionStorage.getItem(DYNAMIC_IMPORT_RELOAD_KEY)) return;
+  if (safeSessionStorage.getItem(DYNAMIC_IMPORT_RELOAD_KEY)) return;
 
-  sessionStorage.setItem(DYNAMIC_IMPORT_RELOAD_KEY, '1');
+  safeSessionStorage.setItem(DYNAMIC_IMPORT_RELOAD_KEY, '1');
   window.location.reload();
 }
 
