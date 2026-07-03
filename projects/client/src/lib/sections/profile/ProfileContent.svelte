@@ -411,6 +411,30 @@
     background-color: var(--color-card-background);
   }
 
+  /* The identity row overlaps the cover's bottom edge; without a scrim a
+     bright cover swallows the username and the gear icon. */
+  .has-cover .profile-cover {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 35%,
+        color-mix(in srgb, var(--color-background) 55%, transparent) 78%,
+        color-mix(in srgb, var(--color-background) 92%, transparent) 100%
+      );
+      pointer-events: none;
+    }
+  }
+
+  .has-cover .profile-username,
+  .has-cover .profile-name {
+    text-shadow: 0 1px 6px var(--color-background);
+  }
+
   .profile-identity {
     display: flex;
     align-items: flex-end;
@@ -476,6 +500,12 @@
       width: 1.125rem;
       height: 1.125rem;
     }
+  }
+
+  .has-cover .profile-settings-btn {
+    background: color-mix(in srgb, var(--color-background) 55%, transparent);
+    backdrop-filter: blur(8px);
+    color: var(--color-text-primary);
   }
 
   .profile-name {
