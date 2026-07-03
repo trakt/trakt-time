@@ -332,5 +332,11 @@
   "import_status_syncing": "{processed} / {total} items worden gesynchroniseerd…",
   "import_summary_ratings": "{count} beoordelingen",
   "import_drop_zip": "Sleep een ZIP-bestand hierheen of klik om te uploaden.",
-  "welcome_tvtime_import_cta": "Importeren vanuit TV Time"
+  "welcome_tvtime_import_cta": "Importeren vanuit TV Time",
+  "welcome_tvtime_badge": "TV Time stopt",
+  "welcome_tvtime_heading": "Kom je van TV Time? Je bent thuis.",
+  "welcome_tvtime_body": "TV Time sluit de deuren, maar je kijkgeschiedenis hoeft niet verloren te gaan. Breng alles over naar Trakt en blijf bijhouden zonder iets te missen.",
+  "welcome_tvtime_liberator_body": "Exporteer je volledige geschiedenis met de TV Time Liberator browserextensie, of upload de officiële AVG-gegevensexport van TV Time's privacyportaal. Beide werken.",
+  "welcome_tvtime_liberator_cta": "Download TV Time Liberator",
+  "welcome_tvtime_gdpr_cta": "GDPR-export aanvragen"
 }

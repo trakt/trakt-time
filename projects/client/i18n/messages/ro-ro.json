@@ -332,5 +332,11 @@
   "import_status_syncing": "Se sincronizează {processed} / {total} elemente…",
   "import_summary_ratings": "{count} evaluări",
   "import_drop_zip": "Trage un fișier ZIP aici sau apasă pentru a încărca.",
-  "welcome_tvtime_import_cta": "Importă de pe TV Time"
+  "welcome_tvtime_import_cta": "Importă de pe TV Time",
+  "welcome_tvtime_badge": "TV Time se închide",
+  "welcome_tvtime_heading": "Vii de pe TV Time? Ești acasă.",
+  "welcome_tvtime_body": "TV Time își închide porțile, dar istoricul tău de vizionare nu trebuie să dispară odată cu el. Transferă totul pe Trakt și continuă să urmărești fără să ratezi nimic.",
+  "welcome_tvtime_liberator_body": "Exportă-ți istoricul complet cu extensia de browser TV Time Liberator, sau încarcă exportul oficial de date GDPR din portalul de confidențialitate TV Time. Ambele funcționează.",
+  "welcome_tvtime_liberator_cta": "Descarcă TV Time Liberator",
+  "welcome_tvtime_gdpr_cta": "Solicită exportul GDPR"
 }

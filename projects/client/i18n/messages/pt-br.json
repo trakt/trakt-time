@@ -332,5 +332,11 @@
   "import_status_syncing": "Sincronizando {processed} / {total} itens…",
   "import_summary_ratings": "{count} avaliações",
   "import_drop_zip": "Arraste um arquivo ZIP aqui ou clique para enviar.",
-  "welcome_tvtime_import_cta": "Importar do TV Time"
+  "welcome_tvtime_import_cta": "Importar do TV Time",
+  "welcome_tvtime_badge": "TV Time está encerrando",
+  "welcome_tvtime_heading": "Vindo do TV Time? Você está em casa.",
+  "welcome_tvtime_body": "O TV Time está encerrando suas atividades, mas seu histórico de exibição não precisa desaparecer com ele. Traga tudo para o Trakt e continue acompanhando sem perder o ritmo.",
+  "welcome_tvtime_liberator_body": "Exporte seu histórico completo com a extensão de navegador TV Time Liberator, ou faça upload da exportação oficial de dados GDPR do portal de privacidade do TV Time. Qualquer um funciona.",
+  "welcome_tvtime_liberator_cta": "Obtenha o TV Time Liberator",
+  "welcome_tvtime_gdpr_cta": "Solicitar exportação de dados GDPR"
 }

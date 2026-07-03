@@ -332,5 +332,11 @@
   "import_status_syncing": "Synchronizowanie {processed} / {total} elementów…",
   "import_summary_ratings": "{count} ocen",
   "import_drop_zip": "Upuść plik ZIP tutaj lub kliknij, aby przesłać.",
-  "welcome_tvtime_import_cta": "Importuj z TV Time"
+  "welcome_tvtime_import_cta": "Importuj z TV Time",
+  "welcome_tvtime_badge": "TV Time kończy działalność",
+  "welcome_tvtime_heading": "Przychodzisz z TV Time? Jesteś w domu.",
+  "welcome_tvtime_body": "TV Time zamyka swoje podwoje, ale Twoja historia oglądania nie musi z nią zniknąć. Przenieś wszystko do Trakt i kontynuuj śledzenie bez żadnych przeszkód.",
+  "welcome_tvtime_liberator_body": "Wyeksportuj całą swoją historię za pomocą rozszerzenia przeglądarki TV Time Liberator lub prześlij oficjalny eksport danych RODO z portalu prywatności TV Time. Obie metody działają.",
+  "welcome_tvtime_liberator_cta": "Pobierz TV Time Liberator",
+  "welcome_tvtime_gdpr_cta": "Poproś o eksport RODO"
 }

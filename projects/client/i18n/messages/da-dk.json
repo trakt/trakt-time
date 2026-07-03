@@ -332,5 +332,11 @@
   "import_status_syncing": "Synkroniserer {processed} / {total} elementer…",
   "import_summary_ratings": "{count} bedømmelser",
   "import_drop_zip": "Træk en ZIP-fil herover, eller klik for at uploade.",
-  "welcome_tvtime_import_cta": "Importer fra TV Time"
+  "welcome_tvtime_import_cta": "Importer fra TV Time",
+  "welcome_tvtime_badge": "TV Time lukker ned",
+  "welcome_tvtime_heading": "Kommer du fra TV Time? Du er hjemme.",
+  "welcome_tvtime_body": "TV Time lukker sine døre, men din seerhistorik behøver ikke at forsvinde med det. Overfør alt til Trakt og fortsæt med at spore uden at gå glip af noget.",
+  "welcome_tvtime_liberator_body": "Eksporter din fulde historik med TV Time Liberator browserudvidelsen, eller upload den officielle GDPR-dataeksport fra TV Times privatlivsportal. Begge dele virker.",
+  "welcome_tvtime_liberator_cta": "Hent TV Time Liberator",
+  "welcome_tvtime_gdpr_cta": "Anmod om GDPR-eksport"
 }

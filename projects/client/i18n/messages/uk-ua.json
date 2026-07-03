@@ -332,5 +332,11 @@
   "import_status_syncing": "Синхронізація {processed} / {total} елементів…",
   "import_summary_ratings": "{count} оцінок",
   "import_drop_zip": "Перетягніть файл ZIP сюди або натисніть, щоб завантажити.",
-  "welcome_tvtime_import_cta": "Імпорт з TV Time"
+  "welcome_tvtime_import_cta": "Імпорт з TV Time",
+  "welcome_tvtime_badge": "TV Time припиняє роботу",
+  "welcome_tvtime_heading": "Перейшли з TV Time? Ви вдома.",
+  "welcome_tvtime_body": "TV Time зачиняє свої двері, але ваша історія переглядів не повинна зникати разом з ним. Перенесіть усе в Trakt і продовжуйте відстежувати без перебоїв.",
+  "welcome_tvtime_liberator_body": "Експортуйте повну історію за допомогою розширення браузера TV Time Liberator або завантажте офіційний експорт даних GDPR з порталу конфіденційності TV Time. Підійде будь-який з цих варіантів.",
+  "welcome_tvtime_liberator_cta": "Отримати TV Time Liberator",
+  "welcome_tvtime_gdpr_cta": "Запит на експорт даних GDPR"
 }

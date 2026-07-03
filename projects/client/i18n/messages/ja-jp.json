@@ -332,5 +332,11 @@
   "import_status_syncing": "{processed} / {total}項目を同期中…",
   "import_summary_ratings": "{count}件の評価",
   "import_drop_zip": "ZIPファイルをここにドロップするか、クリックしてアップロードしてください。",
-  "welcome_tvtime_import_cta": "TV Timeからインポート"
+  "welcome_tvtime_import_cta": "TV Timeからインポート",
+  "welcome_tvtime_badge": "TV Timeは終了します",
+  "welcome_tvtime_heading": "TV Timeから移行しましたか？ようこそ。",
+  "welcome_tvtime_body": "TV Timeは終了しますが、あなたの視聴履歴が一緒に消える必要はありません。すべてをTraktに移行して、滞りなく追跡を続けましょう。",
+  "welcome_tvtime_liberator_body": "TV Time Liberatorブラウザ拡張機能で完全な履歴をエクスポートするか、TV Timeのプライバシーポータルから公式のGDPRデータエクスポートをアップロードしてください。どちらの方法でも動作します。",
+  "welcome_tvtime_liberator_cta": "TV Time Liberatorを入手",
+  "welcome_tvtime_gdpr_cta": "GDPRデータエクスポートをリクエスト"
 }

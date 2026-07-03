@@ -8,16 +8,11 @@
 
   const { variant = 'default' }: Props = $props();
 
-  const HREF = 'https://github.com/hobo-Ware/tv-time-liberator';
+  const LIBERATOR_HREF = 'https://github.com/hobo-Ware/tv-time-liberator';
+  const GDPR_HREF = 'https://gdpr.tvtime.com/gdpr/self-service';
 </script>
 
-<a
-  class="liberator-cta"
-  class:is-compact={variant === 'compact'}
-  href={HREF}
-  target="_blank"
-  rel="noopener noreferrer"
->
+<div class="liberator-cta" class:is-compact={variant === 'compact'}>
   <div class="liberator-cta-icon" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M14 7V5a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2v2H6a1 1 0 0 0-1 1v3.5a.5.5 0 0 0 .5.5H7a2 2 0 0 1 0 4H5.5a.5.5 0 0 0-.5.5V18a1 1 0 0 0 1 1h3.5a.5.5 0 0 0 .5-.5V17a2 2 0 0 1 4 0v1.5a.5.5 0 0 0 .5.5H18a1 1 0 0 0 1-1v-3.5a.5.5 0 0 0-.5-.5H17a2 2 0 0 1 0-4h1.5a.5.5 0 0 0 .5-.5V8a1 1 0 0 0-1-1h-4z" />
@@ -25,15 +20,33 @@
   </div>
   <div class="liberator-cta-body">
     <p class="liberator-cta-title">{m.header_tv_time_liberator()}</p>
-    <p class="liberator-cta-text">{m.text_tv_time_liberator()}</p>
+    <p class="liberator-cta-text">{m.welcome_tvtime_liberator_body()}</p>
   </div>
-  <span class="liberator-cta-action">
-    {m.button_text_get_extension()}
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3z" />
-    </svg>
-  </span>
-</a>
+  <div class="liberator-cta-actions">
+    <a
+      class="liberator-cta-action"
+      href={LIBERATOR_HREF}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {m.button_text_get_extension()}
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3z" />
+      </svg>
+    </a>
+    <a
+      class="liberator-cta-action"
+      href={GDPR_HREF}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {m.welcome_tvtime_gdpr_cta()}
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3z" />
+      </svg>
+    </a>
+  </div>
+</div>
 
 <style lang="scss">
   .liberator-cta {
@@ -46,24 +59,6 @@
       color-mix(in srgb, var(--trakttime-accent) 25%, transparent);
     border-radius: var(--border-radius-m);
     color: var(--color-text-primary);
-    text-decoration: none;
-    transition: background 0.15s ease, border-color 0.15s ease,
-      transform 0.15s ease;
-    -webkit-tap-highlight-color: transparent;
-
-    &:hover,
-    &:focus-visible {
-      background: color-mix(in srgb, var(--trakttime-accent) 14%, transparent);
-      border-color: color-mix(
-        in srgb,
-        var(--trakttime-accent) 45%,
-        transparent
-      );
-    }
-
-    &:active {
-      transform: scale(0.99);
-    }
 
     &.is-compact {
       padding: var(--gap-xs) var(--gap-s);
@@ -118,8 +113,15 @@
     display: none;
   }
 
-  .liberator-cta-action {
+  .liberator-cta-actions {
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gap-xs);
+  }
+
+  .liberator-cta-action {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -128,6 +130,14 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      opacity: 0.8;
+    }
 
     svg {
       width: 0.7rem;
@@ -135,15 +145,11 @@
     }
   }
 
-  /* Stack everything on mobile-narrow viewports so the action stays readable. */
+  /* Stack everything on mobile-narrow viewports so the actions stay readable. */
   @media (max-width: 360px) {
     .liberator-cta {
-      flex-wrap: wrap;
-    }
-
-    .liberator-cta-action {
-      width: 100%;
-      justify-content: flex-end;
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>
