@@ -81,7 +81,7 @@ export const useRecommendedList = (props: RecommendationListStoreProps) => {
     map((q) => q.data ?? []),
     dailyOrderArray<RecommendedEntry>(
       `recommended-${listKey}-order`,
-      (item) => item.id,
+      (item) => item.key,
     ),
   );
 
