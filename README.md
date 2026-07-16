@@ -4,7 +4,7 @@
 
 > **Note:** This is an experiment. We're rebuilding a Trakt client app with a
 > mobile-first, TV Time-like feel. Started as an AI hackathon project, kept
-> alive for fun and learning. It's not affiliated with Trakt and not aiming to
+> alive for fun and learning. It's not aiming to
 > replace anything — just a sandbox.
 
 ---
