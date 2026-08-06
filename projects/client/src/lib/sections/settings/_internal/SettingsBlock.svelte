@@ -27,7 +27,6 @@
 
     p.settings-title {
       transition: font-size var(--transition-increment) ease-in-out;
-      text-transform: capitalize;
       font-size: var(--font-size-title);
     }
   }
