@@ -442,5 +442,6 @@
   "import_summary_list": "{count} pozycji listy",
   "import_match_toggle_label": "Dopasuj odcinki według numeru sezonu i odcinka",
   "import_match_toggle_hint": "Zalecamy domyślne dopasowanie (według identyfikatora TVDB). Włącz tę opcję tylko, jeśli niektóre odcinki pojawiają się w niewłaściwej pozycji – wyniki różnią się w zależności od serialu.",
-  "import_vip_limit_exceeded": "Twój import przekracza limit darmowego planu. Uaktualnij do VIP, aby zaimportować wszystkie {count} elementów."
+  "import_vip_limit_exceeded": "Twój import przekracza limit darmowego planu. Uaktualnij do VIP, aby zaimportować wszystkie {count} elementów.",
+  "list_title_where_to_watch": "Gdzie oglądać"
 }

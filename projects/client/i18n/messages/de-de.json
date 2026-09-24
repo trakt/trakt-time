@@ -442,5 +442,6 @@
   "import_summary_list": "{count} Listenelemente",
   "import_match_toggle_label": "Episoden nach Staffel- und Episodennummer abgleichen",
   "import_match_toggle_hint": "Wir empfehlen die Standardeinstellung (Abgleich nach TVDB-ID). Aktivieren Sie dies nur, wenn Episoden falsch zugeordnet werden – die Ergebnisse können je nach Serie variieren.",
-  "import_vip_limit_exceeded": "Ihr Import überschreitet das Limit des kostenlosen Kontos. Führen Sie ein Upgrade auf VIP durch, um alle {count} Elemente zu importieren."
+  "import_vip_limit_exceeded": "Ihr Import überschreitet das Limit des kostenlosen Kontos. Führen Sie ein Upgrade auf VIP durch, um alle {count} Elemente zu importieren.",
+  "list_title_where_to_watch": "Wo anzusehen"
 }

@@ -442,5 +442,6 @@
   "import_summary_list": "{count}個のリストアイテム",
   "import_match_toggle_label": "エピソードをシーズンとエピソード番号で照合",
   "import_match_toggle_hint": "デフォルト（TVDB IDで照合）を推奨します。一部のエピソードが間違ったエントリに割り当てられた場合にのみこれをオンにしてください。結果は番組によって異なります。",
-  "import_vip_limit_exceeded": "インポートが無料ティアの制限を超過しています。VIPにアップグレードすると、すべての{count}項目をインポートできます。"
+  "import_vip_limit_exceeded": "インポートが無料ティアの制限を超過しています。VIPにアップグレードすると、すべての{count}項目をインポートできます。",
+  "list_title_where_to_watch": "どこで視聴するか"
 }

@@ -12,6 +12,7 @@
   import SentimentSection from '$lib/sections/summary/components/sentiment/SentimentSection.svelte';
   import TriviaSection from '$lib/sections/summary/components/trivia/TriviaSection.svelte';
   import CastSection from '$lib/sections/summary/_internal/CastSection.svelte';
+  import WhereToWatchSection from '$lib/sections/summary/components/where-to-watch/WhereToWatchSection.svelte';
   import CommentsSection from '$lib/sections/summary/_internal/CommentsSection.svelte';
   import MediaActionsRow from '$lib/sections/summary/_internal/MediaActionsRow.svelte';
   import MediaCoverHero from '$lib/sections/summary/_internal/MediaCoverHero.svelte';
@@ -152,6 +153,8 @@
       {#if intl?.overview ?? movie.overview}
         <p class="summary-overview">{intl?.overview ?? movie.overview}</p>
       {/if}
+
+      <WhereToWatchSection type="movie" {slug} />
 
       <RenderFor audience="vip">
         <SentimentSection type="movie" {slug} />

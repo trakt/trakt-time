@@ -442,5 +442,6 @@
   "import_summary_list": "{count} elementos de la lista",
   "import_match_toggle_label": "Emparejar episodios por temporada y número de episodio",
   "import_match_toggle_hint": "Recomendamos la opción predeterminada (emparejar por ID de TVDB). Activa esto solo si algunos episodios aparecen en la entrada incorrecta; los resultados varían de programa a programa.",
-  "import_vip_limit_exceeded": "Tu importación excede el límite del nivel gratuito. Actualiza a VIP para importar los {count} elementos."
+  "import_vip_limit_exceeded": "Tu importación excede el límite del nivel gratuito. Actualiza a VIP para importar los {count} elementos.",
+  "list_title_where_to_watch": "Dónde ver"
 }

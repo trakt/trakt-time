@@ -442,5 +442,6 @@
   "import_summary_list": "{count} liste öğesi",
   "import_match_toggle_label": "Bölümleri sezon ve bölüm numarasına göre eşleştir",
   "import_match_toggle_hint": "Varsayılanı (TVDB kimliğine göre eşleştir) öneriyoruz. Bunu yalnızca bazı bölümler yanlış girişe düşerse açın - sonuçlar diziden diziye değişir.",
-  "import_vip_limit_exceeded": "İçe aktarmanız ücretsiz katman limitini aşıyor. Tüm {count} öğeyi içe aktarmak için VIP'e yükseltin."
+  "import_vip_limit_exceeded": "İçe aktarmanız ücretsiz katman limitini aşıyor. Tüm {count} öğeyi içe aktarmak için VIP'e yükseltin.",
+  "list_title_where_to_watch": "Nereden İzlenir"
 }

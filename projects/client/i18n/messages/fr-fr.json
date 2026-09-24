@@ -442,5 +442,6 @@
   "import_summary_list": "{count} éléments de la liste",
   "import_match_toggle_label": "Faire correspondre les épisodes par saison et numéro d'épisode",
   "import_match_toggle_hint": "Nous recommandons le réglage par défaut (correspondance par identifiant TVDB). Activez ceci uniquement si certains épisodes sont associés à la mauvaise entrée - les résultats varient d'une série à l'autre.",
-  "import_vip_limit_exceeded": "Votre importation dépasse la limite du niveau gratuit. Passez à VIP pour importer les {count} éléments."
+  "import_vip_limit_exceeded": "Votre importation dépasse la limite du niveau gratuit. Passez à VIP pour importer les {count} éléments.",
+  "list_title_where_to_watch": "Où regarder"
 }
