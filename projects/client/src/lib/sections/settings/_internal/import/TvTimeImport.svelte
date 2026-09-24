@@ -4,6 +4,8 @@
   import TvTimeLiberatorCta from '$lib/components/tv-time-liberator-cta/TvTimeLiberatorCta.svelte';
   import { ConfirmationType } from '$lib/features/confirmation/models/ConfirmationType.ts';
   import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
+  import { useUser } from '$lib/features/auth/stores/useUser.ts';
+  import UpsellCta from '$lib/features/upsell/UpsellCta.svelte';
   import { useImportInProgress } from '$lib/stores/useImportInProgress.ts';
   import { useInvalidator } from '$lib/stores/useInvalidator.ts';
   import { dropzone } from '$lib/utils/actions/dropzone.ts';
@@ -11,11 +13,17 @@
   import * as m from '$lib/paraglide/messages.js';
   import {
     type AmbiguousImportItem,
+    DEFAULT_EPISODE_MATCH_MODE,
+    type EpisodeMatchMode,
     IMPORT_SOURCE_CONFIGS,
+    type ImportAction,
+    type ImportActionSelection,
     type ImportCounts,
     type ImportStatus,
     type UniversalImportItem,
   } from '../../import/ImportTypes.ts';
+  import { exceedsFreeImportLimits } from '../../import/exceedsFreeImportLimits.ts';
+  import { filterImportItemsByActionSelection } from '../../import/filterImportItemsByActionSelection.ts';
   import { TvTimeCsvParser } from '../../import/parsers/TvTimeCsvParser.ts';
   import { syncToTrakt } from '../../import/syncToTrakt.ts';
   import ImportComplete from './ImportComplete.svelte';
@@ -23,6 +31,7 @@
 
   const { importInProgress } = useImportInProgress();
   const { invalidate } = useInvalidator();
+  const { user, limits } = useUser();
 
   const sourceConfig = IMPORT_SOURCE_CONFIGS.tvtime;
 
@@ -39,6 +48,8 @@
     matchProcessedCount: number;
     matchTotalCount: number;
     error: string | null;
+    selectedActions: ImportActionSelection;
+    episodeMatch: EpisodeMatchMode;
   };
 
   const initialState: State = {
@@ -52,6 +63,8 @@
     matchProcessedCount: 0,
     matchTotalCount: 0,
     error: null,
+    selectedActions: { history: true, watchlist: true, ratings: true, list: true },
+    episodeMatch: DEFAULT_EPISODE_MATCH_MODE,
   };
 
   let state = $state<State>({ ...initialState });
@@ -62,6 +75,69 @@
     ratings: state.items.filter((i) => i.action === 'ratings').length,
     list: state.items.filter((i) => i.action === 'list').length,
   });
+
+  const actionRows = $derived<
+    ReadonlyArray<{ action: ImportAction; label: string; count: number }>
+  >(
+    [
+      {
+        action: 'history' as const,
+        count: counts.history,
+        label: m.import_summary_history({ count: counts.history }),
+      },
+      {
+        action: 'watchlist' as const,
+        count: counts.watchlist,
+        label: m.import_summary_watchlist({ count: counts.watchlist }),
+      },
+      {
+        action: 'ratings' as const,
+        count: counts.ratings,
+        label: m.import_summary_ratings({ count: counts.ratings }),
+      },
+      {
+        action: 'list' as const,
+        count: counts.list,
+        label: m.import_summary_list({ count: counts.list }),
+      },
+    ].filter((row) => row.count > 0),
+  );
+
+  const selectedItems = $derived(
+    filterImportItemsByActionSelection({
+      items: state.items,
+      selectedActions: state.selectedActions,
+    }),
+  );
+
+  const hasEpisodes = $derived(
+    state.items.some((item) => item.type === 'episode'),
+  );
+
+  const isOverFreeLimit = $derived.by(() => {
+    if ($user?.isVip || !$limits) return false;
+
+    return exceedsFreeImportLimits({
+      counts: {
+        history: state.selectedActions.history ? counts.history : 0,
+        watchlist: state.selectedActions.watchlist ? counts.watchlist : 0,
+        ratings: state.selectedActions.ratings ? counts.ratings : 0,
+        list: state.selectedActions.list ? counts.list : 0,
+      },
+      limits: $limits,
+    });
+  });
+
+  function toggleAction(action: ImportAction) {
+    state.selectedActions = {
+      ...state.selectedActions,
+      [action]: !state.selectedActions[action],
+    };
+  }
+
+  function toggleEpisodeMatch() {
+    state.episodeMatch = state.episodeMatch === 'positional' ? 'id' : 'positional';
+  }
 
   const progressPercent = $derived(
     state.totalCount === 0
@@ -131,12 +207,14 @@
     state.errorCount = 0;
     state.matchProcessedCount = 0;
     state.matchTotalCount = 0;
+    state.totalCount = selectedItems.length;
 
     try {
       const { errorCount, unresolved, ambiguous } = await syncToTrakt(
-        state.items,
+        selectedItems,
         {
           signal: abortController.signal,
+          episodeMatch: state.episodeMatch,
           onMatchProgress: (processed, total) => {
             state.matchProcessedCount = processed;
             state.matchTotalCount = total;
@@ -172,6 +250,7 @@
       abortController = new AbortController();
       const { errorCount } = await syncToTrakt(picked, {
         signal: abortController.signal,
+        episodeMatch: state.episodeMatch,
         onProgress: () => {},
         onError: (msg) => {
           console.error('[tv-time import]', msg);
@@ -230,22 +309,44 @@
         transition:slide={{ duration: 150, axis: 'y' }}
       >
         <div class="tv-time-counts">
-          <p>{m.import_summary_history({ count: counts.history })}</p>
-          {#if counts.watchlist > 0}
-            <p>{m.import_summary_watchlist({ count: counts.watchlist })}</p>
-          {/if}
-          {#if counts.ratings > 0}
-            <p>{m.import_summary_ratings({ count: counts.ratings })}</p>
-          {/if}
-          {#if counts.list > 0}
-            <p>{m.import_summary_list({ count: counts.list })}</p>
-          {/if}
+          {#each actionRows as row (row.action)}
+            <label class="tv-time-option">
+              <input
+                type="checkbox"
+                checked={state.selectedActions[row.action]}
+                onchange={() => toggleAction(row.action)}
+              />
+              <span>{row.label}</span>
+            </label>
+          {/each}
         </div>
+        {#if hasEpisodes}
+          <label class="tv-time-option">
+            <input
+              type="checkbox"
+              checked={state.episodeMatch === 'positional'}
+              onchange={toggleEpisodeMatch}
+            />
+            <span class="tv-time-option-text">
+              <span>{m.import_match_toggle_label()}</span>
+              <span class="tv-time-secondary">{m.import_match_toggle_hint()}</span>
+            </span>
+          </label>
+        {/if}
+        {#if isOverFreeLimit}
+          <UpsellCta source="tv-time-import">
+            {m.import_vip_limit_exceeded({ count: selectedItems.length })}
+          </UpsellCta>
+        {/if}
         <div class="tv-time-actions">
           <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
             {m.button_text_cancel()}
           </button>
-          <button class="tv-time-btn tv-time-btn--primary" onclick={startImport}>
+          <button
+            class="tv-time-btn tv-time-btn--primary"
+            onclick={startImport}
+            disabled={selectedItems.length === 0}
+          >
             {m.button_text_start_import()}
           </button>
         </div>
@@ -362,7 +463,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-m);
+  }
 
+  .tv-time-syncing,
+  .tv-time-error {
     p {
       margin: 0;
       color: var(--color-text-primary);
@@ -370,6 +474,27 @@
   }
 
   .tv-time-counts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xxs);
+  }
+
+  .tv-time-option {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-s);
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    input {
+      flex-shrink: 0;
+      margin: var(--ni-2) 0 0;
+      accent-color: var(--trakttime-accent);
+    }
+  }
+
+  .tv-time-option-text {
     display: flex;
     flex-direction: column;
     gap: var(--gap-xxs);
@@ -417,6 +542,11 @@
 
     &:active {
       opacity: 0.8;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
     }
   }
 </style>
