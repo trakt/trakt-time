@@ -3,9 +3,12 @@ import { ConfirmationType } from '$lib/features/confirmation/models/Confirmation
 import { useConfirm } from '$lib/features/confirmation/useConfirm.ts';
 import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
 import type { Season } from '$lib/requests/models/Season.ts';
+import { removeRatingRequest } from '$lib/requests/sync/removeRatingRequest.ts';
 import { removeWatchedRequest } from '$lib/requests/sync/removeWatchedRequest.ts';
+import { toRemoveRatingsPayload } from '$lib/requests/sync/toRemoveRatingsPayload.ts';
 import { useInvalidator } from '$lib/stores/useInvalidator.ts';
 import { seasonLabel } from '$lib/utils/intl/seasonLabel.ts';
+import { resolve } from '$lib/utils/store/resolve.ts';
 import { BehaviorSubject, map } from 'rxjs';
 import { useShowEpisodeHistory } from '../_internal/useShowEpisodeHistory.ts';
 
@@ -18,7 +21,7 @@ type UseSeasonWatchedProps = {
 export function useSeasonWatched(
   { slug, showId, season }: UseSeasonWatchedProps,
 ) {
-  const { history } = useUser();
+  const { history, ratings } = useUser();
   const { invalidate } = useInvalidator();
   const { confirm } = useConfirm();
   const { resolveWatched, fetchSeasonEpisodes, markEpisodesAsWatched } =
@@ -62,7 +65,17 @@ export function useSeasonWatched(
     title: seasonLabel(season.number),
     onConfirm: () =>
       withUpdating(async () => {
-        const episodes = await fetchSeasonEpisodes(season.number);
+        const [episodes, { watchedEpisodeIds }, currentRatings] = await Promise
+          .all([
+            fetchSeasonEpisodes(season.number),
+            resolveWatched(),
+            resolve(ratings),
+          ]);
+        const orphanedRatingIds = episodes
+          .map((episode) => episode.id)
+          .filter((id) =>
+            watchedEpisodeIds.has(id) && currentRatings.episodes.has(id)
+          );
 
         await removeWatchedRequest({
           body: {
@@ -72,6 +85,13 @@ export function useSeasonWatched(
           },
         });
         await invalidate(InvalidateAction.MarkAsWatched('episode'));
+
+        if (orphanedRatingIds.length === 0) return;
+
+        await removeRatingRequest({
+          body: toRemoveRatingsPayload('episode', orphanedRatingIds),
+        });
+        await invalidate(InvalidateAction.Rated('episode'));
       }),
   });
 
