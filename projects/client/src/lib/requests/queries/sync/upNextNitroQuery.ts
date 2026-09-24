@@ -81,7 +81,7 @@ export const upNextNitroQuery = defineInfiniteQuery({
     ...getGlobalFilterDependencies(params.filter),
   ],
   request: upNextNitroRequest,
-  mapper: (response) => {
+  mapper: (response, { page }) => {
     return {
       // The API returns next_episode: null for caught-up shows despite the
       // pinned contract saying otherwise; one null would break the mapper
@@ -89,7 +89,7 @@ export const upNextNitroQuery = defineInfiniteQuery({
       entries: response.body
         .filter((item) => item.progress.next_episode != null)
         .map(mapUpNextResponse),
-      page: extractPageMeta(response.headers),
+      page: extractPageMeta(response.headers, page),
     };
   },
   schema: PaginatableSchemaFactory(UpNextEntrySchema),

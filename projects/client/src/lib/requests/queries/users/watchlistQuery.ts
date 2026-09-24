@@ -86,9 +86,9 @@ export const watchlistQuery = defineInfiniteQuery({
     ...getGlobalFilterDependencies(params.filter),
   ],
   request: watchlistRequest,
-  mapper: (response) => ({
+  mapper: (response, { page }) => ({
     entries: response.body.map(mapToListItem),
-    page: extractPageMeta(response.headers),
+    page: extractPageMeta(response.headers, page),
   }),
   schema: PaginatableSchemaFactory(ListItemSchema),
   ttl: time.hours(1),

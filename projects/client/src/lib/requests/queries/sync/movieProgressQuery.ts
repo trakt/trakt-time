@@ -77,14 +77,14 @@ export const movieProgressQuery = defineInfiniteQuery({
     ...getGlobalFilterDependencies(params.filter),
   ],
   request: movieProgressRequest,
-  mapper: (response, { sortBy, sortHow }) => {
+  mapper: (response, { sortBy, sortHow, page }) => {
     const entries = response.body
       .map(mapToMovieProgressEntry)
       .filter(isValidProgressMovie);
 
     return {
       entries: sortMovieProgress({ entries, sortBy, sortHow }),
-      page: extractPageMeta(response.headers),
+      page: extractPageMeta(response.headers, page),
     };
   },
   schema: PaginatableSchemaFactory(MovieProgressSchema),
