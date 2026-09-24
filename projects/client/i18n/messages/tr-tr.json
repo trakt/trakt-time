@@ -402,5 +402,7 @@
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Trakt deneyiminizi geliştirin",
   "button_label_manage_subscription": "VIP Aboneliğini Yönet",
-  "tag_text_new": "Yeni"
+  "tag_text_new": "Yeni",
+  "warning_prompt_watched_until_here": "\"{title}\" bölümünü izlendi olarak işaretlediniz. Ancak bu, önceki bölümlerin izlenmemiş kalmasına neden oldu. Bu bölüme kadar olan tüm bölümleri de izlendi olarak işaretleyelim mi?",
+  "button_text_watched_until_here": "Buraya Kadar İzlendi"
 }

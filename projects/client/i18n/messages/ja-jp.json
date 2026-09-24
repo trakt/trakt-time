@@ -402,5 +402,7 @@
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Trakt体験を向上させる",
   "button_label_manage_subscription": "VIPサブスクリプションを管理",
-  "tag_text_new": "新着"
+  "tag_text_new": "新着",
+  "warning_prompt_watched_until_here": "\"{title}\"を視聴済みにしましたが、以前のエピソードが未視聴のままです。それまでのエピソードもすべて視聴済みにしますか？",
+  "button_text_watched_until_here": "ここまで視聴済み"
 }

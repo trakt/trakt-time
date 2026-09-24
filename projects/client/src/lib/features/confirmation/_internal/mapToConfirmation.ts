@@ -21,6 +21,12 @@ export function mapToConfirmation<T extends ConfirmationType>(
         message: getWarningMessage(props.title, props.target),
         operation: 'destructive',
       };
+    case ConfirmationType.WatchedUntilHere:
+      return {
+        buttonText: m.button_text_watched_until_here(),
+        message: m.warning_prompt_watched_until_here({ title: props.title }),
+        operation: 'affirmative',
+      };
     case ConfirmationType.RemoveFromWatched:
       return {
         buttonText: m.button_text_remove_from_history(),

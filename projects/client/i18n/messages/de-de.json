@@ -402,5 +402,7 @@
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Verbessern Sie Ihr Trakt-Erlebnis",
   "button_label_manage_subscription": "VIP-Abonnement verwalten",
-  "tag_text_new": "Neu"
+  "tag_text_new": "Neu",
+  "warning_prompt_watched_until_here": "Das Markieren von \"{title}\" als gesehen hat frühere Episoden ungesehen gelassen. Alle davor liegenden Episoden ebenfalls als gesehen markieren?",
+  "button_text_watched_until_here": "Bis hierhin gesehen"
 }

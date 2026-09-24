@@ -402,5 +402,7 @@
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Verbeter je Trakt-ervaring",
   "button_label_manage_subscription": "VIP-abonnement beheren",
-  "tag_text_new": "Nieuw"
+  "tag_text_new": "Nieuw",
+  "warning_prompt_watched_until_here": "Door \"{title}\" als bekeken te markeren, zijn eerdere afleveringen onbekeken gebleven. Alles tot en met deze aflevering ook als bekeken markeren?",
+  "button_text_watched_until_here": "Tot hier bekeken"
 }

@@ -13,8 +13,9 @@
     episode: EpisodeEntry;
     showId: number;
     showTitle: string;
+    onWatched: (episode: EpisodeEntry) => void;
   };
-  const { slug, episode, showId, showTitle }: Props = $props();
+  const { slug, episode, showId, showTitle, onWatched }: Props = $props();
 
   const { markAsWatched, removeWatched, isWatched, isMarkingAsWatched, isWatchable } =
     $derived(
@@ -39,9 +40,14 @@
     ),
   );
 
-  function toggle() {
-    if ($isWatched) removeWatched();
-    else markAsWatched();
+  async function toggle() {
+    if ($isWatched) {
+      removeWatched();
+      return;
+    }
+
+    await markAsWatched();
+    onWatched(episode);
   }
 </script>
 

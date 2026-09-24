@@ -1,6 +1,9 @@
 <script lang="ts">
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import { showSeasonEpisodesQuery } from '$lib/requests/queries/shows/showSeasonEpisodesQuery.ts';
+  import type { EpisodeEntry } from '$lib/requests/models/EpisodeEntry.ts';
+  import type { Season } from '$lib/requests/models/Season.ts';
+  import { useWatchedUntilHere } from '$lib/sections/media-actions/mark-as-watched/watched-until-here/useWatchedUntilHere.ts';
   import SeasonEpisodeRow from './SeasonEpisodeRow.svelte';
 
   type Props = {
@@ -9,12 +12,18 @@
     showId: number;
     showTitle: string;
     episodeCount: number;
+    seasons: ReadonlyArray<Season>;
   };
-  const { slug, season, showId, showTitle, episodeCount }: Props = $props();
+  const { slug, season, showId, showTitle, episodeCount, seasons }: Props = $props();
 
   const query = $derived(useQuery(showSeasonEpisodesQuery({ slug, season })));
   const episodes = $derived($query.data ?? []);
   const isLoading = $derived($query.isLoading);
+
+  const { offerWatchedUntilHere } = $derived(useWatchedUntilHere({ slug, showId }));
+
+  const onWatched = (episode: EpisodeEntry) =>
+    offerWatchedUntilHere({ episode, currentSeasonEpisodes: episodes, seasons });
 
   const skeletonCount = $derived(Math.max(episodeCount, 1));
 </script>
@@ -36,7 +45,7 @@
   {:else}
     <ol class="episode-list">
       {#each episodes as episode (episode.id)}
-        <SeasonEpisodeRow {slug} {episode} {showId} {showTitle} />
+        <SeasonEpisodeRow {slug} {episode} {showId} {showTitle} {onWatched} />
       {/each}
     </ol>
   {/if}
