@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "Upgraden Sie auf VIP, um mehr Einblicke freizuschalten.",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Verbessern Sie Ihr Trakt-Erlebnis",
-  "button_label_manage_subscription": "VIP-Abonnement verwalten"
+  "button_label_manage_subscription": "VIP-Abonnement verwalten",
+  "tag_text_new": "Neu"
 }

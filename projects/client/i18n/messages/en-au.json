@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "Upgrade to VIP to unlock more insights.",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Enhance your Trakt experience",
-  "button_label_manage_subscription": "Manage VIP Subscription"
+  "button_label_manage_subscription": "Manage VIP Subscription",
+  "tag_text_new": "New"
 }

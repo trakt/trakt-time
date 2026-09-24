@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "Atualize para VIP para desbloquear mais informações.",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Aprimore sua experiência Trakt",
-  "button_label_manage_subscription": "Gerenciar Assinatura VIP"
+  "button_label_manage_subscription": "Gerenciar Assinatura VIP",
+  "tag_text_new": "Novo"
 }

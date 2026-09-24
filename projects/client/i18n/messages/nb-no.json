@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "Oppgrader til VIP for å låse opp flere innsikter.",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Forbedre din Trakt-opplevelse",
-  "button_label_manage_subscription": "Administrer VIP-abonnement"
+  "button_label_manage_subscription": "Administrer VIP-abonnement",
+  "tag_text_new": "Ny"
 }

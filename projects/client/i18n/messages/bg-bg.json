@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "Надградете до VIP, за да отключите повече прозрения.",
   "tag_text_vip": "ВИП",
   "text_vip_upsell_default": "Подобрете вашето Trakt изживяване",
-  "button_label_manage_subscription": "Управление на VIP абонамент"
+  "button_label_manage_subscription": "Управление на VIP абонамент",
+  "tag_text_new": "Ново"
 }

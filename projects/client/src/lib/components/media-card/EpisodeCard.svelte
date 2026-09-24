@@ -3,7 +3,8 @@
   import { useMarkAsWatched } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
   import type { UpNextEntry } from '$lib/requests/models/UpNextEntry.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
-  import { EpisodePremiereType, EpisodeFinaleType } from '$lib/requests/models/EpisodeType.ts';
+  import { getEpisodeStatus } from '$lib/utils/media/getEpisodeStatus.ts';
+  import { episodeStatusLabel } from '$lib/utils/media/episodeStatusLabel.ts';
   import * as m from '$lib/paraglide/messages.js';
 
   const { entry }: { entry: UpNextEntry } = $props();
@@ -13,13 +14,10 @@
   const seasonLabel = $derived(`S${entry.season.toString().padStart(2, '0')}`);
   const episodeLabel = $derived(`E${entry.number.toString().padStart(2, '0')}`);
   const remainingLabel = $derived(entry.remaining > 1 ? ` +${entry.remaining - 1}` : '');
-  const badgeLabel = $derived(
-    Object.values(EpisodePremiereType).includes(entry.type as never)
-      ? m.tag_text_premiere()
-      : Object.values(EpisodeFinaleType).includes(entry.type as never)
-        ? m.tag_text_finale()
-        : null,
+  const status = $derived(
+    getEpisodeStatus({ type: entry.type, releaseDate: entry.effectiveReleaseDate }),
   );
+  const badgeLabel = $derived(episodeStatusLabel(status));
 
   const { markAsWatched, removeWatched, isWatched, isMarkingAsWatched, isWatchable } =
     $derived(
@@ -62,7 +60,7 @@
     <div class="episode-meta">
       <span class="episode-code">{seasonLabel} | {episodeLabel}{remainingLabel}</span>
       {#if badgeLabel}
-        <span class="episode-badge">{badgeLabel}</span>
+        <span class="episode-badge" data-status={status}>{badgeLabel}</span>
       {/if}
     </div>
 

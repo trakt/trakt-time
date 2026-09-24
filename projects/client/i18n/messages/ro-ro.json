@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "Treci la VIP pentru a debloca mai multe informații.",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Îmbunătățește-ți experiența Trakt",
-  "button_label_manage_subscription": "Gestionează abonamentul VIP"
+  "button_label_manage_subscription": "Gestionează abonamentul VIP",
+  "tag_text_new": "Nou"
 }

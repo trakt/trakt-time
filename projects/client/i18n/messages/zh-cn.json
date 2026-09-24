@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "升级到 VIP 以解锁更多见解。",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "提升你的 Trakt 体验",
-  "button_label_manage_subscription": "管理VIP订阅"
+  "button_label_manage_subscription": "管理VIP订阅",
+  "tag_text_new": "新"
 }
