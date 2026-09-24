@@ -402,5 +402,7 @@
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Покращте свій досвід Trakt",
   "button_label_manage_subscription": "Керувати VIP-підпискою",
-  "tag_text_new": "Нове"
+  "tag_text_new": "Нове",
+  "warning_prompt_watched_until_here": "Позначення \"{title}\" як переглянутого залишило попередні епізоди непроглянутими. Позначити все до нього як переглянуте?",
+  "button_text_watched_until_here": "Переглянуто до цього місця"
 }

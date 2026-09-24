@@ -402,5 +402,7 @@
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Forbedr din Trakt-oplevelse",
   "button_label_manage_subscription": "Administrer VIP-abonnement",
-  "tag_text_new": "Ny"
+  "tag_text_new": "Ny",
+  "warning_prompt_watched_until_here": "Markering af \"{title}\" som set efterlod tidligere episoder usete. Skal alt op til den også markeres som set?",
+  "button_text_watched_until_here": "Set hertil"
 }

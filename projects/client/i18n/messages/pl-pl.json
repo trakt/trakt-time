@@ -402,5 +402,7 @@
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Wzbogać swoje doświadczenia z Trakt",
   "button_label_manage_subscription": "Zarządzaj subskrypcją VIP",
-  "tag_text_new": "Nowość"
+  "tag_text_new": "Nowość",
+  "warning_prompt_watched_until_here": "Oznaczenie \"{title}\" jako obejrzanego pozostawiło wcześniejsze odcinki nieobejrzane. Oznaczyć również wszystko do tego momentu jako obejrzane?",
+  "button_text_watched_until_here": "Obejrzano do tego miejsca"
 }

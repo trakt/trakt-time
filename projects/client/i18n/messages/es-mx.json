@@ -402,5 +402,7 @@
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Mejora tu experiencia Trakt",
   "button_label_manage_subscription": "Gestionar suscripción VIP",
-  "tag_text_new": "Nuevo"
+  "tag_text_new": "Nuevo",
+  "warning_prompt_watched_until_here": "Marcar \"{title}\" como visto dejó episodios anteriores sin ver. ¿Marcar también todo hasta ese punto como visto?",
+  "button_text_watched_until_here": "Visto hasta aquí"
 }

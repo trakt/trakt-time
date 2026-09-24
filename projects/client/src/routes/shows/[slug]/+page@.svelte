@@ -228,6 +228,7 @@
                     showId={show.id}
                     showTitle={intl?.title ?? show.title}
                     episodeCount={season.episodes.count}
+                    {seasons}
                   />
                 {/if}
               </li>

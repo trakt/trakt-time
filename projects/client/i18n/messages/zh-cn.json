@@ -402,5 +402,7 @@
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "提升你的 Trakt 体验",
   "button_label_manage_subscription": "管理VIP订阅",
-  "tag_text_new": "新"
+  "tag_text_new": "新",
+  "warning_prompt_watched_until_here": "将 “{title}” 标记为已看后，之前的剧集仍未观看。是否将它之前的所有剧集也标记为已看？",
+  "button_text_watched_until_here": "看到这里"
 }

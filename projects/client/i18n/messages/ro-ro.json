@@ -402,5 +402,7 @@
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Îmbunătățește-ți experiența Trakt",
   "button_label_manage_subscription": "Gestionează abonamentul VIP",
-  "tag_text_new": "Nou"
+  "tag_text_new": "Nou",
+  "warning_prompt_watched_until_here": "Marcarea \"{title}\" ca vizionat a lăsat episoadele anterioare nevăzute. Marchezi și tot ce este până la el ca vizionat?",
+  "button_text_watched_until_here": "Vizionat până aici"
 }
