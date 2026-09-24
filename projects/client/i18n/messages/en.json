@@ -442,5 +442,6 @@
   "import_summary_list": "{count} list items",
   "import_match_toggle_label": "Match episodes by season and episode number",
   "import_match_toggle_hint": "We recommend the default (match by TVDB id). Turn this on only if some episodes land on the wrong entry - results vary from show to show.",
-  "import_vip_limit_exceeded": "Your import exceeds the free tier limit. Upgrade to VIP to import all {count} items."
+  "import_vip_limit_exceeded": "Your import exceeds the free tier limit. Upgrade to VIP to import all {count} items.",
+  "list_title_where_to_watch": "Where to Watch"
 }

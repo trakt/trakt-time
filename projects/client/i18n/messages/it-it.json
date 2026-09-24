@@ -442,5 +442,6 @@
   "import_summary_list": "{count} elementi della lista",
   "import_match_toggle_label": "Abbina episodi per stagione e numero di episodio",
   "import_match_toggle_hint": "Consigliamo l'impostazione predefinita (abbina per ID TVDB). Attiva questa opzione solo se alcuni episodi vengono associati all'elemento sbagliato: i risultati variano da serie a serie.",
-  "import_vip_limit_exceeded": "La tua importazione supera il limite del piano gratuito. Esegui l'upgrade a VIP per importare tutti i {count} elementi."
+  "import_vip_limit_exceeded": "La tua importazione supera il limite del piano gratuito. Esegui l'upgrade a VIP per importare tutti i {count} elementi.",
+  "list_title_where_to_watch": "Dove Guardare"
 }

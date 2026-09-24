@@ -442,5 +442,6 @@
   "import_summary_list": "{count} listobjekt",
   "import_match_toggle_label": "Matcha avsnitt efter säsong och avsnittsnummer",
   "import_match_toggle_hint": "Vi rekommenderar standardinställningen (matcha efter TVDB-ID). Aktivera detta endast om vissa avsnitt hamnar fel – resultaten varierar från serie till serie.",
-  "import_vip_limit_exceeded": "Din import överskrider gränsen för gratistjänsten. Uppgradera till VIP för att importera alla {count} objekt."
+  "import_vip_limit_exceeded": "Din import överskrider gränsen för gratistjänsten. Uppgradera till VIP för att importera alla {count} objekt.",
+  "list_title_where_to_watch": "Var du kan titta"
 }

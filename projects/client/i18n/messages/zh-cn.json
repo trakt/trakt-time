@@ -442,5 +442,6 @@
   "import_summary_list": "{count} 个列表项",
   "import_match_toggle_label": "按季数和集数匹配剧集",
   "import_match_toggle_hint": "我们推荐默认设置（按TVDB ID匹配）。仅当某些剧集匹配到错误条目时才启用此功能 - 结果因节目而异。",
-  "import_vip_limit_exceeded": "您的导入超出了免费层级限制。升级到 VIP 以导入所有 {count} 个项目。"
+  "import_vip_limit_exceeded": "您的导入超出了免费层级限制。升级到 VIP 以导入所有 {count} 个项目。",
+  "list_title_where_to_watch": "观看平台"
 }
