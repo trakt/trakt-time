@@ -1,4 +1,10 @@
-import { defineQuery } from '$lib/features/query/defineQuery.ts';
+import { defineInfiniteQuery } from '$lib/features/query/defineQuery.ts';
+import {
+  CALENDAR_WINDOW_DAYS,
+  toCalendarPageMeta,
+  toCalendarWindowStart,
+} from '$lib/requests/_internal/toCalendarWindow.ts';
+import { PaginatableSchemaFactory } from '$lib/requests/models/Paginatable.ts';
 import { coalesceEpisodes } from '$lib/requests/_internal/coalesceEpisodes.ts';
 import { mapToEpisodeEntry } from '$lib/requests/_internal/mapToEpisodeEntry.ts';
 import { mapToShowEntry } from '$lib/requests/_internal/mapToShowEntry.ts';
@@ -14,7 +20,7 @@ import type { FilterParams } from '../../models/FilterParams.ts';
 export type CalendarShowsParams =
   & {
     startDate: string;
-    days: number;
+    page?: number;
   }
   & ApiParams
   & FilterParams;
@@ -25,7 +31,7 @@ export const UpcomingEpisodeEntrySchema = EpisodeEntrySchema.merge(z.object({
 export type UpcomingEpisodeEntry = z.infer<typeof UpcomingEpisodeEntrySchema>;
 
 export const upcomingEpisodesRequest = (
-  { fetch, startDate, days, filter }: CalendarShowsParams,
+  { fetch, startDate, page, filter }: CalendarShowsParams,
 ) =>
   api({ fetch })
     .calendars
@@ -36,12 +42,12 @@ export const upcomingEpisodesRequest = (
       },
       params: {
         target: 'my',
-        start_date: startDate,
-        days,
+        start_date: toCalendarWindowStart({ startDate, page }),
+        days: CALENDAR_WINDOW_DAYS,
       },
     });
 
-export const upcomingEpisodesQuery = defineQuery({
+export const upcomingEpisodesQuery = defineInfiniteQuery({
   key: 'upcomingEpisodes',
   invalidations: [
     InvalidateAction.Watchlisted('show'),
@@ -53,19 +59,21 @@ export const upcomingEpisodesQuery = defineQuery({
     params,
   ) => [
     params.startDate,
-    params.days,
     ...getGlobalFilterDependencies(params.filter),
   ],
   request: upcomingEpisodesRequest,
-  mapper: (response) => {
+  mapper: (response, { page }) => {
     const episodes = response.body.map((item) => ({
       show: mapToShowEntry(item.show),
       ...mapToEpisodeEntry(item.episode),
     }));
 
-    return coalesceEpisodes(episodes);
+    return {
+      entries: coalesceEpisodes(episodes),
+      page: toCalendarPageMeta(page),
+    };
   },
-  schema: UpcomingEpisodeEntrySchema.array(),
+  schema: PaginatableSchemaFactory(UpcomingEpisodeEntrySchema),
   ttl: time.minutes(30),
   refetchOnWindowFocus: true,
 });

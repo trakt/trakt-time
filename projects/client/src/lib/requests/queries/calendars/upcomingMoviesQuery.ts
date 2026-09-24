@@ -1,4 +1,10 @@
-import { defineQuery } from '$lib/features/query/defineQuery.ts';
+import { defineInfiniteQuery } from '$lib/features/query/defineQuery.ts';
+import {
+  CALENDAR_WINDOW_DAYS,
+  toCalendarPageMeta,
+  toCalendarWindowStart,
+} from '$lib/requests/_internal/toCalendarWindow.ts';
+import { PaginatableSchemaFactory } from '$lib/requests/models/Paginatable.ts';
 import { api, type ApiParams } from '$lib/requests/api.ts';
 import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
 import { time } from '$lib/utils/timing/time.ts';
@@ -10,13 +16,13 @@ import { MovieEntrySchema } from '../../models/MovieEntry.ts';
 export type CalendarMoviesParams =
   & {
     startDate: string;
-    days: number;
+    page?: number;
   }
   & ApiParams
   & FilterParams;
 
 export const upcomingMoviesRequest = (
-  { fetch, startDate, days, filter }: CalendarMoviesParams,
+  { fetch, startDate, page, filter }: CalendarMoviesParams,
 ) =>
   api({ fetch })
     .calendars
@@ -27,12 +33,12 @@ export const upcomingMoviesRequest = (
       },
       params: {
         target: 'my',
-        start_date: startDate,
-        days,
+        start_date: toCalendarWindowStart({ startDate, page }),
+        days: CALENDAR_WINDOW_DAYS,
       },
     });
 
-export const upcomingMoviesQuery = defineQuery({
+export const upcomingMoviesQuery = defineInfiniteQuery({
   key: 'upcomingMovies',
   invalidations: [
     InvalidateAction.Watchlisted('movie'),
@@ -42,13 +48,14 @@ export const upcomingMoviesQuery = defineQuery({
     params,
   ) => [
     params.startDate,
-    params.days,
     ...getGlobalFilterDependencies(params.filter),
   ],
   request: upcomingMoviesRequest,
-  mapper: (response) =>
-    response.body.map((entry) => mapToMovieEntry(entry.movie)),
-  schema: MovieEntrySchema.array(),
+  mapper: (response, { page }) => ({
+    entries: response.body.map((entry) => mapToMovieEntry(entry.movie)),
+    page: toCalendarPageMeta(page),
+  }),
+  schema: PaginatableSchemaFactory(MovieEntrySchema),
   ttl: time.minutes(30),
   refetchOnWindowFocus: true,
 });
