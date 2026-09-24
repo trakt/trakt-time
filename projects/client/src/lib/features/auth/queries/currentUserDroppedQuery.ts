@@ -25,6 +25,7 @@ export const currentUserDroppedQuery = defineQuery({
   key: 'currentUserDropped',
   invalidations: [
     InvalidateAction.Drop('show'),
+    InvalidateAction.Restore,
   ],
   dependencies: [],
   request: currentUserDroppedRequest,

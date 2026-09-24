@@ -10,6 +10,7 @@
   } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
   import { useRatings } from '$lib/sections/summary/components/rating/useRatings.ts';
   import { useWatchlist } from '$lib/sections/media-actions/watchlist/useWatchlist.ts';
+  import { useDropShow } from '$lib/sections/media-actions/drop/useDropShow.ts';
   import { userListsQuery } from '$lib/requests/queries/users/userListsQuery.ts';
   import CloseIcon from '$lib/components/icons/CloseIcon.svelte';
   import HeartIcon from '$lib/components/icons/HeartIcon.svelte';
@@ -53,6 +54,11 @@
     $derived(useWatchlist({ type, media: { id } }));
 
   const { hasWatched } = $derived(useHasWatched({ type, id }));
+
+  const { isDropped, isUpdatingDrop, dropShow, restoreShow } = $derived(
+    useDropShow({ id, title }),
+  );
+  const isDroppable = $derived(type === 'show' && $hasWatched);
 
   const watchedHooks = $derived(
     watchedProps ? useMarkAsWatched(watchedProps) : null,
@@ -230,6 +236,30 @@
                 : m.button_text_watchlist()}
             </span>
           </button>
+
+          {#if isDroppable}
+            <button
+              type="button"
+              class="action-pill"
+              class:is-active={$isDropped}
+              disabled={$isUpdatingDrop}
+              onclick={() => ($isDropped ? restoreShow() : dropShow())}
+              aria-pressed={$isDropped}
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                {#if $isDropped}
+                  <path
+                    d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18z"
+                  />
+                {:else}
+                  <path d="M6 6h12v12H6z" />
+                {/if}
+              </svg>
+              <span>
+                {$isDropped ? m.button_text_restore_show() : m.button_text_drop_show()}
+              </span>
+            </button>
+          {/if}
         </div>
       </section>
 
