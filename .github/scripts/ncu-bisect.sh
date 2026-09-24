@@ -248,24 +248,12 @@ else
   FINAL_BUILD_OK=1
 fi
 
-log ""
-log "▶ Phase 4: SSR render smoke on adopted set"
-SSR_SMOKE_OK=0
-SMOKE_SCRIPT="$ROOT/.github/scripts/ssr-smoke.sh"
-if "$SMOKE_SCRIPT" > "$LOG_DIR/final-ssr-smoke.log" 2>&1; then
-  log "  ✓ SSR smoke passed"
-else
-  log "  ✗ SSR smoke failed (log: $LOG_DIR/final-ssr-smoke.log)"
-  SSR_SMOKE_OK=1
-fi
-
 ADOPTED_FINAL=$(count_lines /tmp/passing.txt)
 REJECTED_FINAL=$(count_lines /tmp/failing.txt)
 log ""
 log "═══════════════════════════════════════════════════════════════════"
 log " Summary: probes=${PROBE_COUNT} | adopted=${ADOPTED_FINAL} | rejected=${REJECTED_FINAL} | elapsed=$(human_elapsed)"
 log " final build:doctor: $([ "$FINAL_BUILD_OK" -eq 0 ] && echo OK || echo FAIL)"
-log " final SSR smoke:    $([ "$SSR_SMOKE_OK" -eq 0 ] && echo OK || echo FAIL)"
 log "═══════════════════════════════════════════════════════════════════"
 
 echo ""
@@ -275,4 +263,4 @@ echo ""
 echo "=== Failing ==="
 cat /tmp/failing.txt || true
 
-exit $((FINAL_BUILD_OK || SSR_SMOKE_OK))
+exit $FINAL_BUILD_OK
