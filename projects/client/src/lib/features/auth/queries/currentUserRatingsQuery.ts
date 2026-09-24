@@ -42,6 +42,14 @@ function mapRatedItemResponse(response: RatedItemResponse): RatedEntry {
           'Expected episode in RatedItemResponse',
         ).ids.trakt,
       };
+    case 'season':
+      return {
+        ...common,
+        id: assertDefined(
+          response.season,
+          'Expected season in RatedItemResponse',
+        ).ids.trakt,
+      };
   }
 }
 
