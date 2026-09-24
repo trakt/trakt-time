@@ -2,7 +2,7 @@
   import CommentCard from '$lib/components/comment-card/CommentCard.svelte';
   import LoaderIcon from '$lib/components/icons/LoaderIcon.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
-  import LoadMoreButton from '$lib/components/load-more-button/LoadMoreButton.svelte';
+  import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
   import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { ExtendedMediaType } from '$lib/requests/models/ExtendedMediaType.ts';
@@ -135,13 +135,12 @@
             </li>
           {/each}
         </ul>
-        {#if $hasNextPage}
-          <LoadMoreButton
-            loading={$isLoading}
-            onclick={fetchNextPage}
-            label={m.button_text_load_more()}
-          />
-        {/if}
+        <InfiniteScrollTrigger
+          hasMore={$hasNextPage}
+          isLoading={$isLoading}
+          count={$list.length}
+          onload={fetchNextPage}
+        />
       {:else if $isLoading}
         <div class="thread-loading">
           <LoadingIndicator />

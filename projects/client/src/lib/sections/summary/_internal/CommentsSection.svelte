@@ -3,7 +3,7 @@
   import CommentCardSkeleton from '$lib/components/comment-card/CommentCardSkeleton.svelte';
   import AddCommentDrawer from '$lib/components/comment-drawer/AddCommentDrawer.svelte';
   import CommentThreadDrawer from '$lib/components/comment-drawer/CommentThreadDrawer.svelte';
-  import LoadMoreButton from '$lib/components/load-more-button/LoadMoreButton.svelte';
+  import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
   import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { MediaComment } from '$lib/requests/models/MediaComment.ts';
@@ -89,13 +89,12 @@
         />
       {/each}
     </div>
-    {#if $commentsHasNextPage}
-      <LoadMoreButton
-        loading={$commentsLoading}
-        onclick={commentsFetchNext}
-        label={m.button_text_load_more()}
-      />
-    {/if}
+    <InfiniteScrollTrigger
+      hasMore={$commentsHasNextPage}
+      isLoading={$commentsLoading}
+      count={$commentList.length}
+      onload={commentsFetchNext}
+    />
   {/if}
 </section>
 

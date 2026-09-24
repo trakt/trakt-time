@@ -2,7 +2,7 @@
   import { page } from '$app/state';
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
-  import LoadMoreButton from '$lib/components/load-more-button/LoadMoreButton.svelte';
+  import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
   import { userListItemsQuery } from '$lib/requests/queries/users/userListItemsQuery.ts';
   import { usePaginatedListQuery } from '$lib/sections/lists/stores/usePaginatedListQuery.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
@@ -56,13 +56,12 @@
         {/each}
       </div>
 
-      {#if $hasNextPage}
-        <LoadMoreButton
-          loading={$isLoading}
-          onclick={fetchNextPage}
-          label={m.button_text_load_more()}
-        />
-      {/if}
+      <InfiniteScrollTrigger
+        hasMore={$hasNextPage}
+        isLoading={$isLoading}
+        count={items.length}
+        onload={fetchNextPage}
+      />
     {:else if !$isLoading}
       <div class="empty-state">
         <p>{m.text_empty_list()}</p>
