@@ -23,6 +23,7 @@
   import MediaRating from '$lib/sections/summary/_internal/MediaRating.svelte';
   import SummarySkeleton from '$lib/sections/summary/_internal/SummarySkeleton.svelte';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
+  import { seasonLabel } from '$lib/utils/intl/seasonLabel.ts';
   import PosterCard from '$lib/components/poster-card/PosterCard.svelte';
   import MediaActionsSheet from '$lib/components/media-actions-sheet/MediaActionsSheet.svelte';
   import { hasAired } from '$lib/utils/media/hasAired.ts';
@@ -209,8 +210,11 @@
                   onclick={() => toggleSeason(season.number)}
                   aria-expanded={openSeason === season.number}
                 >
-                  <span class="season-label">
-                    {m.text_season_number({ number: season.number })}
+                  <span class="season-text">
+                    <span class="season-label">{seasonLabel(season.number)}</span>
+                    {#if season.title}
+                      <span class="season-title">{season.title}</span>
+                    {/if}
                   </span>
                   <span class="season-meta">{season.episodes.count} {m.text_episodes_unit()}</span>
                   <svg viewBox="0 0 24 24" class="season-chevron" fill="currentColor" aria-hidden="true">
@@ -319,9 +323,24 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  .season-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
   .season-label {
     font-weight: 600;
     font-size: 0.9375rem;
+  }
+
+  .season-title {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .season-meta {

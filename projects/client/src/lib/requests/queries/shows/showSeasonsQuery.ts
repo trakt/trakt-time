@@ -27,6 +27,17 @@ const showSeasonsRequest = (
       },
     });
 
+const toDistinctSeasonTitle = (item: SeasonsResponse[0]): string | null => {
+  const title = item.title?.trim();
+  if (!title) return null;
+
+  const normalized = title.toLowerCase();
+  if (normalized === 'specials') return null;
+  if (/^season \d+$/.test(normalized)) return null;
+
+  return title;
+};
+
 export const mapToSeason = (item: SeasonsResponse[0]): Season => {
   const poster = findDefined(
     ...(item.images?.poster ?? []),
@@ -36,6 +47,7 @@ export const mapToSeason = (item: SeasonsResponse[0]): Season => {
     id: item.ids.trakt,
     key: `season-${item.ids.trakt}`,
     number: item.number,
+    title: toDistinctSeasonTitle(item),
     episodes: {
       count: item.episode_count ?? 0,
     },
