@@ -1,42 +1,60 @@
 import type { RatingsSyncRequest } from '@trakt/api';
-import type { UniversalImportItem } from '../ImportTypes.ts';
-import { MOVIE_IDS, pickIds, SHOW_IDS } from './pickIds.ts';
+import type { ImportType, UniversalImportItem } from '../ImportTypes.ts';
+import {
+  type IdPriority,
+  MOVIE_IDS,
+  pickIds,
+  type ResolvedIds,
+  SEASON_IDS,
+  SHOW_IDS,
+  toEpisodeIdPriority,
+} from './pickIds.ts';
 
-type RatingsMovie = NonNullable<RatingsSyncRequest['movies']>[number];
-type RatingsShow = NonNullable<RatingsSyncRequest['shows']>[number];
+type RatingsEntry = {
+  rating: number;
+  ids: ResolvedIds;
+  rated_at?: string;
+};
 
-function clampRating(rating: number): number {
-  return Math.min(10, Math.max(1, Math.round(rating)));
+// Trakt ratings are 1-10. A third party dump that writes 0 for "unrated" must
+// not be clamped up into a real 1/10 rating, so drop anything below the scale.
+function toRating(rating: number): number | null {
+  const rounded = Math.round(rating);
+  if (rounded < 1) return null;
+  return Math.min(10, rounded);
 }
 
-function toRatingsMovie(
-  { ids, rating }: UniversalImportItem,
-): RatingsMovie | null {
+function toRatingsEntry(
+  { ids, rating, rated_at }: UniversalImportItem,
+  priority: IdPriority,
+): RatingsEntry | null {
   if (rating == null) return null;
-  const resolvedIds = pickIds(ids, MOVIE_IDS);
+  const resolved = toRating(rating);
+  if (resolved == null) return null;
+  const resolvedIds = pickIds(ids, priority);
   if (!resolvedIds) return null;
-  return { rating: clampRating(rating), ids: resolvedIds as never };
-}
-
-function toRatingsShow(
-  { ids, rating }: UniversalImportItem,
-): RatingsShow | null {
-  if (rating == null) return null;
-  const resolvedIds = pickIds(ids, SHOW_IDS);
-  if (!resolvedIds) return null;
-  return { rating: clampRating(rating), ids: resolvedIds as never };
+  return {
+    rating: resolved,
+    ids: resolvedIds,
+    ...(rated_at ? { rated_at } : {}),
+  };
 }
 
 export function buildRatingsPayload(
-  items: UniversalImportItem[],
+  items: ReadonlyArray<UniversalImportItem>,
 ): RatingsSyncRequest {
-  const movies = items
-    .filter((item) => item.type === 'movie')
-    .flatMap((item) => toRatingsMovie(item) ?? []);
+  const collect = (
+    type: ImportType,
+    toPriority: (item: UniversalImportItem) => IdPriority,
+  ) =>
+    items
+      .filter((item) => item.type === type)
+      .flatMap((item) => toRatingsEntry(item, toPriority(item)) ?? []);
 
-  const shows = items
-    .filter((item) => item.type === 'show')
-    .flatMap((item) => toRatingsShow(item) ?? []);
-
-  return { movies, shows };
+  return {
+    movies: collect('movie', () => MOVIE_IDS),
+    shows: collect('show', () => SHOW_IDS),
+    seasons: collect('season', () => SEASON_IDS),
+    episodes: collect('episode', toEpisodeIdPriority),
+  } as RatingsSyncRequest;
 }
