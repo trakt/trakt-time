@@ -60,6 +60,7 @@
     history: state.items.filter((i) => i.action === 'history').length,
     watchlist: state.items.filter((i) => i.action === 'watchlist').length,
     ratings: state.items.filter((i) => i.action === 'ratings').length,
+    list: state.items.filter((i) => i.action === 'list').length,
   });
 
   const progressPercent = $derived(
@@ -118,6 +119,8 @@
       await invalidate(InvalidateAction.MarkAsWatched('movie'));
       await invalidate(InvalidateAction.Rated('show'));
       await invalidate(InvalidateAction.Rated('movie'));
+      await invalidate(InvalidateAction.Listed('show'));
+      await invalidate(InvalidateAction.Listed('movie'));
     }
   }
 
@@ -233,6 +236,9 @@
           {/if}
           {#if counts.ratings > 0}
             <p>{m.import_summary_ratings({ count: counts.ratings })}</p>
+          {/if}
+          {#if counts.list > 0}
+            <p>{m.import_summary_list({ count: counts.list })}</p>
           {/if}
         </div>
         <div class="tv-time-actions">

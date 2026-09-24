@@ -59,12 +59,30 @@ const V2_HEADER = [
   'rewatch_count',
   's_no',
   'is_unitary',
-  'episode_id',
   'season_number',
   'gsi',
   'runtime',
   'bulk_type',
   'is_special',
+];
+
+const V2_SLIM_HEADER = [
+  'movie_watch_count',
+  'series_follow_count',
+  'key',
+  'total_series_runtime',
+  'user_id',
+  'updated_at',
+  'ep_watch_count',
+  'total_movies_runtime',
+  'created_at',
+  'uuid',
+  's_id',
+  'followed_at',
+  'is_archived',
+  'series_name',
+  'is_for_later',
+  'is_followed',
 ];
 
 function toCsv(
@@ -102,9 +120,9 @@ function v2EpisodeWatch(
     created_at: '2021-10-10 11:49:11',
     s_id: '82066',
     series_name: 'Fringe',
-    episode_id: '1331151',
-    season_number: '2',
-    episode_number: '10',
+    ep_id: '1331151',
+    s_no: '2',
+    ep_no: '10',
     ...overrides,
   };
 }
@@ -216,12 +234,103 @@ describe('TvTimeGdprParser', () => {
       expect(result[0]?.watched_at).toBeDefined();
     });
 
-    it('should skip episode rows without an episode id', async () => {
-      const csv = toCsv(V2_HEADER, [v2EpisodeWatch({ episode_id: '' })]);
+    it('should handle very large exports without overflowing the stack', async () => {
+      const rows = Array.from(
+        { length: 200_000 },
+        (_, i) => v2EpisodeWatch({ ep_id: String(1_000_000 + i) }),
+      );
+      const csv = toCsv(V2_HEADER, rows);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(200_000);
+    });
+
+    it('should resolve an episode with no episode id positionally', async () => {
+      const csv = toCsv(V2_HEADER, [v2EpisodeWatch({ ep_id: '' })]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        action: 'history',
+        type: 'episode',
+        ids: {},
+        showTvdb: 82066,
+        season: 2,
+        episode: 10,
+      });
+    });
+
+    it('should skip episode rows with neither an episode id nor a show id', async () => {
+      const csv = toCsv(V2_HEADER, [v2EpisodeWatch({ ep_id: '', s_id: '' })]);
 
       const result = await TvTimeGdprParser.parse([csvFile(csv)]);
 
       expect(result).toHaveLength(0);
+    });
+
+    it('should fall back to legacy episode columns when ep_id is absent', async () => {
+      const legacyHeader = [
+        'ep_watch_count',
+        'updated_at',
+        'key',
+        'user_id',
+        'created_at',
+        's_id',
+        'series_name',
+        'episode_id',
+        'season_number',
+        'episode_number',
+      ];
+      const csv = toCsv(legacyHeader, [{
+        key: 'watch-episode-02531a20-021e25cc',
+        created_at: '2021-10-10 11:49:11',
+        s_id: '82066',
+        series_name: 'Fringe',
+        episode_id: '1331151',
+        season_number: '2',
+        episode_number: '10',
+      }]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        action: 'history',
+        type: 'episode',
+        ids: { tvdb: 1331151 },
+        season: 2,
+        episode: 10,
+      });
+    });
+
+    it('should prefer ep_id over a blank ep_id shadowing episode_id', async () => {
+      const bothHeader = [
+        ...V2_HEADER,
+        'episode_id',
+        'season_number',
+        'episode_number',
+      ];
+      const csv = toCsv(bothHeader, [
+        v2EpisodeWatch({
+          ep_id: '',
+          s_no: '',
+          ep_no: '',
+          episode_id: '1331151',
+          season_number: '2',
+          episode_number: '10',
+        }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        ids: { tvdb: 1331151 },
+        season: 2,
+        episode: 10,
+      });
     });
 
     it('should watchlist shows marked for later', async () => {
@@ -286,6 +395,38 @@ describe('TvTimeGdprParser', () => {
       const result = await TvTimeGdprParser.parse([csvFile(csv)]);
 
       expect(result).toHaveLength(0);
+    });
+  });
+
+  describe('v2 tracking file: slim header (no watch history)', () => {
+    it('should watchlist followed shows', async () => {
+      const csv = toCsv(V2_SLIM_HEADER, [
+        v2UserSeries({ is_followed: 'true' }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        action: 'watchlist',
+        type: 'show',
+        ids: { tvdb: 353309 },
+      });
+    });
+
+    it('should watchlist shows marked for later', async () => {
+      const csv = toCsv(V2_SLIM_HEADER, [
+        v2UserSeries({ is_for_later: 'true' }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        action: 'watchlist',
+        type: 'show',
+        ids: { tvdb: 353309 },
+      });
     });
   });
 
@@ -589,6 +730,51 @@ describe('TvTimeGdprParser', () => {
       ]);
 
       expect(result).toHaveLength(0);
+    });
+  });
+
+  describe('custom lists file', () => {
+    const LISTS_HEADER = ['name', 'is_public', 'objects'];
+
+    it('should import list items from the go-map objects column', async () => {
+      const objects =
+        '[map[created_at:1.7e+09 id:253463 type:series uuid:abc] ' +
+        'map[created_at:1.7e+09 id:1435 type:movie uuid:def]]';
+      const csv = toCsv(LISTS_HEADER, [
+        { name: 'Favs', is_public: 'true', objects },
+      ]);
+
+      const result = await TvTimeGdprParser.parse([
+        csvFile(csv, 'lists-prod-lists.csv'),
+      ]);
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toMatchObject({
+        action: 'list',
+        type: 'show',
+        ids: { tvdb: 253463 },
+        listName: 'Favs',
+        listIsPublic: true,
+      });
+      expect(result[1]).toMatchObject({ type: 'movie', ids: { tvdb: 1435 } });
+    });
+
+    it('should map is_public false to a private list and skip unnamed lists', async () => {
+      const objects = '[map[created_at:1.7e+09 id:253463 type:series]]';
+      const csv = toCsv(LISTS_HEADER, [
+        { name: 'Private', is_public: 'false', objects },
+        { name: '', is_public: 'true', objects },
+      ]);
+
+      const result = await TvTimeGdprParser.parse([
+        csvFile(csv, 'lists-prod-lists.csv'),
+      ]);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        listName: 'Private',
+        listIsPublic: false,
+      });
     });
   });
 

@@ -21,6 +21,24 @@ describe('buildRatingsPayload', () => {
       expect(result.shows).toHaveLength(0);
     });
 
+    it('should preserve rated_at date for movies', () => {
+      const item: UniversalImportItem = {
+        action: 'ratings',
+        type: 'movie',
+        ids: { imdb: 'tt1234567' },
+        rating: 8,
+        rated_at: '2022-09-18T00:00:00.000Z',
+      };
+
+      const result = buildRatingsPayload([item]);
+
+      expect(result.movies).toEqual([{
+        rating: 8,
+        ids: { imdb: 'tt1234567' },
+        rated_at: '2022-09-18T00:00:00.000Z',
+      }]);
+    });
+
     it('should skip a movie with no resolvable ids', () => {
       const item: UniversalImportItem = {
         action: 'ratings',
@@ -57,6 +75,24 @@ describe('buildRatingsPayload', () => {
       expect(result.shows).toEqual([{ rating: 10, ids: { tvdb: 81189 } }]);
       expect(result.movies).toHaveLength(0);
     });
+
+    it('should preserve rated_at date for shows', () => {
+      const item: UniversalImportItem = {
+        action: 'ratings',
+        type: 'show',
+        ids: { tvdb: 81189 },
+        rating: 10,
+        rated_at: '2022-09-18T00:00:00.000Z',
+      };
+
+      const result = buildRatingsPayload([item]);
+
+      expect(result.shows).toEqual([{
+        rating: 10,
+        ids: { tvdb: 81189 },
+        rated_at: '2022-09-18T00:00:00.000Z',
+      }]);
+    });
   });
 
   describe('rating clamping', () => {
@@ -73,7 +109,7 @@ describe('buildRatingsPayload', () => {
       ]);
     });
 
-    it('should clamp ratings below 1 to 1', () => {
+    it('should drop a rating of 0 rather than clamp it up to 1', () => {
       const item: UniversalImportItem = {
         action: 'ratings',
         type: 'movie',
@@ -81,9 +117,18 @@ describe('buildRatingsPayload', () => {
         rating: 0,
       };
 
-      expect(buildRatingsPayload([item]).movies).toEqual([
-        { rating: 1, ids: { imdb: 'tt0000002' } },
-      ]);
+      expect(buildRatingsPayload([item]).movies).toEqual([]);
+    });
+
+    it('should drop a negative rating', () => {
+      const item: UniversalImportItem = {
+        action: 'ratings',
+        type: 'movie',
+        ids: { imdb: 'tt0000002' },
+        rating: -3,
+      };
+
+      expect(buildRatingsPayload([item]).movies).toEqual([]);
     });
 
     it('should round fractional ratings', () => {
@@ -112,5 +157,63 @@ describe('buildRatingsPayload', () => {
 
     expect(result.movies).toHaveLength(0);
     expect(result.shows).toHaveLength(0);
+  });
+
+  describe('seasons', () => {
+    it('should map a rated season into the seasons bucket', () => {
+      const result = buildRatingsPayload([{
+        action: 'ratings',
+        type: 'season',
+        ids: { tvdb: 12345 },
+        rating: 8,
+        rated_at: '2026-08-11T07:22:03.000Z',
+      }]);
+
+      expect(result.seasons).toEqual([{
+        rating: 8,
+        ids: { tvdb: 12345 },
+        rated_at: '2026-08-11T07:22:03.000Z',
+      }]);
+      expect(result.shows).toEqual([]);
+    });
+
+    it('should drop a season with no rating', () => {
+      const result = buildRatingsPayload([{
+        action: 'ratings',
+        type: 'season',
+        ids: { tvdb: 12345 },
+      }]);
+
+      expect(result.seasons).toEqual([]);
+    });
+  });
+
+  describe('episodes', () => {
+    it('should map a rated episode into the episodes bucket', () => {
+      const result = buildRatingsPayload([{
+        action: 'ratings',
+        type: 'episode',
+        ids: { tvdb: 7654321 },
+        rating: 9,
+        rated_at: '2026-08-11T07:22:03.000Z',
+      }]);
+
+      expect(result.episodes).toEqual([{
+        rating: 9,
+        ids: { tvdb: 7654321 },
+        rated_at: '2026-08-11T07:22:03.000Z',
+      }]);
+      expect(result.shows).toEqual([]);
+    });
+
+    it('should drop an episode with no rating', () => {
+      const result = buildRatingsPayload([{
+        action: 'ratings',
+        type: 'episode',
+        ids: { tvdb: 7654321 },
+      }]);
+
+      expect(result.episodes).toEqual([]);
+    });
   });
 });

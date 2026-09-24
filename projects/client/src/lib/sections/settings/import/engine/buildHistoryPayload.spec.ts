@@ -80,7 +80,184 @@ describe('buildHistoryPayload', () => {
   });
 
   describe('episodes', () => {
-    it('should add an episode by resolved episode ids', () => {
+    it('should resolve an episode positionally via show + season + number', () => {
+      const item: UniversalImportItem = {
+        action: 'history',
+        type: 'episode',
+        ids: {},
+        showTvdb: 9001,
+        season: 2,
+        episode: 1,
+        watched_at,
+      };
+
+      const result = buildHistoryPayload([item]);
+
+      expect(result.shows).toEqual([{
+        ids: { tvdb: 9001 },
+        seasons: [{ number: 2, episodes: [{ number: 1, watched_at }] }],
+      }]);
+      expect(result.episodes).toHaveLength(0);
+    });
+
+    it('should resolve positionally via show imdb when the show has no tvdb', () => {
+      const item: UniversalImportItem = {
+        action: 'history',
+        type: 'episode',
+        ids: {},
+        showImdb: 'tt1234567',
+        season: 1,
+        episode: 1,
+        watched_at,
+      };
+
+      const result = buildHistoryPayload([item]);
+
+      expect(result.shows).toEqual([{
+        ids: { imdb: 'tt1234567' },
+        seasons: [{ number: 1, episodes: [{ number: 1, watched_at }] }],
+      }]);
+      expect(result.episodes).toHaveLength(0);
+    });
+
+    it('should merge one show when items carry differing show ids', () => {
+      const items: UniversalImportItem[] = [
+        {
+          action: 'history',
+          type: 'episode',
+          ids: {},
+          showTvdb: 9001,
+          season: 1,
+          episode: 1,
+          watched_at,
+        },
+        {
+          action: 'history',
+          type: 'episode',
+          ids: {},
+          showTvdb: 9001,
+          showImdb: 'tt1234567',
+          season: 1,
+          episode: 2,
+          watched_at,
+        },
+      ];
+
+      const result = buildHistoryPayload(items);
+
+      expect(result.shows).toEqual([{
+        ids: { tvdb: 9001, imdb: 'tt1234567' },
+        seasons: [{
+          number: 1,
+          episodes: [
+            { number: 1, watched_at },
+            { number: 2, watched_at },
+          ],
+        }],
+      }]);
+    });
+
+    it('should group positional episodes by show and season', () => {
+      const items: UniversalImportItem[] = [
+        {
+          action: 'history',
+          type: 'episode',
+          ids: {},
+          showTvdb: 9001,
+          season: 1,
+          episode: 1,
+          watched_at,
+        },
+        {
+          action: 'history',
+          type: 'episode',
+          ids: {},
+          showTvdb: 9001,
+          season: 1,
+          episode: 2,
+          watched_at,
+        },
+        {
+          action: 'history',
+          type: 'episode',
+          ids: {},
+          showTvdb: 9001,
+          season: 2,
+          episode: 1,
+          watched_at,
+        },
+      ];
+
+      const result = buildHistoryPayload(items);
+
+      expect(result.shows).toEqual([{
+        ids: { tvdb: 9001 },
+        seasons: [
+          {
+            number: 1,
+            episodes: [
+              { number: 1, watched_at },
+              { number: 2, watched_at },
+            ],
+          },
+          { number: 2, episodes: [{ number: 1, watched_at }] },
+        ],
+      }]);
+      expect(result.episodes).toHaveLength(0);
+    });
+
+    it('should prefer the episode id over positional resolution', () => {
+      const item: UniversalImportItem = {
+        action: 'history',
+        type: 'episode',
+        ids: { tvdb: 4321 },
+        showTvdb: 9001,
+        season: 2,
+        episode: 1,
+        watched_at,
+      };
+
+      const result = buildHistoryPayload([item]);
+
+      expect(result.episodes).toEqual([{ ids: { tvdb: 4321 }, watched_at }]);
+      expect(result.shows).toHaveLength(0);
+    });
+
+    it('should resolve positionally over the episode id in positional mode', () => {
+      const item: UniversalImportItem = {
+        action: 'history',
+        type: 'episode',
+        ids: { tvdb: 4321 },
+        showTvdb: 9001,
+        season: 2,
+        episode: 1,
+        watched_at,
+      };
+
+      const result = buildHistoryPayload([item], 'positional');
+
+      expect(result.episodes).toHaveLength(0);
+      expect(result.shows).toEqual([{
+        ids: { tvdb: 9001 },
+        seasons: [{ number: 2, episodes: [{ number: 1, watched_at }] }],
+      }]);
+    });
+
+    it('should fall back to the episode id in positional mode when no positional key', () => {
+      const item: UniversalImportItem = {
+        action: 'history',
+        type: 'episode',
+        ids: { tvdb: 4321 },
+        watched_at,
+      };
+
+      const result = buildHistoryPayload([item], 'positional');
+
+      expect(result.episodes).toEqual([{ ids: { tvdb: 4321 }, watched_at }]);
+      expect(result.shows).toHaveLength(0);
+    });
+
+    it('should add an episode by its id when not positionally resolvable', () => {
       const item: UniversalImportItem = {
         action: 'history',
         type: 'episode',
@@ -94,7 +271,7 @@ describe('buildHistoryPayload', () => {
       expect(result.shows).toHaveLength(0);
     });
 
-    it('should fall back to show via imdb when no episode ids resolve', () => {
+    it('should resolve an episode carrying only an imdb id as an episode', () => {
       const item: UniversalImportItem = {
         action: 'history',
         type: 'episode',
@@ -104,11 +281,11 @@ describe('buildHistoryPayload', () => {
 
       const result = buildHistoryPayload([item]);
 
-      expect(result.episodes).toHaveLength(0);
-      expect(result.shows).toEqual([{
+      expect(result.episodes).toEqual([{
         ids: { imdb: 'tt9999999' },
         watched_at,
       }]);
+      expect(result.shows).toEqual([]);
     });
 
     it('should skip an episode with no usable ids', () => {
@@ -123,6 +300,100 @@ describe('buildHistoryPayload', () => {
 
       expect(result.episodes).toHaveLength(0);
       expect(result.shows).toHaveLength(0);
+    });
+  });
+
+  describe('seasons', () => {
+    it('should map a season item into the seasons bucket', () => {
+      const result = buildHistoryPayload([{
+        action: 'history',
+        type: 'season',
+        ids: { tvdb: 12345 },
+        watched_at: '2026-08-14T10:47:49.000Z',
+      }]);
+
+      expect(result.seasons).toEqual([{
+        ids: { tvdb: 12345 },
+        watched_at: '2026-08-14T10:47:49.000Z',
+      }]);
+      expect(result.shows).toEqual([]);
+      expect(result.movies).toEqual([]);
+    });
+
+    it('should resolve a season by tmdb id', () => {
+      const result = buildHistoryPayload([{
+        action: 'history',
+        type: 'season',
+        ids: { tmdb: 67324 },
+      }]);
+
+      expect(result.seasons).toEqual([{
+        ids: { tmdb: 67324 },
+        watched_at: undefined,
+      }]);
+    });
+
+    it('should drop a season carrying only an imdb id', () => {
+      const result = buildHistoryPayload([{
+        action: 'history',
+        type: 'season',
+        ids: { imdb: 'tt0306414' },
+      }]);
+
+      expect(result.seasons).toEqual([]);
+    });
+  });
+
+  describe('episodes carrying positional numbers', () => {
+    it('should not treat a tmdb id as an episode id when season and episode are present', () => {
+      const result = buildHistoryPayload([{
+        action: 'history',
+        type: 'episode',
+        ids: { tmdb: 1396 },
+        season: 1,
+        episode: 1,
+        watched_at,
+      }]);
+
+      expect(result.episodes).toEqual([]);
+      expect(result.shows).toEqual([]);
+    });
+
+    it('should not treat an imdb id as an episode id when season and episode are present', () => {
+      const result = buildHistoryPayload([{
+        action: 'history',
+        type: 'episode',
+        ids: { imdb: 'tt0903747' },
+        season: 3,
+        episode: 7,
+        watched_at,
+      }]);
+
+      expect(result.episodes).toEqual([]);
+    });
+
+    it('should still resolve a tmdb episode id when no positional numbers are given', () => {
+      const result = buildHistoryPayload([{
+        action: 'history',
+        type: 'episode',
+        ids: { tmdb: 66452 },
+        watched_at,
+      }]);
+
+      expect(result.episodes).toEqual([{ ids: { tmdb: 66452 }, watched_at }]);
+    });
+
+    it('should keep resolving a tvdb episode id alongside positional numbers', () => {
+      const result = buildHistoryPayload([{
+        action: 'history',
+        type: 'episode',
+        ids: { tvdb: 4133781 },
+        season: 1,
+        episode: 1,
+        watched_at,
+      }]);
+
+      expect(result.episodes).toEqual([{ ids: { tvdb: 4133781 }, watched_at }]);
     });
   });
 });
