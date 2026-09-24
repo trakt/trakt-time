@@ -44,6 +44,10 @@ export function usePaginatedListQuery<
 
   const hasNextPage = query.pipe(map(($query) => $query.hasNextPage));
 
+  const pageCount = query.pipe(
+    map(($query) => $query.data?.pages.length ?? 0),
+  );
+
   const fetchNextPage = async () => {
     const { fetchNextPage } = await firstValueFrom(query);
     await fetchNextPage();
@@ -53,6 +57,7 @@ export function usePaginatedListQuery<
     list,
     isLoading,
     hasNextPage,
+    pageCount,
     fetchNextPage,
   };
 }

@@ -4,15 +4,21 @@
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
   import GroupHeader from '$lib/components/group-header/GroupHeader.svelte';
   import UpcomingEpisodeCard from '$lib/components/media-card/UpcomingEpisodeCard.svelte';
-  import { useQuery } from '$lib/features/query/useQuery.ts';
+  import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
+  import {
+    CALENDAR_WINDOW_COUNT,
+    CALENDAR_WINDOW_DAYS,
+  } from '$lib/requests/_internal/toCalendarWindow.ts';
+  import { usePaginatedListQuery } from '$lib/sections/lists/stores/usePaginatedListQuery.ts';
   import { upcomingEpisodesQuery } from '$lib/requests/queries/calendars/upcomingEpisodesQuery.ts';
   import type { UpcomingEpisodeEntry } from '$lib/requests/queries/calendars/upcomingEpisodesQuery.ts';
 
-  const DAYS_TO_FETCH = 90;
+  const DAYS_AHEAD = CALENDAR_WINDOW_DAYS * CALENDAR_WINDOW_COUNT;
   const startDate = toLocalDayKey(new Date());
   const locale = languageTag();
 
-  const query = useQuery(upcomingEpisodesQuery({ startDate, days: DAYS_TO_FETCH, filter: {} }));
+  const { list, isLoading, hasNextPage, pageCount, fetchNextPage } =
+    usePaginatedListQuery(upcomingEpisodesQuery({ startDate, filter: {} }));
 
   function toGroupLabel(dateKey: string): string {
     const diffDays = daysFromToday(dateKey);
@@ -31,7 +37,7 @@
   type EpisodeGroup = { key: string; label: string; items: UpcomingEpisodeEntry[] };
 
   const groups = $derived.by<EpisodeGroup[]>(() => {
-    const entries = $query.data ?? [];
+    const entries = $list;
     const grouped = new Map<string, UpcomingEpisodeEntry[]>();
 
     for (const entry of entries) {
@@ -51,13 +57,13 @@
 </script>
 
 <div class="upcoming-page">
-  {#if $query.isPending}
+  {#if $isLoading && $pageCount === 0}
     <div class="loading-state">
       <LoadingIndicator />
     </div>
-  {:else if groups.length === 0}
+  {:else if groups.length === 0 && !$hasNextPage}
     <div class="empty-state">
-      <p>No upcoming episodes in the next {DAYS_TO_FETCH} days.</p>
+      <p>No upcoming episodes in the next {DAYS_AHEAD} days.</p>
     </div>
   {:else}
     {#each groups as group (group.key)}
@@ -66,6 +72,12 @@
         <UpcomingEpisodeCard {entry} />
       {/each}
     {/each}
+    <InfiniteScrollTrigger
+      hasMore={$hasNextPage}
+      isLoading={$isLoading}
+      count={$pageCount}
+      onload={fetchNextPage}
+    />
   {/if}
 </div>
 
