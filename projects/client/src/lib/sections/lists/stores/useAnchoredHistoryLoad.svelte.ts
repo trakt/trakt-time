@@ -1,7 +1,7 @@
 type UseAnchoredHistoryLoadParams = {
   loading: () => boolean;
   entryCount: () => number;
-  fetchOlder: () => void;
+  fetchOlder: () => Promise<void>;
 };
 
 /*
@@ -51,6 +51,6 @@ export function useAnchoredHistoryLoad(
 
   return function loadOlder() {
     pendingHeight = document.documentElement.scrollHeight;
-    fetchOlder();
+    return fetchOlder();
   };
 }

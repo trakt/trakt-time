@@ -1,6 +1,6 @@
 <script lang="ts" generics="T extends ShowEntry | MovieEntry">
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
-  import LoadMoreButton from '$lib/components/load-more-button/LoadMoreButton.svelte';
+  import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
   import PosterSkeleton from '$lib/components/poster-card/PosterSkeleton.svelte';
   import type { MovieEntry } from '$lib/requests/models/MovieEntry.ts';
   import type { ShowEntry } from '$lib/requests/models/ShowEntry.ts';
@@ -67,13 +67,12 @@
       {/each}
     </div>
 
-    {#if hasNextPage}
-      <LoadMoreButton
-        loading={isLoading}
-        onclick={fetchNextPage}
-        label={m.button_text_load_more()}
-      />
-    {/if}
+    <InfiniteScrollTrigger
+      hasMore={hasNextPage}
+      isLoading={isLoading}
+      count={items.length}
+      onload={fetchNextPage}
+    />
   {/if}
 </div>
 

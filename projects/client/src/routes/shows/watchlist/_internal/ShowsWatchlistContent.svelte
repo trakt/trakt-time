@@ -3,7 +3,7 @@
   import EpisodeCard from '$lib/components/media-card/EpisodeCard.svelte';
   import WatchedHistoryRow from '$lib/components/media-card/WatchedHistoryRow.svelte';
   import GroupHeader from '$lib/components/group-header/GroupHeader.svelte';
-  import LoadMoreButton from '$lib/components/load-more-button/LoadMoreButton.svelte';
+  import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
   import WatchlistSkeleton from '$lib/sections/lists/components/WatchlistSkeleton.svelte';
   import { useUpNextList } from '$lib/sections/lists/progress/useUpNextList.ts';
   import { useAnchoredHistoryLoad } from '$lib/sections/lists/stores/useAnchoredHistoryLoad.svelte.ts';
@@ -107,14 +107,13 @@
     </div>
   {:else}
     {#if historyEntries.length > 0}
-      {#if $historyHasNextPage}
-        <LoadMoreButton
-          loading={$historyLoading}
-          onclick={loadOlderHistory}
-          label={m.button_text_load_older()}
-          variant="older"
-        />
-      {/if}
+      <InfiniteScrollTrigger
+        hasMore={$historyHasNextPage}
+        isLoading={$historyLoading}
+        count={historyEntries.length}
+        onload={loadOlderHistory}
+        isEnabled={reveal.isReady}
+      />
       <GroupHeader label={m.header_watched_history()} />
       {#each historyEntries as entry (entry.key)}
         <WatchedHistoryRow {entry} />
@@ -134,13 +133,12 @@
       {/each}
     {/each}
 
-    {#if $hasNextPage}
-      <LoadMoreButton
-        loading={$isLoading}
-        onclick={fetchNextPage}
-        label={m.button_text_load_more()}
-      />
-    {/if}
+    <InfiniteScrollTrigger
+      hasMore={$hasNextPage}
+      isLoading={$isLoading}
+      count={$list.length}
+      onload={fetchNextPage}
+    />
   {/if}
 </div>
 
