@@ -4,6 +4,8 @@
   import type { EpisodeEntry } from '$lib/requests/models/EpisodeEntry.ts';
   import { useMarkAsWatched } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
+  import { getEpisodeStatus } from '$lib/utils/media/getEpisodeStatus.ts';
+  import { episodeStatusLabel } from '$lib/utils/media/episodeStatusLabel.ts';
   import * as m from '$lib/paraglide/messages.js';
 
   type Props = {
@@ -27,6 +29,15 @@
         show: { id: showId, title: showTitle },
       }),
     );
+
+  const statusLabel = $derived(
+    episodeStatusLabel(
+      getEpisodeStatus({
+        type: episode.type,
+        releaseDate: episode.effectiveReleaseDate,
+      }),
+    ),
+  );
 
   function toggle() {
     if ($isWatched) removeWatched();
@@ -53,7 +64,12 @@
       {/if}
     </div>
     <div class="episode-text">
-      <span class="episode-number">E{episode.number}</span>
+      <span class="episode-meta">
+        <span class="episode-number">E{episode.number}</span>
+        {#if statusLabel}
+          <span class="episode-badge">{statusLabel}</span>
+        {/if}
+      </span>
       <span class="episode-title">{episode.title}</span>
     </div>
   </a>
@@ -128,6 +144,22 @@
     flex-direction: column;
     gap: 2px;
     min-width: 0;
+  }
+
+  .episode-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+  }
+
+  .episode-badge {
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--trakttime-accent);
+    border: var(--ni-1) solid var(--trakttime-accent);
+    padding: var(--ni-1) 5px;
+    border-radius: var(--border-radius-xs);
   }
 
   .episode-number {

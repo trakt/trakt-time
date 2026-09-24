@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "Обновите до VIP, чтобы получить больше информации.",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Улучшите свой опыт Trakt",
-  "button_label_manage_subscription": "Управление VIP-подпиской"
+  "button_label_manage_subscription": "Управление VIP-подпиской",
+  "tag_text_new": "Новое"
 }

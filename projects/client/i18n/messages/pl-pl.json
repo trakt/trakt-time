@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "Zostań VIP, aby odblokować więcej informacji.",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Wzbogać swoje doświadczenia z Trakt",
-  "button_label_manage_subscription": "Zarządzaj subskrypcją VIP"
+  "button_label_manage_subscription": "Zarządzaj subskrypcją VIP",
+  "tag_text_new": "Nowość"
 }

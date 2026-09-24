@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "Uppgradera till VIP för att låsa upp fler insikter.",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Förbättra din Trakt-upplevelse",
-  "button_label_manage_subscription": "Hantera VIP-prenumeration"
+  "button_label_manage_subscription": "Hantera VIP-prenumeration",
+  "tag_text_new": "Ny"
 }

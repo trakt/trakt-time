@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "Upgrade naar VIP om meer inzichten te ontgrendelen.",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Verbeter je Trakt-ervaring",
-  "button_label_manage_subscription": "VIP-abonnement beheren"
+  "button_label_manage_subscription": "VIP-abonnement beheren",
+  "tag_text_new": "Nieuw"
 }

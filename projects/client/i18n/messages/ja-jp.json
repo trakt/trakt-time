@@ -401,5 +401,6 @@
   "text_vip_upsell_sentiment": "より多くのインサイトをアンロックするにはVIPにアップグレードしてください。",
   "tag_text_vip": "VIP",
   "text_vip_upsell_default": "Trakt体験を向上させる",
-  "button_label_manage_subscription": "VIPサブスクリプションを管理"
+  "button_label_manage_subscription": "VIPサブスクリプションを管理",
+  "tag_text_new": "新着"
 }
