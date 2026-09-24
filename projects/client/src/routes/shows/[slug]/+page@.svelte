@@ -7,7 +7,7 @@
   import { showPeopleQuery } from '$lib/requests/queries/shows/showPeopleQuery.ts';
   import { showIntlQuery } from '$lib/requests/queries/shows/showIntlQuery.ts';
   import { showSeasonsQuery } from '$lib/requests/queries/shows/showSeasonsQuery.ts';
-  import SeasonEpisodes from './_internal/SeasonEpisodes.svelte';
+  import SeasonRow from './_internal/SeasonRow.svelte';
   import SeasonListSkeleton from './_internal/SeasonListSkeleton.svelte';
   import RenderFor from '$lib/guards/RenderFor.svelte';
   import UpsellCta from '$lib/features/upsell/UpsellCta.svelte';
@@ -23,7 +23,6 @@
   import MediaRating from '$lib/sections/summary/_internal/MediaRating.svelte';
   import SummarySkeleton from '$lib/sections/summary/_internal/SummarySkeleton.svelte';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
-  import { seasonLabel } from '$lib/utils/intl/seasonLabel.ts';
   import PosterCard from '$lib/components/poster-card/PosterCard.svelte';
   import MediaActionsSheet from '$lib/components/media-actions-sheet/MediaActionsSheet.svelte';
   import { hasAired } from '$lib/utils/media/hasAired.ts';
@@ -202,36 +201,15 @@
           <h2 class="summary-section-title">{m.header_seasons()}</h2>
           <ul class="seasons-list">
             {#each seasons as season (season.id)}
-              <li class="season-row">
-                <button
-                  type="button"
-                  class="season-toggle"
-                  class:is-open={openSeason === season.number}
-                  onclick={() => toggleSeason(season.number)}
-                  aria-expanded={openSeason === season.number}
-                >
-                  <span class="season-text">
-                    <span class="season-label">{seasonLabel(season.number)}</span>
-                    {#if season.title}
-                      <span class="season-title">{season.title}</span>
-                    {/if}
-                  </span>
-                  <span class="season-meta">{season.episodes.count} {m.text_episodes_unit()}</span>
-                  <svg viewBox="0 0 24 24" class="season-chevron" fill="currentColor" aria-hidden="true">
-                    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
-                  </svg>
-                </button>
-                {#if openSeason === season.number}
-                  <SeasonEpisodes
-                    {slug}
-                    season={season.number}
-                    showId={show.id}
-                    showTitle={intl?.title ?? show.title}
-                    episodeCount={season.episodes.count}
-                    {seasons}
-                  />
-                {/if}
-              </li>
+              <SeasonRow
+                {slug}
+                {season}
+                {seasons}
+                showId={show.id}
+                showTitle={intl?.title ?? show.title}
+                isOpen={openSeason === season.number}
+                onToggle={() => toggleSeason(season.number)}
+              />
             {/each}
           </ul>
         </section>
@@ -300,65 +278,6 @@
     border-radius: var(--border-radius-m);
     overflow: hidden;
     background: var(--color-card-background);
-  }
-
-  .season-row {
-    border-bottom: var(--ni-1) solid var(--color-border);
-
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-
-  .season-toggle {
-    width: 100%;
-    background: none;
-    border: none;
-    color: var(--color-text-primary);
-    display: flex;
-    align-items: center;
-    gap: var(--gap-s);
-    padding: var(--gap-s) var(--gap-m);
-    cursor: pointer;
-    text-align: left;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .season-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  .season-label {
-    font-weight: 600;
-    font-size: 0.9375rem;
-  }
-
-  .season-title {
-    font-size: 0.8125rem;
-    color: var(--color-text-secondary);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .season-meta {
-    flex: 1;
-    color: var(--color-text-secondary);
-    font-size: 0.8125rem;
-  }
-
-  .season-chevron {
-    width: var(--ni-18);
-    height: var(--ni-18);
-    color: var(--color-text-secondary);
-    transition: transform var(--transition-increment) ease-in-out;
-  }
-
-  .season-toggle.is-open .season-chevron {
-    transform: rotate(180deg);
   }
 
   .status-badge {
