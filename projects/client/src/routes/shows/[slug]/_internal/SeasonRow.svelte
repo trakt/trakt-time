@@ -127,6 +127,11 @@
     display: flex;
     align-items: center;
     padding-right: var(--gap-m);
+
+    .watched-btn {
+      width: var(--trakttime-watched-btn-size-compact);
+      height: var(--trakttime-watched-btn-size-compact);
+    }
   }
 
   .season-toggle {
@@ -138,7 +143,7 @@
     display: flex;
     align-items: center;
     gap: var(--gap-s);
-    padding: var(--gap-s) var(--gap-m);
+    padding: var(--gap-m);
     cursor: pointer;
     text-align: left;
     -webkit-tap-highlight-color: transparent;
