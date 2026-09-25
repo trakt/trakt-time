@@ -3,6 +3,7 @@ import './palette/green.css';
 import './palette/orange.css';
 import './palette/purple.css';
 import './palette/red.css';
+import './palette/rose.css';
 import './palette/shade.css';
 
 import './numeric-increments/index.css';

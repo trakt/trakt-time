@@ -203,7 +203,7 @@
     padding: 0 var(--gap-xl);
     border: none;
     border-radius: var(--trakttime-radius-pill);
-    background: var(--trakttime-accent);
+    background: var(--trakttime-gradient);
     color: var(--trakttime-accent-foreground);
     font: inherit;
     font-size: 1rem;

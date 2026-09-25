@@ -1,13 +1,18 @@
 <script lang="ts">
   type Props = {
     coverUrl: string | null;
+    tint?: Nil | string;
   };
 
-  const { coverUrl }: Props = $props();
+  const { coverUrl, tint }: Props = $props();
 </script>
 
 {#if coverUrl}
-  <div class="summary-cover-hero" style:--cover-url="url({coverUrl})">
+  <div
+    class="summary-cover-hero"
+    style:--cover-url="url({coverUrl})"
+    style:--cover-tint={tint ?? 'var(--color-background)'}
+  >
     <div class="summary-cover-gradient"></div>
   </div>
 {:else}
@@ -29,8 +34,8 @@
     inset: 0;
     background: linear-gradient(
       to bottom,
-      transparent 40%,
-      color-mix(in srgb, var(--color-background) 70%, transparent) 75%,
+      transparent 35%,
+      color-mix(in srgb, var(--cover-tint) 22%, var(--color-background) 58%) 74%,
       var(--color-background) 100%
     );
   }

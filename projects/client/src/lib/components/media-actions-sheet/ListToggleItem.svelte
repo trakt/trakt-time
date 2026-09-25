@@ -132,8 +132,8 @@
   }
 
   .list-item.is-added .list-item-check {
-    border-color: var(--trakttime-accent);
-    background: var(--trakttime-accent);
+    border-color: transparent;
+    background: var(--trakttime-gradient);
     color: var(--trakttime-accent-foreground);
   }
 </style>

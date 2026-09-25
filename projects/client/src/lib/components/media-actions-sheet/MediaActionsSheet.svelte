@@ -487,7 +487,7 @@
     gap: var(--gap-xs);
     min-height: var(--ni-52);
     border-radius: var(--trakttime-radius-pill);
-    background: var(--trakttime-accent);
+    background: var(--trakttime-gradient);
     color: var(--trakttime-accent-foreground);
     font-size: 1rem;
     font-weight: 600;
