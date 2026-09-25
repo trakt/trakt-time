@@ -1,14 +1,16 @@
 <script lang="ts">
   import * as m from "$lib/paraglide/messages.js";
+  import type { Snippet } from "svelte";
 
   type Props = {
     label: string;
     href?: string;
     onclick?: () => void;
     variant?: "header" | "overlay";
+    action?: Snippet;
   };
 
-  const { label, href, onclick, variant = "header" }: Props = $props();
+  const { label, href, onclick, variant = "header", action }: Props = $props();
 
   const handleFallback = () => history.back();
 </script>
@@ -36,6 +38,12 @@
 
   {#if variant === "header"}
     <h1 class="back-bar-title">{label}</h1>
+  {/if}
+
+  {#if action}
+    <div class="back-bar-action">
+      {@render action()}
+    </div>
   {/if}
 </nav>
 
@@ -73,6 +81,12 @@
       width: var(--ni-24);
       height: var(--ni-24);
     }
+  }
+
+  .back-bar-action {
+    grid-column: 3;
+    justify-self: end;
+    pointer-events: auto;
   }
 
   .back-bar-title {

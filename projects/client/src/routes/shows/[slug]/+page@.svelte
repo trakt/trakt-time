@@ -20,6 +20,7 @@
   import WhereToWatchSection from '$lib/sections/summary/components/where-to-watch/WhereToWatchSection.svelte';
   import CommentsSection from '$lib/sections/summary/_internal/CommentsSection.svelte';
   import MediaActionsRow from '$lib/sections/summary/_internal/MediaActionsRow.svelte';
+  import MoreActionsButton from '$lib/sections/summary/_internal/MoreActionsButton.svelte';
   import MediaCoverHero from '$lib/sections/summary/_internal/MediaCoverHero.svelte';
   import MediaGenres from '$lib/sections/summary/_internal/MediaGenres.svelte';
   import MediaRating from '$lib/sections/summary/_internal/MediaRating.svelte';
@@ -127,7 +128,13 @@
 />
 
 <div class="summary-page">
-  <BackBar href="/shows/watchlist" label={m.page_title_shows()} variant="overlay" />
+  <BackBar href="/shows/watchlist" label={m.page_title_shows()} variant="overlay">
+    {#snippet action()}
+      {#if show}
+        <MoreActionsButton title={intl?.title ?? show.title} onclick={() => (actionsOpen = true)} />
+      {/if}
+    {/snippet}
+  </BackBar>
 
   {#if (isLoading && !show) || (seasonsLoading && seasons.length === 0)}
     <SummarySkeleton variant="show">
@@ -171,7 +178,7 @@
           },
         }}
         title={intl?.title ?? show.title}
-        onMore={() => (actionsOpen = true)}
+        watchlist={{ type: 'show', id: show.id }}
       />
 
       <MediaGenres genres={show.genres} />
