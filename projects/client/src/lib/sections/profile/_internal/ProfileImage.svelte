@@ -90,7 +90,7 @@
 </script>
 
 <div class="profile-image-container">
-  <figure class="profile-image" data-sentry-block>
+  <figure class="profile-image">
     <figcaption class="visually-hidden">
       {m.image_alt_user_avatar({ username: name })}
     </figcaption>

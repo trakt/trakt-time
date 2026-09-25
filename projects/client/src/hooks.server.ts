@@ -11,12 +11,6 @@ import { handle as handleSearchConfig } from '$lib/features/search/handle.ts';
 import { handle as handleTheme } from '$lib/features/theme/handle.ts';
 import { isBotAgent } from '$lib/utils/devices/isBotAgent.ts';
 
-import { SENTRY_DSN } from '$lib/utils/constants.ts';
-import {
-  handleErrorWithSentry,
-  initCloudflareSentryHandle,
-  sentryHandle,
-} from '@sentry/sveltekit';
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
@@ -59,12 +53,6 @@ export const handleCacheControl: Handle = async ({ event, resolve }) => {
 };
 
 export const handle: Handle = sequence(
-  initCloudflareSentryHandle({
-    dsn: SENTRY_DSN,
-    tracesSampleRate: 0.1,
-    enableLogs: true,
-  }),
-  sentryHandle(),
   handleBotVerification,
   handleBootLoader,
   handleDevice,
@@ -83,5 +71,3 @@ export const handle: Handle = sequence(
   handleDeployment,
   handleSearchConfig,
 );
-
-export const handleError = handleErrorWithSentry();

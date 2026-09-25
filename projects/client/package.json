@@ -56,7 +56,6 @@
   "dependencies": {
     "@inlang/paraglide-js": "2.25.4",
     "@libn/fuzzy": "npm:@jsr/libn__fuzzy@0.4.0",
-    "@sentry/sveltekit": "10.75.3",
     "@sveltejs/kit": "2.70.3",
     "@tanstack/query-core": "5.103.2",
     "@tanstack/query-devtools": "5.103.2",

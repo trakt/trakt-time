@@ -5,7 +5,6 @@
   import ErrorLockedAccountPage from "$lib/pages/errors/ErrorLockedAccountPage.svelte";
   import ErrorServicePage from "$lib/pages/errors/ErrorServicePage.svelte";
   import UnexpectedErrorPage from "$lib/pages/errors/UnexpectedErrorPage.svelte";
-  import * as Sentry from "@sentry/sveltekit";
   import { onMount } from "svelte";
   import { isErrorExempt } from "./_internal/errorExemptions.ts";
   import { mapToWellKnownError } from "./_internal/mapToWellKnownError";
@@ -21,7 +20,6 @@
 
   let fetchError = $state<WellKnownError | undefined>(undefined);
   let unexpectedError = $state<Error | undefined>(undefined);
-  let sessionId = $state<string | undefined>(undefined);
 
   onMount(() => {
     const handler = (event: Event) => {
@@ -39,7 +37,6 @@
   afterNavigate((_) => {
     fetchError = undefined;
     unexpectedError = undefined;
-    sessionId = undefined;
   });
 
   const hasExemption = $derived(isErrorExempt(fetchError, page.route.id));
@@ -71,22 +68,13 @@
       return;
     }
 
-    const id = crypto.randomUUID();
-    sessionId = id;
-
-    Sentry.captureException(error, {
-      tags: {
-        type: "ErrorProvider",
-        sessionId: id,
-      },
-    });
     unexpectedError = error;
   }}
 />
 
 {#if !hasExemption}
   {#if unexpectedError}
-    <UnexpectedErrorPage error={unexpectedError} {sessionId} />
+    <UnexpectedErrorPage error={unexpectedError} />
   {/if}
 
   {#if fetchError?.type === WellKnownErrorType.LockedAccountError}

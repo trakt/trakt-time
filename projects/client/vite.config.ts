@@ -1,5 +1,4 @@
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
-import { sentrySvelteKit } from '@sentry/sveltekit';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { svelteTesting } from '@testing-library/svelte/vite';
 import { Environment } from '@trakt/api';
@@ -81,14 +80,6 @@ export default defineConfig(({ mode }) => ({
   },
 
   plugins: [
-    // Sentry source map upload requires SENTRY_AUTH_TOKEN; skipped under
-    // IS_DOCTOR so the dep-update loop runs without that secret.
-    !IS_DOCTOR && sentrySvelteKit({
-      sourceMapsUploadOptions: {
-        org: 'trakt-tv',
-        project: 'trakt-time',
-      },
-    }),
     sveltekit(),
     paraglideVitePlugin({
       project: './i18n/project.inlang',
