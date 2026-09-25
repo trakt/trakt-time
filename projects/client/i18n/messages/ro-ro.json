@@ -478,7 +478,6 @@
   "trivia_category_impact_n_legacy": "Impact și moștenire",
   "trivia_category_real_world_connections": "Lumea reală",
   "text_reveal_spoiler": "Atinge pentru a vedea spoilerul",
-  "button_text_see_all_reviews": "Vezi toate recenziile",
   "trivia_category_quick_fact": "Pe scurt",
   "text_unlock_sentiment_analysis": "Deblochează analiza completă",
   "text_unlock_all_trivia": "Deblochează toate curiozitățile",
@@ -487,5 +486,8 @@
   "button_label_remove_gif": "Eliminați GIF-ul",
   "image_alt_comment_gif": "GIF atașat comentariului",
   "input_placeholder_search_gifs": "Căutați KLIPY",
-  "text_gif_no_results": "Nu s-au găsit GIF-uri"
+  "text_gif_no_results": "Nu s-au găsit GIF-uri",
+  "button_label_previous_episode": "Episodul anterior",
+  "button_label_next_episode": "Episodul următor",
+  "text_no_reviews": "Încă nu există recenzii. Fii primul care își spune părerea."
 }

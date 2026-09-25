@@ -478,7 +478,6 @@
   "trivia_category_impact_n_legacy": "Вплив і спадщина",
   "trivia_category_real_world_connections": "Реальний світ",
   "text_reveal_spoiler": "Торкніться, щоб побачити спойлер",
-  "button_text_see_all_reviews": "Усі відгуки",
   "trivia_category_quick_fact": "Коротко",
   "text_unlock_sentiment_analysis": "Відкрити повний аналіз",
   "text_unlock_all_trivia": "Відкрити всі факти",
@@ -487,5 +486,8 @@
   "button_label_remove_gif": "Видалити GIF",
   "image_alt_comment_gif": "GIF, прикріплений до коментаря",
   "input_placeholder_search_gifs": "Пошук KLIPY",
-  "text_gif_no_results": "GIF не знайдено"
+  "text_gif_no_results": "GIF не знайдено",
+  "button_label_previous_episode": "Попередня серія",
+  "button_label_next_episode": "Наступна серія",
+  "text_no_reviews": "Ще немає відгуків. Поділіться думкою першими."
 }

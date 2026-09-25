@@ -478,7 +478,6 @@
   "trivia_category_impact_n_legacy": "Påverkan & arv",
   "trivia_category_real_world_connections": "Verkliga världen",
   "text_reveal_spoiler": "Tryck för att visa spoilern",
-  "button_text_see_all_reviews": "Visa alla recensioner",
   "trivia_category_quick_fact": "Snabbfakta",
   "text_unlock_sentiment_analysis": "Lås upp hela analysen",
   "text_unlock_all_trivia": "Lås upp all trivia",
@@ -487,5 +486,8 @@
   "button_label_remove_gif": "Ta bort GIF",
   "image_alt_comment_gif": "GIF bifogad till kommentaren",
   "input_placeholder_search_gifs": "Sök KLIPY",
-  "text_gif_no_results": "Inga GIF:ar hittades"
+  "text_gif_no_results": "Inga GIF:ar hittades",
+  "button_label_previous_episode": "Föregående avsnitt",
+  "button_label_next_episode": "Nästa avsnitt",
+  "text_no_reviews": "Inga recensioner än. Bli först med att dela dina tankar."
 }
