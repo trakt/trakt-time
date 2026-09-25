@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import { WorkerMessage } from "$worker/WorkerMessage";
   import { workerRequest } from "$worker/workerRequest";
   import { Theme } from "../models/Theme";
@@ -7,14 +8,14 @@
   import LightMode from "./LightMode.svelte";
   import AutoMode from "./SystemMode.svelte";
 
-  import NativeSelect from "$lib/components/select/NativeSelect.svelte";
+  import SegmentedControl from "$lib/components/segmented-control/SegmentedControl.svelte";
   import { useAuth } from "$lib/features/auth/stores/useAuth";
   import * as m from "$lib/features/i18n/messages";
   import { useSettings } from "$lib/sections/settings/_internal/useSettings";
 
   const { set, theme } = useTheme();
 
-  const availableThemes = [Theme.Light, Theme.Dark, Theme.System];
+  const availableThemes = [Theme.System, Theme.Light, Theme.Dark];
 
   const { isAuthorized } = useAuth();
   const { theme: themeSettings } = useSettings();
@@ -34,23 +35,35 @@
     }
   }
 
-  const options = $derived(
-    availableThemes.map((theme) => ({
-      value: theme,
-      text: themeToTitle[theme],
-      label: themeToTitle[theme],
-    })),
-  );
+  const themeToIcon: Record<Theme, Snippet> = {
+    [Theme.Light]: lightIcon,
+    [Theme.Dark]: darkIcon,
+    [Theme.System]: systemIcon,
+  };
+
+  const options = availableThemes.map((theme) => ({
+    value: theme,
+    label: themeToTitle[theme],
+    icon: themeToIcon[theme],
+  }));
 </script>
 
-<NativeSelect value={$theme} onChange={submitTheme} {options}>
-  {#snippet icon()}
-    {#if $theme === Theme.System}
-      <AutoMode />
-    {:else if $theme === Theme.Dark}
-      <DarkMode />
-    {:else}
-      <LightMode />
-    {/if}
-  {/snippet}
-</NativeSelect>
+{#snippet lightIcon()}
+  <LightMode />
+{/snippet}
+
+{#snippet darkIcon()}
+  <DarkMode />
+{/snippet}
+
+{#snippet systemIcon()}
+  <AutoMode />
+{/snippet}
+
+<SegmentedControl
+  label={m.text_theme()}
+  value={$theme}
+  onChange={submitTheme}
+  {options}
+  surface="card"
+/>

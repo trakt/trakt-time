@@ -11,7 +11,7 @@
 
   const {
     style = "normal",
-  }: { style?: "normal" | "action" | "dropdown-item" } = $props();
+  }: { style?: "normal" | "action" | "dropdown-item" | "row" } = $props();
 
   const { logout } = useAuth();
 
@@ -59,8 +59,41 @@
   </DropdownItem>
 {/if}
 
+{#if style === "row"}
+  <button
+    type="button"
+    class="trakt-logout-row"
+    aria-label={commonProps.label}
+    onclick={commonProps.onclick}
+  >
+    {m.button_text_logout()}
+  </button>
+{/if}
+
 <style lang="scss">
   @use "$style/scss/mixins/index" as *;
+
+  .trakt-logout-row {
+    width: 100%;
+    min-height: var(--ni-52);
+    border: none;
+    background: transparent;
+    color: var(--color-background-red);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    &:active {
+      background: var(--color-floating-background);
+    }
+
+    &:focus-visible {
+      outline: var(--ni-2) solid var(--trakttime-accent);
+      outline-offset: calc(var(--ni-2) * -1);
+    }
+  }
 
   .trakt-logout-action-button {
     --color-logout-button: var(--color-background-red);

@@ -6,6 +6,7 @@
       <div class="profile-skeleton-line profile-skeleton-line--username"></div>
       <div class="profile-skeleton-line profile-skeleton-line--name"></div>
       <div class="profile-skeleton-line profile-skeleton-line--about"></div>
+      <div class="profile-skeleton-line profile-skeleton-line--joined"></div>
     </div>
   </div>
 </div>
@@ -28,7 +29,8 @@
   .profile-skeleton-identity {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-s);
+    align-items: center;
+    gap: var(--gap-m);
     padding: 0 var(--gap-m) var(--gap-m);
     margin-top: var(--trakttime-profile-offset);
   }
@@ -38,11 +40,14 @@
     height: var(--trakttime-avatar-size);
     flex-shrink: 0;
     border-radius: 50%;
-    box-shadow: 0 0 0 4px var(--color-background);
+    box-shadow: 0 0 0 var(--ni-4) var(--color-background);
     @include shimmer-bg;
   }
 
   .profile-skeleton-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     min-width: 0;
   }
 
@@ -60,15 +65,22 @@
     &--about {
       width: var(--ni-200);
       height: 1.25rem;
-      margin-top: var(--gap-xxs);
+      margin-top: var(--gap-xs);
       animation-delay: 0.15s;
     }
 
     &--name {
       width: var(--ni-88);
-      height: 1.1875rem;
-      margin-top: var(--ni-2);
+      height: 1.3125rem;
+      margin-top: var(--ni-4);
       animation-delay: 0.1s;
+    }
+
+    &--joined {
+      width: var(--ni-120);
+      height: 1rem;
+      margin-top: var(--ni-4);
+      animation-delay: 0.2s;
     }
   }
 </style>

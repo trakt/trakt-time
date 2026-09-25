@@ -1,7 +1,11 @@
 <script lang="ts">
   import NavigationGuard from '$lib/components/NavigationGuard.svelte';
   import LoaderIcon from '$lib/components/icons/LoaderIcon.svelte';
-  import TvTimeLiberatorCta from '$lib/components/tv-time-liberator-cta/TvTimeLiberatorCta.svelte';
+  import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
+  import PuzzleIcon from '$lib/components/icons/PuzzleIcon.svelte';
+  import ShieldIcon from '$lib/components/icons/ShieldIcon.svelte';
+  import UploadIcon from '$lib/components/icons/UploadIcon.svelte';
+  import { GDPR_HREF, LIBERATOR_HREF } from './tvTimeExportLinks.ts';
   import { ConfirmationType } from '$lib/features/confirmation/models/ConfirmationType.ts';
   import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
   import { useUser } from '$lib/features/auth/stores/useUser.ts';
@@ -28,6 +32,7 @@
   import { syncToTrakt } from '../../import/syncToTrakt.ts';
   import ImportComplete from './ImportComplete.svelte';
   import SettingsBlock from '../SettingsBlock.svelte';
+  import SettingsRow from '../SettingsRow.svelte';
 
   const { importInProgress } = useImportInProgress();
   const { invalidate } = useInvalidator();
@@ -267,164 +272,227 @@
   }
 </script>
 
-<SettingsBlock
-  title={m.header_import_tv_time()}
-  description={m.description_import_tv_time()}
->
-  <TvTimeLiberatorCta />
+{#snippet step(title: string, body: string)}
+  <li class="tv-time-step">
+    <span class="tv-time-step-title">{title}</span>
+    {body}
+  </li>
+{/snippet}
 
-  <ol class="tv-time-import-steps">
-    <li>{m.import_tv_time_step_export()}</li>
-    <li>{m.import_tv_time_step_drop()}</li>
-    <li>{m.import_tv_time_step_review()}</li>
-  </ol>
-
-  <NavigationGuard
-    isActive={state.status === 'matching' || state.status === 'syncing'}
-    confirmationParams={{ type: ConfirmationType.CancelImport }}
-    onreset={reset}
+<SettingsBlock title={m.header_your_data()}>
+  <SettingsRow
+    title={m.header_import_tv_time()}
+    subtitle={m.import_tv_time_intro()}
+    tone="rose"
   >
-    {#if state.status === 'idle' || state.status === 'parsing'}
-      <div
-        class="tv-time-dropzone"
-        transition:slide={{ duration: 150, axis: 'y' }}
-        use:dropzone={{ accept: sourceConfig.accept, multiple: true }}
-        onfiles={handleFiles}
-      >
-        {#if state.status === 'parsing'}
-          <LoaderIcon />
-          <p class="tv-time-secondary">{m.import_status_parsing()}</p>
-        {:else}
-          <p class="tv-time-prompt">{m.import_drop_zip()}</p>
-          <p class="tv-time-secondary">
-            {m.import_max_files({ count: sourceConfig.maxFiles })}
-          </p>
-        {/if}
-      </div>
-    {/if}
+    {#snippet icon()}
+      <UploadIcon />
+    {/snippet}
+  </SettingsRow>
 
-    {#if state.status === 'review'}
-      <div
-        class="tv-time-summary"
-        transition:slide={{ duration: 150, axis: 'y' }}
-      >
-        <div class="tv-time-counts">
-          {#each actionRows as row (row.action)}
+  <div class="tv-time-panel">
+    <ol class="tv-time-steps">
+      {@render step(m.import_step_export_title(), m.import_step_export_body())}
+      {@render step(m.import_step_upload_title(), m.import_step_upload_body())}
+      {@render step(m.import_step_sync_title(), m.import_step_sync_body())}
+    </ol>
+
+    <NavigationGuard
+      isActive={state.status === 'matching' || state.status === 'syncing'}
+      confirmationParams={{ type: ConfirmationType.CancelImport }}
+      onreset={reset}
+    >
+      {#if state.status === 'idle' || state.status === 'parsing'}
+        <div
+          class="tv-time-dropzone"
+          transition:slide={{ duration: 150, axis: 'y' }}
+          use:dropzone={{ accept: sourceConfig.accept, multiple: true }}
+          onfiles={handleFiles}
+        >
+          {#if state.status === 'parsing'}
+            <LoaderIcon />
+            <p class="tv-time-secondary">{m.import_status_parsing()}</p>
+          {:else}
+            <p class="tv-time-prompt">{m.import_drop_zip()}</p>
+            <p class="tv-time-secondary">
+              {m.import_max_files({ count: sourceConfig.maxFiles })}
+            </p>
+          {/if}
+        </div>
+      {/if}
+
+      {#if state.status === 'review'}
+        <div
+          class="tv-time-summary"
+          transition:slide={{ duration: 150, axis: 'y' }}
+        >
+          <div class="tv-time-counts">
+            {#each actionRows as row (row.action)}
+              <label class="tv-time-option">
+                <input
+                  type="checkbox"
+                  checked={state.selectedActions[row.action]}
+                  onchange={() => toggleAction(row.action)}
+                />
+                <span>{row.label}</span>
+              </label>
+            {/each}
+          </div>
+          {#if hasEpisodes}
             <label class="tv-time-option">
               <input
                 type="checkbox"
-                checked={state.selectedActions[row.action]}
-                onchange={() => toggleAction(row.action)}
+                checked={state.episodeMatch === 'positional'}
+                onchange={toggleEpisodeMatch}
               />
-              <span>{row.label}</span>
+              <span class="tv-time-option-text">
+                <span>{m.import_match_toggle_label()}</span>
+                <span class="tv-time-secondary">{m.import_match_toggle_hint()}</span>
+              </span>
             </label>
-          {/each}
+          {/if}
+          {#if isOverFreeLimit}
+            <UpsellCta source="tv-time-import">
+              {m.import_vip_limit_exceeded({ count: selectedItems.length })}
+            </UpsellCta>
+          {/if}
+          <div class="tv-time-actions">
+            <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
+              {m.button_text_cancel()}
+            </button>
+            <button
+              class="tv-time-btn tv-time-btn--primary"
+              onclick={startImport}
+              disabled={selectedItems.length === 0}
+            >
+              {m.button_text_start_import()}
+            </button>
+          </div>
         </div>
-        {#if hasEpisodes}
-          <label class="tv-time-option">
-            <input
-              type="checkbox"
-              checked={state.episodeMatch === 'positional'}
-              onchange={toggleEpisodeMatch}
-            />
-            <span class="tv-time-option-text">
-              <span>{m.import_match_toggle_label()}</span>
-              <span class="tv-time-secondary">{m.import_match_toggle_hint()}</span>
-            </span>
-          </label>
-        {/if}
-        {#if isOverFreeLimit}
-          <UpsellCta source="tv-time-import">
-            {m.import_vip_limit_exceeded({ count: selectedItems.length })}
-          </UpsellCta>
-        {/if}
-        <div class="tv-time-actions">
-          <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
-            {m.button_text_cancel()}
-          </button>
-          <button
-            class="tv-time-btn tv-time-btn--primary"
-            onclick={startImport}
-            disabled={selectedItems.length === 0}
-          >
-            {m.button_text_start_import()}
-          </button>
-        </div>
-      </div>
-    {/if}
+      {/if}
 
-    {#if state.status === 'matching'}
-      <div
-        class="tv-time-syncing"
-        transition:slide={{ duration: 150, axis: 'y' }}
-      >
-        <p class="tv-time-secondary">
-          {m.import_status_matching({
-            processed: state.matchProcessedCount,
-            total: state.matchTotalCount,
-          })}
-        </p>
-        <div class="tv-time-progress">
-          <div class="tv-time-progress-fill" style:width="{matchPercent}%"></div>
+      {#if state.status === 'matching'}
+        <div
+          class="tv-time-syncing"
+          transition:slide={{ duration: 150, axis: 'y' }}
+        >
+          <p class="tv-time-secondary">
+            {m.import_status_matching({
+              processed: state.matchProcessedCount,
+              total: state.matchTotalCount,
+            })}
+          </p>
+          <div class="tv-time-progress">
+            <div class="tv-time-progress-fill" style:width="{matchPercent}%"></div>
+          </div>
         </div>
-      </div>
-    {/if}
+      {/if}
 
-    {#if state.status === 'syncing'}
-      <div
-        class="tv-time-syncing"
-        transition:slide={{ duration: 150, axis: 'y' }}
-      >
-        <p class="tv-time-secondary">
-          {m.import_progress({
-            processed: state.processedCount,
-            total: state.totalCount,
-          })}
-        </p>
-        <div class="tv-time-progress">
-          <div class="tv-time-progress-fill" style:width="{progressPercent}%"></div>
+      {#if state.status === 'syncing'}
+        <div
+          class="tv-time-syncing"
+          transition:slide={{ duration: 150, axis: 'y' }}
+        >
+          <p class="tv-time-secondary">
+            {m.import_progress({
+              processed: state.processedCount,
+              total: state.totalCount,
+            })}
+          </p>
+          <div class="tv-time-progress">
+            <div class="tv-time-progress-fill" style:width="{progressPercent}%"></div>
+          </div>
         </div>
-      </div>
-    {/if}
+      {/if}
 
-    {#if state.status === 'complete'}
-      <div transition:slide={{ duration: 150, axis: 'y' }}>
-        <ImportComplete
-          processedCount={state.processedCount}
-          errorCount={state.errorCount}
-          unresolved={state.unresolved}
-          ambiguous={state.ambiguous}
-          onimportpicked={importPicked}
-          onreset={reset}
-        />
-      </div>
-    {/if}
-
-    {#if state.status === 'error'}
-      <div
-        class="tv-time-error"
-        transition:slide={{ duration: 150, axis: 'y' }}
-      >
-        <p>{state.error ?? m.import_error_generic()}</p>
-        <div class="tv-time-actions">
-          <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
-            {m.button_text_try_again()}
-          </button>
+      {#if state.status === 'complete'}
+        <div transition:slide={{ duration: 150, axis: 'y' }}>
+          <ImportComplete
+            processedCount={state.processedCount}
+            errorCount={state.errorCount}
+            unresolved={state.unresolved}
+            ambiguous={state.ambiguous}
+            onimportpicked={importPicked}
+            onreset={reset}
+          />
         </div>
-      </div>
-    {/if}
-  </NavigationGuard>
+      {/if}
+
+      {#if state.status === 'error'}
+        <div
+          class="tv-time-error"
+          transition:slide={{ duration: 150, axis: 'y' }}
+        >
+          <p>{state.error ?? m.import_error_generic()}</p>
+          <div class="tv-time-actions">
+            <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
+              {m.button_text_try_again()}
+            </button>
+          </div>
+        </div>
+      {/if}
+    </NavigationGuard>
+  </div>
+
+  <SettingsRow
+    externalHref={LIBERATOR_HREF}
+    title={m.button_text_get_extension()}
+    subtitle={m.import_liberator_hint()}
+    tone="orange"
+  >
+    {#snippet icon()}
+      <PuzzleIcon />
+    {/snippet}
+    <ExternalLinkIcon size="small" />
+  </SettingsRow>
+
+  <SettingsRow
+    externalHref={GDPR_HREF}
+    title={m.welcome_tvtime_gdpr_cta()}
+    subtitle={m.import_gdpr_hint()}
+    tone="green"
+  >
+    {#snippet icon()}
+      <ShieldIcon />
+    {/snippet}
+    <ExternalLinkIcon size="small" />
+  </SettingsRow>
 </SettingsBlock>
 
 <style lang="scss">
-  .tv-time-import-steps {
-    margin: 0;
-    padding-left: var(--gap-l);
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
+  .tv-time-panel {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-xxs);
+    gap: var(--gap-m);
+    padding: var(--gap-m);
+  }
+
+  .tv-time-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tv-time-step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ni-4);
+    padding: var(--gap-s);
+    border-radius: var(--border-radius-m);
+    background: var(--color-background);
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
+
+  .tv-time-step-title {
+    font-family: var(--trakttime-font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-text-emphasis);
   }
 
   .tv-time-dropzone {

@@ -1,46 +1,39 @@
 <script lang="ts">
-  const {
-    title,
-    description,
-    children,
-  }: ChildrenProps & { title: string; description: string } = $props();
+  const { title, children }: ChildrenProps & { title: string } = $props();
 </script>
 
-<div class="trakt-settings-block">
-  <div class="trakt-settings-block-header">
-    <h2 class="settings-title">{title}</h2>
-    <p class="secondary">{description}</p>
-  </div>
+<section class="trakt-settings-block">
+  <h2 class="trakt-settings-block-title">{title}</h2>
   <div class="trakt-settings-block-content">
     {@render children()}
   </div>
-</div>
+</section>
 
 <style lang="scss">
-  @use "$style/scss/mixins/index" as *;
-
-  .trakt-settings-block-header {
+  .trakt-settings-block {
     display: flex;
     flex-direction: column;
-
     gap: var(--gap-xs);
-
-    .settings-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
   }
 
-  .trakt-settings-block,
+  .trakt-settings-block-title {
+    margin: 0 0 0 var(--gap-xs);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
   .trakt-settings-block-content {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-m);
-  }
-
-  .trakt-settings-block-content {
-    padding: var(--gap-m);
     background: var(--color-card-background);
-    border-radius: var(--trakttime-radius-card);
+    border-radius: var(--border-radius-xl);
+    overflow: hidden;
+
+    > :global(* + *) {
+      border-top: var(--ni-1) solid var(--color-border);
+    }
   }
 </style>
