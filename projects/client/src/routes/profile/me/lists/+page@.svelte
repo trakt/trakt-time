@@ -86,12 +86,18 @@
   }
 
   .list-name {
+    min-width: 0;
     font-size: 1rem;
     font-weight: 500;
     color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .list-count {
+    flex-shrink: 0;
+    white-space: nowrap;
     font-size: 0.875rem;
     color: var(--color-text-secondary);
   }
