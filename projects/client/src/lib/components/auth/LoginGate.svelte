@@ -1,26 +1,36 @@
 <script lang="ts">
-  import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
   import { browser } from '$app/environment';
+  import { useTrendingList } from '$lib/sections/lists/trending/useTrendingList.ts';
   import * as m from '$lib/paraglide/messages.js';
 
   const { login }: { login: () => void } = $props();
 
-  const LIBERATOR_HREF = 'https://github.com/hobo-Ware/tv-time-liberator';
-  const GDPR_HREF = 'https://gdpr.tvtime.com/gdpr/self-service';
+  const POSTER_COUNT = 7;
+  const CENTER_INDEX = Math.floor(POSTER_COUNT / 2);
+
+  const { list: trending } = useTrendingList({
+    type: 'show',
+    limit: 10,
+    filter: {},
+  });
+
+  const posters = $derived($trending.slice(0, POSTER_COUNT));
 </script>
 
 {#if browser}
   <div class="login-gate">
-    <div class="login-gate-glow" aria-hidden="true"></div>
+    <div class="login-gate-posters" aria-hidden="true">
+      {#each posters as item, i (item.id)}
+        <img
+          class="login-gate-poster"
+          src={item.poster.url.thumb}
+          alt=""
+          style:--offset={i - CENTER_INDEX}
+        />
+      {/each}
+    </div>
 
     <div class="login-gate-hero">
-      <div class="login-gate-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="7" width="20" height="14" rx="2" />
-          <path d="m8 2 4 4 4-4" />
-          <path d="m10 11.5 5 2.5-5 2.5z" fill="currentColor" stroke="none" />
-        </svg>
-      </div>
       <h2 class="login-gate-title">{m.header_sign_in_to_trakt()}</h2>
       <p class="login-gate-message">{m.text_sign_in_pitch()}</p>
       <button class="login-gate-btn" onclick={login}>
@@ -28,63 +38,64 @@
       </button>
     </div>
 
-    <div class="login-gate-migrate">
-      <span class="login-gate-badge">{m.welcome_tvtime_badge()}</span>
-      <h3 class="login-gate-migrate-title">{m.welcome_tvtime_heading()}</h3>
-      <p class="login-gate-migrate-body">{m.welcome_tvtime_body()}</p>
-      <p class="login-gate-migrate-note">{m.welcome_tvtime_liberator_body()}</p>
-      <div class="login-gate-migrate-actions">
-        <a
-          class="login-gate-migrate-link"
-          href={LIBERATOR_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {m.welcome_tvtime_liberator_cta()}
-          <ExternalLinkIcon size="small" />
-        </a>
-        <a
-          class="login-gate-migrate-link"
-          href={GDPR_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {m.welcome_tvtime_gdpr_cta()}
-          <ExternalLinkIcon size="small" />
-        </a>
-      </div>
-    </div>
+    <p class="login-gate-import">
+      {m.header_tv_time_liberator()}
+      <a href="/settings">{m.welcome_tvtime_import_cta()}</a>
+    </p>
   </div>
 {/if}
 
 <style lang="scss">
   .login-gate {
     position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: var(--gap-xxl) var(--gap-l);
     gap: var(--gap-xl);
-    min-height: 60vh;
+    padding: var(--gap-l) var(--gap-m) var(--gap-xxl);
+    min-height: 70dvh;
     text-align: center;
+    overflow: hidden;
   }
 
-  .login-gate-glow {
-    position: absolute;
-    top: -20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(48rem, 120vw);
-    aspect-ratio: 1;
-    background: radial-gradient(
-      circle at center,
-      color-mix(in srgb, var(--trakttime-accent) 22%, transparent) 0%,
-      color-mix(in srgb, var(--trakttime-accent) 8%, transparent) 42%,
-      transparent 70%
-    );
-    pointer-events: none;
+  .login-gate-posters {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    height: var(--ni-240);
+    mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 10% 5% -20%;
+      background: radial-gradient(
+        ellipse at center,
+        color-mix(in srgb, var(--trakttime-accent) 35%, transparent) 0%,
+        transparent 70%
+      );
+      filter: blur(24px);
+    }
+  }
+
+  .login-gate-poster {
+    --abs-offset: max(var(--offset), -1 * var(--offset));
+
+    position: relative;
+    z-index: calc(10 - var(--abs-offset));
+    flex-shrink: 0;
+    width: var(--ni-104);
+    aspect-ratio: 2 / 3;
+    margin-inline: calc(-1 * var(--ni-16));
+    object-fit: cover;
+    border-radius: var(--border-radius-m);
+    box-shadow: 0 var(--ni-12) var(--ni-32)
+      color-mix(in srgb, var(--shade-1000) 60%, transparent);
+    transform: translateY(calc(var(--abs-offset) * var(--ni-12)))
+      rotate(calc(var(--offset) * 6deg));
+    opacity: calc(1 - var(--abs-offset) * 0.15);
   }
 
   .login-gate-hero {
@@ -92,66 +103,48 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--gap-m);
-  }
-
-  .login-gate-icon {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: color-mix(in srgb, var(--trakttime-accent) 14%, transparent);
-    border: 1px solid
-      color-mix(in srgb, var(--trakttime-accent) 30%, transparent);
-    color: var(--trakttime-accent);
-
-    svg {
-      width: 2rem;
-      height: 2rem;
-    }
+    gap: var(--gap-s);
+    margin-top: calc(-1 * var(--gap-xl));
   }
 
   .login-gate-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.01em;
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.1;
     color: var(--color-text-primary);
-    margin: 0;
+    text-wrap: balance;
   }
 
   .login-gate-message {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    margin: 0;
     max-width: var(--ni-320);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
   }
 
   .login-gate-btn {
-    margin-top: var(--gap-s);
-    padding: var(--gap-s) var(--gap-xl);
-    background: var(--trakttime-accent);
-    color: #fff;
+    margin-top: var(--gap-m);
+    min-width: var(--ni-240);
+    height: var(--ni-52);
+    padding: 0 var(--gap-xl);
     border: none;
-    border-radius: var(--border-radius-m);
-    font-size: 0.9375rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    border-radius: var(--trakttime-radius-pill);
+    background: var(--trakttime-accent);
+    color: var(--trakttime-accent-foreground);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    box-shadow: 0 8px 24px -8px
-      color-mix(in srgb, var(--trakttime-accent) 60%, transparent);
-    transition: transform var(--transition-increment) ease-in-out,
-      box-shadow var(--transition-increment) ease-in-out,
+    box-shadow: 0 var(--ni-8) var(--ni-24) calc(-1 * var(--ni-8))
+      color-mix(in srgb, var(--trakttime-accent) 70%, transparent);
+    transition:
+      transform var(--transition-increment) ease-in-out,
       opacity var(--transition-increment) ease-in-out;
 
     &:hover,
     &:focus-visible {
       transform: translateY(-1px);
-      box-shadow: 0 12px 28px -8px
-        color-mix(in srgb, var(--trakttime-accent) 75%, transparent);
     }
 
     &:active {
@@ -160,76 +153,15 @@
     }
   }
 
-  .login-gate-migrate {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--gap-s);
-    width: 100%;
-    max-width: 26rem;
-    padding: var(--gap-l);
-    background: color-mix(in srgb, var(--trakttime-accent) 6%, transparent);
-    border: 1px solid
-      color-mix(in srgb, var(--trakttime-accent) 22%, transparent);
-    border-radius: var(--border-radius-l);
-  }
-
-  .login-gate-badge {
-    padding: 2px var(--gap-s);
-    background: color-mix(in srgb, var(--trakttime-accent) 24%, transparent);
-    border-radius: var(--border-radius-m);
-    color: var(--color-text-primary);
-    font-size: 0.6875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .login-gate-migrate-title {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-  }
-
-  .login-gate-migrate-body,
-  .login-gate-migrate-note {
-    margin: 0;
-    font-size: 0.8125rem;
-    line-height: 1.6;
+  .login-gate-import {
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
-  }
 
-  .login-gate-migrate-actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--gap-s) var(--gap-l);
-    margin-top: var(--gap-xs);
-  }
-
-  .login-gate-migrate-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    color: var(--trakttime-accent);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    text-decoration: none;
-    -webkit-tap-highlight-color: transparent;
-    transition: opacity 0.15s ease;
-
-    &:hover,
-    &:focus-visible {
-      opacity: 0.8;
-    }
-
-    :global(svg) {
-      width: 0.7rem;
-      height: 0.7rem;
+    a {
+      margin-inline-start: var(--gap-xxs);
+      color: var(--trakttime-accent);
+      font-weight: 600;
+      text-decoration: none;
     }
   }
 </style>
