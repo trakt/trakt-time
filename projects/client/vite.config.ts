@@ -103,7 +103,7 @@ export default defineConfig(({ mode }) => ({
       manifest,
       manifestFilename: 'manifest.webmanifest',
       injectManifest: {
-        injectionPoint: 'self.__WB_MANIFEST',
+        injectionPoint: undefined,
       },
       devOptions: {
         enabled: true,
