@@ -482,5 +482,10 @@
   "trivia_category_quick_fact": "豆知識",
   "text_unlock_sentiment_analysis": "分析をすべて見る",
   "text_unlock_all_trivia": "トリビアをすべて見る",
-  "text_vip_upsell_trivia": "VIPならネタバレを含むすべての舞台裏トリビアが見られます。"
+  "text_vip_upsell_trivia": "VIPならネタバレを含むすべての舞台裏トリビアが見られます。",
+  "button_label_add_gif": "GIFを追加",
+  "button_label_remove_gif": "GIFを削除",
+  "image_alt_comment_gif": "コメントに添付されたGIF",
+  "input_placeholder_search_gifs": "KLIPYを検索",
+  "text_gif_no_results": "GIFが見つかりません"
 }

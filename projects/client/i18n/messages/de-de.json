@@ -482,5 +482,10 @@
   "trivia_category_quick_fact": "Kurzfakt",
   "text_unlock_sentiment_analysis": "Ganze Analyse freischalten",
   "text_unlock_all_trivia": "Alle Trivia freischalten",
-  "text_vip_upsell_trivia": "Hol dir mit VIP alle Hintergrundfakten, inklusive Spoiler."
+  "text_vip_upsell_trivia": "Hol dir mit VIP alle Hintergrundfakten, inklusive Spoiler.",
+  "button_label_add_gif": "GIF hinzufügen",
+  "button_label_remove_gif": "GIF entfernen",
+  "image_alt_comment_gif": "Dem Kommentar angehängtes GIF",
+  "input_placeholder_search_gifs": "KLIPY suchen",
+  "text_gif_no_results": "Keine GIFs gefunden"
 }
