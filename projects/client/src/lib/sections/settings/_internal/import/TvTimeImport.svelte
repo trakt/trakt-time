@@ -1,11 +1,7 @@
 <script lang="ts">
   import NavigationGuard from '$lib/components/NavigationGuard.svelte';
   import LoaderIcon from '$lib/components/icons/LoaderIcon.svelte';
-  import ExternalLinkIcon from '$lib/components/icons/ExternalLinkIcon.svelte';
-  import PuzzleIcon from '$lib/components/icons/PuzzleIcon.svelte';
-  import ShieldIcon from '$lib/components/icons/ShieldIcon.svelte';
   import UploadIcon from '$lib/components/icons/UploadIcon.svelte';
-  import { GDPR_HREF, LIBERATOR_HREF } from './tvTimeExportLinks.ts';
   import { ConfirmationType } from '$lib/features/confirmation/models/ConfirmationType.ts';
   import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
   import { useUser } from '$lib/features/auth/stores/useUser.ts';
@@ -433,30 +429,6 @@
       {/if}
     </NavigationGuard>
   </div>
-
-  <SettingsRow
-    externalHref={LIBERATOR_HREF}
-    title={m.button_text_get_extension()}
-    subtitle={m.import_liberator_hint()}
-    tone="orange"
-  >
-    {#snippet icon()}
-      <PuzzleIcon />
-    {/snippet}
-    <ExternalLinkIcon size="small" />
-  </SettingsRow>
-
-  <SettingsRow
-    externalHref={GDPR_HREF}
-    title={m.welcome_tvtime_gdpr_cta()}
-    subtitle={m.import_gdpr_hint()}
-    tone="green"
-  >
-    {#snippet icon()}
-      <ShieldIcon />
-    {/snippet}
-    <ExternalLinkIcon size="small" />
-  </SettingsRow>
 </SettingsBlock>
 
 <style lang="scss">
