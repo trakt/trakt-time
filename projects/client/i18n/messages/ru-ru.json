@@ -471,5 +471,11 @@
   "compare_bingers_faq_both_q": "Можно ли пользоваться Trakt Time и Bingers одновременно?",
   "compare_bingers_faq_both_a": "Да. Они независимы, поэтому можно импортировать одну и ту же историю TV Time в оба и попробовать каждое.",
   "compare_bingers_disclaimer": "Bingers является товарным знаком своего владельца. Сведения о Bingers взяты из его страницы в App Store и из публикаций в прессе и могут измениться.",
-  "text_not_streaming": "Сейчас недоступно для стриминга в вашей стране."
+  "text_not_streaming": "Сейчас недоступно для стриминга в вашей стране.",
+  "trivia_category_bts": "За кадром",
+  "trivia_category_cast_n_crew": "Актёры и съёмочная группа",
+  "trivia_category_story_n_themes": "Сюжет и темы",
+  "trivia_category_impact_n_legacy": "Влияние и наследие",
+  "trivia_category_real_world_connections": "Реальный мир",
+  "text_reveal_spoiler": "Нажмите, чтобы увидеть спойлер"
 }

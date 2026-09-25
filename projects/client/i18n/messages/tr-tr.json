@@ -471,5 +471,11 @@
   "compare_bingers_faq_both_q": "Trakt Time ve Bingers'ı birlikte kullanabilir miyim?",
   "compare_bingers_faq_both_a": "Evet. Birbirinden bağımsızlar; aynı TV Time geçmişini ikisine de aktarıp ikisini de deneyebilirsin.",
   "compare_bingers_disclaimer": "Bingers, sahibinin ticari markasıdır. Bingers hakkındaki bilgiler App Store sayfasından ve basından alınmıştır ve değişebilir.",
-  "text_not_streaming": "Şu anda ülkende yayın akışı yok."
+  "text_not_streaming": "Şu anda ülkende yayın akışı yok.",
+  "trivia_category_bts": "Kamera arkası",
+  "trivia_category_cast_n_crew": "Oyuncular ve ekip",
+  "trivia_category_story_n_themes": "Hikâye ve temalar",
+  "trivia_category_impact_n_legacy": "Etki ve miras",
+  "trivia_category_real_world_connections": "Gerçek dünya",
+  "text_reveal_spoiler": "Spoiler'ı görmek için dokun"
 }

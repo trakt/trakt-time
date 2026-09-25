@@ -471,5 +471,11 @@
   "compare_bingers_faq_both_q": "Kan jeg bruge Trakt Time og Bingers samtidig?",
   "compare_bingers_faq_both_a": "Ja. De er uafhængige, så du kan importere den samme TV Time-historik i begge og prøve dem.",
   "compare_bingers_disclaimer": "Bingers er et varemærke tilhørende ejeren. Oplysningerne om Bingers stammer fra dens App Store-side og fra pressen og kan ændre sig.",
-  "text_not_streaming": "Kan ikke streames i dit land lige nu."
+  "text_not_streaming": "Kan ikke streames i dit land lige nu.",
+  "trivia_category_bts": "Bag kulisserne",
+  "trivia_category_cast_n_crew": "Medvirkende & hold",
+  "trivia_category_story_n_themes": "Handling & temaer",
+  "trivia_category_impact_n_legacy": "Indflydelse & eftermæle",
+  "trivia_category_real_world_connections": "Den virkelige verden",
+  "text_reveal_spoiler": "Tryk for at vise spoileren"
 }

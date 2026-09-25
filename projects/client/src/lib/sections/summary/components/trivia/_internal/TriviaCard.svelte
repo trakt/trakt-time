@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MediaTrivia } from '$lib/requests/models/MediaTrivia.ts';
+  import * as m from '$lib/paraglide/messages.js';
   import { Marked } from 'marked';
 
   const {
@@ -14,7 +15,7 @@
 <div class="trivia-card">
   {#if trivia.isSpoiler && !spoilerRevealed}
     <button class="spoiler-btn" onclick={() => (spoilerRevealed = true)}>
-      Tap to reveal spoiler
+      {m.text_reveal_spoiler()}
     </button>
   {:else}
     <div class="trivia-card-text">

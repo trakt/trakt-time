@@ -471,5 +471,11 @@
   "compare_bingers_faq_both_q": "Kann ich Trakt Time und Bingers gemeinsam nutzen?",
   "compare_bingers_faq_both_a": "Ja. Sie sind unabhängig voneinander, du kannst also denselben TV-Time-Verlauf in beide importieren und beide ausprobieren.",
   "compare_bingers_disclaimer": "Bingers ist eine Marke ihres Inhabers. Angaben zu Bingers stammen aus dem App-Store-Eintrag und der Presseberichterstattung und können sich ändern.",
-  "text_not_streaming": "Derzeit in deinem Land nicht im Stream verfügbar."
+  "text_not_streaming": "Derzeit in deinem Land nicht im Stream verfügbar.",
+  "trivia_category_bts": "Hinter den Kulissen",
+  "trivia_category_cast_n_crew": "Besetzung & Crew",
+  "trivia_category_story_n_themes": "Handlung & Themen",
+  "trivia_category_impact_n_legacy": "Wirkung & Vermächtnis",
+  "trivia_category_real_world_connections": "Echte Welt",
+  "text_reveal_spoiler": "Tippen, um den Spoiler zu zeigen"
 }

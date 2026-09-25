@@ -471,5 +471,11 @@
   "compare_bingers_faq_both_q": "Trakt Time と Bingers は併用できますか？",
   "compare_bingers_faq_both_a": "はい。それぞれ独立しているので、同じ TV Time の履歴を両方にインポートして試せます。",
   "compare_bingers_disclaimer": "Bingers はその所有者の商標です。Bingers に関する情報は App Store の掲載内容と報道に基づいており、変更される場合があります。",
-  "text_not_streaming": "現在、お住まいの国では配信されていません。"
+  "text_not_streaming": "現在、お住まいの国では配信されていません。",
+  "trivia_category_bts": "舞台裏",
+  "trivia_category_cast_n_crew": "キャストとスタッフ",
+  "trivia_category_story_n_themes": "ストーリーとテーマ",
+  "trivia_category_impact_n_legacy": "影響と功績",
+  "trivia_category_real_world_connections": "現実とのつながり",
+  "text_reveal_spoiler": "タップしてネタバレを表示"
 }
