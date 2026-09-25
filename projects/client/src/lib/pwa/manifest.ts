@@ -4,7 +4,8 @@ export const manifest: Partial<ManifestOptions> = {
   id: 'trakt-time-pwa',
   name: 'Trakt Time',
   short_name: 'Trakt Time',
-  description: 'An experimental Trakt client built for fun & learning.',
+  description:
+    'Track the TV shows and movies you watch, never miss a new episode and find what to watch next. Coming from TV Time? Import your watch history in minutes.',
   dir: 'ltr',
   lang: 'en',
   prefer_related_applications: false,
