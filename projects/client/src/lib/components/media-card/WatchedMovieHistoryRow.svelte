@@ -30,7 +30,7 @@
 <article class="media-row" data-variant="history">
   <a href={movieUrl} aria-label={entry.movie.title} class="media-row-thumb-link">
     <div class="media-row-thumb">
-      <img src={entry.movie.cover.url.thumb} alt={entry.movie.title} loading="lazy" />
+      <img src={entry.movie.poster.url.thumb} alt={entry.movie.title} loading="lazy" />
     </div>
   </a>
 
