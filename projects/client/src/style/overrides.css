@@ -5,6 +5,11 @@
   --trakttime-bottom-nav-height: 64px;
   --trakttime-accent: var(--purple-500);
   --trakttime-accent-foreground: var(--shade-10);
+  --trakttime-gradient: linear-gradient(
+    120deg,
+    var(--rose-500) 0%,
+    var(--purple-500) 100%
+  );
   --trakttime-font-heading: 'Outfit', 'Inter', Arial, sans-serif;
   --trakttime-font-body: 'Inter', Arial, sans-serif;
   --trakttime-radius-card: var(--border-radius-l);
@@ -25,6 +30,8 @@
   --trakttime-avatar-size: 88px;
   --trakttime-poster-card-width: 112px;
   --trakttime-row-thumb-width: 76px;
+  --trakttime-trivia-card-height: 172px;
+  --trakttime-sentiment-card-height: 192px;
   --trakttime-watched-btn-size: 44px;
   --trakttime-watchlist-btn-size: 28px;
   --trakttime-icon-sm: 18px;
@@ -49,6 +56,11 @@
     var(--shade-920) 80%,
     transparent
   );
+  --trakttime-navbar-solid-bg: color-mix(
+    in srgb,
+    var(--shade-920) 94%,
+    transparent
+  );
   --trakttime-control-surface: color-mix(
     in srgb,
     var(--shade-920) 75%,
@@ -71,6 +83,11 @@
   --trakttime-navbar-blur-bg: color-mix(
     in srgb,
     var(--shade-10) 80%,
+    transparent
+  );
+  --trakttime-navbar-solid-bg: color-mix(
+    in srgb,
+    var(--shade-10) 94%,
     transparent
   );
   --trakttime-control-surface: color-mix(
@@ -98,6 +115,11 @@
       var(--shade-920) 80%,
       transparent
     );
+    --trakttime-navbar-solid-bg: color-mix(
+      in srgb,
+      var(--shade-920) 94%,
+      transparent
+    );
     --trakttime-control-surface: color-mix(
       in srgb,
       var(--shade-920) 75%,
@@ -119,6 +141,11 @@
     --trakttime-navbar-blur-bg: color-mix(
       in srgb,
       var(--shade-10) 80%,
+      transparent
+    );
+    --trakttime-navbar-solid-bg: color-mix(
+      in srgb,
+      var(--shade-10) 94%,
       transparent
     );
     --trakttime-control-surface: color-mix(

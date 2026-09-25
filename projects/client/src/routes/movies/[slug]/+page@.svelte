@@ -118,7 +118,7 @@
   {#if isLoading && !movie}
     <SummarySkeleton variant="movie" />
   {:else if movie}
-    <MediaCoverHero coverUrl={movie.cover.url.medium} />
+    <MediaCoverHero coverUrl={movie.cover.url.medium} tint={movie.colors?.[0]} />
 
     <div class="summary-content">
       <div class="summary-header">

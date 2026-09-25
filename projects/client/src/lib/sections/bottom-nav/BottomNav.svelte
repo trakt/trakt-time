@@ -15,9 +15,20 @@
 
   const pathname = $derived(page.url.pathname);
   const isActive = $derived((href: string) => pathname.startsWith(href));
+  const activeIndex = $derived(tabs.findIndex(({ href }) => isActive(href)));
 </script>
 
-<nav class="bottom-nav" aria-label={m.button_label_main_navigation()}>
+<nav
+  class="bottom-nav"
+  aria-label={m.button_label_main_navigation()}
+  style:--tab-count={tabs.length}
+  style:--active-index={Math.max(activeIndex, 0)}
+>
+  <span
+    class="bottom-nav-indicator"
+    class:is-hidden={activeIndex === -1}
+    aria-hidden="true"
+  ></span>
   {#each tabs as { href, label, icon: Icon }}
     <a {href} aria-label={label} class="bottom-nav-tab" data-active={isActive(href)}>
       <Icon />
@@ -43,15 +54,46 @@
     display: flex;
     justify-content: space-around;
     align-items: stretch;
-    gap: var(--ni-4);
+    --nav-padding: var(--ni-4);
+
     height: var(--trakttime-bottom-nav-height);
-    padding: var(--ni-4);
-    background-color: var(--trakttime-navbar-blur-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: var(--ni-1) solid
-      color-mix(in srgb, var(--color-border) 60%, transparent);
+    padding: var(--nav-padding);
+    box-sizing: border-box;
+    background-color: var(--trakttime-navbar-solid-bg);
+    backdrop-filter: blur(24px) saturate(1.6);
+    -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    border: var(--ni-1) solid var(--color-border);
     border-radius: var(--trakttime-radius-pill);
+    box-shadow: 0 var(--ni-8) var(--ni-32)
+      color-mix(in srgb, var(--shade-1000) 35%, transparent);
+
+    .bottom-nav-indicator {
+      position: absolute;
+      inset-block: var(--nav-padding);
+      inset-inline-start: var(--nav-padding);
+      width: calc((100% - 2 * var(--nav-padding)) / var(--tab-count));
+      border-radius: var(--trakttime-radius-pill);
+      background: linear-gradient(
+        120deg,
+        color-mix(in srgb, var(--rose-500) 7%, transparent),
+        color-mix(in srgb, var(--purple-500) 13%, transparent)
+      );
+      box-shadow: inset 0 0 0 var(--ni-1)
+        color-mix(in srgb, var(--purple-500) 16%, transparent);
+      transform: translateX(calc(var(--active-index) * 100%));
+      transition:
+        transform 320ms cubic-bezier(0.32, 0.72, 0, 1),
+        opacity var(--transition-increment) ease-in-out;
+      pointer-events: none;
+
+      &.is-hidden {
+        opacity: 0;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
 
     .bottom-nav-tab {
       display: flex;
@@ -60,20 +102,20 @@
       justify-content: center;
       gap: 3px;
       flex: 1;
+      position: relative;
       color: var(--color-text-secondary);
       text-decoration: none;
       border-radius: var(--trakttime-radius-pill);
-      transition:
-        color var(--transition-increment) ease-in-out,
-        background-color var(--transition-increment) ease-in-out;
+      -webkit-tap-highlight-color: transparent;
+      transition: color var(--transition-increment) ease-in-out;
+
+      &:focus-visible {
+        outline: var(--border-thickness-xs) solid var(--trakttime-accent);
+        outline-offset: calc(-1 * var(--border-thickness-xs));
+      }
 
       &[data-active='true'] {
         color: var(--trakttime-accent);
-        background-color: color-mix(
-          in srgb,
-          var(--color-text-primary) 10%,
-          transparent
-        );
       }
     }
   }
