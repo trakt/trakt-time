@@ -4,6 +4,7 @@
   import CoverImage from "$lib/components/background/CoverImage.svelte";
   import CoverProvider from "$lib/components/background/CoverProvider.svelte";
   import AuthProvider from "$lib/features/auth/components/AuthProvider.svelte";
+  import { markAppReady } from "$lib/features/boot-loader/markAppReady.ts";
   import BotProvider from "$lib/features/bot-verification/BotProvider.svelte";
   import ConfirmationProvider from "$lib/features/confirmation/ConfirmationProvider.svelte";
   import CookieConsentProvider from "$lib/features/cookie-consent/CookieConsentProvider.svelte";
@@ -36,6 +37,7 @@
   const { data, children } = $props();
 
   onMount(async () => {
+    markAppReady();
     removeUnclaimedHeadNodes(document.head);
 
     if (isPWA()) {
@@ -71,10 +73,6 @@
     rel="preconnect"
     href="https://media.trakt.tv"
     crossorigin="anonymous"
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Outfit:wght@400..800&display=swap"
-    rel="stylesheet"
   />
   <style>
     html,
