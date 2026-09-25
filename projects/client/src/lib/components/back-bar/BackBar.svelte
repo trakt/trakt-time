@@ -60,7 +60,9 @@
     grid-template-columns: var(--ni-44) 1fr var(--ni-44);
     align-items: center;
     gap: var(--gap-s);
-    padding: var(--gap-s) var(--gap-m);
+    padding: calc(var(--gap-s) + env(safe-area-inset-top, 0px)) var(--gap-m)
+      var(--gap-s);
+    box-sizing: border-box;
     pointer-events: none;
 
     &[data-variant="header"] {
