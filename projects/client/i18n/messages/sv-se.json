@@ -478,5 +478,9 @@
   "trivia_category_impact_n_legacy": "Påverkan & arv",
   "trivia_category_real_world_connections": "Verkliga världen",
   "text_reveal_spoiler": "Tryck för att visa spoilern",
-  "button_text_see_all_reviews": "Visa alla recensioner"
+  "button_text_see_all_reviews": "Visa alla recensioner",
+  "trivia_category_quick_fact": "Snabbfakta",
+  "text_unlock_sentiment_analysis": "Lås upp hela analysen",
+  "text_unlock_all_trivia": "Lås upp all trivia",
+  "text_vip_upsell_trivia": "Få alla fakta bakom kulisserna, spoilers inkluderade, med VIP."
 }

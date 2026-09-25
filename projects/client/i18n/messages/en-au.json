@@ -478,5 +478,9 @@
   "trivia_category_impact_n_legacy": "Impact & legacy",
   "trivia_category_real_world_connections": "Real world",
   "text_reveal_spoiler": "Tap to reveal spoiler",
-  "button_text_see_all_reviews": "See all reviews"
+  "button_text_see_all_reviews": "See all reviews",
+  "trivia_category_quick_fact": "Quick fact",
+  "text_unlock_sentiment_analysis": "Unlock the full analysis",
+  "text_unlock_all_trivia": "Unlock all trivia",
+  "text_vip_upsell_trivia": "Get every behind-the-scenes fact, spoilers included, with VIP."
 }

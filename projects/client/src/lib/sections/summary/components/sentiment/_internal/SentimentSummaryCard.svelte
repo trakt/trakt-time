@@ -1,6 +1,8 @@
 <script lang="ts">
   import ChevronRightIcon from '$lib/components/icons/ChevronRightIcon.svelte';
   import SentimentIcon from '$lib/components/icons/SentimentIcon.svelte';
+  import SparkleIcon from '$lib/components/icons/SparkleIcon.svelte';
+  import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { SentimentAnalysis } from '$lib/requests/models/SentimentAnalysis.ts';
   import { mapToSentimentSummary } from './mapToSentimentSummary.ts';
@@ -45,7 +47,23 @@
     <ChevronRightIcon />
   </span>
 
-  <span class="sentiment-quote">“{sentiment.highlight || sentiment.analysis}”</span>
+  <RenderFor audience="vip">
+    <span class="sentiment-quote">“{sentiment.highlight || sentiment.analysis}”</span>
+
+    {#snippet fallback()}
+      <span class="sentiment-quote sentiment-quote--locked">
+        <span class="sentiment-locked-lines" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <span class="sentiment-locked-pill">
+          <SparkleIcon />
+          {m.text_unlock_sentiment_analysis()}
+        </span>
+      </span>
+    {/snippet}
+  </RenderFor>
 
   <span class="sentiment-chips">
     {#each chips as chip, i (`${chip.label}-${i}`)}
@@ -116,6 +134,57 @@
     line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  .sentiment-quote--locked {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .sentiment-locked-lines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    filter: blur(3px);
+
+    span {
+      height: var(--ni-12);
+      border-radius: var(--trakttime-radius-pill);
+      background: color-mix(in srgb, var(--color-text-primary) 14%, transparent);
+
+      &:nth-child(2) {
+        width: 88%;
+      }
+
+      &:nth-child(3) {
+        width: 56%;
+      }
+    }
+  }
+
+  .sentiment-locked-pill {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-xxs);
+    padding: var(--gap-xxs) var(--gap-s);
+    border-radius: var(--trakttime-radius-pill);
+    background: var(--trakttime-gradient);
+    color: var(--trakttime-accent-foreground);
+    font-family: var(--trakttime-font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+
+    :global(svg) {
+      width: var(--ni-14);
+      height: var(--ni-14);
+    }
   }
 
   .sentiment-chips {

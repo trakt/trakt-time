@@ -478,5 +478,9 @@
   "trivia_category_impact_n_legacy": "Impact & nalatenschap",
   "trivia_category_real_world_connections": "Echte wereld",
   "text_reveal_spoiler": "Tik om de spoiler te tonen",
-  "button_text_see_all_reviews": "Alle recensies bekijken"
+  "button_text_see_all_reviews": "Alle recensies bekijken",
+  "trivia_category_quick_fact": "Snel weetje",
+  "text_unlock_sentiment_analysis": "Ontgrendel de volledige analyse",
+  "text_unlock_all_trivia": "Ontgrendel alle weetjes",
+  "text_vip_upsell_trivia": "Krijg elk weetje achter de schermen, spoilers inbegrepen, met VIP."
 }

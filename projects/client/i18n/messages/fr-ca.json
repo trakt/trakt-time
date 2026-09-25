@@ -478,5 +478,9 @@
   "trivia_category_impact_n_legacy": "Impact & héritage",
   "trivia_category_real_world_connections": "Monde réel",
   "text_reveal_spoiler": "Touchez pour révéler le spoiler",
-  "button_text_see_all_reviews": "Voir toutes les critiques"
+  "button_text_see_all_reviews": "Voir toutes les critiques",
+  "trivia_category_quick_fact": "Info éclair",
+  "text_unlock_sentiment_analysis": "Débloque l'analyse complète",
+  "text_unlock_all_trivia": "Débloque toutes les anecdotes",
+  "text_vip_upsell_trivia": "Obtiens toutes les anecdotes de tournage, spoilers compris, avec VIP."
 }
