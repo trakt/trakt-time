@@ -70,13 +70,13 @@
       {/if}
     </div>
     <div class="episode-text">
+      <span class="episode-title">{episode.title}</span>
       <span class="episode-meta">
         <span class="episode-number">E{episode.number}</span>
         {#if statusLabel}
           <span class="episode-badge">{statusLabel}</span>
         {/if}
       </span>
-      <span class="episode-title">{episode.title}</span>
     </div>
   </a>
   {#if isWatchable}
@@ -96,7 +96,6 @@
 </li>
 
 <style lang="scss">
-  @use '$style/scss/mixins/index' as *;
   .episode-row {
     display: flex;
     align-items: center;
@@ -121,9 +120,9 @@
 
   .episode-thumb {
     flex-shrink: 0;
-    width: 4.5rem;
+    width: var(--ni-104);
     aspect-ratio: 16 / 9;
-    border-radius: var(--border-radius-s);
+    border-radius: var(--border-radius-m);
     overflow: hidden;
     background: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
     display: flex;
@@ -158,67 +157,17 @@
     gap: var(--gap-xs);
   }
 
-  .episode-badge {
-    font-size: 0.5rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--trakttime-accent);
-    border: var(--ni-1) solid var(--trakttime-accent);
-    padding: var(--ni-1) 5px;
-    border-radius: var(--border-radius-xs);
-  }
-
   .episode-number {
-    font-size: 0.6875rem;
-    font-weight: 700;
+    font-size: 0.8125rem;
     color: var(--color-text-secondary);
-    letter-spacing: 0.04em;
   }
 
   .episode-title {
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
     color: var(--color-text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  .watched-btn {
-    flex-shrink: 0;
-    background: none;
-    border: var(--ni-2) solid var(--color-border);
-    border-radius: 50%;
-    width: var(--trakttime-watched-btn-size);
-    height: var(--trakttime-watched-btn-size);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    padding: 0;
-    transition:
-      border-color var(--transition-increment) ease-in-out,
-      color var(--transition-increment) ease-in-out,
-      background var(--transition-increment) ease-in-out;
-
-    &.is-watched {
-      border-color: var(--trakttime-accent);
-      background: var(--trakttime-accent);
-      color: var(--color-background);
-    }
-
-    /* Direct hover on an already-watched toggle previews removal. */
-    @include for-mouse {
-      &.is-watched:hover,
-      &.is-watched:focus-visible {
-        border-color: var(--red-400);
-        background: var(--red-400);
-      }
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: default;
-    }
   }
 </style>
