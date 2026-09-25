@@ -11,7 +11,7 @@
     width: var(--trakttime-poster-card-width);
     display: flex;
     flex-direction: column;
-    gap: var(--gap-xxs);
+    gap: var(--gap-xs);
   }
 
   .poster-skeleton-img {
@@ -22,7 +22,7 @@
   }
 
   .poster-skeleton-text {
-    height: 1rem;
+    height: 1.125rem;
     border-radius: var(--border-radius-s);
     @include shimmer-bg;
     animation-delay: 0.1s;

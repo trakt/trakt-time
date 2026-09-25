@@ -21,18 +21,14 @@
     flex-direction: column;
   }
 
-  /* Mirrors the GroupHeader footprint (centered pill divider). */
   .watchlist-skeleton-header {
-    display: flex;
-    justify-content: center;
-    padding: var(--gap-s) 0;
+    padding: var(--gap-m) var(--gap-m) var(--gap-s);
   }
 
   .watchlist-skeleton-pill {
-    width: var(--ni-96);
-    /* Pill line box: 0.625rem text + 4px vertical padding. */
-    height: 1.1875rem;
-    border-radius: var(--border-radius-xxl);
+    width: var(--ni-120);
+    height: 1.5625rem;
+    border-radius: var(--border-radius-s);
     @include shimmer-bg;
   }
 </style>

@@ -132,7 +132,7 @@
   <BackBar href={showUrl} label={show?.title ?? ''} variant="overlay" />
 
   {#if isLoading}
-    <SummarySkeleton />
+    <SummarySkeleton variant="episode" />
   {:else if episode}
     <MediaCoverHero {coverUrl} />
 

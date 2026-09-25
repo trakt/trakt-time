@@ -16,7 +16,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    border-radius: var(--border-radius-m);
+    border-radius: var(--trakttime-radius-card);
     overflow: hidden;
     background: var(--color-card-background);
   }
@@ -37,10 +37,9 @@
     border-radius: var(--border-radius-s);
     @include shimmer-bg-elevated;
 
-    /* Height tracks the .season-label line box (0.9375rem at normal leading). */
     &--label {
       width: var(--ni-88);
-      height: 1.125rem;
+      height: 1.3125rem;
     }
 
     &--meta {
