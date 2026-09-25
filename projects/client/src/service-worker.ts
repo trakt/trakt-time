@@ -2,7 +2,6 @@ import { AssetPattern } from '$worker/AssetPattern.ts';
 import { Domain } from '$worker/Domain.ts';
 import { WorkerMessage } from '$worker/WorkerMessage.ts';
 import { ExpirationPlugin } from 'workbox-expiration';
-import { precacheAndRoute } from 'workbox-precaching';
 import {
   NavigationRoute,
   registerRoute,
@@ -101,9 +100,6 @@ addEventListener('message', (event) => {
     event.waitUntil(removeNavigationCache());
   }
 });
-
-// Precache static assets
-precacheAndRoute(self.__WB_MANIFEST);
 
 // Vary the navigation cache key by locale so a document rendered for one
 // locale is never served to a request for another (the SSR HTML is
