@@ -44,7 +44,9 @@
 
   const episode = $derived($episodeQuery.data ?? null);
   const show = $derived($showQuery.data ?? null);
-  const isLoading = $derived($episodeQuery.isLoading && !episode);
+  const isLoading = $derived(
+    ($episodeQuery.isLoading && !episode) || ($showQuery.isLoading && !show),
+  );
 
   const locale = $derived(languageTag());
   const region = $derived(getLanguageAndRegion());

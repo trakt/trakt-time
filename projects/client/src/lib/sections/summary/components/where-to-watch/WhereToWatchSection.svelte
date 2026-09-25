@@ -10,12 +10,20 @@
 
   const { type, slug }: Props = $props();
 
-  const { services } = $derived(useWhereToWatch({ type, slug }));
+  const { services, isLoading } = $derived(useWhereToWatch({ type, slug }));
+
+  const PLACEHOLDER_COUNT = 3;
 </script>
 
-{#if $services.length > 0}
-  <section class="media-section">
-    <h2 class="section-title">{m.list_title_where_to_watch()}</h2>
+<section class="media-section">
+  <h2 class="summary-section-title">{m.list_title_where_to_watch()}</h2>
+  {#if $isLoading}
+    <div class="services-row" aria-hidden="true">
+      {#each Array(PLACEHOLDER_COUNT) as _, i (`ws-${i}`)}
+        <div class="service service-skeleton"></div>
+      {/each}
+    </div>
+  {:else if $services.length > 0}
     <ul class="services-row">
       {#each $services as service (service.key)}
         <li>
@@ -36,8 +44,10 @@
         </li>
       {/each}
     </ul>
-  </section>
-{/if}
+  {:else}
+    <p class="services-empty">{m.text_not_streaming()}</p>
+  {/if}
+</section>
 
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
@@ -48,18 +58,26 @@
     gap: var(--gap-s);
   }
 
-  .section-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0;
-  }
 
   .services-row {
     @include scrollable-row(var(--gap-s));
     list-style: none;
     margin: 0 calc(-1 * var(--gap-m));
     padding: 0 var(--gap-m);
+  }
+
+  .service-skeleton {
+    flex-shrink: 0;
+    @include shimmer-bg;
+  }
+
+  .services-empty {
+    display: flex;
+    align-items: center;
+    min-height: var(--ni-56);
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
   }
 
   .service {

@@ -45,5 +45,7 @@ export function useWhereToWatch({ type, slug }: UseWhereToWatchProps) {
     }),
   );
 
-  return { services };
+  const isLoading = streamQuery.pipe(map(($stream) => $stream.isLoading));
+
+  return { services, isLoading };
 }
