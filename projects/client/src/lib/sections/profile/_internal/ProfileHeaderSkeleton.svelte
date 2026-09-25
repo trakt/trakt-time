@@ -5,6 +5,7 @@
     <div class="profile-skeleton-meta">
       <div class="profile-skeleton-line profile-skeleton-line--username"></div>
       <div class="profile-skeleton-line profile-skeleton-line--name"></div>
+      <div class="profile-skeleton-line profile-skeleton-line--about"></div>
     </div>
   </div>
 </div>
@@ -54,6 +55,13 @@
       width: var(--ni-160);
       height: 1.875rem;
       animation-delay: 0.05s;
+    }
+
+    &--about {
+      width: var(--ni-200);
+      height: 1.25rem;
+      margin-top: var(--gap-xxs);
+      animation-delay: 0.15s;
     }
 
     &--name {

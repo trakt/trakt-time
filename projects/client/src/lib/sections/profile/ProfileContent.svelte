@@ -148,9 +148,7 @@
       <div class="profile-meta">
         <h1 class="profile-username">{profile.name?.full || profile.username}</h1>
         <p class="profile-name">@{profile.username}</p>
-        {#if profile.about}
-          <p class="profile-about">{profile.about}</p>
-        {/if}
+        <p class="profile-about">{profile.about ?? ''}</p>
       </div>
     </div>
   </div>
@@ -475,14 +473,14 @@
   }
 
   .profile-about {
+    height: 1.25rem;
+    margin: var(--gap-xxs) 0 0;
     font-size: 0.875rem;
+    line-height: 1.25rem;
     color: var(--color-text-secondary);
-    margin: var(--gap-xs) 0 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .profile-counts {
@@ -506,8 +504,9 @@
   }
 
   .count-value--skeleton {
+    align-self: center;
     width: var(--ni-28);
-    height: 1.25rem;
+    height: 1rem;
     border-radius: var(--border-radius-s);
     @include shimmer-bg;
   }
