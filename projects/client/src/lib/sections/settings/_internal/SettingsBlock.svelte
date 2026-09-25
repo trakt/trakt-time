@@ -8,7 +8,7 @@
 
 <div class="trakt-settings-block">
   <div class="trakt-settings-block-header">
-    <p class="settings-title">{title}</p>
+    <h2 class="settings-title">{title}</h2>
     <p class="secondary">{description}</p>
   </div>
   <div class="trakt-settings-block-content">
@@ -25,9 +25,9 @@
 
     gap: var(--gap-xs);
 
-    p.settings-title {
-      transition: font-size var(--transition-increment) ease-in-out;
-      font-size: var(--font-size-title);
+    .settings-title {
+      font-size: 1.25rem;
+      font-weight: 600;
     }
   }
 
@@ -35,6 +35,12 @@
   .trakt-settings-block-content {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-l);
+    gap: var(--gap-m);
+  }
+
+  .trakt-settings-block-content {
+    padding: var(--gap-m);
+    background: var(--color-card-background);
+    border-radius: var(--trakttime-radius-card);
   }
 </style>

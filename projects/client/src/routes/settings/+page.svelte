@@ -6,6 +6,7 @@
   import LogoutButton from '$lib/components/buttons/logout/LogoutButton.svelte';
   import { useAuth } from '$lib/features/auth/stores/useAuth.ts';
   import LoginGate from '$lib/components/auth/LoginGate.svelte';
+  import BackBar from '$lib/components/back-bar/BackBar.svelte';
 
   const { isAuthorized, login } = useAuth();
 </script>
@@ -15,6 +16,8 @@
 </svelte:head>
 
 <div class="settings-page">
+  <BackBar href="/profile" label={m.page_title_settings()} />
+
   {#if !$isAuthorized}
     <LoginGate {login} />
   {:else}
@@ -33,9 +36,8 @@
   .settings-page {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-xxl);
-    padding: var(--gap-l) var(--gap-m);
-    padding-bottom: var(--trakttime-bottom-nav-height);
+    gap: var(--gap-xl);
+    padding: var(--ni-72) var(--gap-m) var(--trakttime-bottom-nav-height);
   }
 
   .settings-logout {

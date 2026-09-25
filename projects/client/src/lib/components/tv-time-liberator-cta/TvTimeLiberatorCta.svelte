@@ -48,13 +48,12 @@
 <style lang="scss">
   .liberator-cta {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--gap-s);
-    padding: var(--gap-s) var(--gap-m);
-    background: color-mix(in srgb, var(--trakttime-accent) 8%, transparent);
-    border: 1px solid
-      color-mix(in srgb, var(--trakttime-accent) 25%, transparent);
-    border-radius: var(--border-radius-m);
+    padding: var(--gap-m);
+    background: var(--color-floating-background);
+    border-radius: var(--trakttime-radius-card);
     color: var(--color-text-primary);
 
     &.is-compact {
@@ -81,7 +80,7 @@
   }
 
   .liberator-cta-body {
-    flex: 1;
+    flex: 1 1 12rem;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -90,14 +89,14 @@
 
   .liberator-cta-title {
     margin: 0;
-    font-size: 0.8125rem;
-    font-weight: 700;
+    font-size: 0.9375rem;
+    font-weight: 600;
     color: var(--color-text-primary);
   }
 
   .liberator-cta-text {
     margin: 0;
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     color: var(--color-text-secondary);
     line-height: 1.4;
   }
@@ -111,11 +110,11 @@
   }
 
   .liberator-cta-actions {
-    flex-shrink: 0;
+    flex: 1 1 100%;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--gap-xs);
+    flex-wrap: wrap;
+    gap: var(--gap-xs) var(--gap-l);
+    padding-inline-start: calc(2rem + var(--gap-s));
   }
 
   .liberator-cta-action {
@@ -123,10 +122,8 @@
     align-items: center;
     gap: 4px;
     color: var(--trakttime-accent);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-size: 0.875rem;
+    font-weight: 600;
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
     transition: opacity 0.15s ease;
