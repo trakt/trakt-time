@@ -42,7 +42,8 @@ function typeToWatchlistMethod(type?: MediaType) {
 }
 
 const watchlistRequest = (
-  { fetch, slug, sortBy, sortHow, type, limit, page, filter, hide }: WatchlistParams,
+  { fetch, slug, sortBy, sortHow, type, limit, page, filter, hide }:
+    WatchlistParams,
 ) => {
   const method = typeToWatchlistMethod(type);
 
