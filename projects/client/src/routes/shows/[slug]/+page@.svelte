@@ -1,4 +1,7 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
+  import { toShowSeo } from '$lib/features/seo/media/toShowSeo.ts';
+  import type { PageProps } from './$types.ts';
   import { page } from '$app/state';
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import PosterSkeleton from '$lib/components/poster-card/PosterSkeleton.svelte';
@@ -30,6 +33,8 @@
   import { getLanguageAndRegion, languageTag } from '$lib/features/i18n/index.ts';
   import * as m from '$lib/paraglide/messages.js';
 
+  const { data }: PageProps = $props();
+
   const slug = $derived(page.params.slug ?? '');
 
   let actionsOpen = $state(false);
@@ -40,6 +45,7 @@
 
   const query = $derived(useQuery(showSummaryQuery({ slug })));
   const show = $derived($query.data ?? null);
+  const seoShow = $derived(show ?? data.crawlerShow);
   const isLoading = $derived($query.isLoading);
 
   const peopleQuery = $derived(useQuery(showPeopleQuery({ slug })));
@@ -112,9 +118,14 @@
 
 </script>
 
-<svelte:head>
-  <title>{intl?.title ? `${intl.title} - Trakt Time` : 'Trakt Time'}</title>
-</svelte:head>
+<SeoHead
+  {...toShowSeo({
+    show: seoShow,
+    title: intl?.title,
+    overview: intl?.overview,
+    url: `${page.url.origin}${page.url.pathname}`,
+  })}
+/>
 
 <div class="summary-page">
   <BackBar href="/shows/watchlist" label={m.page_title_shows()} variant="overlay" />

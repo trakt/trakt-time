@@ -1,4 +1,7 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
+  import { toMovieSeo } from '$lib/features/seo/media/toMovieSeo.ts';
+  import type { PageProps } from './$types.ts';
   import { page } from '$app/state';
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import PosterSkeleton from '$lib/components/poster-card/PosterSkeleton.svelte';
@@ -27,6 +30,8 @@
   import { getLanguageAndRegion, languageTag } from '$lib/features/i18n/index.ts';
   import * as m from '$lib/paraglide/messages.js';
 
+  const { data }: PageProps = $props();
+
   const slug = $derived(page.params.slug ?? '');
 
   let actionsOpen = $state(false);
@@ -37,6 +42,7 @@
 
   const query = $derived(useQuery(movieSummaryQuery({ slug })));
   const movie = $derived($query.data ?? null);
+  const seoMovie = $derived(movie ?? data.crawlerMovie);
   const isLoading = $derived($query.isLoading);
 
   const locale = $derived(languageTag());
@@ -97,9 +103,14 @@
 
 </script>
 
-<svelte:head>
-  <title>{intl?.title ? `${intl.title} - Trakt Time` : 'Trakt Time'}</title>
-</svelte:head>
+<SeoHead
+  {...toMovieSeo({
+    movie: seoMovie,
+    title: intl?.title,
+    overview: intl?.overview,
+    url: `${page.url.origin}${page.url.pathname}`,
+  })}
+/>
 
 <div class="summary-page">
   <BackBar href="/movies/watchlist" label={m.page_title_movies()} variant="overlay" />

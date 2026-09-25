@@ -1,4 +1,7 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
+  import { toPersonSeo } from '$lib/features/seo/media/toPersonSeo.ts';
+  import type { PageProps } from './$types.ts';
   import { page } from '$app/state';
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import CrossOriginImage from '$lib/features/image/components/CrossOriginImage.svelte';
@@ -10,6 +13,8 @@
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import * as m from '$lib/paraglide/messages.js';
   import PosterCard from '$lib/components/poster-card/PosterCard.svelte';
+
+  const { data }: PageProps = $props();
 
   const slug = $derived(page.params.slug ?? '');
 
@@ -49,9 +54,12 @@
   );
 </script>
 
-<svelte:head>
-  <title>{person ? `${person.name} - Trakt Time` : 'Trakt Time'}</title>
-</svelte:head>
+<SeoHead
+  {...toPersonSeo({
+    person: person ?? data.crawlerPerson,
+    url: `${page.url.origin}${page.url.pathname}`,
+  })}
+/>
 
 <div class="person-page">
   <BackBar label={m.button_label_back()} variant="overlay" />
