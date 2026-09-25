@@ -3,6 +3,9 @@
   import LoaderIcon from '$lib/components/icons/LoaderIcon.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
   import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
+  import GifButton from '$lib/features/gif-picker/GifButton.svelte';
+  import { klipyCustomerId } from '$lib/features/gif-picker/klipyCustomerId.ts';
+  import { reportGifShare } from '$lib/features/gif-picker/reportGifShare.ts';
   import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { ExtendedMediaType } from '$lib/requests/models/ExtendedMediaType.ts';
@@ -12,6 +15,10 @@
   import { useCommentReplies } from '$lib/sections/summary/components/comments/_internal/useCommentReplies.ts';
   import { usePostComment } from '$lib/sections/summary/components/comments/_internal/usePostComment.ts';
   import { tick } from 'svelte';
+  import type { CommentDraftGif } from './_internal/CommentDraftGif.ts';
+  import SelectedGif from './_internal/SelectedGif.svelte';
+  import { toCommentDraftGif } from './_internal/toCommentDraftGif.ts';
+  import { toCommentGifParams } from './_internal/toCommentGifParams.ts';
 
   const MIN_WORDS = 5;
 
@@ -45,13 +52,16 @@
 
   let replyText = $state('');
   let replyIsSpoiler = $state(false);
+  let replyGif = $state<CommentDraftGif | null>(null);
   let textareaEl: HTMLTextAreaElement | undefined = $state();
 
   const wordCount = $derived(
     replyText.trim() === '' ? 0 : replyText.trim().split(/\s+/).length,
   );
   const wordsRemaining = $derived(Math.max(0, MIN_WORDS - wordCount));
-  const canSubmit = $derived(wordsRemaining === 0 && !$isCommenting);
+  const canSubmit = $derived(
+    (wordsRemaining === 0 || replyGif != null) && !$isCommenting,
+  );
   const errorMessage = $derived(toCommentErrorMessage($error));
 
   $effect(() => {
@@ -68,13 +78,16 @@
       id: comment.id,
       type,
       comment: replyText,
+      gif: toCommentGifParams(replyGif),
       isSpoiler: replyIsSpoiler,
     });
 
-    if (result) {
-      replyText = '';
-      replyIsSpoiler = false;
-    }
+    if (!result) return;
+
+    reportGifShare({ slug: replyGif?.slug, customerId: klipyCustomerId() });
+    replyText = '';
+    replyIsSpoiler = false;
+    replyGif = null;
   }
 
   function onBackdropClick(e: MouseEvent) {
@@ -170,12 +183,24 @@
           rows="2"
           disabled={$isCommenting}
         ></textarea>
-        {#if wordsRemaining > 0 && replyText.length > 0}
+        {#if replyGif}
+          <SelectedGif
+            gif={replyGif}
+            disabled={$isCommenting}
+            onRemove={() => (replyGif = null)}
+          />
+        {/if}
+        {#if wordsRemaining > 0 && replyText.length > 0 && !replyGif}
           <p class="word-hint">
             {m.text_min_words_hint({ count: wordsRemaining })}
           </p>
         {/if}
         <div class="reply-actions">
+          <div class="reply-tools">
+            <GifButton
+              disabled={$isCommenting}
+              onSelect={(selected) => (replyGif = toCommentDraftGif(selected))}
+            />
           <label class="spoiler-label">
             <input
               type="checkbox"
@@ -184,6 +209,7 @@
             />
             <span>{m.switch_label_mark_as_spoiler()}</span>
           </label>
+          </div>
           <button type="submit" class="submit-btn" disabled={!canSubmit}>
             {#if $isCommenting}
               <span class="submit-spinner"><LoaderIcon /></span>
@@ -353,6 +379,12 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--gap-s);
+  }
+
+  .reply-tools {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
   }
 
   .spoiler-label {
