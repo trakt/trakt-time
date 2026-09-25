@@ -8,6 +8,7 @@
     subtitle,
     icon,
     tone = 'purple',
+    href,
     externalHref,
     children,
   }: Partial<ChildrenProps> & {
@@ -15,6 +16,7 @@
     subtitle?: string;
     icon?: Snippet;
     tone?: Tone;
+    href?: string;
     externalHref?: string;
   } = $props();
 </script>
@@ -43,6 +45,10 @@
     target="_blank"
     rel="noopener noreferrer"
   >
+    {@render contents()}
+  </a>
+{:else if href}
+  <a class="trakt-settings-row is-link" {href}>
     {@render contents()}
   </a>
 {:else}

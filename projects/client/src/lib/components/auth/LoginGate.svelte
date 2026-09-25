@@ -42,6 +42,8 @@
       {m.header_tv_time_liberator()}
       <a href="/settings">{m.welcome_tvtime_import_cta()}</a>
     </p>
+
+    <a class="login-gate-compare" href="/compare">{m.compare_index_title()}</a>
   </div>
 {/if}
 
@@ -163,5 +165,12 @@
       font-weight: 600;
       text-decoration: none;
     }
+  }
+
+  .login-gate-compare {
+    margin-top: calc(-1 * var(--gap-m));
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    text-decoration: underline;
   }
 </style>
