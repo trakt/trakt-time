@@ -57,11 +57,26 @@
   const { onDelete: onDeleteComment } = $derived(
     useCommentDeleteAction({ type: props.type }),
   );
+
+  const PREVIEW_COUNT = 3;
+
+  let showAll = $state(false);
+  $effect(() => {
+    props.slug;
+    showAll = false;
+  });
+
+  const visibleComments = $derived(
+    showAll ? $commentList : $commentList.slice(0, PREVIEW_COUNT),
+  );
+  const hasMoreComments = $derived(
+    $commentList.length > PREVIEW_COUNT || $commentsHasNextPage,
+  );
 </script>
 
 <section class="media-section">
   <div class="section-header-row">
-    <h2 class="section-title">{m.list_title_comments()}</h2>
+    <h2 class="summary-section-title">{m.list_title_comments()}</h2>
     <RenderFor audience="authenticated">
       <button
         type="button"
@@ -75,13 +90,13 @@
   </div>
   {#if $commentsLoading && $commentList.length === 0}
     <div class="comments-list" aria-hidden="true">
-      {#each Array(3) as _, i (`cs-${i}`)}
+      {#each Array(PREVIEW_COUNT) as _, i (`cs-${i}`)}
         <CommentCardSkeleton />
       {/each}
     </div>
   {:else if $commentList.length > 0}
     <div class="comments-list">
-      {#each $commentList as comment (comment.key)}
+      {#each visibleComments as comment (comment.key)}
         <CommentCard
           {comment}
           onOpenThread={(c) => (threadComment = c)}
@@ -89,12 +104,22 @@
         />
       {/each}
     </div>
-    <InfiniteScrollTrigger
-      hasMore={$commentsHasNextPage}
-      isLoading={$commentsLoading}
-      count={$commentList.length}
-      onload={commentsFetchNext}
-    />
+    {#if showAll}
+      <InfiniteScrollTrigger
+        hasMore={$commentsHasNextPage}
+        isLoading={$commentsLoading}
+        count={$commentList.length}
+        onload={commentsFetchNext}
+      />
+    {:else if hasMoreComments}
+      <button
+        type="button"
+        class="see-all-btn"
+        onclick={() => (showAll = true)}
+      >
+        {m.button_text_see_all_reviews()}
+      </button>
+    {/if}
   {/if}
 </section>
 
@@ -115,6 +140,21 @@
 {/if}
 
 <style lang="scss">
+  .see-all-btn {
+    align-self: flex-start;
+    height: var(--ni-40);
+    padding: 0 var(--gap-l);
+    border: none;
+    border-radius: var(--trakttime-radius-pill);
+    background: var(--color-card-background);
+    color: var(--color-text-primary);
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   .media-section {
     display: flex;
     flex-direction: column;
@@ -128,12 +168,6 @@
     gap: var(--gap-s);
   }
 
-  .section-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0;
-  }
 
   .add-comment-btn {
     background: none;
