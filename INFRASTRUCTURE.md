@@ -82,7 +82,7 @@ deno task client:dev
 deno task client:pwa:screenshots
 ```
 
-The script (`projects/client/.scripts/pwa-screenshots.ts`) uses Playwright's bundled Chromium. It captures three unauth-friendly surfaces — `/discover`, `/movies/the-matrix-1999`, `/shows/breaking-bad` — at portrait (1556×3476) and wide (2596×1804) resolutions, pre-seeds the cookie-consent cookie so the banner stays out of the shot, and writes webp into `static/pwa/screenshots/`. ImageMagick (`magick`) is required for the PNG → webp step.
+The script (`projects/client/.scripts/pwa-screenshots.ts`) uses Playwright's bundled Chromium. It captures three unauth-friendly surfaces — `/discover`, `/movies/the-matrix-1999`, `/shows/breaking-bad` — at portrait (1556×3476) and wide (2596×1804) resolutions, and writes webp into `static/pwa/screenshots/`. ImageMagick (`magick`) is required for the PNG → webp step.
 
 Override the dev server URL with `PWA_SCREENSHOT_URL=https://<...> deno task client:pwa:screenshots` if you want to capture against preview / a deployed worker. Don't run from CI — it would double pipeline time and the screenshots only churn when the UI does.
 
