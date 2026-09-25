@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import ProfileHeaderSkeleton from '$lib/sections/profile/_internal/ProfileHeaderSkeleton.svelte';
   import { useAuth } from '$lib/features/auth/stores/useAuth.ts';
@@ -12,9 +13,7 @@
   const slug = $derived($user?.slug ?? $user?.username ?? null);
 </script>
 
-<svelte:head>
-  <title>{m.page_title_profile()} - Trakt Time</title>
-</svelte:head>
+<SeoHead title={m.page_title_profile()} noindex />
 
 <div class="profile-page">
   {#if !$isAuthorized}

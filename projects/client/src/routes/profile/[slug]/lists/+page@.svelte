@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
@@ -15,9 +16,7 @@
   const isLoading = $derived($listsQuery.isLoading);
 </script>
 
-<svelte:head>
-  <title>{m.page_title_lists()} — {params.slug} - Trakt Time</title>
-</svelte:head>
+<SeoHead title="{m.page_title_lists()} · {params.slug}" />
 
 <div class="all-lists-page">
   <BackBar href="/profile/{params.slug}" label={m.page_title_lists()} />

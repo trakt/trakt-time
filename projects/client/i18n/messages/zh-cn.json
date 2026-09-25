@@ -439,5 +439,7 @@
   "import_match_toggle_label": "按季数和集数匹配剧集",
   "import_match_toggle_hint": "我们推荐默认设置（按TVDB ID匹配）。仅当某些剧集匹配到错误条目时才启用此功能 - 结果因节目而异。",
   "import_vip_limit_exceeded": "您的导入超出了免费层级限制。升级到 VIP 以导入所有 {count} 个项目。",
-  "list_title_where_to_watch": "观看平台"
+  "list_title_where_to_watch": "观看平台",
+  "seo_title_default": "Trakt Time：追踪剧集和电影",
+  "seo_description_default": "记录你看过的剧集和电影，不错过任何新剧集，发现下一部要看的作品。从 TV Time 过来？几分钟即可导入观看记录。"
 }

@@ -439,5 +439,7 @@
   "import_match_toggle_label": "Bölümleri sezon ve bölüm numarasına göre eşleştir",
   "import_match_toggle_hint": "Varsayılanı (TVDB kimliğine göre eşleştir) öneriyoruz. Bunu yalnızca bazı bölümler yanlış girişe düşerse açın - sonuçlar diziden diziye değişir.",
   "import_vip_limit_exceeded": "İçe aktarmanız ücretsiz katman limitini aşıyor. Tüm {count} öğeyi içe aktarmak için VIP'e yükseltin.",
-  "list_title_where_to_watch": "Nereden İzlenir"
+  "list_title_where_to_watch": "Nereden İzlenir",
+  "seo_title_default": "Trakt Time: dizi ve filmlerini takip et",
+  "seo_description_default": "İzlediğin dizi ve filmleri takip et, hiçbir yeni bölümü kaçırma ve sırada ne izleyeceğini keşfet. TV Time'dan mı geliyorsun? İzleme geçmişini dakikalar içinde içe aktar."
 }

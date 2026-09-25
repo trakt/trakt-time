@@ -439,5 +439,7 @@
   "import_match_toggle_label": "Afleveringen matchen op seizoen en afleveringnummer",
   "import_match_toggle_hint": "We raden de standaardinstelling aan (matchen op TVDB id). Schakel dit alleen in als sommige afleveringen op de verkeerde vermelding terechtkomen - de resultaten variëren per serie.",
   "import_vip_limit_exceeded": "Uw import overschrijdt de limiet van de gratis versie. Upgrade naar VIP om alle {count} items te importeren.",
-  "list_title_where_to_watch": "Waar te bekijken"
+  "list_title_where_to_watch": "Waar te bekijken",
+  "seo_title_default": "Trakt Time: houd series en films bij",
+  "seo_description_default": "Houd de series en films bij die je kijkt, mis geen nieuwe aflevering en ontdek wat je hierna kijkt. Kom je van TV Time? Importeer je kijkgeschiedenis in een paar minuten."
 }

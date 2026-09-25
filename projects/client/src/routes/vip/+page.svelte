@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import LoginGate from '$lib/components/auth/LoginGate.svelte';
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import { useAuth } from '$lib/features/auth/stores/useAuth.ts';
@@ -11,9 +12,7 @@
   const { isAuthorized, login } = useAuth();
 </script>
 
-<svelte:head>
-  <title>VIP - Trakt Time</title>
-</svelte:head>
+<SeoHead title="VIP" noindex />
 
 <div class="vip-page">
   <BackBar label={m.tag_text_vip()} />

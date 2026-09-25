@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import { useUser } from '$lib/features/auth/stores/useUser.ts';
   import ProfileContent from '$lib/sections/profile/ProfileContent.svelte';
   import type { PageProps } from './$types.ts';
@@ -11,9 +12,7 @@
   );
 </script>
 
-<svelte:head>
-  <title>{params.slug} - Trakt Time</title>
-</svelte:head>
+<SeoHead title={params.slug} type="profile" />
 
 <div class="profile-page">
   <ProfileContent slug={params.slug} {isOwner} />

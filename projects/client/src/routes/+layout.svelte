@@ -35,10 +35,6 @@
 
   const { data, children } = $props();
 
-  const shareTitle = "Trakt Time";
-  const shareDescription = "Track your shows & movies.";
-  const shareImage = $derived(`${data.origin}/og.jpg`);
-
   onMount(async () => {
     removeUnclaimedHeadNodes(document.head);
 
@@ -60,21 +56,6 @@
 </script>
 
 <svelte:head>
-  <title>Trakt Time</title>
-
-  <!-- Share / OG defaults — shows when the URL is pasted into Slack, Discord, iMessage, etc. -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content={shareTitle} />
-  <meta property="og:title" content={shareTitle} />
-  <meta property="og:description" content={shareDescription} />
-  <meta property="og:image" content={shareImage} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={shareTitle} />
-  <meta name="twitter:description" content={shareDescription} />
-  <meta name="twitter:image" content={shareImage} />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     rel="preconnect"

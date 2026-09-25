@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import { page } from '$app/state';
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
@@ -21,9 +22,7 @@
   );
 </script>
 
-<svelte:head>
-  <title>{listName} - Trakt Time</title>
-</svelte:head>
+<SeoHead title={listName} noindex />
 
 <div class="list-page">
   <BackBar href="/profile" label={listName} />
