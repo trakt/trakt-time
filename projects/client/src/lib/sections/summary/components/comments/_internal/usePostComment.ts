@@ -35,6 +35,7 @@ export type UseAddCommentProps = ReplyProps | PostProps | EditProps;
 
 type PostCommentProps = {
   comment: string;
+  gif?: { url: string; width?: number; height?: number } | null;
   isSpoiler: boolean;
 } & UseAddCommentProps;
 
@@ -54,6 +55,7 @@ function toPostCommentPayload(type: ExtendedMediaType, id: number) {
 function addCommentRequest(props: PostCommentProps) {
   const commonProps = {
     comment: props.comment,
+    gif: props.gif,
     spoiler: props.isSpoiler,
   };
 
