@@ -6,6 +6,7 @@
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import CrossOriginImage from '$lib/features/image/components/CrossOriginImage.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
+  import PosterSkeleton from '$lib/components/poster-card/PosterSkeleton.svelte';
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import { peopleSummaryQuery } from '$lib/requests/queries/people/peopleSummaryQuery.ts';
   import { personShowCreditsQuery } from '$lib/requests/queries/people/personShowCreditsQuery.ts';
@@ -33,6 +34,7 @@
   );
 
   const creditsLoading = $derived($showCreditsQuery.isLoading || $movieCreditsQuery.isLoading);
+  const CREDITS_SKELETON_COUNT = 4;
 
   const birthdayLabel = $derived(
     person?.birthday
@@ -97,12 +99,18 @@
         </section>
       {/if}
 
-      {#if creditsLoading && showCredits.length === 0 && movieCredits.length === 0}
-        <div class="loading-credits">
-          <LoadingIndicator />
-        </div>
-      {/if}
-
+      {#if creditsLoading}
+        {#each [m.page_title_shows(), m.page_title_movies()] as heading (heading)}
+          <section class="person-section" aria-hidden="true">
+            <h2 class="section-title">{heading}</h2>
+            <div class="poster-row">
+              {#each Array(CREDITS_SKELETON_COUNT) as _, i (`ps-${i}`)}
+                <PosterSkeleton />
+              {/each}
+            </div>
+          </section>
+        {/each}
+      {:else}
       {#if showCredits.length > 0}
         <section class="person-section">
           <h2 class="section-title">{m.page_title_shows()}</h2>
@@ -139,6 +147,7 @@
             {/each}
           </div>
         </section>
+      {/if}
       {/if}
     </div>
   {/if}
@@ -271,11 +280,6 @@
     padding: 0 var(--gap-m);
   }
 
-  .loading-credits {
-    display: flex;
-    justify-content: center;
-    padding: var(--gap-l) 0;
-  }
 
   .poster-row {
     @include scrollable-row;
