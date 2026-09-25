@@ -15,6 +15,7 @@ const STATIC_ROUTES: ReadonlyArray<SitemapEntry> = [
   { path: '/popular/movies', priority: '0.8', changefreq: 'daily' },
   { path: '/shows/upcoming', priority: '0.6', changefreq: 'daily' },
   { path: '/movies/upcoming', priority: '0.6', changefreq: 'daily' },
+  { path: '/compare/bingers', priority: '0.7', changefreq: 'monthly' },
 ];
 
 const toMediaEntries = (
