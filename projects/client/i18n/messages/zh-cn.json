@@ -471,5 +471,11 @@
   "compare_bingers_faq_both_q": "我可以同时使用 Trakt Time 和 Bingers 吗？",
   "compare_bingers_faq_both_a": "可以。两者相互独立，你可以把同一份 TV Time 记录分别导入并都试一试。",
   "compare_bingers_disclaimer": "Bingers 是其所有者的商标。有关 Bingers 的信息来自其 App Store 页面和媒体报道，可能会有变动。",
-  "text_not_streaming": "目前在你所在的国家/地区暂无流媒体播放。"
+  "text_not_streaming": "目前在你所在的国家/地区暂无流媒体播放。",
+  "trivia_category_bts": "幕后花絮",
+  "trivia_category_cast_n_crew": "演职人员",
+  "trivia_category_story_n_themes": "故事与主题",
+  "trivia_category_impact_n_legacy": "影响与传承",
+  "trivia_category_real_world_connections": "现实关联",
+  "text_reveal_spoiler": "点按查看剧透"
 }

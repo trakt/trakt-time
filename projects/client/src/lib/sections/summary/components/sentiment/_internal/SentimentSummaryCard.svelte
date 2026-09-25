@@ -1,8 +1,11 @@
 <script lang="ts">
   import ChevronRightIcon from '$lib/components/icons/ChevronRightIcon.svelte';
+  import SentimentIcon from '$lib/components/icons/SentimentIcon.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { SentimentAnalysis } from '$lib/requests/models/SentimentAnalysis.ts';
   import { mapToSentimentSummary } from './mapToSentimentSummary.ts';
+
+  const MAX_CHIPS_PER_SIDE = 3;
 
   const {
     sentiment,
@@ -12,85 +15,149 @@
     onclick: () => void;
   } = $props();
 
-  const { text, aspects } = $derived(
-    mapToSentimentSummary({
-      pros: sentiment.aspect.pros,
-      cons: sentiment.aspect.cons,
-    }),
+  const { pros, cons } = $derived(sentiment.aspect);
+  const { text } = $derived(mapToSentimentSummary({ pros, cons }));
+
+  const toChipLabel = (aspect: string) => aspect.replace(/[.!]+$/, '');
+
+  const chips = $derived(
+    Array.from({ length: MAX_CHIPS_PER_SIDE }).flatMap((_, i) => [
+      ...(pros[i] ? [{ label: toChipLabel(pros[i]), sentiment: 'good' as const }] : []),
+      ...(cons[i] ? [{ label: toChipLabel(cons[i]), sentiment: 'bad' as const }] : []),
+    ]),
+  );
+
+  const positiveShare = $derived(
+    pros.length + cons.length > 0
+      ? Math.round((pros.length / (pros.length + cons.length)) * 100)
+      : 50,
   );
 </script>
 
 <button
   type="button"
-  class="sentiment-summary-card"
+  class="sentiment-card"
   {onclick}
   aria-label={m.button_label_view_sentiment_analysis()}
 >
-  <div class="sentiment-summary-body">
-    <span class="sentiment-summary-verdict">{text}</span>
-    <ul>
-      {#each aspects as aspect, i (`${aspect}-${i}`)}
-        <li>{aspect}</li>
-      {/each}
-    </ul>
-  </div>
-  <ChevronRightIcon />
+  <span class="sentiment-card-top">
+    <span class="sentiment-verdict">{text}</span>
+    <ChevronRightIcon />
+  </span>
+
+  <span class="sentiment-quote">“{sentiment.highlight || sentiment.analysis}”</span>
+
+  <span class="sentiment-chips">
+    {#each chips as chip, i (`${chip.label}-${i}`)}
+      <span class="sentiment-chip" data-sentiment={chip.sentiment}>
+        <SentimentIcon sentiment={chip.sentiment} />
+        {chip.label}
+      </span>
+    {/each}
+  </span>
+
+  <span
+    class="sentiment-balance"
+    style:--positive-share="{positiveShare}%"
+    aria-hidden="true"
+  ></span>
 </button>
 
 <style lang="scss">
-  .sentiment-summary-card {
+  .sentiment-card {
     width: 100%;
+    height: var(--trakttime-sentiment-card-height);
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: var(--gap-s);
-
     padding: var(--gap-m);
     box-sizing: border-box;
-
+    overflow: hidden;
     border: none;
-    border-radius: var(--border-radius-m);
+    border-radius: var(--trakttime-radius-card);
     background: var(--background-vip-drawer);
-
     color: var(--color-text-primary);
-    text-align: left;
+    font: inherit;
+    text-align: start;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+  }
 
-    > :global(svg) {
-      flex-shrink: 0;
+  .sentiment-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    :global(svg) {
       width: var(--trakttime-icon-md);
       height: var(--trakttime-icon-md);
       color: var(--color-text-secondary);
     }
   }
 
-  .sentiment-summary-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-xs);
-    min-width: 0;
-  }
-
-  .sentiment-summary-verdict {
-    font-weight: 700;
+  .sentiment-verdict {
+    padding: var(--ni-2) var(--gap-s);
+    border-radius: var(--trakttime-radius-pill);
+    background: color-mix(in srgb, var(--trakttime-accent) 18%, transparent);
+    color: var(--trakttime-accent);
+    font-size: 0.8125rem;
+    font-weight: 600;
     text-transform: capitalize;
   }
 
-  ul {
+  .sentiment-quote {
+    font-family: var(--trakttime-font-heading);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.35;
+    height: calc(3 * 1.35em);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .sentiment-chips {
     display: flex;
-    flex-direction: column;
-    gap: var(--gap-xxs);
+    gap: var(--gap-xs);
+    overflow: hidden;
+    mask-image: linear-gradient(to right, black 85%, transparent);
+  }
 
-    margin: 0;
-    padding: 0;
-    padding-inline-start: var(--ni-18);
+  .sentiment-chip {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ni-4);
+    height: var(--ni-28);
+    padding: 0 var(--gap-s);
+    border-radius: var(--trakttime-radius-pill);
+    background: var(--color-floating-background);
+    font-size: 0.8125rem;
+    white-space: nowrap;
 
-    font-size: 0.875rem;
-    color: var(--color-text-primary);
-
-    &::marker {
-      color: var(--color-text-secondary);
+    :global(svg) {
+      width: var(--ni-14);
+      height: var(--ni-14);
     }
+
+    &[data-sentiment='good'] :global(svg) {
+      color: var(--color-sentiment-good);
+    }
+
+    &[data-sentiment='bad'] :global(svg) {
+      color: var(--color-sentiment-bad);
+    }
+  }
+
+  .sentiment-balance {
+    height: var(--ni-4);
+    border-radius: var(--trakttime-radius-pill);
+    background: linear-gradient(
+      to right,
+      var(--color-sentiment-good) var(--positive-share),
+      var(--color-sentiment-bad) var(--positive-share)
+    );
   }
 </style>

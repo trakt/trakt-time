@@ -6,9 +6,10 @@
   import { Marked } from 'marked';
   import TriviaDrawer from './_internal/TriviaDrawer.svelte';
   import TriviaSummaryCardSkeleton from './_internal/TriviaSummaryCardSkeleton.svelte';
+  import { toTriviaCategoryLabel } from './_internal/toTriviaCategoryLabel.ts';
   import { useTrivia } from './_internal/useTrivia.ts';
 
-  const MAX_SUMMARY_FACTS = 3;
+  const MAX_CARDS = 6;
 
   const { type, slug }: { type: MediaType; slug: string } = $props();
 
@@ -21,7 +22,7 @@
   const marked = new Marked();
 
   const { items, summary, isLoading } = $derived(useTrivia({ slug, type }));
-  const visibleFacts = $derived($summary.slice(0, MAX_SUMMARY_FACTS));
+  const cards = $derived($items.slice(0, MAX_CARDS));
 </script>
 
 {#if $isLoading}
@@ -29,28 +30,44 @@
     <h2 class="summary-section-title">{m.list_title_trivia()}</h2>
     <TriviaSummaryCardSkeleton />
   </section>
-{:else if visibleFacts.length > 0}
+{:else if cards.length > 0}
   <section class="summary-section">
     <h2 class="summary-section-title">{m.list_title_trivia()}</h2>
 
-    <button
-      type="button"
-      class="trivia-summary-card"
-      onclick={() => (drawerOpen = true)}
-      aria-label={m.button_label_view_trivia()}
-    >
-      <ul class="trivia-summary-list">
-        {#each visibleFacts as fact, i (`${fact}-${i}`)}
-          <li>
-            <SparkleIcon />
-            <div class="trivia-summary-fact">
-              {@html marked.parse(fact)}
+    <ul class="trivia-row">
+      {#each cards as fact (fact.key)}
+        <li>
+          <button
+            type="button"
+            class="trivia-card"
+            class:is-spoiler={fact.isSpoiler}
+            onclick={() => (drawerOpen = true)}
+            aria-label={m.button_label_view_trivia()}
+          >
+            <span class="trivia-category">
+              <SparkleIcon />
+              {toTriviaCategoryLabel(fact.category)}
+            </span>
+            <div class="trivia-text">
+              {@html marked.parse(fact.text)}
             </div>
-          </li>
-        {/each}
-      </ul>
-      <ChevronRightIcon />
-    </button>
+            {#if fact.isSpoiler}
+              <span class="trivia-spoiler">{m.text_reveal_spoiler()}</span>
+            {/if}
+          </button>
+        </li>
+      {/each}
+      <li>
+        <button
+          type="button"
+          class="trivia-card trivia-card--more"
+          onclick={() => (drawerOpen = true)}
+        >
+          <span>{m.button_label_view_trivia()}</span>
+          <ChevronRightIcon />
+        </button>
+      </li>
+    </ul>
   </section>
 
   {#if drawerOpen}
@@ -63,63 +80,100 @@
 {/if}
 
 <style lang="scss">
-  .trivia-summary-card {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: var(--gap-s);
+  @use '$style/scss/mixins/index' as *;
 
-    padding: var(--gap-m);
-    box-sizing: border-box;
+  .trivia-row {
+    @include scrollable-row(var(--gap-s));
+    list-style: none;
+    margin: 0 calc(-1 * var(--gap-m));
+    padding: 0 var(--gap-m);
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gap-m);
 
-    border: none;
-    border-radius: var(--border-radius-m);
-    background: var(--background-vip-drawer);
-
-    color: var(--color-text-primary);
-    text-align: left;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-
-    > :global(svg) {
+    li {
       flex-shrink: 0;
-      width: var(--trakttime-icon-md);
-      height: var(--trakttime-icon-md);
-      color: var(--color-text-secondary);
+      scroll-snap-align: start;
     }
   }
 
-  .trivia-summary-list {
-    flex: 1;
+  .trivia-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--gap-s);
+    width: min(78vw, var(--ni-280));
+    height: var(--trakttime-trivia-card-height);
+    padding: var(--gap-m);
+    box-sizing: border-box;
+    overflow: hidden;
+    border: none;
+    border-radius: var(--trakttime-radius-card);
+    background: var(--background-vip-drawer);
+    color: var(--color-text-primary);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    min-width: 0;
+  .trivia-category {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-xxs);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--trakttime-accent);
 
-    li {
-      display: flex;
-      align-items: flex-start;
-      gap: var(--gap-s);
-
-      > :global(svg) {
-        flex-shrink: 0;
-        width: var(--trakttime-icon-sm);
-        height: var(--trakttime-icon-sm);
-        color: var(--color-text-secondary);
-      }
+    :global(svg) {
+      width: var(--ni-14);
+      height: var(--ni-14);
     }
   }
 
-  .trivia-summary-fact {
-    font-size: 0.875rem;
-    line-height: 1.5;
+  .trivia-text {
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 
     :global(p) {
       margin: 0;
+    }
+  }
+
+  .trivia-card.is-spoiler .trivia-text {
+    filter: blur(6px);
+  }
+
+  .trivia-spoiler {
+    position: absolute;
+    inset: auto var(--gap-m) var(--gap-m);
+    padding: var(--gap-xs) var(--gap-s);
+    border-radius: var(--trakttime-radius-pill);
+    background: var(--color-floating-background);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .trivia-card--more {
+    width: var(--ni-136);
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-xxs);
+    background: var(--color-card-background);
+    color: var(--trakttime-accent);
+    font-weight: 600;
+
+    :global(svg) {
+      width: var(--ni-18);
+      height: var(--ni-18);
     }
   }
 </style>
