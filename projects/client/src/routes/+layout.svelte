@@ -26,6 +26,7 @@
   import MarkAsWatchedDrawerProvider from "$lib/sections/media-actions/mark-as-watched/MarkAsWatchedDrawerProvider.svelte";
   import NavbarToastContent from "$lib/sections/toast/NavbarToastContent.svelte";
   import { isPWA } from "$lib/utils/devices/isPWA.ts";
+  import { removeUnclaimedHeadNodes } from "$lib/utils/dom/removeUnclaimedHeadNodes.ts";
   import { retry } from "$lib/utils/retry/retry.js";
   import { WorkerMessage } from "$worker/WorkerMessage";
   import { workerRequest } from "$worker/workerRequest";
@@ -39,6 +40,8 @@
   const shareImage = $derived(`${data.origin}/og.jpg`);
 
   onMount(async () => {
+    removeUnclaimedHeadNodes(document.head);
+
     if (isPWA()) {
       document.body.classList.add("trakt-pwa");
     }
