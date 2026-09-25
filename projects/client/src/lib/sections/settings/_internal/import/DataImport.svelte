@@ -15,8 +15,10 @@
     type AmbiguousImportItem,
     DEFAULT_EPISODE_MATCH_MODE,
     type EpisodeMatchMode,
+    DEFAULT_IMPORT_SOURCE,
     IMPORT_SOURCE_CONFIGS,
     type ImportAction,
+    type ImportSource,
     type ImportActionSelection,
     type ImportCounts,
     type ImportStatus,
@@ -24,17 +26,16 @@
   } from '../../import/ImportTypes.ts';
   import { exceedsFreeImportLimits } from '../../import/exceedsFreeImportLimits.ts';
   import { filterImportItemsByActionSelection } from '../../import/filterImportItemsByActionSelection.ts';
-  import { TvTimeCsvParser } from '../../import/parsers/TvTimeCsvParser.ts';
+  import { getParser } from '../../import/parsers/getParser.ts';
   import { syncToTrakt } from '../../import/syncToTrakt.ts';
   import ImportComplete from './ImportComplete.svelte';
+  import ImportGuide from './ImportGuide.svelte';
   import SettingsBlock from '../SettingsBlock.svelte';
   import SettingsRow from '../SettingsRow.svelte';
 
   const { importInProgress } = useImportInProgress();
   const { invalidate } = useInvalidator();
   const { user, limits } = useUser();
-
-  const sourceConfig = IMPORT_SOURCE_CONFIGS.tvtime;
 
   let abortController: AbortController | null = null;
 
@@ -68,13 +69,21 @@
     episodeMatch: DEFAULT_EPISODE_MATCH_MODE,
   };
 
-  let state = $state<State>({ ...initialState });
+  let importState = $state<State>({ ...initialState });
+
+  const sources = Object.values(IMPORT_SOURCE_CONFIGS);
+
+  let source = $state<ImportSource>(DEFAULT_IMPORT_SOURCE);
+  const sourceConfig = $derived(IMPORT_SOURCE_CONFIGS[source]);
+  const canSwitchSource = $derived(
+    importState.status === 'idle' || importState.status === 'error',
+  );
 
   const counts = $derived<ImportCounts>({
-    history: state.items.filter((i) => i.action === 'history').length,
-    watchlist: state.items.filter((i) => i.action === 'watchlist').length,
-    ratings: state.items.filter((i) => i.action === 'ratings').length,
-    list: state.items.filter((i) => i.action === 'list').length,
+    history: importState.items.filter((i) => i.action === 'history').length,
+    watchlist: importState.items.filter((i) => i.action === 'watchlist').length,
+    ratings: importState.items.filter((i) => i.action === 'ratings').length,
+    list: importState.items.filter((i) => i.action === 'list').length,
   });
 
   const actionRows = $derived<
@@ -106,13 +115,13 @@
 
   const selectedItems = $derived(
     filterImportItemsByActionSelection({
-      items: state.items,
-      selectedActions: state.selectedActions,
+      items: importState.items,
+      selectedActions: importState.selectedActions,
     }),
   );
 
   const hasEpisodes = $derived(
-    state.items.some((item) => item.type === 'episode'),
+    importState.items.some((item) => item.type === 'episode'),
   );
 
   const isOverFreeLimit = $derived.by(() => {
@@ -120,69 +129,74 @@
 
     return exceedsFreeImportLimits({
       counts: {
-        history: state.selectedActions.history ? counts.history : 0,
-        watchlist: state.selectedActions.watchlist ? counts.watchlist : 0,
-        ratings: state.selectedActions.ratings ? counts.ratings : 0,
-        list: state.selectedActions.list ? counts.list : 0,
+        history: importState.selectedActions.history ? counts.history : 0,
+        watchlist: importState.selectedActions.watchlist ? counts.watchlist : 0,
+        ratings: importState.selectedActions.ratings ? counts.ratings : 0,
+        list: importState.selectedActions.list ? counts.list : 0,
       },
       limits: $limits,
     });
   });
 
   function toggleAction(action: ImportAction) {
-    state.selectedActions = {
-      ...state.selectedActions,
-      [action]: !state.selectedActions[action],
+    importState.selectedActions = {
+      ...importState.selectedActions,
+      [action]: !importState.selectedActions[action],
     };
   }
 
   function toggleEpisodeMatch() {
-    state.episodeMatch = state.episodeMatch === 'positional' ? 'id' : 'positional';
+    importState.episodeMatch = importState.episodeMatch === 'positional' ? 'id' : 'positional';
   }
 
   const progressPercent = $derived(
-    state.totalCount === 0
+    importState.totalCount === 0
       ? 0
       : Math.min(
         100,
-        Math.round((state.processedCount / state.totalCount) * 100),
+        Math.round((importState.processedCount / importState.totalCount) * 100),
       ),
   );
 
   const matchPercent = $derived(
-    state.matchTotalCount === 0
+    importState.matchTotalCount === 0
       ? 0
       : Math.min(
         100,
-        Math.round((state.matchProcessedCount / state.matchTotalCount) * 100),
+        Math.round((importState.matchProcessedCount / importState.matchTotalCount) * 100),
       ),
   );
+
+  function selectSource(next: ImportSource) {
+    reset();
+    source = next;
+  }
 
   function reset() {
     abortController?.abort();
     abortController = null;
-    state = { ...initialState };
+    importState = { ...initialState };
   }
 
   async function handleFiles(ev: Event) {
     const { files } = (ev as CustomEvent<{ files: FileList }>).detail;
     if (!files?.length) return;
 
-    state.status = 'parsing';
-    state.error = null;
+    importState.status = 'parsing';
+    importState.error = null;
 
     try {
       const fileArray = Array.from(files).slice(0, sourceConfig.maxFiles);
-      const items = await TvTimeCsvParser.parse(fileArray);
-      state.items = items;
-      state.totalCount = items.length;
-      state.status = items.length === 0 ? 'error' : 'review';
+      const items = await getParser(source).parse(fileArray);
+      importState.items = items;
+      importState.totalCount = items.length;
+      importState.status = items.length === 0 ? 'error' : 'review';
       if (items.length === 0) {
-        state.error = m.import_error_empty();
+        importState.error = m.import_error_empty();
       }
     } catch (err) {
-      state.error = err instanceof Error ? err.message : String(err);
-      state.status = 'error';
+      importState.error = err instanceof Error ? err.message : String(err);
+      importState.status = 'error';
     }
   }
 
@@ -203,43 +217,43 @@
 
   async function startImport() {
     abortController = new AbortController();
-    state.status = 'syncing';
-    state.processedCount = 0;
-    state.errorCount = 0;
-    state.matchProcessedCount = 0;
-    state.matchTotalCount = 0;
-    state.totalCount = selectedItems.length;
+    importState.status = 'syncing';
+    importState.processedCount = 0;
+    importState.errorCount = 0;
+    importState.matchProcessedCount = 0;
+    importState.matchTotalCount = 0;
+    importState.totalCount = selectedItems.length;
 
     try {
       const { errorCount, unresolved, ambiguous } = await syncToTrakt(
         selectedItems,
         {
           signal: abortController.signal,
-          episodeMatch: state.episodeMatch,
+          episodeMatch: importState.episodeMatch,
           onMatchProgress: (processed, total) => {
-            state.matchProcessedCount = processed;
-            state.matchTotalCount = total;
-            state.status = total > 0 ? 'matching' : 'syncing';
+            importState.matchProcessedCount = processed;
+            importState.matchTotalCount = total;
+            importState.status = total > 0 ? 'matching' : 'syncing';
           },
           onProgress: (n) => {
-            state.status = 'syncing';
-            state.processedCount = n;
+            importState.status = 'syncing';
+            importState.processedCount = n;
           },
           onError: (msg) => {
             // Per-chunk errors are surfaced via errorCount; log for diagnostics.
-            console.error('[tv-time import]', msg);
+            console.error('[import]', msg);
           },
           onStart: () => importInProgress.next(true),
           onComplete: invalidateImported,
         },
       );
-      state.errorCount = errorCount;
-      state.unresolved = unresolved;
-      state.ambiguous = ambiguous;
-      state.status = 'complete';
+      importState.errorCount = errorCount;
+      importState.unresolved = unresolved;
+      importState.ambiguous = ambiguous;
+      importState.status = 'complete';
     } catch (err) {
-      state.error = err instanceof Error ? err.message : String(err);
-      state.status = 'error';
+      importState.error = err instanceof Error ? err.message : String(err);
+      importState.status = 'error';
     }
   }
 
@@ -251,34 +265,27 @@
       abortController = new AbortController();
       const { errorCount } = await syncToTrakt(picked, {
         signal: abortController.signal,
-        episodeMatch: state.episodeMatch,
+        episodeMatch: importState.episodeMatch,
         onProgress: () => {},
         onError: (msg) => {
-          console.error('[tv-time import]', msg);
+          console.error('[import]', msg);
         },
         onStart: () => importInProgress.next(true),
         onComplete: invalidateImported,
       });
 
-      state.errorCount += errorCount;
+      importState.errorCount += errorCount;
     }
 
-    state.unresolved = [...state.unresolved, ...skipped];
-    state.ambiguous = [];
+    importState.unresolved = [...importState.unresolved, ...skipped];
+    importState.ambiguous = [];
   }
 </script>
 
-{#snippet step(title: string, body: string)}
-  <li class="tv-time-step">
-    <span class="tv-time-step-title">{title}</span>
-    {body}
-  </li>
-{/snippet}
-
 <SettingsBlock title={m.header_your_data()}>
   <SettingsRow
-    title={m.header_import_tv_time()}
-    subtitle={m.import_tv_time_intro()}
+    title={m.header_import_data()}
+    subtitle={m.import_data_intro()}
     tone="rose"
   >
     {#snippet icon()}
@@ -286,48 +293,62 @@
     {/snippet}
   </SettingsRow>
 
-  <div class="tv-time-panel">
-    <ol class="tv-time-steps">
-      {@render step(m.import_step_export_title(), m.import_step_export_body())}
-      {@render step(m.import_step_upload_title(), m.import_step_upload_body())}
-      {@render step(m.import_step_sync_title(), m.import_step_sync_body())}
-    </ol>
+  <div class="import-panel">
+    <div
+      class="import-sources"
+      role="group"
+      aria-label={m.import_source_label()}
+    >
+      {#each sources as option (option.id)}
+        <button
+          type="button"
+          class="import-source"
+          aria-pressed={option.id === source}
+          disabled={!canSwitchSource}
+          onclick={() => selectSource(option.id)}
+        >
+          {option.name}
+        </button>
+      {/each}
+    </div>
+
+    <ImportGuide guide={sourceConfig.guide} />
 
     <NavigationGuard
-      isActive={state.status === 'matching' || state.status === 'syncing'}
+      isActive={importState.status === 'matching' || importState.status === 'syncing'}
       confirmationParams={{ type: ConfirmationType.CancelImport }}
       onreset={reset}
     >
-      {#if state.status === 'idle' || state.status === 'parsing'}
+      {#if importState.status === 'idle' || importState.status === 'parsing'}
         <div
-          class="tv-time-dropzone"
+          class="import-dropzone"
           transition:slide={{ duration: 150, axis: 'y' }}
           use:dropzone={{ accept: sourceConfig.accept, multiple: true }}
           onfiles={handleFiles}
         >
-          {#if state.status === 'parsing'}
+          {#if importState.status === 'parsing'}
             <LoaderIcon />
-            <p class="tv-time-secondary">{m.import_status_parsing()}</p>
+            <p class="import-secondary">{m.import_status_parsing()}</p>
           {:else}
-            <p class="tv-time-prompt">{m.import_drop_zip()}</p>
-            <p class="tv-time-secondary">
+            <p class="import-prompt">{m.import_drop_files()}</p>
+            <p class="import-secondary">
               {m.import_max_files({ count: sourceConfig.maxFiles })}
             </p>
           {/if}
         </div>
       {/if}
 
-      {#if state.status === 'review'}
+      {#if importState.status === 'review'}
         <div
-          class="tv-time-summary"
+          class="import-summary"
           transition:slide={{ duration: 150, axis: 'y' }}
         >
-          <div class="tv-time-counts">
+          <div class="import-counts">
             {#each actionRows as row (row.action)}
-              <label class="tv-time-option">
+              <label class="import-option">
                 <input
                   type="checkbox"
-                  checked={state.selectedActions[row.action]}
+                  checked={importState.selectedActions[row.action]}
                   onchange={() => toggleAction(row.action)}
                 />
                 <span>{row.label}</span>
@@ -335,29 +356,29 @@
             {/each}
           </div>
           {#if hasEpisodes}
-            <label class="tv-time-option">
+            <label class="import-option">
               <input
                 type="checkbox"
-                checked={state.episodeMatch === 'positional'}
+                checked={importState.episodeMatch === 'positional'}
                 onchange={toggleEpisodeMatch}
               />
-              <span class="tv-time-option-text">
+              <span class="import-option-text">
                 <span>{m.import_match_toggle_label()}</span>
-                <span class="tv-time-secondary">{m.import_match_toggle_hint()}</span>
+                <span class="import-secondary">{m.import_match_toggle_hint()}</span>
               </span>
             </label>
           {/if}
           {#if isOverFreeLimit}
-            <UpsellCta source="tv-time-import">
+            <UpsellCta source="import-import">
               {m.import_vip_limit_exceeded({ count: selectedItems.length })}
             </UpsellCta>
           {/if}
-          <div class="tv-time-actions">
-            <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
+          <div class="import-actions">
+            <button class="import-btn import-btn--secondary" onclick={reset}>
               {m.button_text_cancel()}
             </button>
             <button
-              class="tv-time-btn tv-time-btn--primary"
+              class="import-btn import-btn--primary"
               onclick={startImport}
               disabled={selectedItems.length === 0}
             >
@@ -367,61 +388,61 @@
         </div>
       {/if}
 
-      {#if state.status === 'matching'}
+      {#if importState.status === 'matching'}
         <div
-          class="tv-time-syncing"
+          class="import-syncing"
           transition:slide={{ duration: 150, axis: 'y' }}
         >
-          <p class="tv-time-secondary">
+          <p class="import-secondary">
             {m.import_status_matching({
-              processed: state.matchProcessedCount,
-              total: state.matchTotalCount,
+              processed: importState.matchProcessedCount,
+              total: importState.matchTotalCount,
             })}
           </p>
-          <div class="tv-time-progress">
-            <div class="tv-time-progress-fill" style:width="{matchPercent}%"></div>
+          <div class="import-progress">
+            <div class="import-progress-fill" style:width="{matchPercent}%"></div>
           </div>
         </div>
       {/if}
 
-      {#if state.status === 'syncing'}
+      {#if importState.status === 'syncing'}
         <div
-          class="tv-time-syncing"
+          class="import-syncing"
           transition:slide={{ duration: 150, axis: 'y' }}
         >
-          <p class="tv-time-secondary">
+          <p class="import-secondary">
             {m.import_progress({
-              processed: state.processedCount,
-              total: state.totalCount,
+              processed: importState.processedCount,
+              total: importState.totalCount,
             })}
           </p>
-          <div class="tv-time-progress">
-            <div class="tv-time-progress-fill" style:width="{progressPercent}%"></div>
+          <div class="import-progress">
+            <div class="import-progress-fill" style:width="{progressPercent}%"></div>
           </div>
         </div>
       {/if}
 
-      {#if state.status === 'complete'}
+      {#if importState.status === 'complete'}
         <div transition:slide={{ duration: 150, axis: 'y' }}>
           <ImportComplete
-            processedCount={state.processedCount}
-            errorCount={state.errorCount}
-            unresolved={state.unresolved}
-            ambiguous={state.ambiguous}
+            processedCount={importState.processedCount}
+            errorCount={importState.errorCount}
+            unresolved={importState.unresolved}
+            ambiguous={importState.ambiguous}
             onimportpicked={importPicked}
             onreset={reset}
           />
         </div>
       {/if}
 
-      {#if state.status === 'error'}
+      {#if importState.status === 'error'}
         <div
-          class="tv-time-error"
+          class="import-error"
           transition:slide={{ duration: 150, axis: 'y' }}
         >
-          <p>{state.error ?? m.import_error_generic()}</p>
-          <div class="tv-time-actions">
-            <button class="tv-time-btn tv-time-btn--secondary" onclick={reset}>
+          <p>{importState.error ?? m.import_error_generic()}</p>
+          <div class="import-actions">
+            <button class="import-btn import-btn--secondary" onclick={reset}>
               {m.button_text_try_again()}
             </button>
           </div>
@@ -432,42 +453,48 @@
 </SettingsBlock>
 
 <style lang="scss">
-  .tv-time-panel {
+  .import-panel {
     display: flex;
     flex-direction: column;
     gap: var(--gap-m);
     padding: var(--gap-m);
   }
 
-  .tv-time-steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--gap-xs);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .tv-time-step {
+  .import-sources {
     display: flex;
-    flex-direction: column;
-    gap: var(--ni-4);
-    padding: var(--gap-s);
-    border-radius: var(--border-radius-m);
-    background: var(--color-background);
+    flex-wrap: wrap;
+    gap: var(--gap-xs);
+  }
+
+  .import-source {
+    min-height: var(--ni-36);
+    padding: 0 var(--gap-m);
+    border: var(--ni-1) solid var(--color-border);
+    border-radius: var(--trakttime-radius-pill);
+    background: transparent;
     color: var(--color-text-secondary);
-    font-size: 0.75rem;
-    line-height: 1.35;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background var(--transition-increment) ease-in-out,
+      color var(--transition-increment) ease-in-out;
+
+    &[aria-pressed='true'] {
+      border-color: transparent;
+      background: var(--trakttime-accent);
+      color: var(--trakttime-accent-foreground);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
   }
 
-  .tv-time-step-title {
-    font-family: var(--trakttime-font-heading);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: var(--color-text-emphasis);
-  }
-
-  .tv-time-dropzone {
+  .import-dropzone {
     border: 1.5px dashed var(--color-border);
     border-radius: var(--border-radius-m);
     padding: var(--gap-xl) var(--gap-m);
@@ -485,41 +512,41 @@
     }
   }
 
-  .tv-time-prompt {
+  .import-prompt {
     margin: 0;
     font-weight: 600;
     color: var(--color-text-primary);
   }
 
-  .tv-time-secondary {
+  .import-secondary {
     margin: 0;
     color: var(--color-text-secondary);
     font-size: 0.8125rem;
   }
 
-  .tv-time-summary,
-  .tv-time-syncing,
-  .tv-time-error {
+  .import-summary,
+  .import-syncing,
+  .import-error {
     display: flex;
     flex-direction: column;
     gap: var(--gap-m);
   }
 
-  .tv-time-syncing,
-  .tv-time-error {
+  .import-syncing,
+  .import-error {
     p {
       margin: 0;
       color: var(--color-text-primary);
     }
   }
 
-  .tv-time-counts {
+  .import-counts {
     display: flex;
     flex-direction: column;
     gap: var(--gap-xxs);
   }
 
-  .tv-time-option {
+  .import-option {
     display: flex;
     align-items: flex-start;
     gap: var(--gap-s);
@@ -534,13 +561,13 @@
     }
   }
 
-  .tv-time-option-text {
+  .import-option-text {
     display: flex;
     flex-direction: column;
     gap: var(--gap-xxs);
   }
 
-  .tv-time-progress {
+  .import-progress {
     width: 100%;
     height: 6px;
     border-radius: 3px;
@@ -548,19 +575,19 @@
     overflow: hidden;
   }
 
-  .tv-time-progress-fill {
+  .import-progress-fill {
     height: 100%;
     background: var(--trakttime-accent);
     transition: width 0.2s ease;
   }
 
-  .tv-time-actions {
+  .import-actions {
     display: flex;
     gap: var(--gap-s);
     justify-content: flex-end;
   }
 
-  .tv-time-btn {
+  .import-btn {
     border: none;
     border-radius: var(--border-radius-m);
     padding: var(--gap-s) var(--gap-l);

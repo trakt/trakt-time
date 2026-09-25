@@ -6,7 +6,7 @@
   import SettingsBlock from '$lib/sections/settings/_internal/SettingsBlock.svelte';
   import SettingsRow from '$lib/sections/settings/_internal/SettingsRow.svelte';
   import VipSettings from '$lib/sections/settings/_internal/VipSettings.svelte';
-  import TvTimeImport from '$lib/sections/settings/_internal/import/TvTimeImport.svelte';
+  import DataImport from '$lib/sections/settings/_internal/import/DataImport.svelte';
   import LogoutButton from '$lib/components/buttons/logout/LogoutButton.svelte';
   import { useAuth } from '$lib/features/auth/stores/useAuth.ts';
   import LoginGate from '$lib/components/auth/LoginGate.svelte';
@@ -28,7 +28,7 @@
     <AccountCard />
     <VipSettings />
     <Appearance />
-    <TvTimeImport />
+    <DataImport />
     <SettingsBlock title={m.header_about()}>
       <SettingsRow
         href="/compare"
