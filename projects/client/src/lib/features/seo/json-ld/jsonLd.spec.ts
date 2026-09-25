@@ -4,6 +4,7 @@ import type { PersonSummary } from '$lib/requests/models/PersonSummary.ts';
 import type { ShowEntry } from '$lib/requests/models/ShowEntry.ts';
 import { describe, expect, it } from 'vitest';
 import { toEpisodeJsonLd } from './toEpisodeJsonLd.ts';
+import { toFaqJsonLd } from './toFaqJsonLd.ts';
 import { toMovieJsonLd } from './toMovieJsonLd.ts';
 import { toPersonJsonLd } from './toPersonJsonLd.ts';
 import { toShowJsonLd } from './toShowJsonLd.ts';
@@ -140,6 +141,25 @@ describe('json-ld builders', () => {
     expect(app).toMatchObject({
       '@type': 'WebApplication',
       offers: { price: '0' },
+    });
+  });
+
+  it('should describe questions and answers as an FAQPage', () => {
+    const data = toFaqJsonLd([
+      { question: 'Is it free?', answer: 'Yes.' },
+      { question: 'Can I import?', answer: 'From TV Time, yes.' },
+    ]);
+
+    expect(data).toMatchObject({
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Is it free?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Yes.' },
+        },
+        { name: 'Can I import?' },
+      ],
     });
   });
 });
