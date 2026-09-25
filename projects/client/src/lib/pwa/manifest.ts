@@ -40,8 +40,8 @@ export const manifest: Partial<ManifestOptions> = {
   ],
   start_url: '/',
   display: 'standalone',
-  theme_color: '#131517',
-  background_color: '#131517',
+  theme_color: '#0c0b0b',
+  background_color: '#0c0b0b',
   orientation: 'any',
   categories: ['entertainment'],
   shortcuts: [
