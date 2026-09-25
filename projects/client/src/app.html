@@ -54,9 +54,24 @@
       href="%sveltekit.assets%/pwa/ios/apple-touch-icon.png"
     />
 
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Outfit:wght@400..800&display=swap"
+      rel="preload"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Outfit:wght@400..800&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
     %sveltekit.head%
   </head>
   <body>
+    %boot.loader%
     <div
       style="display: contents"
       data-sveltekit-preload-code="viewport"

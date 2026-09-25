@@ -1,4 +1,5 @@
 import { handle as handleAuth } from '$lib/features/auth/handle.ts';
+import { handle as handleBootLoader } from '$lib/features/boot-loader/handle.ts';
 import { handle as handleBotVerification } from '$lib/features/bot-verification/handle.ts';
 import { handle as handleCacheBust } from '$lib/features/cache-bust/handle.ts';
 import { handle as handleCookieConsent } from '$lib/features/cookie-consent/handle.ts';
@@ -66,6 +67,7 @@ export const handle: Handle = sequence(
   }),
   sentryHandle(),
   handleBotVerification,
+  handleBootLoader,
   handleDevice,
   handleLocale,
   handleTheme,
