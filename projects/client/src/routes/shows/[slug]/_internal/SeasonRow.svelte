@@ -83,9 +83,12 @@
       </RenderFor>
     {/if}
   </div>
-  {#if progressPercent > 0}
-    <div class="season-progress" style:--progress="{progressPercent}%" aria-hidden="true"></div>
-  {/if}
+  <div
+    class="season-progress"
+    class:is-empty={progressPercent === 0}
+    style:--progress="{progressPercent}%"
+    aria-hidden="true"
+  ></div>
   {#if isOpen}
     <SeasonEpisodes
       {slug}
@@ -111,11 +114,13 @@
     height: var(--ni-4);
     margin: 0 var(--gap-m) var(--gap-xs);
     border-radius: var(--trakttime-radius-pill);
-    background: linear-gradient(
-      to right,
-      var(--trakttime-accent) var(--progress),
-      var(--color-border) var(--progress)
-    );
+    background:
+      var(--trakttime-gradient) 0 0 / var(--progress) 100% no-repeat,
+      var(--color-border);
+
+    &.is-empty {
+      visibility: hidden;
+    }
   }
 
   .season-header {

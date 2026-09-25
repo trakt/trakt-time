@@ -470,5 +470,6 @@
   "compare_bingers_faq_import_a": "Ja. Log ind, åbn Indstillinger, og importér din TV Time-eksport fra udvidelsen TV Time Liberator eller fra GDPR-dataanmodningen hos TV Time.",
   "compare_bingers_faq_both_q": "Kan jeg bruge Trakt Time og Bingers samtidig?",
   "compare_bingers_faq_both_a": "Ja. De er uafhængige, så du kan importere den samme TV Time-historik i begge og prøve dem.",
-  "compare_bingers_disclaimer": "Bingers er et varemærke tilhørende ejeren. Oplysningerne om Bingers stammer fra dens App Store-side og fra pressen og kan ændre sig."
+  "compare_bingers_disclaimer": "Bingers er et varemærke tilhørende ejeren. Oplysningerne om Bingers stammer fra dens App Store-side og fra pressen og kan ændre sig.",
+  "text_not_streaming": "Kan ikke streames i dit land lige nu."
 }

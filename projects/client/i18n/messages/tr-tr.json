@@ -470,5 +470,6 @@
   "compare_bingers_faq_import_a": "Evet. Giriş yap, Ayarlar'ı aç ve TV Time Liberator uzantısından ya da TV Time'ın GDPR veri talebinden aldığın dışa aktarmayı içe aktar.",
   "compare_bingers_faq_both_q": "Trakt Time ve Bingers'ı birlikte kullanabilir miyim?",
   "compare_bingers_faq_both_a": "Evet. Birbirinden bağımsızlar; aynı TV Time geçmişini ikisine de aktarıp ikisini de deneyebilirsin.",
-  "compare_bingers_disclaimer": "Bingers, sahibinin ticari markasıdır. Bingers hakkındaki bilgiler App Store sayfasından ve basından alınmıştır ve değişebilir."
+  "compare_bingers_disclaimer": "Bingers, sahibinin ticari markasıdır. Bingers hakkındaki bilgiler App Store sayfasından ve basından alınmıştır ve değişebilir.",
+  "text_not_streaming": "Şu anda ülkende yayın akışı yok."
 }

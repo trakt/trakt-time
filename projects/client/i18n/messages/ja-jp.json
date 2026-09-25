@@ -470,5 +470,6 @@
   "compare_bingers_faq_import_a": "はい。サインインして設定を開き、TV Time Liberator 拡張機能または TV Time の GDPR データ請求で取得したエクスポートをインポートしてください。",
   "compare_bingers_faq_both_q": "Trakt Time と Bingers は併用できますか？",
   "compare_bingers_faq_both_a": "はい。それぞれ独立しているので、同じ TV Time の履歴を両方にインポートして試せます。",
-  "compare_bingers_disclaimer": "Bingers はその所有者の商標です。Bingers に関する情報は App Store の掲載内容と報道に基づいており、変更される場合があります。"
+  "compare_bingers_disclaimer": "Bingers はその所有者の商標です。Bingers に関する情報は App Store の掲載内容と報道に基づいており、変更される場合があります。",
+  "text_not_streaming": "現在、お住まいの国では配信されていません。"
 }

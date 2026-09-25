@@ -13,7 +13,7 @@
 </script>
 
 <section class="media-section">
-  <h2 class="section-title">{m.header_cast()}</h2>
+  <h2 class="summary-section-title">{m.header_cast()}</h2>
   {#if isLoading && cast.length === 0}
     <div class="cast-row" aria-hidden="true">
       {#each Array(6) as _, i (`csk-${i}`)}
@@ -57,13 +57,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-s);
-  }
-
-  .section-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0;
   }
 
   .cast-row {
@@ -110,6 +103,7 @@
 
   .cast-name {
     font-size: 0.6875rem;
+    line-height: 1rem;
     font-weight: 600;
     color: var(--color-text-primary);
     margin: 0;
@@ -121,6 +115,7 @@
 
   .cast-character {
     font-size: 0.625rem;
+    line-height: 0.875rem;
     color: var(--color-text-secondary);
     margin: 0;
     text-align: center;
@@ -155,13 +150,13 @@
     /* Heights track the rendered line boxes of .cast-name / .cast-character. */
     &--name {
       width: var(--ni-56);
-      height: 0.8125rem;
+      height: 1rem;
       animation-delay: 0.1s;
     }
 
     &--char {
       width: var(--ni-44);
-      height: 0.6875rem;
+      height: 0.875rem;
       animation-delay: 0.2s;
     }
   }

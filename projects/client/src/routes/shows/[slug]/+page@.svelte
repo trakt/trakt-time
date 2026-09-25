@@ -130,7 +130,7 @@
 <div class="summary-page">
   <BackBar href="/shows/watchlist" label={m.page_title_shows()} variant="overlay" />
 
-  {#if isLoading && !show}
+  {#if (isLoading && !show) || (seasonsLoading && seasons.length === 0)}
     <SummarySkeleton variant="show">
       <section class="summary-section" aria-hidden="true">
         <h2 class="summary-section-title">{m.header_seasons()}</h2>
@@ -138,7 +138,7 @@
       </section>
     </SummarySkeleton>
   {:else if show}
-    <MediaCoverHero coverUrl={show.cover.url.medium} />
+    <MediaCoverHero coverUrl={show.cover.url.medium} tint={show.colors?.[0]} />
 
     <div class="summary-content">
       <div class="summary-header">
@@ -200,12 +200,7 @@
         {/snippet}
       </RenderFor>
 
-      {#if seasonsLoading && seasons.length === 0}
-        <section class="summary-section" aria-hidden="true">
-          <h2 class="summary-section-title">{m.header_seasons()}</h2>
-          <SeasonListSkeleton />
-        </section>
-      {:else if seasons.length > 0}
+      {#if seasons.length > 0}
         <section class="summary-section">
           <h2 class="summary-section-title">{m.header_seasons()}</h2>
           <ul class="seasons-list">
