@@ -5,33 +5,37 @@
     label: string;
     href?: string;
     onclick?: () => void;
+    variant?: "header" | "overlay";
   };
 
-  const { label, href, onclick }: Props = $props();
+  const { label, href, onclick, variant = "header" }: Props = $props();
 
   const handleFallback = () => history.back();
 </script>
 
-{#snippet content()}
+{#snippet icon()}
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+    <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
   </svg>
-  {label}
 {/snippet}
 
-<nav class="back-bar">
+<nav class="back-bar" data-variant={variant}>
   {#if href}
-    <a class="back-btn" {href} aria-label={m.button_label_back()}>
-      {@render content()}
+    <a class="back-btn icon-button-round" {href} aria-label={m.button_label_back()}>
+      {@render icon()}
     </a>
   {:else}
     <button
-      class="back-btn"
+      class="back-btn icon-button-round"
       onclick={onclick ?? handleFallback}
       aria-label={m.button_label_back()}
     >
-      {@render content()}
+      {@render icon()}
     </button>
+  {/if}
+
+  {#if variant === "header"}
+    <h1 class="back-bar-title">{label}</h1>
   {/if}
 </nav>
 
@@ -44,31 +48,40 @@
     width: 100%;
     max-width: var(--trakttime-max-width);
     z-index: var(--layer-floating);
+    display: grid;
+    grid-template-columns: var(--ni-44) 1fr var(--ni-44);
+    align-items: center;
+    gap: var(--gap-s);
     padding: var(--gap-s) var(--gap-m);
     pointer-events: none;
-    margin-left: var(--gap-m);
+
+    &[data-variant="header"] {
+      background: linear-gradient(
+        var(--color-background) 65%,
+        transparent
+      );
+    }
   }
 
   .back-btn {
     pointer-events: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--gap-xxs);
-    padding: var(--ni-6) var(--ni-12) var(--ni-6) var(--ni-8);
-    color: var(--color-text-primary);
-    text-decoration: none;
+    border: none;
     cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 600;
-    background: var(--trakttime-navbar-blur-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: var(--ni-1) solid var(--color-border);
-    border-radius: 999px;
+    text-decoration: none;
 
     svg {
-      width: var(--ni-18);
-      height: var(--ni-18);
+      width: var(--ni-24);
+      height: var(--ni-24);
     }
+  }
+
+  .back-bar-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>

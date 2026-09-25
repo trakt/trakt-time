@@ -34,21 +34,24 @@
 
   .bottom-nav {
     position: fixed;
-    bottom: 0;
+    bottom: calc(var(--gap-s) + env(safe-area-inset-bottom, var(--ni-0)));
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
-    max-width: var(--trakttime-max-width);
+    width: calc(100% - 2 * var(--gap-m));
+    max-width: calc(var(--trakttime-max-width) - 2 * var(--gap-m));
     z-index: var(--layer-overlay);
     display: flex;
     justify-content: space-around;
     align-items: stretch;
+    gap: var(--ni-4);
     height: var(--trakttime-bottom-nav-height);
-    padding-bottom: env(safe-area-inset-bottom, var(--ni-0));
+    padding: var(--ni-4);
     background-color: var(--trakttime-navbar-blur-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-top: var(--ni-1) solid var(--color-border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: var(--ni-1) solid
+      color-mix(in srgb, var(--color-border) 60%, transparent);
+    border-radius: var(--trakttime-radius-pill);
 
     .bottom-nav-tab {
       display: flex;
@@ -59,11 +62,18 @@
       flex: 1;
       color: var(--color-text-secondary);
       text-decoration: none;
-      padding: var(--gap-xs) 0;
-      transition: color var(--transition-increment) ease-in-out;
+      border-radius: var(--trakttime-radius-pill);
+      transition:
+        color var(--transition-increment) ease-in-out,
+        background-color var(--transition-increment) ease-in-out;
 
       &[data-active='true'] {
         color: var(--trakttime-accent);
+        background-color: color-mix(
+          in srgb,
+          var(--color-text-primary) 10%,
+          transparent
+        );
       }
     }
   }
@@ -77,7 +87,8 @@
 
   .bottom-nav-spacer {
     height: calc(
-      var(--trakttime-bottom-nav-height) + env(safe-area-inset-bottom, 0px)
+      var(--trakttime-bottom-nav-height) + var(--gap-l) +
+        env(safe-area-inset-bottom, 0px)
     );
   }
 </style>

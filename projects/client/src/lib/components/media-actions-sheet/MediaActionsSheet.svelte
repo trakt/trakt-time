@@ -308,7 +308,7 @@
     width: 100%;
     max-width: var(--trakttime-max-width);
     background: var(--color-card-background);
-    border-radius: var(--border-radius-l) var(--border-radius-l) 0 0;
+    border-radius: var(--border-radius-xxl) var(--border-radius-xxl) 0 0;
     padding: var(--gap-s) var(--gap-m)
       calc(
         var(--trakttime-bottom-nav-height) + var(--gap-m) +
@@ -471,7 +471,7 @@
     justify-content: center;
     gap: var(--gap-xs);
     padding: var(--gap-s) var(--gap-m);
-    border-radius: var(--border-radius-m);
+    border-radius: var(--trakttime-radius-pill);
     border: 1.5px solid var(--color-border);
     background: none;
     color: var(--color-text-secondary);

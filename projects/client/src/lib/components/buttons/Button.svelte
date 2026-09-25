@@ -183,7 +183,7 @@
     align-items: center;
     gap: var(--gap-m);
     min-width: var(--ni-40);
-    padding: var(--ni-16);
+    padding: var(--ni-16) var(--ni-20);
     flex-shrink: 0;
     cursor: pointer;
     user-select: none;
@@ -251,7 +251,7 @@
 
     &[data-size="small"] {
       --button-height: var(--ni-40);
-      border-radius: calc(var(--border-radius-m) * 0.8);
+      border-radius: var(--trakttime-radius-pill);
       padding: var(--ni-12);
       gap: var(--ni-12);
     }
@@ -272,7 +272,7 @@
     &:active[disabled] {
       height: var(--button-height);
       box-sizing: border-box;
-      border-radius: var(--border-radius-m);
+      border-radius: var(--trakttime-radius-pill);
     }
 
     &::before {

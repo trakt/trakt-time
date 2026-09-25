@@ -145,7 +145,7 @@
     align-items: center;
     flex-shrink: 0;
 
-    border-radius: var(--border-radius-m);
+    border-radius: 50%;
     background-color: var(--color-background-action-button);
     color: var(--color-foreground-action-button);
 
