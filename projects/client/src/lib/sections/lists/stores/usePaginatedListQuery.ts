@@ -44,6 +44,13 @@ export function usePaginatedListQuery<
 
   const hasNextPage = query.pipe(map(($query) => $query.hasNextPage));
 
+  const itemCount = query.pipe(
+    map(($query) => {
+      const firstPage = $query.data?.pages.at(0)?.page;
+      return firstPage?.type === 'paginated' ? firstPage.itemCount : undefined;
+    }),
+  );
+
   const pageCount = query.pipe(
     map(($query) => $query.data?.pages.length ?? 0),
   );
@@ -57,6 +64,7 @@ export function usePaginatedListQuery<
     list,
     isLoading,
     hasNextPage,
+    itemCount,
     pageCount,
     fetchNextPage,
   };

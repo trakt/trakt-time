@@ -17,6 +17,21 @@ describe('extractPageMeta', () => {
     });
   });
 
+  it('should carry the item count when the header is present', () => {
+    const headers = new Headers({
+      'x-pagination-page': '1',
+      'x-pagination-page-count': '8',
+      'x-pagination-item-count': '144',
+    });
+
+    expect(extractPageMeta(headers)).toEqual({
+      type: 'paginated',
+      current: 1,
+      total: 8,
+      itemCount: 144,
+    });
+  });
+
   it('should return infinite type when page count header is missing', () => {
     const headers = new Headers();
 
