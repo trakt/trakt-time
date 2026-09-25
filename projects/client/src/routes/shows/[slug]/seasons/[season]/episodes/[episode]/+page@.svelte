@@ -9,6 +9,10 @@
   import { episodeIntlQuery } from '$lib/requests/queries/episode/episodeIntlQuery.ts';
   import { episodePeopleQuery } from '$lib/requests/queries/episode/episodePeopleQuery.ts';
   import { showSummaryQuery } from '$lib/requests/queries/shows/showSummaryQuery.ts';
+  import { showSeasonsQuery } from '$lib/requests/queries/shows/showSeasonsQuery.ts';
+  import ChevronRightIcon from '$lib/components/icons/ChevronRightIcon.svelte';
+  import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
+  import { toAdjacentEpisodes } from './_internal/toAdjacentEpisodes.ts';
   import {
     EpisodeFinaleType,
     EpisodePremiereType,
@@ -26,15 +30,22 @@
 
   const { data }: PageProps = $props();
 
-  const slug = page.params.slug ?? '';
-  const season = Number(page.params.season ?? 0);
-  const episodeNum = Number(page.params.episode ?? 0);
+  const slug = $derived(page.params.slug ?? '');
+  const season = $derived(Number(page.params.season ?? 0));
+  const episodeNum = $derived(Number(page.params.episode ?? 0));
 
   const episodeQuery = $derived(
     useQuery(episodeSummaryQuery({ slug, season, episode: episodeNum })),
   );
 
   const showQuery = $derived(useQuery(showSummaryQuery({ slug })));
+  const seasonsQuery = $derived(useQuery(showSeasonsQuery({ slug })));
+  const adjacent = $derived(
+    toAdjacentEpisodes({
+      current: { season, episode: episodeNum },
+      seasons: $seasonsQuery.data ?? [],
+    }),
+  );
 
   const peopleQuery = $derived(
     useQuery(episodePeopleQuery({ slug, season, episode: episodeNum })),
@@ -153,7 +164,31 @@
             <a href={showUrl} class="summary-show-link">{show.title}</a>
           {/if}
           <div class="episode-code-row">
+            {#if adjacent.previous}
+              <a
+                class="episode-step is-previous"
+                href={UrlBuilder.episode(slug, adjacent.previous.season, adjacent.previous.episode)}
+                data-sveltekit-replacestate
+                aria-label={m.button_label_previous_episode()}
+              >
+                <ChevronRightIcon />
+              </a>
+            {:else}
+              <span class="episode-step" aria-hidden="true"></span>
+            {/if}
             <span class="episode-code">{seasonLabel} {episodeLabel}</span>
+            {#if adjacent.next}
+              <a
+                class="episode-step"
+                href={UrlBuilder.episode(slug, adjacent.next.season, adjacent.next.episode)}
+                data-sveltekit-replacestate
+                aria-label={m.button_label_next_episode()}
+              >
+                <ChevronRightIcon />
+              </a>
+            {:else}
+              <span class="episode-step" aria-hidden="true"></span>
+            {/if}
             {#if badgeLabel}
               <span class="episode-badge">{badgeLabel}</span>
             {/if}
@@ -214,13 +249,42 @@
   .episode-code-row {
     display: flex;
     align-items: center;
-    gap: var(--gap-xs);
+    gap: var(--gap-xxs);
+    margin-inline: calc(-1 * var(--gap-xs));
   }
 
   .episode-code {
     font-size: 0.8125rem;
     font-weight: 600;
     color: var(--trakttime-accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .episode-step {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ni-28);
+    height: var(--ni-28);
+    border-radius: 50%;
+    color: var(--color-text-secondary);
+    -webkit-tap-highlight-color: transparent;
+
+    &:is(a):hover,
+    &:is(a):focus-visible {
+      color: var(--trakttime-accent);
+      background: color-mix(in srgb, var(--trakttime-accent) 12%, transparent);
+    }
+
+    &.is-previous :global(svg) {
+      transform: rotate(180deg);
+    }
+
+    :global(svg) {
+      width: var(--ni-16);
+      height: var(--ni-16);
+    }
   }
 
   .summary-show-link {
