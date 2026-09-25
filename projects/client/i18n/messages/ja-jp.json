@@ -478,5 +478,9 @@
   "trivia_category_impact_n_legacy": "影響と功績",
   "trivia_category_real_world_connections": "現実とのつながり",
   "text_reveal_spoiler": "タップしてネタバレを表示",
-  "button_text_see_all_reviews": "すべてのレビューを見る"
+  "button_text_see_all_reviews": "すべてのレビューを見る",
+  "trivia_category_quick_fact": "豆知識",
+  "text_unlock_sentiment_analysis": "分析をすべて見る",
+  "text_unlock_all_trivia": "トリビアをすべて見る",
+  "text_vip_upsell_trivia": "VIPならネタバレを含むすべての舞台裏トリビアが見られます。"
 }

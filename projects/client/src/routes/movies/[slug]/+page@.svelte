@@ -10,7 +10,6 @@
   import { moviePeopleQuery } from '$lib/requests/queries/movies/moviePeopleQuery.ts';
   import { movieIntlQuery } from '$lib/requests/queries/movies/movieIntlQuery.ts';
   import RenderFor from '$lib/guards/RenderFor.svelte';
-  import UpsellCta from '$lib/features/upsell/UpsellCta.svelte';
   import { useRelatedList } from '$lib/sections/lists/stores/useRelatedList.ts';
   import SentimentSection from '$lib/sections/summary/components/sentiment/SentimentSection.svelte';
   import TriviaSection from '$lib/sections/summary/components/trivia/TriviaSection.svelte';
@@ -162,17 +161,9 @@
 
       <WhereToWatchSection type="movie" {slug} />
 
-      <RenderFor audience="vip">
+      <RenderFor audience="authenticated">
         <SentimentSection type="movie" {slug} />
         <TriviaSection type="movie" {slug} />
-
-        {#snippet fallback()}
-          <RenderFor audience="free">
-            <UpsellCta source="movie-summary">
-              {m.text_vip_upsell_sentiment()}
-            </UpsellCta>
-          </RenderFor>
-        {/snippet}
       </RenderFor>
 
       <CastSection {cast} isLoading={castLoading} />

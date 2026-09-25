@@ -1,12 +1,15 @@
 <script lang="ts">
   import ChevronRightIcon from '$lib/components/icons/ChevronRightIcon.svelte';
   import SparkleIcon from '$lib/components/icons/SparkleIcon.svelte';
+  import VipUpsellBadge from '$lib/components/badge/VipUpsellBadge.svelte';
+  import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { MediaType } from '$lib/requests/models/MediaType.ts';
   import { Marked } from 'marked';
   import TriviaDrawer from './_internal/TriviaDrawer.svelte';
   import TriviaSummaryCardSkeleton from './_internal/TriviaSummaryCardSkeleton.svelte';
   import { toTriviaCategoryLabel } from './_internal/toTriviaCategoryLabel.ts';
+  import { toTriviaFacts } from './_internal/toTriviaFacts.ts';
   import { useTrivia } from './_internal/useTrivia.ts';
 
   const MAX_CARDS = 6;
@@ -22,7 +25,8 @@
   const marked = new Marked();
 
   const { items, summary, isLoading } = $derived(useTrivia({ slug, type }));
-  const cards = $derived($items.slice(0, MAX_CARDS));
+  const facts = $derived(toTriviaFacts({ items: $items, summary: $summary }));
+  const cards = $derived(facts.slice(0, MAX_CARDS));
 </script>
 
 {#if $isLoading}
@@ -46,7 +50,9 @@
           >
             <span class="trivia-category">
               <SparkleIcon />
-              {toTriviaCategoryLabel(fact.category)}
+              {fact.category
+                ? toTriviaCategoryLabel(fact.category)
+                : m.trivia_category_quick_fact()}
             </span>
             <div class="trivia-text">
               {@html marked.parse(fact.text)}
@@ -63,19 +69,24 @@
           class="trivia-card trivia-card--more"
           onclick={() => (drawerOpen = true)}
         >
-          <span>{m.button_label_view_trivia()}</span>
-          <ChevronRightIcon />
+          <RenderFor audience="vip">
+            <span>{m.button_label_view_trivia()}</span>
+            <ChevronRightIcon />
+
+            {#snippet fallback()}
+              <span class="trivia-unlock">
+                {m.text_unlock_all_trivia()}
+                <VipUpsellBadge />
+              </span>
+            {/snippet}
+          </RenderFor>
         </button>
       </li>
     </ul>
   </section>
 
   {#if drawerOpen}
-    <TriviaDrawer
-      items={$items}
-      summary={$summary}
-      onClose={() => (drawerOpen = false)}
-    />
+    <TriviaDrawer {facts} onClose={() => (drawerOpen = false)} />
   {/if}
 {/if}
 
@@ -158,6 +169,14 @@
     background: var(--color-floating-background);
     font-size: 0.8125rem;
     font-weight: 600;
+    text-align: center;
+  }
+
+  .trivia-unlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-xs);
     text-align: center;
   }
 
