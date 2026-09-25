@@ -7,10 +7,9 @@
 
   type UnexpectedErrorPageProps = {
     error?: Error;
-    sessionId?: string;
   };
 
-  const { error, sessionId }: UnexpectedErrorPageProps = $props();
+  const { error }: UnexpectedErrorPageProps = $props();
 </script>
 
 <ErrorPage title={m.page_title_unexpected_error()}>
@@ -33,21 +32,14 @@
       </Button>
     </div>
 
-    {#if sessionId || error?.stack}
+    {#if error?.stack}
       <div class="trakt-error-details">
         <p class="trakt-error-details-header">
           {m.error_text_unexpected_error_include_details()}
         </p>
 
-        {#if sessionId}
-          <span class="tag bold">Session ID</span>
-          <code>{sessionId}</code>
-        {/if}
-
-        {#if error?.stack}
-          <span class="tag bold">Stack trace</span>
-          <pre>{error.stack}</pre>
-        {/if}
+        <span class="tag bold">Stack trace</span>
+        <pre>{error.stack}</pre>
       </div>
     {/if}
   </div>
@@ -90,7 +82,6 @@
       grid-column: 1 / -1;
     }
 
-    code,
     pre {
       user-select: all;
       font-size: var(--font-size-tag);

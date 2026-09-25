@@ -1,77 +1,7 @@
 import '$lib/polyfills/at.ts';
 import '$lib/polyfills/toSorted.ts';
-import { SENTRY_DSN } from '$lib/utils/constants.ts';
 import { safeSessionStorage } from '$lib/utils/storage/safeStorage.ts';
-import * as Sentry from '@sentry/sveltekit';
-import { handleErrorWithSentry } from '@sentry/sveltekit';
-
-Sentry.init({
-  dsn: SENTRY_DSN,
-
-  tracesSampleRate: 1.0,
-
-  // Enable logs to be sent to Sentry
-  enableLogs: true,
-
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0.1,
-
-  // If the entire session is not sampled, use the below sample rate to sample
-  // sessions when an error occurs.
-  replaysOnErrorSampleRate: 1.0,
-
-  // Strings for partial matches. Regex patterns for exact matches.
-  ignoreErrors: [
-    'CancelledError',
-    'AbortError',
-    'Failed to register a ServiceWorker',
-    'service-worker.js load failed',
-    'Failed to fetch dynamically imported module',
-    'error loading dynamically imported module',
-    'Importing a module script failed',
-    'Unable to preload CSS for',
-  ],
-  beforeSend(event) {
-    const isWellKnownRejection = event.exception?.values?.some(
-      ({ type, value, stacktrace }) => {
-        const isRejected = type === 'Rejected' || value === 'Rejected';
-        const isServiceWorker = stacktrace?.frames?.some(
-          (frame) =>
-            frame.filename?.includes('service-worker') ||
-            frame.function?.includes('navigator.serviceWorker.register') ||
-            frame.function?.includes('ServiceWorkerContainer.register'),
-        );
-
-        return isRejected && isServiceWorker;
-      },
-    );
-
-    return isWellKnownRejection ? null : event;
-  },
-});
-
-async function addReplayIntegration() {
-  const replayIntegration = await Sentry.lazyLoadIntegration(
-    'replayIntegration',
-  );
-
-  Sentry.addIntegration(replayIntegration({
-    maskAllInputs: false,
-    maskAllText: false,
-    blockAllMedia: false,
-  }));
-}
-
-function whenPageLoaded(callback: () => void) {
-  if (document.readyState === 'complete') return callback();
-
-  window.addEventListener('load', callback, { once: true });
-}
-
-whenPageLoaded(() => {
-  addReplayIntegration().catch(() => {});
-});
+import type { HandleClientError } from '@sveltejs/kit';
 
 // FIXME remove once we have custom paraglide handling for this
 // Remove PARAGLIDE_LOCALE cookie if it appears multiple times
@@ -117,9 +47,6 @@ function reloadOnceForStaleDeploy(error: unknown): void {
   window.location.reload();
 }
 
-// If you have a custom error handler, pass it to `handleErrorWithSentry`
-export const handleError = handleErrorWithSentry(
-  ({ error }: { error: unknown }) => {
-    reloadOnceForStaleDeploy(error);
-  },
-);
+export const handleError: HandleClientError = ({ error }) => {
+  reloadOnceForStaleDeploy(error);
+};

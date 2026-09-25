@@ -42,6 +42,3 @@ export const UPPER_SMART_LIST_LIMIT = 100;
 
 export const SUPPORT_EMAIL = 'support@trakt.tv';
 export const COPYRIGHT_EMAIL = 'copyright@trakt.tv';
-
-export const SENTRY_DSN =
-  'https://7c03bc5bf58eb8ceb23801702a91954f@o4509870904639488.ingest.de.sentry.io/4509870926463056';
