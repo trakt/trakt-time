@@ -47,7 +47,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100dvh;
-    padding-top: var(--ni-56);
+    padding-top: var(--ni-72);
     padding-bottom: var(--trakttime-bottom-nav-height);
   }
 
@@ -74,26 +74,25 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--gap-s) var(--gap-m);
+    padding: var(--gap-m);
     background: var(--color-card-background);
-    border-radius: var(--border-radius-m);
-    border: var(--ni-1) solid var(--color-border);
+    border-radius: var(--trakttime-radius-card);
     text-decoration: none;
-    transition: border-color 0.15s ease;
+    transition: background-color var(--transition-increment) ease-in-out;
 
     &:active {
-      border-color: var(--trakttime-accent);
+      background: var(--color-floating-background);
     }
   }
 
   .list-name {
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
     color: var(--color-text-primary);
   }
 
   .list-count {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
   }
 </style>
