@@ -2,6 +2,7 @@ import {
   buildSitemap,
   type SitemapEntry,
 } from '$lib/features/seo/sitemap/buildSitemap.ts';
+import { COMPETITORS } from '$lib/features/compare/competitors.ts';
 import { fetchSitemapSlugs } from '$lib/features/seo/sitemap/fetchSitemapSlugs.ts';
 import type { RequestHandler } from '@sveltejs/kit';
 
@@ -15,7 +16,12 @@ const STATIC_ROUTES: ReadonlyArray<SitemapEntry> = [
   { path: '/popular/movies', priority: '0.8', changefreq: 'daily' },
   { path: '/shows/upcoming', priority: '0.6', changefreq: 'daily' },
   { path: '/movies/upcoming', priority: '0.6', changefreq: 'daily' },
-  { path: '/compare/bingers', priority: '0.7', changefreq: 'monthly' },
+  { path: '/compare', priority: '0.7', changefreq: 'monthly' },
+  ...COMPETITORS.map(({ slug }): SitemapEntry => ({
+    path: `/compare/${slug}`,
+    priority: '0.7',
+    changefreq: 'monthly',
+  })),
 ];
 
 const toMediaEntries = (
