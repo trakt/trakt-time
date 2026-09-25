@@ -35,6 +35,8 @@
   --trakttime-watched-btn-size: 44px;
   --trakttime-watched-btn-size-compact: var(--ni-36);
   --trakttime-cast-card-width: var(--ni-96);
+  --trakttime-comment-gif-width: 200px;
+  --trakttime-comment-gif-max-height: 260px;
   --trakttime-watchlist-btn-size: 28px;
   --trakttime-icon-sm: 18px;
   --trakttime-icon-md: 20px;

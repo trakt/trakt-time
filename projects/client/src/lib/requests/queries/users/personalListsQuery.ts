@@ -2,10 +2,7 @@ import { defineQuery } from '$lib/features/query/defineQuery.ts';
 import { api, type ApiParams } from '$lib/requests/api.ts';
 import { time } from '$lib/utils/timing/time.ts';
 import { InvalidateAction } from '../../models/InvalidateAction.ts';
-import {
-  type UserList,
-  UserListSchema,
-} from './userListsQuery.ts';
+import { type UserList, UserListSchema } from './userListsQuery.ts';
 
 type PersonalListsParams = { slug: string } & ApiParams;
 

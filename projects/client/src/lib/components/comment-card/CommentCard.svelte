@@ -9,6 +9,7 @@
   import StarIcon from '$lib/components/icons/StarIcon.svelte';
   import { languageTag } from '$lib/features/i18n/index.ts';
   import { toCompactAge } from '$lib/utils/date/toCompactAge.ts';
+  import CommentGif from './_internal/CommentGif.svelte';
 
   type Props = {
     comment: MediaComment;
@@ -37,6 +38,7 @@
     toCompactAge({ date: comment.createdAt, now: new Date(), locale: languageTag() }),
   );
   const userRating = $derived(comment.user.stats.rating);
+  const hasText = $derived(comment.comment.trim().length > 0);
 
   const html = $derived(
     marked.parse(comment.comment, { gfm: true, breaks: true }) as string,
@@ -76,22 +78,33 @@
     {/if}
   </header>
 
-  {#if comment.isSpoiler && !spoilerRevealed}
-    <button class="spoiler-btn" onclick={() => (spoilerRevealed = true)}>
-      <span class="spoiler-blur" aria-hidden="true">{comment.comment.slice(0, 140)}</span>
-      <span class="spoiler-label">{m.text_reveal_spoiler()}</span>
-    </button>
-  {:else}
-    <div
-      class="comment-text"
-      class:clamped={!expanded}
-      bind:this={commentEl}
-    >
-      {@html html}
-    </div>
-    {#if !expanded && isOverflowing}
-      <button class="expand-btn" onclick={() => (expanded = true)}>more</button>
+  {#if hasText}
+    {#if comment.isSpoiler && !spoilerRevealed}
+      <button class="spoiler-btn" onclick={() => (spoilerRevealed = true)}>
+        <span class="spoiler-blur" aria-hidden="true">{comment.comment.slice(0, 140)}</span>
+        <span class="spoiler-label">{m.text_reveal_spoiler()}</span>
+      </button>
+    {:else}
+      <div
+        class="comment-text"
+        class:clamped={!expanded}
+        bind:this={commentEl}
+      >
+        {@html html}
+      </div>
+      {#if !expanded && isOverflowing}
+        <button class="expand-btn" onclick={() => (expanded = true)}>more</button>
+      {/if}
     {/if}
+  {/if}
+
+  {#if comment.gif}
+    <CommentGif
+      gif={comment.gif}
+      isHidden={comment.isSpoiler && !spoilerRevealed}
+      hasRevealLabel={!hasText}
+      onReveal={() => (spoilerRevealed = true)}
+    />
   {/if}
 
   <footer class="comment-footer">
