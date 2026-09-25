@@ -54,7 +54,7 @@
 </svelte:head>
 
 <div class="person-page">
-  <BackBar label={m.button_label_back()} />
+  <BackBar label={m.button_label_back()} variant="overlay" />
 
   {#if isLoading}
     <div class="loading-state">
@@ -144,7 +144,7 @@
     flex-direction: column;
     min-height: 100dvh;
     background: var(--color-background);
-    padding-top: var(--ni-56);
+    padding-top: var(--ni-64);
     padding-bottom: var(--trakttime-bottom-nav-height);
   }
 
@@ -165,11 +165,10 @@
 
   .headshot-wrap {
     flex-shrink: 0;
-    width: 90px;
-    height: 90px;
+    width: var(--ni-104);
+    height: var(--ni-104);
     border-radius: 50%;
     overflow: hidden;
-    border: var(--ni-2) solid var(--color-border);
     background: var(--color-card-background);
 
     :global(img) {
@@ -199,8 +198,8 @@
   }
 
   .person-name {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 1.75rem;
+    font-weight: 600;
     color: var(--color-text-primary);
     margin: 0;
     line-height: 1.2;
@@ -208,14 +207,12 @@
 
   .known-for-badge {
     display: inline-block;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    font-weight: 500;
     padding: var(--gap-xxs) var(--gap-s);
-    border-radius: var(--border-radius-s);
-    background: color-mix(in srgb, var(--trakttime-accent) 15%, transparent);
-    color: var(--trakttime-accent);
+    border-radius: var(--trakttime-radius-pill);
+    background: var(--color-card-background);
+    color: var(--color-text-primary);
     width: fit-content;
   }
 
@@ -223,7 +220,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--gap-xs);
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
 
     span {
@@ -251,8 +248,8 @@
   }
 
   .section-title {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 600;
     color: var(--color-text-primary);
     margin: 0;
     padding: 0 var(--gap-m);

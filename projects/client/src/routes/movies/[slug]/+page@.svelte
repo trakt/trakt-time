@@ -17,7 +17,6 @@
   import MediaActionsRow from '$lib/sections/summary/_internal/MediaActionsRow.svelte';
   import MediaCoverHero from '$lib/sections/summary/_internal/MediaCoverHero.svelte';
   import MediaGenres from '$lib/sections/summary/_internal/MediaGenres.svelte';
-  import MediaPoster from '$lib/sections/summary/_internal/MediaPoster.svelte';
   import MediaRating from '$lib/sections/summary/_internal/MediaRating.svelte';
   import SummarySkeleton from '$lib/sections/summary/_internal/SummarySkeleton.svelte';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
@@ -103,7 +102,7 @@
 </svelte:head>
 
 <div class="summary-page">
-  <BackBar href="/movies/watchlist" label={m.page_title_movies()} />
+  <BackBar href="/movies/watchlist" label={m.page_title_movies()} variant="overlay" />
 
   {#if isLoading && !movie}
     <SummarySkeleton />
@@ -112,11 +111,6 @@
 
     <div class="summary-content">
       <div class="summary-header">
-        <MediaPoster
-          src={movie.poster.url.medium}
-          alt={intl?.title ?? movie.title}
-        />
-
         <div class="summary-info">
           <h1 class="summary-title">{intl?.title ?? movie.title}</h1>
           <div class="summary-meta">
@@ -129,20 +123,21 @@
           {#if ratingLabel}
             <MediaRating label={ratingLabel} />
           {/if}
-          <MediaActionsRow
-            watchedProps={{
-              type: 'movie',
-              media: {
-                id: movie.id,
-                effectiveReleaseDate: movie.effectiveReleaseDate,
-                status: movie.status,
-              },
-            }}
-            title={intl?.title ?? movie.title}
-            onMore={() => (actionsOpen = true)}
-          />
         </div>
       </div>
+
+      <MediaActionsRow
+        watchedProps={{
+          type: 'movie',
+          media: {
+            id: movie.id,
+            effectiveReleaseDate: movie.effectiveReleaseDate,
+            status: movie.status,
+          },
+        }}
+        title={intl?.title ?? movie.title}
+        onMore={() => (actionsOpen = true)}
+      />
 
       <MediaGenres genres={movie.genres} />
 

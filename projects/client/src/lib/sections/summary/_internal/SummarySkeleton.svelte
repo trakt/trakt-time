@@ -13,15 +13,15 @@
 
   <div class="summary-content">
     <div class="summary-header">
-      <div class="summary-skeleton-poster"></div>
       <div class="summary-info">
         <div class="summary-skeleton-line summary-skeleton-line--title"></div>
         <div class="summary-skeleton-line summary-skeleton-line--meta"></div>
         <div class="summary-skeleton-line summary-skeleton-line--badge"></div>
         <div class="summary-skeleton-line summary-skeleton-line--rating"></div>
-        <div class="summary-skeleton-line summary-skeleton-line--actions"></div>
       </div>
     </div>
+
+    <div class="summary-skeleton-line summary-skeleton-line--actions"></div>
 
     <div class="summary-skeleton-genres">
       {#each Array(3) as _, i (`g-${i}`)}
@@ -61,14 +61,6 @@
     @include shimmer-bg;
   }
 
-  .summary-skeleton-poster {
-    flex-shrink: 0;
-    width: var(--trakttime-poster-card-width);
-    aspect-ratio: 2 / 3;
-    border-radius: var(--border-radius-m);
-    @include shimmer-bg;
-  }
-
   .summary-skeleton-line {
     border-radius: var(--border-radius-s);
     @include shimmer-bg;
@@ -76,7 +68,7 @@
     /* Heights track the rendered line boxes of the real summary text. */
     &--title {
       width: 70%;
-      height: calc(1.125rem * 1.3);
+      height: calc(1.75rem * 1.15);
     }
 
     &--meta {
@@ -98,9 +90,9 @@
     }
 
     &--actions {
-      width: var(--ni-128);
-      height: var(--ni-28);
-      border-radius: var(--border-radius-xxl);
+      width: 100%;
+      height: var(--ni-48);
+      border-radius: var(--trakttime-radius-pill);
       animation-delay: 0.2s;
     }
 

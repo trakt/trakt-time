@@ -235,7 +235,7 @@ p.media-row-meta {
  *
  * The whole summary stack is identical across the three routes: a cover hero
  * pinned at the top, a content column that overlaps the hero by
- * `--trakttime-cover-offset`, an info row of poster + meta, and stacked
+ * `--trakttime-cover-offset`, an info row of title + meta, and stacked
  * sections below (genres, tagline, overview, related, cast, comments). These
  * classes keep that skeleton in one place so the route pages can express only
  * what's specific to them (title, meta tokens, action wiring).
@@ -252,7 +252,7 @@ p.media-row-meta {
 .summary-content {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-m);
+  gap: var(--gap-l);
   padding: 0 var(--gap-m) var(--gap-l);
   margin-top: var(--trakttime-cover-offset);
   position: relative;
@@ -274,9 +274,9 @@ p.media-row-meta {
 }
 
 .summary-title {
-  font-size: 1.125rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.15;
   color: var(--color-text-primary);
   margin: 0;
 }
@@ -285,7 +285,7 @@ p.media-row-meta {
   display: flex;
   flex-wrap: wrap;
   gap: var(--gap-xs);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--color-text-secondary);
 }
 
@@ -328,8 +328,8 @@ p.media-row-meta {
 }
 
 .summary-section-title {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 600;
   color: var(--color-text-primary);
   margin: 0;
 }

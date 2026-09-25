@@ -17,77 +17,53 @@
 </script>
 
 {#if isWatchable}
-  <div class="watched-row">
-    <span class="watched-label" class:is-watched={$isWatched}>
-      {$isWatched ? m.tag_text_watched() : m.button_text_mark_as_watched()}
-    </span>
-    <button
-      class="watched-btn"
-      class:is-watched={$isWatched}
-      onclick={toggleWatched}
-      disabled={$isMarkingAsWatched}
-      aria-label={$isWatched
-        ? m.button_label_remove_from_watched({ title })
-        : m.button_label_mark_as_watched({ title })}
-      type="button"
-    >
-      <TrackIcon state={$isWatched ? 'watched' : 'unwatched'} />
-    </button>
-  </div>
+  <button
+    class="watched-pill"
+    class:is-watched={$isWatched}
+    onclick={toggleWatched}
+    disabled={$isMarkingAsWatched}
+    aria-label={$isWatched
+      ? m.button_label_remove_from_watched({ title })
+      : m.button_label_mark_as_watched({ title })}
+    type="button"
+  >
+    <TrackIcon state={$isWatched ? 'watched' : 'unwatched'} />
+    <span>{$isWatched ? m.tag_text_watched() : m.button_text_mark_as_watched()}</span>
+  </button>
 {/if}
 
 <style lang="scss">
-  @use '$style/scss/mixins/index' as *;
-  .watched-row {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-s);
-  }
-
-  .watched-label {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-
-    &.is-watched {
-      color: var(--trakttime-accent);
-    }
-  }
-
-  .watched-btn {
-    background: none;
-    border: var(--ni-2) solid var(--color-border);
-    border-radius: 50%;
-    width: var(--ni-28);
-    height: var(--ni-28);
-    display: flex;
+  .watched-pill {
+    flex: 1;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-text-secondary);
+    gap: var(--gap-xs);
+    height: var(--ni-48);
+    padding: 0 var(--gap-l);
+    border-radius: var(--trakttime-radius-pill);
+    border: var(--border-thickness-xs) solid var(--color-text-primary);
+    background: none;
+    color: var(--color-text-primary);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    padding: 0;
+    -webkit-tap-highlight-color: transparent;
     transition:
       border-color var(--transition-increment) ease-in-out,
-      color var(--transition-increment) ease-in-out,
-      background var(--transition-increment) ease-in-out;
+      background var(--transition-increment) ease-in-out,
+      color var(--transition-increment) ease-in-out;
 
     :global(svg) {
-      width: var(--ni-14);
-      height: var(--ni-14);
+      width: var(--ni-18);
+      height: var(--ni-18);
     }
 
     &.is-watched {
       border-color: var(--trakttime-accent);
       background: var(--trakttime-accent);
-      color: var(--color-background);
-    }
-
-    /* Direct hover on an already-watched toggle previews removal. */
-    @include for-mouse {
-      &.is-watched:hover,
-      &.is-watched:focus-visible {
-        border-color: var(--red-400);
-        background: var(--red-400);
-      }
+      color: var(--trakttime-accent-foreground);
     }
 
     &:disabled {

@@ -29,6 +29,11 @@
 
   const label = $derived(seasonLabel(season.number));
   const hasAired = $derived(season.airDate <= new Date());
+  const progressPercent = $derived(
+    season.episodes.count > 0
+      ? Math.min(100, ($watchedCount / season.episodes.count) * 100)
+      : 0,
+  );
   const progressLabel = $derived(
     $watchedCount > 0
       ? `${Math.min($watchedCount, season.episodes.count)}/${season.episodes.count} ${m.text_episodes_unit()}`
@@ -78,6 +83,9 @@
       </RenderFor>
     {/if}
   </div>
+  {#if progressPercent > 0}
+    <div class="season-progress" style:--progress="{progressPercent}%" aria-hidden="true"></div>
+  {/if}
   {#if isOpen}
     <SeasonEpisodes
       {slug}
@@ -91,14 +99,23 @@
 </li>
 
 <style lang="scss">
-  @use '$style/scss/mixins/index' as *;
-
   .season-row {
     border-bottom: var(--ni-1) solid var(--color-border);
 
     &:last-child {
       border-bottom: none;
     }
+  }
+
+  .season-progress {
+    height: var(--ni-4);
+    margin: 0 var(--gap-m) var(--gap-xs);
+    border-radius: var(--trakttime-radius-pill);
+    background: linear-gradient(
+      to right,
+      var(--trakttime-accent) var(--progress),
+      var(--color-border) var(--progress)
+    );
   }
 
   .season-header {
@@ -131,8 +148,9 @@
   }
 
   .season-label {
+    font-family: var(--trakttime-font-heading);
     font-weight: 600;
-    font-size: 0.9375rem;
+    font-size: 1.0625rem;
   }
 
   .season-title {
@@ -158,44 +176,5 @@
 
   .season-toggle.is-open .season-chevron {
     transform: rotate(180deg);
-  }
-
-
-  .watched-btn {
-    flex-shrink: 0;
-    background: none;
-    border: var(--ni-2) solid var(--color-border);
-    border-radius: 50%;
-    width: var(--trakttime-watched-btn-size);
-    height: var(--trakttime-watched-btn-size);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    padding: 0;
-    transition:
-      border-color var(--transition-increment) ease-in-out,
-      color var(--transition-increment) ease-in-out,
-      background var(--transition-increment) ease-in-out;
-
-    &.is-watched {
-      border-color: var(--trakttime-accent);
-      background: var(--trakttime-accent);
-      color: var(--color-background);
-    }
-
-    @include for-mouse {
-      &.is-watched:hover,
-      &.is-watched:focus-visible {
-        border-color: var(--red-400);
-        background: var(--red-400);
-      }
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: default;
-    }
   }
 </style>

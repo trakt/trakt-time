@@ -29,7 +29,8 @@
     inset: 0;
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.2) 0%,
+      transparent 40%,
+      color-mix(in srgb, var(--color-background) 70%, transparent) 75%,
       var(--color-background) 100%
     );
   }

@@ -20,7 +20,6 @@
   import MediaActionsRow from '$lib/sections/summary/_internal/MediaActionsRow.svelte';
   import MediaCoverHero from '$lib/sections/summary/_internal/MediaCoverHero.svelte';
   import MediaGenres from '$lib/sections/summary/_internal/MediaGenres.svelte';
-  import MediaPoster from '$lib/sections/summary/_internal/MediaPoster.svelte';
   import MediaRating from '$lib/sections/summary/_internal/MediaRating.svelte';
   import SummarySkeleton from '$lib/sections/summary/_internal/SummarySkeleton.svelte';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
@@ -118,7 +117,7 @@
 </svelte:head>
 
 <div class="summary-page">
-  <BackBar href="/shows/watchlist" label={m.page_title_shows()} />
+  <BackBar href="/shows/watchlist" label={m.page_title_shows()} variant="overlay" />
 
   {#if isLoading && !show}
     <SummarySkeleton>
@@ -132,11 +131,6 @@
 
     <div class="summary-content">
       <div class="summary-header">
-        <MediaPoster
-          src={show.poster.url.medium}
-          alt={intl?.title ?? show.title}
-        />
-
         <div class="summary-info">
           <h1 class="summary-title">{intl?.title ?? show.title}</h1>
           <div class="summary-meta">
@@ -154,20 +148,21 @@
           {#if ratingLabel}
             <MediaRating label={ratingLabel} extraLabel={episodeCountLabel} />
           {/if}
-          <MediaActionsRow
-            watchedProps={{
-              type: 'show',
-              media: {
-                id: show.id,
-                effectiveReleaseDate: show.effectiveReleaseDate,
-                episode: { count: show.episode.count },
-              },
-            }}
-            title={intl?.title ?? show.title}
-            onMore={() => (actionsOpen = true)}
-          />
         </div>
       </div>
+
+      <MediaActionsRow
+        watchedProps={{
+          type: 'show',
+          media: {
+            id: show.id,
+            effectiveReleaseDate: show.effectiveReleaseDate,
+            episode: { count: show.episode.count },
+          },
+        }}
+        title={intl?.title ?? show.title}
+        onMore={() => (actionsOpen = true)}
+      />
 
       <MediaGenres genres={show.genres} />
 
@@ -278,7 +273,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    border-radius: var(--border-radius-m);
+    border-radius: var(--trakttime-radius-card);
     overflow: hidden;
     background: var(--color-card-background);
   }
@@ -288,8 +283,8 @@
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.06em;
-    padding: var(--gap-xxs) var(--gap-xs);
-    border-radius: var(--border-radius-s);
+    padding: var(--gap-xxs) var(--gap-s);
+    border-radius: var(--trakttime-radius-pill);
     text-transform: uppercase;
     width: fit-content;
 

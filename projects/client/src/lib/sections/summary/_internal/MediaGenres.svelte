@@ -28,13 +28,11 @@
   }
 
   .summary-genre-pill {
-    background: color-mix(in srgb, var(--trakttime-accent) 15%, transparent);
-    color: var(--trakttime-accent);
-    border-radius: var(--border-radius-m);
+    background: var(--color-card-background);
+    color: var(--color-text-primary);
+    border-radius: var(--trakttime-radius-pill);
     padding: var(--gap-xxs) var(--gap-s);
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    font-weight: 500;
   }
 </style>

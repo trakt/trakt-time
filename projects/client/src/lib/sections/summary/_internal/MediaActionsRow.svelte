@@ -18,19 +18,14 @@
   <WatchedRow {watchedProps} {title} />
 
   {#if onMore}
-    <div class="summary-actions-divider" aria-hidden="true"></div>
-
-    <div class="summary-more">
-      <span class="summary-more-label">{m.button_text_more()}</span>
-      <button
-        type="button"
-        class="summary-more-btn"
-        onclick={onMore}
-        aria-label={m.button_label_more_actions({ title })}
-      >
-        <MoreIcon />
-      </button>
-    </div>
+    <button
+      type="button"
+      class="summary-more-btn icon-button-round"
+      onclick={onMore}
+      aria-label={m.button_label_more_actions({ title })}
+    >
+      <MoreIcon />
+    </button>
   {/if}
 </div>
 
@@ -38,57 +33,21 @@
   .summary-actions-row {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: var(--gap-m);
-    margin-top: var(--gap-xxs);
-  }
-
-  /* A 1px line that visually breaks the watch toggle from the more-actions
-     widget so they don't read as one chunky control. */
-  .summary-actions-divider {
-    width: 1px;
-    height: var(--ni-20);
-    background: var(--color-border);
-  }
-
-  .summary-more {
-    display: flex;
-    align-items: center;
     gap: var(--gap-s);
-  }
-
-  .summary-more-label {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
+    width: 100%;
   }
 
   .summary-more-btn {
-    background: none;
-    border: var(--ni-2) solid var(--color-border);
-    border-radius: 50%;
-    width: var(--ni-28);
-    height: var(--ni-28);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text-secondary);
+    flex-shrink: 0;
+    width: var(--ni-48);
+    height: var(--ni-48);
+    border: var(--border-thickness-xs) solid var(--color-border);
     cursor: pointer;
     padding: 0;
-    transition:
-      border-color var(--transition-increment) ease-in-out,
-      color var(--transition-increment) ease-in-out,
-      background var(--transition-increment) ease-in-out;
-    -webkit-tap-highlight-color: transparent;
 
     :global(svg) {
-      width: var(--ni-14);
-      height: var(--ni-14);
-    }
-
-    &:hover,
-    &:focus-visible {
-      border-color: var(--trakttime-accent);
-      color: var(--trakttime-accent);
+      width: var(--ni-20);
+      height: var(--ni-20);
     }
   }
 </style>
