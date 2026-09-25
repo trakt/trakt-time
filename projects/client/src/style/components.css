@@ -176,6 +176,14 @@ p.media-row-meta {
   }
 }
 
+.poster-grid {
+  --trakttime-poster-card-width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--ni-96), 1fr));
+  gap: var(--gap-m) var(--gap-s);
+}
+
 .segmented-tabs {
   position: sticky;
   top: 0;

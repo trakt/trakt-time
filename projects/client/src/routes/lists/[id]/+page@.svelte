@@ -89,16 +89,6 @@
     gap: var(--gap-m);
   }
 
-  .poster-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(var(--ni-96), 1fr));
-    gap: var(--gap-m) var(--gap-s);
-
-    :global(.poster-card) {
-      width: 100%;
-    }
-  }
-
   .loading-state {
     flex: 1;
     display: flex;
