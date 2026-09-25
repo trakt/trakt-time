@@ -17,6 +17,7 @@
 
 <svelte:head>
   <title>{title}</title>
+  <meta name="robots" content="noindex" />
 </svelte:head>
 
 <main class="error-page">

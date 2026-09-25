@@ -13,7 +13,7 @@ const getAuth = (auth: Nil | OidcAuthToken) => {
   };
 };
 
-export const load: LayoutServerLoad = ({ request, url, locals }) => ({
+export const load: LayoutServerLoad = ({ request, locals }) => ({
   theme: locals.theme,
   oidcAuth: getAuth(locals.oidcAuth),
   isLegitimateBot: locals.isLegitimateBot,
@@ -21,6 +21,4 @@ export const load: LayoutServerLoad = ({ request, url, locals }) => ({
   device: getDeviceType(request.headers.get('user-agent')),
   cookieConsent: locals.cookieConsent,
   typesense: locals.typesense,
-  // Used by `+layout.svelte` to mint absolute URLs for OG / Twitter share tags.
-  origin: url.origin,
 });

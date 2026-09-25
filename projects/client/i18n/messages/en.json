@@ -439,5 +439,7 @@
   "import_match_toggle_label": "Match episodes by season and episode number",
   "import_match_toggle_hint": "We recommend the default (match by TVDB id). Turn this on only if some episodes land on the wrong entry - results vary from show to show.",
   "import_vip_limit_exceeded": "Your import exceeds the free tier limit. Upgrade to VIP to import all {count} items.",
-  "list_title_where_to_watch": "Where to Watch"
+  "list_title_where_to_watch": "Where to Watch",
+  "seo_title_default": "Trakt Time: Track TV Shows & Movies",
+  "seo_description_default": "Track the TV shows and movies you watch, never miss a new episode and find what to watch next. Coming from TV Time? Import your watch history in minutes."
 }

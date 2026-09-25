@@ -439,5 +439,7 @@
   "import_match_toggle_label": "Potrivește episoadele după sezon și numărul episodului",
   "import_match_toggle_hint": "Recomandăm setarea implicită (potrivire după ID-ul TVDB). Activează această opțiune doar dacă unele episoade ajung la intrarea greșită - rezultatele variază de la un serial la altul.",
   "import_vip_limit_exceeded": "Importul tău depășește limita nivelului gratuit. Actualizează la VIP pentru a importa toate cele {count} elemente.",
-  "list_title_where_to_watch": "Unde să vizionezi"
+  "list_title_where_to_watch": "Unde să vizionezi",
+  "seo_title_default": "Trakt Time: urmărește seriale și filme",
+  "seo_description_default": "Ține evidența serialelor și filmelor pe care le vezi, nu rata niciun episod nou și descoperă ce să vezi în continuare. Vii de pe TV Time? Importă-ți istoricul în câteva minute."
 }

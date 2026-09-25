@@ -439,5 +439,7 @@
   "import_match_toggle_label": "Dopasuj odcinki według numeru sezonu i odcinka",
   "import_match_toggle_hint": "Zalecamy domyślne dopasowanie (według identyfikatora TVDB). Włącz tę opcję tylko, jeśli niektóre odcinki pojawiają się w niewłaściwej pozycji – wyniki różnią się w zależności od serialu.",
   "import_vip_limit_exceeded": "Twój import przekracza limit darmowego planu. Uaktualnij do VIP, aby zaimportować wszystkie {count} elementów.",
-  "list_title_where_to_watch": "Gdzie oglądać"
+  "list_title_where_to_watch": "Gdzie oglądać",
+  "seo_title_default": "Trakt Time: śledź seriale i filmy",
+  "seo_description_default": "Śledź seriale i filmy, które oglądasz, nie przegap żadnego nowego odcinka i odkryj, co obejrzeć dalej. Przychodzisz z TV Time? Zaimportuj swoją historię w kilka minut."
 }

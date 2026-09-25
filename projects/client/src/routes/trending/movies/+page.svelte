@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import PosterGrid from '$lib/components/poster-grid/PosterGrid.svelte';
   import { useTrendingList } from '$lib/sections/lists/trending/useTrendingList.ts';
@@ -10,9 +11,7 @@
   });
 </script>
 
-<svelte:head>
-  <title>{m.page_title_trending_movies()} - Trakt Time</title>
-</svelte:head>
+<SeoHead title={m.page_title_trending_movies()} />
 
 <PosterGrid
   title="Trending Movies"

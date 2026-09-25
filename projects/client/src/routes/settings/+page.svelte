@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import Appearance from '$lib/sections/settings/_internal/Appearance.svelte';
   import VipSettings from '$lib/sections/settings/_internal/VipSettings.svelte';
@@ -11,9 +12,7 @@
   const { isAuthorized, login } = useAuth();
 </script>
 
-<svelte:head>
-  <title>{m.page_title_settings()} - Trakt Time</title>
-</svelte:head>
+<SeoHead title={m.page_title_settings()} noindex />
 
 <div class="settings-page">
   <BackBar href="/profile" label={m.page_title_settings()} />

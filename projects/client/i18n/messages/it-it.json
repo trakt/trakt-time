@@ -439,5 +439,7 @@
   "import_match_toggle_label": "Abbina episodi per stagione e numero di episodio",
   "import_match_toggle_hint": "Consigliamo l'impostazione predefinita (abbina per ID TVDB). Attiva questa opzione solo se alcuni episodi vengono associati all'elemento sbagliato: i risultati variano da serie a serie.",
   "import_vip_limit_exceeded": "La tua importazione supera il limite del piano gratuito. Esegui l'upgrade a VIP per importare tutti i {count} elementi.",
-  "list_title_where_to_watch": "Dove Guardare"
+  "list_title_where_to_watch": "Dove Guardare",
+  "seo_title_default": "Trakt Time: tieni traccia di serie TV e film",
+  "seo_description_default": "Tieni traccia delle serie TV e dei film che guardi, non perderti nessun nuovo episodio e scopri cosa guardare dopo. Arrivi da TV Time? Importa la tua cronologia in pochi minuti."
 }

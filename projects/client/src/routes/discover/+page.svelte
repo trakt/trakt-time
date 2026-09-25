@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import ChevronRightIcon from '$lib/components/icons/ChevronRightIcon.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
@@ -47,9 +48,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>{m.page_title_discover()} - Trakt Time</title>
-</svelte:head>
+<SeoHead title={m.page_title_discover()} />
 
 <div class="discover-page">
   <div class="search-bar-wrap">

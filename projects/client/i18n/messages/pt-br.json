@@ -439,5 +439,7 @@
   "import_match_toggle_label": "Corresponder episódios por temporada e número do episódio",
   "import_match_toggle_hint": "Recomendamos o padrão (corresponder pelo ID do TVDB). Ative esta opção apenas se alguns episódios caírem na entrada errada - os resultados variam de série para série.",
   "import_vip_limit_exceeded": "Sua importação excede o limite do plano gratuito. Faça upgrade para VIP para importar todos os {count} itens.",
-  "list_title_where_to_watch": "Onde Assistir"
+  "list_title_where_to_watch": "Onde Assistir",
+  "seo_title_default": "Trakt Time: acompanhe séries e filmes",
+  "seo_description_default": "Acompanhe as séries e filmes que você assiste, não perca nenhum episódio novo e descubra o que assistir em seguida. Vem do TV Time? Importe seu histórico em minutos."
 }
