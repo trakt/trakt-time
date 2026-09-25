@@ -29,9 +29,9 @@
       {#each cast as member, i (`${member.key}-${i}`)}
         <a href="/people/{member.key}" class="cast-member">
           <div class="cast-avatar">
-            {#if member.headshot.url.thumb}
+            {#if member.headshot.url.medium}
               <CrossOriginImage
-                src={member.headshot.url.thumb}
+                src={member.headshot.url.medium}
                 alt={member.name}
               />
             {:else}
@@ -60,33 +60,58 @@
   }
 
   .cast-row {
-    @include scrollable-row(var(--gap-m));
+    @include scrollable-row(var(--gap-s));
     margin: 0 calc(-1 * var(--gap-m));
     padding: 0 var(--gap-m);
   }
 
-  .cast-member {
+  .cast-member,
+  .cast-skeleton {
     flex-shrink: 0;
-    width: 68px;
+    width: var(--trakttime-cast-card-width);
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: var(--ni-2);
+  }
+
+  .cast-member {
     text-decoration: none;
+
+    @include for-mouse {
+      &:hover .cast-avatar :global(img) {
+        transform: scale(1.04);
+      }
+    }
+  }
+
+  .cast-avatar,
+  .cast-skeleton-avatar {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    margin-bottom: var(--gap-xxs);
+    border-radius: var(--trakttime-radius-card);
   }
 
   .cast-avatar {
-    width: 68px;
-    height: 68px;
-    border-radius: 50%;
+    position: relative;
     overflow: hidden;
-    background: var(--color-card-background);
-    border: var(--ni-1) solid var(--color-border);
+    background: color-mix(in srgb, var(--trakttime-accent) 10%, var(--color-card-background));
 
     :global(img) {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: transform var(--transition-increment) ease-out;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 var(--ni-1) color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+      pointer-events: none;
     }
   }
 
@@ -96,50 +121,36 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
+    font-family: var(--trakttime-font-heading);
+    font-size: 2rem;
     font-weight: 700;
-    color: var(--color-text-secondary);
+    background: var(--trakttime-gradient);
+    background-clip: text;
+    color: transparent;
   }
 
   .cast-name {
-    font-size: 0.6875rem;
-    line-height: 1rem;
+    font-size: 0.8125rem;
+    line-height: 1.125rem;
     font-weight: 600;
     color: var(--color-text-primary);
     margin: 0;
-    text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .cast-character {
-    font-size: 0.625rem;
-    line-height: 0.875rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
     color: var(--color-text-secondary);
     margin: 0;
-    text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .cast-skeleton {
-    flex-shrink: 0;
-    width: 68px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-  }
-
   .cast-skeleton-avatar {
-    align-self: flex-start;
-    width: 68px;
-    height: 68px;
-    /* Same border as .cast-avatar so the footprint is 70x70 either way. */
-    border: var(--ni-1) solid var(--color-border);
-    border-radius: 50%;
     @include shimmer-bg;
   }
 
@@ -147,16 +158,15 @@
     border-radius: var(--border-radius-s);
     @include shimmer-bg;
 
-    /* Heights track the rendered line boxes of .cast-name / .cast-character. */
     &--name {
-      width: var(--ni-56);
-      height: 1rem;
+      width: 80%;
+      height: 1.125rem;
       animation-delay: 0.1s;
     }
 
     &--char {
-      width: var(--ni-44);
-      height: 0.875rem;
+      width: 60%;
+      height: 1rem;
       animation-delay: 0.2s;
     }
   }

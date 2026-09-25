@@ -34,6 +34,7 @@
   --trakttime-sentiment-card-height: 192px;
   --trakttime-watched-btn-size: 44px;
   --trakttime-watched-btn-size-compact: var(--ni-36);
+  --trakttime-cast-card-width: var(--ni-96);
   --trakttime-watchlist-btn-size: 28px;
   --trakttime-icon-sm: 18px;
   --trakttime-icon-md: 20px;
