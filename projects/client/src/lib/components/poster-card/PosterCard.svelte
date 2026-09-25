@@ -74,7 +74,7 @@
     width: var(--trakttime-poster-card-width);
     display: flex;
     flex-direction: column;
-    gap: var(--gap-xxs);
+    gap: var(--gap-xs);
   }
 
   .poster-frame {
@@ -103,43 +103,44 @@
     right: var(--gap-xxs);
     width: var(--trakttime-watchlist-btn-size);
     height: var(--trakttime-watchlist-btn-size);
-    border-radius: var(--border-radius-s);
+    border-radius: 50%;
     border: none;
-    background: var(--trakttime-accent);
-    color: var(--color-background);
+    background: color-mix(in srgb, var(--shade-1000) 55%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--trakttime-overlay-text-primary);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     padding: 0;
-    transition: background-color 0.15s ease;
+    transition:
+      background-color var(--transition-increment) ease-in-out,
+      color var(--transition-increment) ease-in-out;
 
     &:disabled {
       opacity: 0.6;
       cursor: default;
     }
 
-    &.is-watchlisted {
-      background: color-mix(in srgb, var(--trakttime-accent) 30%, transparent);
-      color: var(--trakttime-accent);
-    }
-
+    &.is-watchlisted,
     &.is-favorited {
-      background: color-mix(in srgb, var(--trakttime-accent) 30%, transparent);
-      color: var(--trakttime-accent);
+      background: var(--trakttime-accent);
+      color: var(--trakttime-accent-foreground);
     }
 
     svg,
     :global(svg) {
-      width: var(--ni-14);
-      height: var(--ni-14);
+      width: var(--ni-16);
+      height: var(--ni-16);
     }
   }
 
   .poster-title {
-    font-size: 0.7rem;
-    line-height: 1rem;
-    color: var(--color-text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.125rem;
+    color: var(--color-text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -265,19 +265,17 @@
     top: 0;
     z-index: var(--layer-floating);
     padding: var(--gap-s) var(--gap-m);
-    background: var(--trakttime-navbar-blur-bg);
-    backdrop-filter: blur(12px);
-    border-bottom: var(--ni-1) solid var(--color-border);
+    background: linear-gradient(var(--color-background) 70%, transparent);
   }
 
   .search-form {
     display: flex;
     align-items: center;
     gap: var(--gap-s);
+    height: var(--ni-48);
     background: var(--color-card-background);
-    border: var(--ni-1) solid var(--color-border);
-    border-radius: var(--border-radius-xxl);
-    padding: var(--gap-xs) var(--gap-m);
+    border-radius: var(--trakttime-radius-pill);
+    padding: 0 var(--gap-m);
   }
 
   .search-icon {
@@ -326,15 +324,6 @@
     padding: var(--gap-m);
   }
 
-  .poster-grid {
-    display: grid;
-    grid-template-columns: repeat(
-      auto-fill,
-      minmax(var(--trakttime-poster-card-width), 1fr)
-    );
-    gap: var(--gap-s);
-  }
-
   .empty-search {
     display: flex;
     align-items: center;
@@ -344,7 +333,6 @@
     color: var(--color-text-secondary);
     text-align: center;
   }
-
 
   .row-loading {
     display: flex;
@@ -360,7 +348,7 @@
   .section-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: var(--gap-xxs);
     padding: 0 var(--gap-m) var(--gap-s);
     text-decoration: none;
     color: inherit;
@@ -371,8 +359,8 @@
   }
 
   .section-title {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 600;
     color: var(--color-text-primary);
     margin: 0;
     transition: color var(--transition-increment) ease-in-out;
@@ -399,14 +387,17 @@
     align-items: center;
     gap: var(--gap-s);
     margin: 0 var(--gap-m) var(--gap-m);
-    padding: var(--gap-m);
-    background: var(--trakttime-accent);
-    color: var(--color-background);
-    border-radius: var(--border-radius-m);
+    padding: var(--gap-s) var(--gap-l);
+    background: var(--color-card-background);
+    color: var(--color-text-primary);
+    border-radius: var(--trakttime-radius-pill);
     text-decoration: none;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
+    font-size: 0.9375rem;
+    font-weight: 600;
+
+    svg {
+      color: var(--trakttime-accent);
+    }
 
     svg {
       width: var(--trakttime-icon-md);
@@ -416,6 +407,7 @@
 
     .cta-chevron {
       margin-left: auto;
+      color: var(--color-text-secondary);
     }
   }
 </style>
