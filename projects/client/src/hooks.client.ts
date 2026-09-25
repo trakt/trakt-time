@@ -3,7 +3,7 @@ import '$lib/polyfills/toSorted.ts';
 import { SENTRY_DSN } from '$lib/utils/constants.ts';
 import { safeSessionStorage } from '$lib/utils/storage/safeStorage.ts';
 import * as Sentry from '@sentry/sveltekit';
-import { handleErrorWithSentry, replayIntegration } from '@sentry/sveltekit';
+import { handleErrorWithSentry } from '@sentry/sveltekit';
 
 Sentry.init({
   dsn: SENTRY_DSN,
@@ -21,12 +21,6 @@ Sentry.init({
   // sessions when an error occurs.
   replaysOnErrorSampleRate: 1.0,
 
-  // If you don't want to use Session Replay, just remove the line below:
-  integrations: [replayIntegration({
-    maskAllInputs: false,
-    maskAllText: false,
-    blockAllMedia: false,
-  })],
   // Strings for partial matches. Regex patterns for exact matches.
   ignoreErrors: [
     'CancelledError',
@@ -55,6 +49,28 @@ Sentry.init({
 
     return isWellKnownRejection ? null : event;
   },
+});
+
+async function addReplayIntegration() {
+  const replayIntegration = await Sentry.lazyLoadIntegration(
+    'replayIntegration',
+  );
+
+  Sentry.addIntegration(replayIntegration({
+    maskAllInputs: false,
+    maskAllText: false,
+    blockAllMedia: false,
+  }));
+}
+
+function whenPageLoaded(callback: () => void) {
+  if (document.readyState === 'complete') return callback();
+
+  window.addEventListener('load', callback, { once: true });
+}
+
+whenPageLoaded(() => {
+  addReplayIntegration().catch(() => {});
 });
 
 // FIXME remove once we have custom paraglide handling for this
