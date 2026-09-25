@@ -7,7 +7,6 @@
   import { markAppReady } from "$lib/features/boot-loader/markAppReady.ts";
   import BotProvider from "$lib/features/bot-verification/BotProvider.svelte";
   import ConfirmationProvider from "$lib/features/confirmation/ConfirmationProvider.svelte";
-  import CookieConsentProvider from "$lib/features/cookie-consent/CookieConsentProvider.svelte";
   import { DeploymentEndpoint } from "$lib/features/deployment/DeploymentEndpoint.js";
   import ErrorProvider from "$lib/features/errors/ErrorProvider.svelte";
   import FeatureFlagProvider from "$lib/features/feature-flag/FeatureFlagProvider.svelte";
@@ -119,47 +118,42 @@
         >
           <WSInvalidator />
           <FeatureFlagProvider>
-            <CookieConsentProvider
-              consent={data.cookieConsent}
-              isBot={data.isBot}
-            >
-              <RedirectProvider>
-                <NavigationProvider>
-                  <NavigationHistoryProvider>
-                    <LocaleProvider>
-                      <SearchProvider config={data.typesense}>
-                        <FilterProvider>
-                          <CoverProvider>
-                            <ToastProvider>
-                              <ConfirmationProvider>
-                                <MarkAsWatchedDrawerProvider />
-                                <CoverImage />
+            <RedirectProvider>
+              <NavigationProvider>
+                <NavigationHistoryProvider>
+                  <LocaleProvider>
+                    <SearchProvider config={data.typesense}>
+                      <FilterProvider>
+                        <CoverProvider>
+                          <ToastProvider>
+                            <ConfirmationProvider>
+                              <MarkAsWatchedDrawerProvider />
+                              <CoverImage />
 
-                                <ThemeProvider theme={data.theme}>
-                                  {@render children()}
+                              <ThemeProvider theme={data.theme}>
+                                {@render children()}
 
-                                  <RenderFor audience="all">
-                                    <BottomNav />
-                                  </RenderFor>
+                                <RenderFor audience="all">
+                                  <BottomNav />
+                                </RenderFor>
 
-                                  <RenderFor audience="authenticated">
-                                    <NavbarToastContent />
-                                  </RenderFor>
-                                  <QueryDevtools
-                                    client={data.queryClient}
-                                    buttonPosition="bottom-right"
-                                  />
-                                </ThemeProvider>
-                              </ConfirmationProvider>
-                            </ToastProvider>
-                          </CoverProvider>
-                        </FilterProvider>
-                      </SearchProvider>
-                    </LocaleProvider>
-                  </NavigationHistoryProvider>
-                </NavigationProvider>
-              </RedirectProvider>
-            </CookieConsentProvider>
+                                <RenderFor audience="authenticated">
+                                  <NavbarToastContent />
+                                </RenderFor>
+                                <QueryDevtools
+                                  client={data.queryClient}
+                                  buttonPosition="bottom-right"
+                                />
+                              </ThemeProvider>
+                            </ConfirmationProvider>
+                          </ToastProvider>
+                        </CoverProvider>
+                      </FilterProvider>
+                    </SearchProvider>
+                  </LocaleProvider>
+                </NavigationHistoryProvider>
+              </NavigationProvider>
+            </RedirectProvider>
           </FeatureFlagProvider>
         </AuthProvider>
       </BotProvider>

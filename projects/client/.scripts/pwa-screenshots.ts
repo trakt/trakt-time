@@ -40,25 +40,6 @@ const ROUTES: ReadonlyArray<{ name: string; path: string }> = [
   { name: 'show', path: '/shows/breaking-bad' },
 ];
 
-const cookieConsentValue = JSON.stringify({
-  categories: ['necessary', 'functionality', 'analytics'],
-  revision: 4,
-  data: {
-    expiration: new Date(Date.now() + 1000 * 60 * 60 * 24 * 180).toUTCString(),
-    saved: new Date().toUTCString(),
-  },
-  consentTimestamp: new Date().toISOString(),
-  consentId: crypto.randomUUID(),
-  services: {
-    necessary: [],
-    functionality: [],
-    analytics: [],
-    advertising: [],
-  },
-  lastConsentTimestamp: new Date().toISOString(),
-  expirationTime: Date.now() + 1000 * 60 * 60 * 24 * 180,
-});
-
 async function main() {
   await mkdir(OUT_DIR, { recursive: true });
 
@@ -72,17 +53,7 @@ async function main() {
       const context = await browser.newContext({
         viewport,
         deviceScaleFactor: 2,
-        // Pre-seed cookie consent so the banner never shows up in the shot.
-        // Domain is left implicit; Playwright will scope to BASE_URL's host.
       });
-
-      await context.addCookies([
-        {
-          name: '_traktconsent',
-          value: cookieConsentValue,
-          url: BASE_URL,
-        },
-      ]);
 
       for (const route of ROUTES) {
         const page = await context.newPage();
