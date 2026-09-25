@@ -78,7 +78,7 @@
     flex-direction: column;
     min-height: 100dvh;
     background: var(--color-background);
-    padding-top: var(--ni-56);
+    padding-top: var(--ni-72);
     padding-bottom: var(--trakttime-bottom-nav-height);
   }
 
@@ -91,8 +91,12 @@
 
   .poster-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(var(--trakttime-poster-card-width), 1fr));
-    gap: var(--gap-s);
+    grid-template-columns: repeat(auto-fill, minmax(var(--ni-96), 1fr));
+    gap: var(--gap-m) var(--gap-s);
+
+    :global(.poster-card) {
+      width: 100%;
+    }
   }
 
   .loading-state {

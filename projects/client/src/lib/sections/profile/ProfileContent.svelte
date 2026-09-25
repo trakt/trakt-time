@@ -126,30 +126,28 @@
   >
     <div class="profile-cover"></div>
     <div class="profile-identity">
-      <div class="profile-avatar">
-        <ProfileImage
-          name={profile.username}
-          src={profile.avatar.url}
-          isEditable={isOwner}
-        />
+      <div class="profile-avatar-row">
+        <div class="profile-avatar">
+          <ProfileImage
+            name={profile.username}
+            src={profile.avatar.url}
+            isEditable={isOwner}
+          />
+        </div>
+        {#if isOwner}
+          <a
+            href="/settings"
+            class="profile-settings-btn icon-button-round"
+            aria-label={m.page_title_settings()}
+            data-sveltekit-preload-data="hover"
+          >
+            <SettingsIcon />
+          </a>
+        {/if}
       </div>
       <div class="profile-meta">
-        <div class="profile-username-row">
-          <h1 class="profile-username">{profile.username}</h1>
-          {#if isOwner}
-            <a
-              href="/settings"
-              class="profile-settings-btn"
-              aria-label={m.page_title_settings()}
-              data-sveltekit-preload-data="hover"
-            >
-              <SettingsIcon />
-            </a>
-          {/if}
-        </div>
-        {#if profile.name?.full}
-          <p class="profile-name">{profile.name.full}</p>
-        {/if}
+        <h1 class="profile-username">{profile.name?.full || profile.username}</h1>
+        <p class="profile-name">@{profile.username}</p>
         {#if profile.about}
           <p class="profile-about">{profile.about}</p>
         {/if}
@@ -161,7 +159,7 @@
 {#snippet countCell(value: number | undefined, label: string)}
   <div class="count-cell">
     {#if value != null}
-      <span class="count-value">{value}</span>
+      <span class="count-value">{value.toLocaleString()}</span>
     {:else}
       <span class="count-value count-value--skeleton" aria-hidden="true"></span>
     {/if}
@@ -171,9 +169,7 @@
 
 <div class="profile-counts">
   {@render countCell(stats?.network.following, m.text_count_following())}
-  <div class="count-divider"></div>
   {@render countCell(stats?.network.followers, m.text_count_followers())}
-  <div class="count-divider"></div>
   {@render countCell(stats?.episodes.plays, m.text_count_plays())}
 </div>
 
@@ -181,11 +177,8 @@
   <div class="section-header">
     <h2 class="section-title">{m.header_stats()}</h2>
   </div>
-  <div class="stats-grid">
+  <div class="stats-row">
     <div class="stat-card">
-      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z" />
-      </svg>
       <span class="stat-card-label">{m.stat_label_tv_time()}</span>
       <div class="tv-time">
         {#if tvTime}
@@ -202,9 +195,6 @@
       </div>
     </div>
     <div class="stat-card">
-      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z" />
-      </svg>
       <span class="stat-card-label">{m.stat_label_episodes_watched()}</span>
       {#if stats}
         <span class="stat-big">{stats.episodes.plays.toLocaleString()}</span>
@@ -213,9 +203,6 @@
       {/if}
     </div>
     <div class="stat-card">
-      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z" />
-      </svg>
       <span class="stat-card-label">{m.stat_label_movies_watched()}</span>
       {#if stats}
         <span class="stat-big">{stats.movies.plays.toLocaleString()}</span>
@@ -224,9 +211,6 @@
       {/if}
     </div>
     <div class="stat-card">
-      <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM10 9h8v2h-8zm0-3h8v2h-8zm0 6h4v2h-4z" />
-      </svg>
       <span class="stat-card-label">{m.stat_label_shows_watched()}</span>
       {#if stats}
         <span class="stat-big">{stats.shows.watched.toLocaleString()}</span>
@@ -415,8 +399,8 @@
     background-color: var(--color-card-background);
   }
 
-  /* The identity row overlaps the cover's bottom edge; without a scrim a
-     bright cover swallows the username and the gear icon. */
+  /* The avatar overlaps the cover's bottom edge; without a scrim a bright
+     cover swallows its ring. */
   .has-cover .profile-cover {
     position: relative;
 
@@ -434,17 +418,19 @@
     }
   }
 
-  .has-cover .profile-username,
-  .has-cover .profile-name {
-    text-shadow: 0 1px 6px var(--color-background);
-  }
-
   .profile-identity {
     display: flex;
-    align-items: flex-end;
-    gap: var(--gap-m);
+    flex-direction: column;
+    gap: var(--gap-s);
     padding: 0 var(--gap-m) var(--gap-m);
     margin-top: var(--trakttime-profile-offset);
+    position: relative;
+  }
+
+  .profile-avatar-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
   }
 
   .profile-avatar {
@@ -452,74 +438,44 @@
     height: var(--trakttime-avatar-size);
     flex-shrink: 0;
     border-radius: 50%;
-    box-shadow: 0 0 0 3px var(--color-background);
+    box-shadow: 0 0 0 4px var(--color-background);
   }
 
   .profile-meta {
-    padding-bottom: var(--gap-xs);
-    min-width: 0;
-  }
-
-  .profile-username-row {
     display: flex;
-    align-items: center;
-    gap: var(--gap-xs);
+    flex-direction: column;
+    gap: var(--ni-2);
     min-width: 0;
   }
 
   .profile-username {
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 600;
     color: var(--color-text-primary);
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex: 1;
-    min-width: 0;
   }
 
   .profile-settings-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    color: var(--color-text-secondary);
     flex-shrink: 0;
-    transition: background 0.15s ease, color 0.15s ease;
-
-    &:hover,
-    &:focus-visible {
-      background: color-mix(
-        in srgb,
-        var(--color-text-primary) 8%,
-        transparent
-      );
-      color: var(--color-text-primary);
-    }
+    margin-bottom: var(--gap-xxs);
 
     :global(svg) {
-      width: 1.125rem;
-      height: 1.125rem;
+      width: var(--ni-20);
+      height: var(--ni-20);
     }
-  }
-
-  .has-cover .profile-settings-btn {
-    background: color-mix(in srgb, var(--color-background) 55%, transparent);
-    backdrop-filter: blur(8px);
-    color: var(--color-text-primary);
   }
 
   .profile-name {
-    font-size: 0.85rem;
+    font-size: 0.9375rem;
     color: var(--color-text-secondary);
     margin: 0;
   }
 
   .profile-about {
-    font-size: 0.8rem;
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
     margin: var(--gap-xs) 0 0;
     display: -webkit-box;
@@ -531,73 +487,57 @@
 
   .profile-counts {
     display: flex;
-    align-items: stretch;
-    border-top: var(--ni-1) solid var(--color-border);
-    border-bottom: var(--ni-1) solid var(--color-border);
+    flex-wrap: wrap;
+    gap: var(--gap-xs) var(--gap-l);
+    padding: 0 var(--gap-m) var(--gap-s);
   }
 
   .count-cell {
-    flex: 1;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: var(--gap-m) var(--gap-xs);
-    gap: var(--ni-2);
-  }
-
-  .count-divider {
-    width: var(--ni-1);
-    background: var(--color-border);
-    margin: var(--gap-s) 0;
+    align-items: baseline;
+    gap: var(--gap-xxs);
   }
 
   .count-value {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 1.0625rem;
+    font-weight: 600;
     color: var(--color-text-primary);
+    font-variant-numeric: tabular-nums;
   }
 
-  /* Sized to the .count-value line box so the row never shifts. */
   .count-value--skeleton {
     width: var(--ni-28);
-    height: 1.5rem;
+    height: 1.25rem;
     border-radius: var(--border-radius-s);
     @include shimmer-bg;
   }
 
   .count-label {
-    font-size: 0.625rem;
+    font-size: 1.0625rem;
     color: var(--color-text-secondary);
-    text-transform: lowercase;
-    letter-spacing: 0.02em;
   }
 
   .profile-section {
     padding: var(--gap-m) 0;
-    border-bottom: var(--ni-1) solid var(--color-border);
   }
 
   .section-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: var(--gap-xxs);
     padding: 0 var(--gap-m) var(--gap-s);
     text-decoration: none;
     color: inherit;
   }
 
   .section-title {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 600;
     color: var(--color-text-primary);
     margin: 0;
     display: flex;
     align-items: center;
     gap: var(--gap-xs);
-  }
-
-  .section-title--heart {
-    color: var(--trakttime-accent);
   }
 
   .heart-icon {
@@ -622,31 +562,28 @@
     }
   }
 
-  .stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--gap-s);
+  .stats-row {
+    @include scrollable-row;
     padding: 0 var(--gap-m);
   }
 
   .stat-card {
+    flex-shrink: 0;
+    min-width: var(--ni-160);
     display: flex;
     flex-direction: column;
-    gap: var(--gap-xs);
+    justify-content: space-between;
+    gap: var(--gap-l);
     padding: var(--gap-m);
     background: var(--color-card-background);
-    border: var(--ni-1) solid var(--color-border);
-    border-radius: var(--border-radius-m);
-  }
-
-  .stat-icon {
-    width: var(--trakttime-icon-md);
-    height: var(--trakttime-icon-md);
-    color: var(--color-text-secondary);
+    border-radius: var(--trakttime-radius-card);
   }
 
   .stat-card-label {
     font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--color-text-secondary);
   }
 
@@ -664,14 +601,17 @@
     align-items: baseline;
 
     strong {
-      font-size: 1.25rem;
-      font-weight: 700;
+      font-family: var(--trakttime-font-heading);
+      font-size: 1.75rem;
+      font-weight: 600;
     }
   }
 
   .stat-big {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-family: var(--trakttime-font-heading);
+    font-size: 1.75rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
     color: var(--color-text-primary);
   }
 
@@ -704,24 +644,23 @@
     justify-content: space-between;
     padding: var(--gap-s) var(--gap-m);
     background: var(--color-card-background);
-    border-radius: var(--border-radius-m);
-    border: var(--ni-1) solid var(--color-border);
+    border-radius: var(--trakttime-radius-card);
     text-decoration: none;
-    transition: border-color 0.15s ease;
+    transition: background-color var(--transition-increment) ease-in-out;
 
     &:active {
-      border-color: var(--trakttime-accent);
+      background: var(--color-floating-background);
     }
   }
 
   .list-name {
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
     color: var(--color-text-primary);
   }
 
   .list-count {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
   }
 
@@ -776,6 +715,4 @@
       margin: 0;
     }
   }
-
-
 </style>

@@ -26,8 +26,8 @@
 
   .profile-skeleton-identity {
     display: flex;
-    align-items: flex-end;
-    gap: var(--gap-m);
+    flex-direction: column;
+    gap: var(--gap-s);
     padding: 0 var(--gap-m) var(--gap-m);
     margin-top: var(--trakttime-profile-offset);
   }
@@ -37,12 +37,11 @@
     height: var(--trakttime-avatar-size);
     flex-shrink: 0;
     border-radius: 50%;
-    box-shadow: 0 0 0 3px var(--color-background);
+    box-shadow: 0 0 0 4px var(--color-background);
     @include shimmer-bg;
   }
 
   .profile-skeleton-meta {
-    padding-bottom: var(--gap-xs);
     min-width: 0;
   }
 
@@ -52,15 +51,15 @@
 
     /* Heights track the username / full-name line boxes. */
     &--username {
-      width: var(--ni-120);
-      height: 1.375rem;
+      width: var(--ni-160);
+      height: 1.8rem;
       animation-delay: 0.05s;
     }
 
     &--name {
       width: var(--ni-88);
-      height: 1rem;
-      margin-top: var(--gap-xxs);
+      height: 1.4rem;
+      margin-top: var(--ni-2);
       animation-delay: 0.1s;
     }
   }
