@@ -16,7 +16,7 @@
 </svelte:head>
 
 <div class="vip-page">
-  <BackBar label={m.button_label_back()} />
+  <BackBar label={m.tag_text_vip()} />
 
   {#if !$isAuthorized}
     <LoginGate {login} />
