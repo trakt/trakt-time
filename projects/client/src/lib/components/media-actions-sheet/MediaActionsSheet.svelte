@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { RatingGroup } from 'bits-ui';
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import { useFavorites } from '$lib/sections/media-actions/favorite/useFavorites.ts';
   import { useHasWatched } from '$lib/sections/media-actions/mark-as-watched/useHasWatched.ts';
@@ -8,7 +7,7 @@
     type MarkAsWatchedStoreProps,
     useMarkAsWatched,
   } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
-  import { useRatings } from '$lib/sections/summary/components/rating/useRatings.ts';
+  import RateStars from '$lib/sections/summary/components/rating/RateStars.svelte';
   import { useWatchlist } from '$lib/sections/media-actions/watchlist/useWatchlist.ts';
   import { useDropShow } from '$lib/sections/media-actions/drop/useDropShow.ts';
   import { userListsQuery } from '$lib/requests/queries/users/userListsQuery.ts';
@@ -16,7 +15,6 @@
   import HeartIcon from '$lib/components/icons/HeartIcon.svelte';
   import LoaderIcon from '$lib/components/icons/LoaderIcon.svelte';
   import TrackIcon from '$lib/components/icons/TrackIcon.svelte';
-  import StarIcon from '$lib/components/icons/StarIcon.svelte';
   import CreateListRow from './CreateListRow.svelte';
   import ListToggleItem from './ListToggleItem.svelte';
   import * as m from '$lib/paraglide/messages.js';
@@ -43,9 +41,6 @@
     isOpen,
     onClose,
   }: Props = $props();
-
-  const { pendingRating, isSubmitting, current, addRating, removeRating } =
-    $derived(useRatings({ type, id }));
 
   const { isFavorited, isUpdatingFavorite, addToFavorites, removeFromFavorites } =
     $derived(useFavorites({ type, id, title }));
@@ -87,22 +82,6 @@
 
   const { listedOnIds } = $derived(useListedOnIds({ type, slug }));
 
-  // Trakt uses 1–10; bits-ui RatingGroup uses 0–5 with 0.5 steps (allowHalf).
-  // Divide by 2 to convert in, multiply by 2 to convert out.
-  const traktRating = $derived($pendingRating ?? $current?.rating ?? 0);
-  const ratingValue = $derived(traktRating / 2);
-  const ratingLabel = $derived(
-    traktRating > 0 ? `${traktRating} / 10` : null,
-  );
-
-  function onRatingChange(value: number) {
-    if (value === 0) {
-      removeRating();
-    } else {
-      addRating(value * 2);
-    }
-  }
-
   function toggleFavorite() {
     if ($isFavorited) removeFromFavorites();
     else addToFavorites();
@@ -117,7 +96,6 @@
     if (e.target === e.currentTarget) onClose();
   }
 
-  const ratingDisabled = $derived($isSubmitting || !$hasWatched);
   const favoriteDisabled = $derived($isUpdatingFavorite || !$hasWatched);
 </script>
 
@@ -148,34 +126,7 @@
 
       {#if isRateable}
         <section class="sheet-section">
-          <div class="section-heading">
-            <span class="section-label">{m.header_rate_now()}</span>
-            {#if ratingLabel}
-              <span class="rating-tally">{ratingLabel}</span>
-            {/if}
-          </div>
-          <RatingGroup.Root
-            class="stars-row"
-            value={ratingValue}
-            onValueChange={onRatingChange}
-            allowHalf
-            max={5}
-            disabled={ratingDisabled}
-          >
-            {#snippet children({ items })}
-              {#each items as item (item.index)}
-                <RatingGroup.Item index={item.index} class="star-btn">
-                  <StarIcon
-                    fill={item.state === 'active'
-                      ? 'full'
-                      : item.state === 'partial'
-                        ? 'half'
-                        : 'none'}
-                  />
-                </RatingGroup.Item>
-              {/each}
-            {/snippet}
-          </RatingGroup.Root>
+          <RateStars {type} {id} isLocked={!$hasWatched} />
         </section>
       {/if}
 
@@ -367,72 +318,11 @@
     gap: var(--gap-s);
   }
 
-  .section-heading {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--gap-s);
-  }
-
   .section-label {
     font-family: var(--trakttime-font-heading);
     font-size: 1.0625rem;
     font-weight: 600;
     color: var(--color-text-primary);
-  }
-
-  .rating-tally {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--trakttime-accent);
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  /* bits-ui's RatingGroup renders <div>s, not <button>s — disabled state
-     comes through as `data-disabled=""` rather than the native attr.
-     Selectors are fully wrapped in :global so Svelte's analyser doesn't
-     mark them dead (and so the attribute selector survives scoping). */
-  :global(.stars-row) {
-    display: flex;
-    gap: var(--gap-xs);
-    align-items: center;
-    justify-content: flex-start;
-  }
-
-  :global(.stars-row svg) {
-    width: var(--ni-32);
-    height: var(--ni-32);
-    color: var(--trakttime-accent);
-    transition: color 0.15s ease;
-  }
-
-  :global(.stars-row[data-disabled]),
-  :global(.star-btn[data-disabled]) {
-    opacity: 0.4;
-  }
-
-  :global(.stars-row[data-disabled] svg),
-  :global(.star-btn[data-disabled] svg) {
-    color: color-mix(in srgb, var(--color-text-secondary) 70%, transparent);
-  }
-
-  :global(.star-btn) {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: transform 0.1s ease;
-  }
-
-  :global(.star-btn[data-disabled]) {
-    cursor: not-allowed;
-  }
-
-  :global(.star-btn:active:not([data-disabled])) {
-    transform: scale(0.9);
   }
 
   .action-pills {

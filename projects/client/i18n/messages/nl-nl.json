@@ -489,5 +489,7 @@
   "text_gif_no_results": "Geen GIFs gevonden",
   "button_label_previous_episode": "Vorige aflevering",
   "button_label_next_episode": "Volgende aflevering",
-  "text_no_reviews": "Nog geen recensies. Deel als eerste je mening."
+  "text_no_reviews": "Nog geen recensies. Deel als eerste je mening.",
+  "text_star_rating_label": "{rating} van 5 sterren",
+  "text_rate_after_watching": "Markeer als gezien om te beoordelen"
 }

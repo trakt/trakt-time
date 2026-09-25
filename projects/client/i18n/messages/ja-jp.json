@@ -489,5 +489,7 @@
   "text_gif_no_results": "GIFが見つかりません",
   "button_label_previous_episode": "前のエピソード",
   "button_label_next_episode": "次のエピソード",
-  "text_no_reviews": "まだレビューはありません。最初の感想を投稿しましょう。"
+  "text_no_reviews": "まだレビューはありません。最初の感想を投稿しましょう。",
+  "text_star_rating_label": "5つ星中{rating}",
+  "text_rate_after_watching": "評価するには視聴済みにしてください"
 }

@@ -95,10 +95,8 @@
       : false,
   );
 
-  const ratingLabel = $derived(
-    movie?.rating && movieHasAired
-      ? `${(movie.rating * 10).toFixed(1)} / 10`
-      : null,
+  const ratingScore = $derived(
+    movie?.rating && movieHasAired ? movie.rating : null,
   );
 
 </script>
@@ -137,8 +135,8 @@
               <span class="summary-cert-badge">{movie.certification}</span>
             {/if}
           </div>
-          {#if ratingLabel}
-            <MediaRating label={ratingLabel} />
+          {#if ratingScore}
+            <MediaRating score={ratingScore} />
           {/if}
         </div>
       </div>

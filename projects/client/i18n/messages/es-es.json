@@ -489,5 +489,7 @@
   "text_gif_no_results": "No se encontraron GIF",
   "button_label_previous_episode": "Episodio anterior",
   "button_label_next_episode": "Episodio siguiente",
-  "text_no_reviews": "Aún no hay reseñas. Sé el primero en opinar."
+  "text_no_reviews": "Aún no hay reseñas. Sé el primero en opinar.",
+  "text_star_rating_label": "{rating} de 5 estrellas",
+  "text_rate_after_watching": "Márcalo como visto para valorarlo"
 }

@@ -489,5 +489,7 @@
   "text_gif_no_results": "Ingen GIF'er fundet",
   "button_label_previous_episode": "Forrige afsnit",
   "button_label_next_episode": "Næste afsnit",
-  "text_no_reviews": "Ingen anmeldelser endnu. Vær den første til at dele dine tanker."
+  "text_no_reviews": "Ingen anmeldelser endnu. Vær den første til at dele dine tanker.",
+  "text_star_rating_label": "{rating} ud af 5 stjerner",
+  "text_rate_after_watching": "Markér som set for at bedømme"
 }

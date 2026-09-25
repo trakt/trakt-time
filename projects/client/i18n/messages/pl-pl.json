@@ -489,5 +489,7 @@
   "text_gif_no_results": "Nie znaleziono GIF-ów",
   "button_label_previous_episode": "Poprzedni odcinek",
   "button_label_next_episode": "Następny odcinek",
-  "text_no_reviews": "Brak recenzji. Podziel się opinią jako pierwszy."
+  "text_no_reviews": "Brak recenzji. Podziel się opinią jako pierwszy.",
+  "text_star_rating_label": "{rating} na 5 gwiazdek",
+  "text_rate_after_watching": "Oznacz jako obejrzane, aby ocenić"
 }

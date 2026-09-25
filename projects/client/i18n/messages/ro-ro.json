@@ -489,5 +489,7 @@
   "text_gif_no_results": "Nu s-au găsit GIF-uri",
   "button_label_previous_episode": "Episodul anterior",
   "button_label_next_episode": "Episodul următor",
-  "text_no_reviews": "Încă nu există recenzii. Fii primul care își spune părerea."
+  "text_no_reviews": "Încă nu există recenzii. Fii primul care își spune părerea.",
+  "text_star_rating_label": "{rating} din 5 stele",
+  "text_rate_after_watching": "Marchează ca văzut pentru a evalua"
 }

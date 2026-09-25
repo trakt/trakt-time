@@ -104,8 +104,8 @@
       : false,
   );
 
-  const ratingLabel = $derived(
-    show?.rating && showHasAired ? `${(show.rating * 10).toFixed(1)} / 10` : null,
+  const ratingScore = $derived(
+    show?.rating && showHasAired ? show.rating : null,
   );
 
   const episodeCountLabel = $derived(
@@ -162,8 +162,8 @@
               {statusLabel}
             </span>
           {/if}
-          {#if ratingLabel}
-            <MediaRating label={ratingLabel} extraLabel={episodeCountLabel} />
+          {#if ratingScore}
+            <MediaRating score={ratingScore} extraLabel={episodeCountLabel} />
           {/if}
         </div>
       </div>

@@ -9,6 +9,7 @@
   import StarIcon from '$lib/components/icons/StarIcon.svelte';
   import { languageTag } from '$lib/features/i18n/index.ts';
   import { toCompactAge } from '$lib/utils/date/toCompactAge.ts';
+  import { formatStars, toStarsFromUserRating } from '$lib/utils/rating/toStars.ts';
   import CommentGif from './_internal/CommentGif.svelte';
 
   type Props = {
@@ -38,6 +39,11 @@
     toCompactAge({ date: comment.createdAt, now: new Date(), locale: languageTag() }),
   );
   const userRating = $derived(comment.user.stats.rating);
+  const userStars = $derived(
+    userRating
+      ? formatStars({ value: toStarsFromUserRating(userRating), locale: languageTag() })
+      : null,
+  );
   const hasText = $derived(comment.comment.trim().length > 0);
 
   const html = $derived(
@@ -66,10 +72,10 @@
       {/if}
     </div>
     <span class="comment-author">{displayName}</span>
-    {#if userRating}
-      <span class="comment-rating" aria-label="{userRating}/10">
+    {#if userStars}
+      <span class="comment-rating" aria-label={m.text_star_rating_label({ rating: userStars })}>
         <StarIcon fill="full" />
-        {userRating}
+        {userStars}
       </span>
     {/if}
     <span class="comment-time">· {age}</span>
