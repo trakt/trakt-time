@@ -75,6 +75,7 @@ jobs:
         working-directory: projects/client
         env:
           TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
+          KLIPY_API_KEY: ${{ secrets.KLIPY_API_KEY }}
         run: deno task build
 
       - name: Deploy the worker via wrangler

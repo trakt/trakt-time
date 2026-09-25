@@ -482,5 +482,10 @@
   "trivia_category_quick_fact": "Hurtigt fakta",
   "text_unlock_sentiment_analysis": "Lås op for hele analysen",
   "text_unlock_all_trivia": "Lås op for al trivia",
-  "text_vip_upsell_trivia": "Få alle fakta bag kulisserne, inklusive spoilere, med VIP."
+  "text_vip_upsell_trivia": "Få alle fakta bag kulisserne, inklusive spoilere, med VIP.",
+  "button_label_add_gif": "Tilføj en GIF",
+  "button_label_remove_gif": "Fjern GIF",
+  "image_alt_comment_gif": "GIF vedhæftet kommentaren",
+  "input_placeholder_search_gifs": "Søg KLIPY",
+  "text_gif_no_results": "Ingen GIF'er fundet"
 }

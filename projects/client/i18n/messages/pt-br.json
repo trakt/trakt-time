@@ -482,5 +482,10 @@
   "trivia_category_quick_fact": "Curiosidade rápida",
   "text_unlock_sentiment_analysis": "Desbloqueie a análise completa",
   "text_unlock_all_trivia": "Desbloqueie todas as curiosidades",
-  "text_vip_upsell_trivia": "Tenha todas as curiosidades dos bastidores, com spoilers, no VIP."
+  "text_vip_upsell_trivia": "Tenha todas as curiosidades dos bastidores, com spoilers, no VIP.",
+  "button_label_add_gif": "Adicionar um GIF",
+  "button_label_remove_gif": "Remover GIF",
+  "image_alt_comment_gif": "GIF anexado ao comentário",
+  "input_placeholder_search_gifs": "Pesquisar KLIPY",
+  "text_gif_no_results": "Nenhum GIF encontrado"
 }
