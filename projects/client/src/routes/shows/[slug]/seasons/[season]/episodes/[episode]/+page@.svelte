@@ -1,4 +1,7 @@
 <script lang="ts">
+  import SeoHead from '$lib/features/seo/SeoHead.svelte';
+  import { toEpisodeSeo } from '$lib/features/seo/media/toEpisodeSeo.ts';
+  import type { PageProps } from './$types.ts';
   import { page } from '$app/state';
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import { useQuery } from '$lib/features/query/useQuery.ts';
@@ -20,6 +23,8 @@
   import SummarySkeleton from '$lib/sections/summary/_internal/SummarySkeleton.svelte';
   import { hasAired } from '$lib/utils/media/hasAired.ts';
   import * as m from '$lib/paraglide/messages.js';
+
+  const { data }: PageProps = $props();
 
   const slug = page.params.slug ?? '';
   const season = Number(page.params.season ?? 0);
@@ -120,13 +125,16 @@
   );
 </script>
 
-<svelte:head>
-  <title>
-    {episode
-      ? `${intl?.title ?? episode.title} - ${seasonLabel}${episodeLabel} - Trakt Time`
-      : 'Trakt Time'}
-  </title>
-</svelte:head>
+<SeoHead
+  {...toEpisodeSeo({
+    episode: episode ?? data.crawlerEpisode,
+    show: show ?? data.crawlerShow,
+    title: intl?.title,
+    overview: intl?.overview,
+    url: `${page.url.origin}${page.url.pathname}`,
+    showUrl: `${page.url.origin}${showUrl}`,
+  })}
+/>
 
 <div class="summary-page">
   <BackBar href={showUrl} label={show?.title ?? ''} variant="overlay" />
