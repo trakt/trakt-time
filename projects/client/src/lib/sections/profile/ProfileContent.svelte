@@ -621,13 +621,13 @@
 
     /* Heights track the tv-time strong / .stat-big line boxes. */
     &--time {
-      width: var(--ni-96);
-      height: 1.5rem;
+      width: var(--ni-160);
+      height: 2.1875rem;
     }
 
     &--big {
       width: var(--ni-64);
-      height: var(--ni-28);
+      height: 2.1875rem;
     }
   }
 
@@ -671,8 +671,8 @@
   }
 
   .list-card-skeleton {
-    /* Line box of .list-name; padding + border come from .list-card. */
-    height: 1rem;
+    /* Line box of .list-name; padding comes from .list-card. */
+    height: 1.25rem;
     @include shimmer-bg;
   }
 

@@ -35,8 +35,8 @@
         <li class="episode-row-skeleton">
           <div class="episode-skeleton-thumb"></div>
           <div class="episode-skeleton-text">
-            <div class="episode-skeleton-line episode-skeleton-line--number"></div>
             <div class="episode-skeleton-line episode-skeleton-line--title"></div>
+            <div class="episode-skeleton-line episode-skeleton-line--number"></div>
           </div>
           <div class="episode-skeleton-btn"></div>
         </li>
@@ -80,9 +80,9 @@
 
   .episode-skeleton-thumb {
     flex-shrink: 0;
-    width: 4.5rem;
+    width: var(--ni-104);
     aspect-ratio: 16 / 9;
-    border-radius: var(--border-radius-s);
+    border-radius: var(--border-radius-m);
     @include shimmer-bg-elevated;
   }
 
@@ -100,13 +100,13 @@
 
     &--number {
       width: var(--ni-24);
-      height: 0.8125rem;
+      height: 1rem;
       animation-delay: 0.1s;
     }
 
     &--title {
       width: 60%;
-      height: 1.0625rem;
+      height: 1.125rem;
       animation-delay: 0.15s;
     }
   }

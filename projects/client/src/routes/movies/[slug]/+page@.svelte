@@ -105,7 +105,7 @@
   <BackBar href="/movies/watchlist" label={m.page_title_movies()} variant="overlay" />
 
   {#if isLoading && !movie}
-    <SummarySkeleton />
+    <SummarySkeleton variant="movie" />
   {:else if movie}
     <MediaCoverHero coverUrl={movie.cover.url.medium} />
 

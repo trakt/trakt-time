@@ -120,7 +120,7 @@
   <BackBar href="/shows/watchlist" label={m.page_title_shows()} variant="overlay" />
 
   {#if isLoading && !show}
-    <SummarySkeleton>
+    <SummarySkeleton variant="show">
       <section class="summary-section" aria-hidden="true">
         <h2 class="summary-section-title">{m.header_seasons()}</h2>
         <SeasonListSkeleton />

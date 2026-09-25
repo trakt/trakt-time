@@ -52,13 +52,13 @@
     /* Heights track the username / full-name line boxes. */
     &--username {
       width: var(--ni-160);
-      height: 1.8rem;
+      height: 1.875rem;
       animation-delay: 0.05s;
     }
 
     &--name {
       width: var(--ni-88);
-      height: 1.4rem;
+      height: 1.1875rem;
       margin-top: var(--ni-2);
       animation-delay: 0.1s;
     }
