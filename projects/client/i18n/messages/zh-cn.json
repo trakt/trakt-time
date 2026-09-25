@@ -496,5 +496,8 @@
   "import_step_sync_body": "确认数量后开始",
   "import_liberator_hint": "导出你完整的 TV Time 记录",
   "import_gdpr_hint": "来自 TV Time 隐私门户",
-  "button_label_view_profile": "查看个人资料"
+  "button_label_view_profile": "查看个人资料",
+  "text_profile_header": "个人资料页头",
+  "option_text_profile_header_posters": "海报",
+  "option_text_profile_header_cover": "封面"
 }

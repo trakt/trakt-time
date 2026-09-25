@@ -496,5 +496,8 @@
   "import_step_sync_body": "Провери броя и започни",
   "import_liberator_hint": "Експортира цялата ти история от TV Time",
   "import_gdpr_hint": "От портала за поверителност на TV Time",
-  "button_label_view_profile": "Виж профила"
+  "button_label_view_profile": "Виж профила",
+  "text_profile_header": "Горна част на профила",
+  "option_text_profile_header_posters": "Постери",
+  "option_text_profile_header_cover": "Корица"
 }

@@ -496,5 +496,8 @@
   "import_step_sync_body": "Confirma a contagem e começa",
   "import_liberator_hint": "Exporta todo o teu histórico do TV Time",
   "import_gdpr_hint": "No portal de privacidade do TV Time",
-  "button_label_view_profile": "Ver perfil"
+  "button_label_view_profile": "Ver perfil",
+  "text_profile_header": "Cabeçalho do perfil",
+  "option_text_profile_header_posters": "Cartazes",
+  "option_text_profile_header_cover": "Capa"
 }

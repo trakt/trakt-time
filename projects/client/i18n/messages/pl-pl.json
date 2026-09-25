@@ -496,5 +496,8 @@
   "import_step_sync_body": "Sprawdź liczbę i zacznij",
   "import_liberator_hint": "Eksportuje całą historię z TV Time",
   "import_gdpr_hint": "Z portalu prywatności TV Time",
-  "button_label_view_profile": "Zobacz profil"
+  "button_label_view_profile": "Zobacz profil",
+  "text_profile_header": "Nagłówek profilu",
+  "option_text_profile_header_posters": "Plakaty",
+  "option_text_profile_header_cover": "Okładka"
 }

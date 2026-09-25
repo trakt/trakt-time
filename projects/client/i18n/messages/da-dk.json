@@ -496,5 +496,8 @@
   "import_step_sync_body": "Tjek antallet, og start så",
   "import_liberator_hint": "Eksporterer hele din TV Time-historik",
   "import_gdpr_hint": "Fra TV Times privatlivsportal",
-  "button_label_view_profile": "Se profil"
+  "button_label_view_profile": "Se profil",
+  "text_profile_header": "Profiloverskrift",
+  "option_text_profile_header_posters": "Plakater",
+  "option_text_profile_header_cover": "Cover"
 }

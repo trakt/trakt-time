@@ -496,5 +496,8 @@
   "import_step_sync_body": "Sayıyı kontrol et, sonra başlat",
   "import_liberator_hint": "Tüm TV Time geçmişini dışa aktarır",
   "import_gdpr_hint": "TV Time gizlilik portalından",
-  "button_label_view_profile": "Profili gör"
+  "button_label_view_profile": "Profili gör",
+  "text_profile_header": "Profil başlığı",
+  "option_text_profile_header_posters": "Afişler",
+  "option_text_profile_header_cover": "Kapak"
 }

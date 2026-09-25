@@ -496,5 +496,8 @@
   "import_step_sync_body": "Перевірте кількість і почніть",
   "import_liberator_hint": "Експортує всю історію TV Time",
   "import_gdpr_hint": "З порталу конфіденційності TV Time",
-  "button_label_view_profile": "Переглянути профіль"
+  "button_label_view_profile": "Переглянути профіль",
+  "text_profile_header": "Шапка профілю",
+  "option_text_profile_header_posters": "Постери",
+  "option_text_profile_header_cover": "Обкладинка"
 }

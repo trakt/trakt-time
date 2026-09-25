@@ -496,5 +496,8 @@
   "import_step_sync_body": "Vérifie le nombre, puis lance",
   "import_liberator_hint": "Exporte tout ton historique TV Time",
   "import_gdpr_hint": "Depuis le portail de confidentialité de TV Time",
-  "button_label_view_profile": "Voir le profil"
+  "button_label_view_profile": "Voir le profil",
+  "text_profile_header": "En-tête du profil",
+  "option_text_profile_header_posters": "Affiches",
+  "option_text_profile_header_cover": "Couverture"
 }

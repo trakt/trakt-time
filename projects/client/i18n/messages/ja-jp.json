@@ -496,5 +496,8 @@
   "import_step_sync_body": "件数を確認して開始",
   "import_liberator_hint": "TV Timeの履歴をすべてエクスポート",
   "import_gdpr_hint": "TV Timeのプライバシーポータルから",
-  "button_label_view_profile": "プロフィールを見る"
+  "button_label_view_profile": "プロフィールを見る",
+  "text_profile_header": "プロフィールのヘッダー",
+  "option_text_profile_header_posters": "ポスター",
+  "option_text_profile_header_cover": "カバー"
 }

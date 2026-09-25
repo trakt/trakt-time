@@ -496,5 +496,8 @@
   "import_step_sync_body": "Check the count, then start",
   "import_liberator_hint": "Exports your full TV Time history",
   "import_gdpr_hint": "From TV Time's privacy portal",
-  "button_label_view_profile": "View profile"
+  "button_label_view_profile": "View profile",
+  "text_profile_header": "Profile header",
+  "option_text_profile_header_posters": "Posters",
+  "option_text_profile_header_cover": "Cover"
 }
