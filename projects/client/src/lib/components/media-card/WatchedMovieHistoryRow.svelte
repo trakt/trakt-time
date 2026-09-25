@@ -27,24 +27,19 @@
   }
 </script>
 
-<article class="history-row">
-  <a href={movieUrl} aria-label={entry.movie.title} class="history-poster-link">
-    <div class="history-poster">
-      <img
-        src={entry.movie.poster.url.thumb}
-        alt={entry.movie.title}
-        loading="lazy"
-        class="poster-img"
-      />
+<article class="media-row" data-variant="history">
+  <a href={movieUrl} aria-label={entry.movie.title} class="media-row-thumb-link">
+    <div class="media-row-thumb">
+      <img src={entry.movie.cover.url.thumb} alt={entry.movie.title} loading="lazy" />
     </div>
   </a>
 
-  <div class="history-body">
-    <a href={movieUrl} aria-label={entry.movie.title} class="history-title">
+  <div class="media-row-body">
+    <a href={movieUrl} aria-label={entry.movie.title} class="media-row-title">
       {entry.movie.title}
     </a>
     {#if entry.movie.year}
-      <span class="history-meta">{entry.movie.year}</span>
+      <span class="media-row-meta">{entry.movie.year}</span>
     {/if}
   </div>
 
@@ -61,107 +56,3 @@
     <TrackIcon state={$isWatched ? 'watched' : 'unwatched'} />
   </button>
 </article>
-
-<style lang="scss">
-  @use '$style/scss/mixins/index' as *;
-  .history-row {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-m);
-    padding: var(--gap-s) var(--gap-m);
-    border-bottom: var(--ni-1) solid var(--color-border);
-    background-color: var(--color-card-background);
-    opacity: 0.45;
-    transition: opacity var(--transition-increment) ease-in-out;
-
-    &:hover,
-    &:focus-within {
-      opacity: 0.85;
-    }
-  }
-
-  :global(.history-poster-link) {
-    flex-shrink: 0;
-    display: block;
-    text-decoration: none;
-  }
-
-  .history-poster {
-    width: var(--trakttime-list-poster-width);
-    aspect-ratio: 2 / 3;
-    border-radius: var(--border-radius-s);
-    overflow: hidden;
-    background-color: var(--color-card-background);
-  }
-
-  .poster-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .history-body {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-xxs);
-  }
-
-  :global(.history-row .history-title) {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-decoration: none;
-    display: block;
-  }
-
-  .history-meta {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-  }
-
-  .watched-btn {
-    flex-shrink: 0;
-    background: none;
-    border: var(--ni-2) solid var(--color-border);
-    border-radius: 50%;
-    width: var(--trakttime-watched-btn-size);
-    height: var(--trakttime-watched-btn-size);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-    transition:
-      border-color var(--transition-increment) ease-in-out,
-      color var(--transition-increment) ease-in-out,
-      background var(--transition-increment) ease-in-out;
-
-    &.is-watched {
-      border-color: var(--trakttime-accent);
-      background: var(--trakttime-accent);
-      color: var(--color-background);
-    }
-
-    /* Direct hover on an already-watched toggle previews removal. */
-    @include for-mouse {
-      &.is-watched:hover,
-      &.is-watched:focus-visible {
-        border-color: var(--red-400);
-        background: var(--red-400);
-      }
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: default;
-    }
-  }
-</style>
