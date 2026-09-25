@@ -113,9 +113,8 @@
 
   .episode-skeleton-btn {
     flex-shrink: 0;
-    /* The real toggle is a button (border-box), so 36px is its full rect. */
-    width: var(--trakttime-watched-btn-size);
-    height: var(--trakttime-watched-btn-size);
+    width: var(--trakttime-watched-btn-size-compact);
+    height: var(--trakttime-watched-btn-size-compact);
     border-radius: 50%;
     @include shimmer-bg-elevated;
   }

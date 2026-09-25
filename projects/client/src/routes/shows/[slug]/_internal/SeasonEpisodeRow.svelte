@@ -106,6 +106,11 @@
     &:last-child {
       border-bottom: none;
     }
+
+    .watched-btn {
+      width: var(--trakttime-watched-btn-size-compact);
+      height: var(--trakttime-watched-btn-size-compact);
+    }
   }
 
   .episode-link {

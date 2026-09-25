@@ -25,8 +25,8 @@
     display: flex;
     align-items: center;
     gap: var(--gap-s);
-    padding: var(--gap-s) var(--gap-m)
-      calc(var(--gap-s) + var(--ni-4) + var(--gap-xs));
+    padding: var(--gap-m) var(--gap-m)
+      calc(var(--gap-m) + var(--ni-4) + var(--gap-xs));
     border-bottom: var(--ni-1) solid var(--color-border);
 
     &:last-child {
