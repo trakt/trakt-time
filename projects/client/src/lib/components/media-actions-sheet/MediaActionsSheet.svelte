@@ -17,7 +17,7 @@
   import LoaderIcon from '$lib/components/icons/LoaderIcon.svelte';
   import TrackIcon from '$lib/components/icons/TrackIcon.svelte';
   import StarIcon from '$lib/components/icons/StarIcon.svelte';
-  import CreateListPill from './CreateListPill.svelte';
+  import CreateListRow from './CreateListRow.svelte';
   import ListToggleItem from './ListToggleItem.svelte';
   import * as m from '$lib/paraglide/messages.js';
 
@@ -70,8 +70,20 @@
     watchedHooks?.markAsWatched();
   }
 
+  const LIST_PREVIEW_COUNT = 5;
+
   const listsQuery = useQuery(userListsQuery({}));
   const lists = $derived($listsQuery.data ?? []);
+
+  let showAllLists = $state(false);
+  $effect(() => {
+    if (!isOpen) showAllLists = false;
+  });
+
+  const visibleLists = $derived(
+    showAllLists ? lists : lists.slice(0, LIST_PREVIEW_COUNT),
+  );
+  const hasHiddenLists = $derived(visibleLists.length < lists.length);
 
   const { listedOnIds } = $derived(useListedOnIds({ type, slug }));
 
@@ -112,15 +124,15 @@
 {#if isOpen}
   <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
   <div
-    class="sheet-backdrop"
+    class="bottom-sheet-backdrop"
     onclick={onBackdropClick}
     role="dialog"
     aria-modal="true"
     aria-label={m.header_more_options()}
     tabindex="-1"
   >
-    <div class="sheet">
-      <div class="sheet-handle"></div>
+    <div class="bottom-sheet sheet">
+      <div class="bottom-sheet-handle"></div>
 
       <header class="sheet-header">
         <p class="sheet-title">{title}</p>
@@ -265,8 +277,8 @@
 
       <section class="sheet-section">
         <span class="section-label">{m.page_title_lists()}</span>
-        <div class="lists-row">
-          {#each lists as list (list.id)}
+        <div class="list-card">
+          {#each visibleLists as list (list.id)}
             <ListToggleItem
               {list}
               {type}
@@ -274,7 +286,17 @@
               isAdded={$listedOnIds.includes(list.id)}
             />
           {/each}
-          <CreateListPill />
+          {#if hasHiddenLists}
+            <button
+              type="button"
+              class="list-card-more"
+              onclick={() => (showAllLists = true)}
+            >
+              <span>{m.button_label_view_all_lists()}</span>
+              <span class="list-card-more-count">{lists.length}</span>
+            </button>
+          {/if}
+          <CreateListRow />
         </div>
       </section>
     </div>
@@ -284,58 +306,12 @@
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
 
-  .sheet-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: var(--layer-overlay);
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    animation: fade-in 0.2s ease;
-  }
-
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
   .sheet {
-    width: 100%;
-    max-width: var(--trakttime-max-width);
-    background: var(--color-card-background);
-    border-radius: var(--border-radius-xxl) var(--border-radius-xxl) 0 0;
-    padding: var(--gap-s) var(--gap-m)
-      calc(
-        var(--trakttime-bottom-nav-height) + var(--gap-m) +
-          env(safe-area-inset-bottom, 0px)
-      );
+    padding-top: var(--gap-s);
+    padding-inline: var(--gap-m);
     display: flex;
     flex-direction: column;
     gap: var(--gap-l);
-    animation: slide-up 0.25s cubic-bezier(0.32, 0.72, 0, 1);
-  }
-
-  @keyframes slide-up {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-
-  .sheet-handle {
-    width: var(--ni-36);
-    height: var(--ni-4);
-    border-radius: var(--ni-2);
-    background: var(--color-border);
-    align-self: center;
-    margin-bottom: var(--gap-xs);
   }
 
   .sheet-header {
@@ -348,8 +324,9 @@
   .sheet-title {
     flex: 1;
     min-width: 0;
-    font-size: 1.125rem;
-    font-weight: 700;
+    font-family: var(--trakttime-font-heading);
+    font-size: 1.375rem;
+    font-weight: 600;
     color: var(--color-text-primary);
     margin: 0;
     overflow: hidden;
@@ -398,11 +375,10 @@
   }
 
   .section-label {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-text-secondary);
+    font-family: var(--trakttime-font-heading);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
   }
 
   .rating-tally {
@@ -460,38 +436,44 @@
   }
 
   .action-pills {
-    display: flex;
-    gap: var(--gap-s);
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    gap: var(--gap-xs);
   }
 
   .action-pill {
-    flex: 1;
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--gap-xs);
-    padding: var(--gap-s) var(--gap-m);
-    border-radius: var(--trakttime-radius-pill);
-    border: 1.5px solid var(--color-border);
-    background: none;
-    color: var(--color-text-secondary);
+    gap: var(--gap-xxs);
+    min-height: var(--ni-72);
+    padding: var(--gap-s) var(--gap-xs);
+    border-radius: var(--trakttime-radius-card);
+    border: none;
+    background: var(--color-floating-background);
+    color: var(--color-text-primary);
+    font: inherit;
     font-size: 0.8125rem;
-    font-weight: 600;
+    font-weight: 500;
+    text-align: center;
     cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    transition:
+      color var(--transition-increment) ease-in-out,
+      background var(--transition-increment) ease-in-out;
     -webkit-tap-highlight-color: transparent;
 
     svg,
     :global(svg) {
-      width: var(--ni-18);
-      height: var(--ni-18);
+      width: var(--ni-20);
+      height: var(--ni-20);
       flex-shrink: 0;
     }
 
     &.is-active {
       color: var(--trakttime-accent);
-      border-color: var(--trakttime-accent);
-      background: color-mix(in srgb, var(--trakttime-accent) 12%, transparent);
+      background: color-mix(in srgb, var(--trakttime-accent) 14%, transparent);
     }
 
     &:disabled {
@@ -501,9 +483,14 @@
   }
 
   .action-pill--primary {
+    flex-direction: row;
+    gap: var(--gap-xs);
+    min-height: var(--ni-52);
+    border-radius: var(--trakttime-radius-pill);
     background: var(--trakttime-accent);
-    border-color: var(--trakttime-accent);
-    color: var(--color-background);
+    color: var(--trakttime-accent-foreground);
+    font-size: 1rem;
+    font-weight: 600;
     width: 100%;
 
     :global(svg) {
@@ -528,9 +515,38 @@
     font-style: italic;
   }
 
-  .lists-row {
+
+  .list-card {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--gap-xs);
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--trakttime-radius-card);
+    background: var(--color-floating-background);
+
+    > :global(* + *) {
+      border-top: var(--ni-1) solid var(--color-border);
+    }
+  }
+
+  .list-card-more {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-s);
+    min-height: var(--ni-48);
+    padding: 0 var(--gap-m);
+    border: none;
+    background: none;
+    color: var(--trakttime-accent);
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .list-card-more-count {
+    color: var(--color-text-secondary);
+    font-weight: 500;
   }
 </style>

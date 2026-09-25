@@ -51,7 +51,7 @@
 {#if mode === 'idle'}
   <button
     type="button"
-    class="create-pill"
+    class="create-row"
     onclick={startEditing}
     aria-label={m.button_label_create_list()}
   >
@@ -99,55 +99,52 @@
 {/if}
 
 <style lang="scss">
-  .create-pill {
-    display: inline-flex;
+  .create-row,
+  .create-form {
+    display: flex;
     align-items: center;
-    gap: var(--gap-xs);
+    gap: var(--gap-s);
+    width: 100%;
+    min-height: var(--ni-56);
+    padding: var(--gap-xs) var(--gap-m);
+    box-sizing: border-box;
+  }
+
+  .create-row {
+    border: none;
     background: none;
-    border: 1.5px dashed
-      color-mix(in srgb, var(--trakttime-accent) 50%, transparent);
-    border-radius: var(--border-radius-m);
-    padding: var(--gap-xs) var(--gap-s);
     color: var(--trakttime-accent);
-    font-size: 0.8125rem;
+    font: inherit;
+    font-size: 0.9375rem;
     font-weight: 600;
     cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.15s ease, border-color 0.15s ease;
     -webkit-tap-highlight-color: transparent;
+    transition: background var(--transition-increment) ease-in-out;
 
     svg {
       flex-shrink: 0;
-      width: var(--ni-16);
-      height: var(--ni-16);
+      width: var(--ni-20);
+      height: var(--ni-20);
     }
 
     &:hover,
     &:focus-visible {
       background: color-mix(in srgb, var(--trakttime-accent) 8%, transparent);
-      border-color: var(--trakttime-accent);
     }
-  }
-
-  .create-form {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-xs);
-    width: 100%;
-    background: var(--color-card-background);
-    border: 1.5px solid var(--trakttime-accent);
-    border-radius: var(--border-radius-m);
-    padding: var(--gap-xxs) var(--gap-xs) var(--gap-xxs) var(--gap-s);
   }
 
   .create-input {
     flex: 1;
     min-width: 0;
-    background: transparent;
-    border: none;
+    height: var(--ni-40);
+    padding: 0 var(--gap-s);
+    border: var(--border-thickness-xs) solid var(--trakttime-accent);
+    border-radius: var(--trakttime-radius-pill);
     outline: none;
+    background: var(--color-card-background);
     color: var(--color-text-primary);
-    font-size: 0.875rem;
+    font: inherit;
+    font-size: 0.9375rem;
 
     &::placeholder {
       color: var(--color-text-secondary);
@@ -161,15 +158,18 @@
   .create-cancel,
   .create-submit {
     flex-shrink: 0;
-    background: none;
+    height: var(--ni-40);
     border: none;
-    border-radius: var(--border-radius-s);
-    padding: var(--gap-xxs) var(--gap-s);
-    font-size: 0.75rem;
-    font-weight: 700;
+    border-radius: var(--trakttime-radius-pill);
+    padding: 0 var(--gap-s);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition:
+      background var(--transition-increment) ease-in-out,
+      color var(--transition-increment) ease-in-out;
 
     &:disabled {
       opacity: 0.5;
@@ -178,6 +178,7 @@
   }
 
   .create-cancel {
+    background: none;
     color: var(--color-text-secondary);
 
     &:hover:not(:disabled) {
@@ -186,12 +187,12 @@
   }
 
   .create-submit {
-    background: var(--trakttime-accent);
-    color: var(--color-background);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 4rem;
+    min-width: var(--ni-72);
+    background: var(--trakttime-accent);
+    color: var(--trakttime-accent-foreground);
 
     :global(svg) {
       width: var(--ni-14);
