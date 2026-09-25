@@ -478,7 +478,6 @@
   "trivia_category_impact_n_legacy": "影響と功績",
   "trivia_category_real_world_connections": "現実とのつながり",
   "text_reveal_spoiler": "タップしてネタバレを表示",
-  "button_text_see_all_reviews": "すべてのレビューを見る",
   "trivia_category_quick_fact": "豆知識",
   "text_unlock_sentiment_analysis": "分析をすべて見る",
   "text_unlock_all_trivia": "トリビアをすべて見る",
@@ -487,5 +486,8 @@
   "button_label_remove_gif": "GIFを削除",
   "image_alt_comment_gif": "コメントに添付されたGIF",
   "input_placeholder_search_gifs": "KLIPYを検索",
-  "text_gif_no_results": "GIFが見つかりません"
+  "text_gif_no_results": "GIFが見つかりません",
+  "button_label_previous_episode": "前のエピソード",
+  "button_label_next_episode": "次のエピソード",
+  "text_no_reviews": "まだレビューはありません。最初の感想を投稿しましょう。"
 }

@@ -478,7 +478,6 @@
   "trivia_category_impact_n_legacy": "Etki ve miras",
   "trivia_category_real_world_connections": "Gerçek dünya",
   "text_reveal_spoiler": "Spoiler'ı görmek için dokun",
-  "button_text_see_all_reviews": "Tüm incelemeleri gör",
   "trivia_category_quick_fact": "Kısa bilgi",
   "text_unlock_sentiment_analysis": "Tam analizin kilidini aç",
   "text_unlock_all_trivia": "Tüm ilginç bilgilerin kilidini aç",
@@ -487,5 +486,8 @@
   "button_label_remove_gif": "GIF'i Kaldır",
   "image_alt_comment_gif": "Yoruma eklenmiş GIF",
   "input_placeholder_search_gifs": "KLIPY Ara",
-  "text_gif_no_results": "GIF bulunamadı"
+  "text_gif_no_results": "GIF bulunamadı",
+  "button_label_previous_episode": "Önceki bölüm",
+  "button_label_next_episode": "Sonraki bölüm",
+  "text_no_reviews": "Henüz inceleme yok. Düşüncelerini ilk sen paylaş."
 }

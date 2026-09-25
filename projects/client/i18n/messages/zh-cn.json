@@ -478,7 +478,6 @@
   "trivia_category_impact_n_legacy": "影响与传承",
   "trivia_category_real_world_connections": "现实关联",
   "text_reveal_spoiler": "点按查看剧透",
-  "button_text_see_all_reviews": "查看全部评论",
   "trivia_category_quick_fact": "小知识",
   "text_unlock_sentiment_analysis": "解锁完整分析",
   "text_unlock_all_trivia": "解锁全部花絮",
@@ -487,5 +486,8 @@
   "button_label_remove_gif": "移除GIF",
   "image_alt_comment_gif": "评论附带的GIF",
   "input_placeholder_search_gifs": "搜索 KLIPY",
-  "text_gif_no_results": "未找到 GIF"
+  "text_gif_no_results": "未找到 GIF",
+  "button_label_previous_episode": "上一集",
+  "button_label_next_episode": "下一集",
+  "text_no_reviews": "还没有评论，快来分享你的看法吧。"
 }

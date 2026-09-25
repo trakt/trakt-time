@@ -478,7 +478,6 @@
   "trivia_category_impact_n_legacy": "Impact & nalatenschap",
   "trivia_category_real_world_connections": "Echte wereld",
   "text_reveal_spoiler": "Tik om de spoiler te tonen",
-  "button_text_see_all_reviews": "Alle recensies bekijken",
   "trivia_category_quick_fact": "Snel weetje",
   "text_unlock_sentiment_analysis": "Ontgrendel de volledige analyse",
   "text_unlock_all_trivia": "Ontgrendel alle weetjes",
@@ -487,5 +486,8 @@
   "button_label_remove_gif": "Verwijder GIF",
   "image_alt_comment_gif": "GIF toegevoegd aan de reactie",
   "input_placeholder_search_gifs": "Zoek KLIPY",
-  "text_gif_no_results": "Geen GIFs gevonden"
+  "text_gif_no_results": "Geen GIFs gevonden",
+  "button_label_previous_episode": "Vorige aflevering",
+  "button_label_next_episode": "Volgende aflevering",
+  "text_no_reviews": "Nog geen recensies. Deel als eerste je mening."
 }

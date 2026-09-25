@@ -6,6 +6,7 @@
   import GifButton from '$lib/features/gif-picker/GifButton.svelte';
   import { klipyCustomerId } from '$lib/features/gif-picker/klipyCustomerId.ts';
   import { reportGifShare } from '$lib/features/gif-picker/reportGifShare.ts';
+  import FullScreenPanel from '$lib/components/panel/FullScreenPanel.svelte';
   import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { ExtendedMediaType } from '$lib/requests/models/ExtendedMediaType.ts';
@@ -90,10 +91,6 @@
     replyGif = null;
   }
 
-  function onBackdropClick(e: MouseEvent) {
-    if (e.target === e.currentTarget) onClose();
-  }
-
   function onTextareaKey(e: KeyboardEvent) {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
@@ -102,67 +99,38 @@
   }
 </script>
 
-<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
-<div
-  class="bottom-sheet-backdrop"
-  onclick={onBackdropClick}
-  role="dialog"
-  aria-modal="true"
-  aria-label={m.header_thread()}
-  tabindex="-1"
->
-  <div class="bottom-sheet sheet">
-    <header class="sheet-header">
-      <div class="bottom-sheet-handle" aria-hidden="true"></div>
-      <div class="sheet-title-row">
-        <span class="sheet-title">{m.header_thread()}</span>
-        <button
-          type="button"
-          class="close-btn"
-          onclick={onClose}
-          aria-label={m.button_label_close()}
-        >
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path
-              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-            />
-          </svg>
-        </button>
-      </div>
-    </header>
+<FullScreenPanel title={m.header_thread()} {onClose}>
+  <div class="parent-wrap">
+    <CommentCard {comment} {onDelete} />
+  </div>
 
-    <div class="thread-scroll">
-      <div class="parent-wrap">
-        <CommentCard {comment} {onDelete} />
-      </div>
-
-      {#if $list.length > 0}
-        <div class="replies-divider">
-          <span>{m.header_replies()}</span>
-          <span class="reply-count">{comment.replyCount}</span>
-        </div>
-        <ul class="replies-list">
-          {#each $list as reply (reply.key)}
-            <li class="reply-item">
-              <CommentCard comment={reply} {onDelete} />
-            </li>
-          {/each}
-        </ul>
-        <InfiniteScrollTrigger
-          hasMore={$hasNextPage}
-          isLoading={$isLoading}
-          count={$list.length}
-          onload={fetchNextPage}
-        />
-      {:else if $isLoading}
-        <div class="thread-loading">
-          <LoadingIndicator />
-        </div>
-      {:else}
-        <p class="empty-replies">{m.text_no_replies()}</p>
-      {/if}
+  {#if $list.length > 0}
+    <div class="replies-divider">
+      <span>{m.header_replies()}</span>
+      <span class="reply-count">{comment.replyCount}</span>
     </div>
+    <ul class="replies-list">
+      {#each $list as reply (reply.key)}
+        <li class="reply-item">
+          <CommentCard comment={reply} {onDelete} />
+        </li>
+      {/each}
+    </ul>
+    <InfiniteScrollTrigger
+      hasMore={$hasNextPage}
+      isLoading={$isLoading}
+      count={$list.length}
+      onload={fetchNextPage}
+    />
+  {:else if $isLoading}
+    <div class="thread-loading">
+      <LoadingIndicator />
+    </div>
+  {:else}
+    <p class="empty-replies">{m.text_no_replies()}</p>
+  {/if}
 
+  {#snippet footer()}
     <RenderFor audience="authenticated">
       <form
         class="reply-composer"
@@ -223,64 +191,10 @@
         </div>
       </form>
     </RenderFor>
-  </div>
-</div>
+  {/snippet}
+</FullScreenPanel>
 
 <style lang="scss">
-  .sheet {
-    height: 92dvh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .sheet-header {
-    flex-shrink: 0;
-    padding: var(--gap-s) var(--gap-m) var(--gap-xs);
-    border-bottom: var(--ni-1) solid var(--color-border);
-  }
-
-  .sheet-title-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--gap-s);
-  }
-
-  .sheet-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-  }
-
-  .close-btn {
-    background: none;
-    border: none;
-    padding: var(--ni-6);
-    cursor: pointer;
-    color: var(--color-text-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-
-    &:hover {
-      color: var(--color-text-primary);
-      background: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
-    }
-
-    svg {
-      width: var(--ni-20);
-      height: var(--ni-20);
-    }
-  }
-
-  .thread-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 var(--gap-m) var(--gap-m);
-  }
-
   .parent-wrap {
     border-bottom: var(--ni-1) solid var(--color-border);
   }
@@ -334,7 +248,8 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-xs);
-    padding: var(--gap-s) var(--gap-m) var(--gap-m);
+    padding: var(--gap-s) var(--gap-m)
+      calc(var(--gap-m) + env(safe-area-inset-bottom, 0px));
     border-top: var(--ni-1) solid var(--color-border);
     background: var(--color-card-background);
   }
