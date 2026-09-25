@@ -489,5 +489,7 @@
   "text_gif_no_results": "GIF не найдены",
   "button_label_previous_episode": "Предыдущая серия",
   "button_label_next_episode": "Следующая серия",
-  "text_no_reviews": "Пока нет отзывов. Поделитесь мнением первым."
+  "text_no_reviews": "Пока нет отзывов. Поделитесь мнением первым.",
+  "text_star_rating_label": "{rating} из 5 звёзд",
+  "text_rate_after_watching": "Отметьте как просмотренное, чтобы оценить"
 }

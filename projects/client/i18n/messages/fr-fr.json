@@ -489,5 +489,7 @@
   "text_gif_no_results": "Aucun GIF trouvé",
   "button_label_previous_episode": "Épisode précédent",
   "button_label_next_episode": "Épisode suivant",
-  "text_no_reviews": "Aucune critique pour l'instant. Soyez le premier à donner votre avis."
+  "text_no_reviews": "Aucune critique pour l'instant. Soyez le premier à donner votre avis.",
+  "text_star_rating_label": "{rating} sur 5 étoiles",
+  "text_rate_after_watching": "Marquez comme vu pour noter"
 }

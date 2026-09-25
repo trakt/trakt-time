@@ -489,5 +489,7 @@
   "text_gif_no_results": "Няма намерени GIF файлове",
   "button_label_previous_episode": "Предишен епизод",
   "button_label_next_episode": "Следващ епизод",
-  "text_no_reviews": "Все още няма ревюта. Бъди първият, който сподели мнение."
+  "text_no_reviews": "Все още няма ревюта. Бъди първият, който сподели мнение.",
+  "text_star_rating_label": "{rating} от 5 звезди",
+  "text_rate_after_watching": "Маркирай като гледано, за да оцениш"
 }

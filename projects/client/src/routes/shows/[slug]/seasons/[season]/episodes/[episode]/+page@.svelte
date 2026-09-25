@@ -13,6 +13,8 @@
   import ChevronRightIcon from '$lib/components/icons/ChevronRightIcon.svelte';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import { toAdjacentEpisodes } from './_internal/toAdjacentEpisodes.ts';
+  import EpisodeRating from './_internal/EpisodeRating.svelte';
+  import RenderFor from '$lib/guards/RenderFor.svelte';
   import {
     EpisodeFinaleType,
     EpisodePremiereType,
@@ -85,6 +87,21 @@
       : null,
   );
 
+  const episodeWatchedProps = $derived(
+    episode && show
+      ? {
+        type: 'episode' as const,
+        media: {
+          id: episode.id,
+          effectiveReleaseDate: episode.effectiveReleaseDate,
+          season: episode.season,
+          number: episode.number,
+        },
+        show: { id: show.id, title: show.title },
+      }
+      : null,
+  );
+
   const showUrl = $derived(`/shows/${slug}`);
 
   const seasonLabel = $derived(`S${season.toString().padStart(2, '0')}`);
@@ -99,10 +116,8 @@
       : false,
   );
 
-  const ratingLabel = $derived(
-    episode?.rating && episodeHasAired
-      ? `${(episode.rating * 10).toFixed(1)} / 10`
-      : null,
+  const ratingScore = $derived(
+    episode?.rating && episodeHasAired ? episode.rating : null,
   );
 
   const duration = $derived(
@@ -201,26 +216,22 @@
             {#if duration}<span>{duration}</span>{/if}
           </div>
 
-          {#if ratingLabel}
-            <MediaRating label={ratingLabel} />
+          {#if ratingScore}
+            <MediaRating score={ratingScore} />
           {/if}
         </div>
       </div>
 
-      {#if show}
+      {#if episodeWatchedProps}
         <MediaActionsRow
-          watchedProps={{
-            type: 'episode',
-            media: {
-              id: episode.id,
-              effectiveReleaseDate: episode.effectiveReleaseDate,
-              season: episode.season,
-              number: episode.number,
-            },
-            show: { id: show.id, title: show.title },
-          }}
+          watchedProps={episodeWatchedProps}
           title={intl?.title ?? episode.title}
         />
+        {#if episodeHasAired}
+          <RenderFor audience="authenticated">
+            <EpisodeRating id={episodeWatchedProps.media.id} watchedProps={episodeWatchedProps} />
+          </RenderFor>
+        {/if}
       {/if}
 
       {#if intl?.overview ?? episode.overview}

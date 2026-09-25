@@ -1,24 +1,25 @@
 <script lang="ts">
+  import StarRating from '$lib/components/rating/StarRating.svelte';
+  import { languageTag } from '$lib/features/i18n/index.ts';
+  import * as m from '$lib/paraglide/messages.js';
+  import { formatStars, toStarsFromScore } from '$lib/utils/rating/toStars.ts';
+
   type Props = {
-    label: string;
+    score: number;
     extraLabel?: string | null;
   };
 
-  const { label, extraLabel }: Props = $props();
+  const { score, extraLabel }: Props = $props();
+
+  const stars = $derived(toStarsFromScore(score));
+  const label = $derived(formatStars({ value: stars, locale: languageTag() }));
 </script>
 
 <div class="summary-rating">
-  <svg
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    class="summary-rating-icon"
-    aria-hidden="true"
-  >
-    <path
-      d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"
-    />
-  </svg>
-  <span>{label}</span>
+  <span class="summary-rating-value" aria-label={m.text_star_rating_label({ rating: label })}>
+    {label}
+  </span>
+  <StarRating value={stars} />
   {#if extraLabel}
     <span class="summary-rating-extra">{extraLabel}</span>
   {/if}
@@ -28,16 +29,14 @@
   .summary-rating {
     display: flex;
     align-items: center;
-    gap: var(--gap-xxs);
+    gap: var(--gap-xs);
     font-size: 0.8125rem;
     font-weight: 600;
     color: var(--trakttime-accent);
   }
 
-  .summary-rating-icon {
-    width: var(--ni-14);
-    height: var(--ni-14);
-    color: var(--trakttime-accent);
+  .summary-rating-value {
+    font-variant-numeric: tabular-nums;
   }
 
   .summary-rating-extra {

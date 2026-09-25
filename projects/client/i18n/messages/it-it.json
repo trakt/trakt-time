@@ -489,5 +489,7 @@
   "text_gif_no_results": "Nessuna GIF trovata",
   "button_label_previous_episode": "Episodio precedente",
   "button_label_next_episode": "Episodio successivo",
-  "text_no_reviews": "Ancora nessuna recensione. Sii il primo a dire la tua."
+  "text_no_reviews": "Ancora nessuna recensione. Sii il primo a dire la tua.",
+  "text_star_rating_label": "{rating} su 5 stelle",
+  "text_rate_after_watching": "Segna come visto per votare"
 }

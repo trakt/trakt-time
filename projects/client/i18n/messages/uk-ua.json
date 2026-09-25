@@ -489,5 +489,7 @@
   "text_gif_no_results": "GIF не знайдено",
   "button_label_previous_episode": "Попередня серія",
   "button_label_next_episode": "Наступна серія",
-  "text_no_reviews": "Ще немає відгуків. Поділіться думкою першими."
+  "text_no_reviews": "Ще немає відгуків. Поділіться думкою першими.",
+  "text_star_rating_label": "{rating} з 5 зірок",
+  "text_rate_after_watching": "Позначте як переглянуте, щоб оцінити"
 }

@@ -489,5 +489,7 @@
   "text_gif_no_results": "Inga GIF:ar hittades",
   "button_label_previous_episode": "Föregående avsnitt",
   "button_label_next_episode": "Nästa avsnitt",
-  "text_no_reviews": "Inga recensioner än. Bli först med att dela dina tankar."
+  "text_no_reviews": "Inga recensioner än. Bli först med att dela dina tankar.",
+  "text_star_rating_label": "{rating} av 5 stjärnor",
+  "text_rate_after_watching": "Markera som sedd för att betygsätta"
 }

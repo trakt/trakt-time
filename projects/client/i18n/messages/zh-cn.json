@@ -489,5 +489,7 @@
   "text_gif_no_results": "未找到 GIF",
   "button_label_previous_episode": "上一集",
   "button_label_next_episode": "下一集",
-  "text_no_reviews": "还没有评论，快来分享你的看法吧。"
+  "text_no_reviews": "还没有评论，快来分享你的看法吧。",
+  "text_star_rating_label": "{rating} / 5 星",
+  "text_rate_after_watching": "标记为已看后即可评分"
 }

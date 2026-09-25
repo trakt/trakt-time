@@ -489,5 +489,7 @@
   "text_gif_no_results": "GIF bulunamadı",
   "button_label_previous_episode": "Önceki bölüm",
   "button_label_next_episode": "Sonraki bölüm",
-  "text_no_reviews": "Henüz inceleme yok. Düşüncelerini ilk sen paylaş."
+  "text_no_reviews": "Henüz inceleme yok. Düşüncelerini ilk sen paylaş.",
+  "text_star_rating_label": "5 yıldız üzerinden {rating}",
+  "text_rate_after_watching": "Puanlamak için izlendi olarak işaretle"
 }
