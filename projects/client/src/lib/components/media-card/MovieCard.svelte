@@ -14,7 +14,7 @@
       ? `${Math.floor(entry.runtime / 60)}h ${entry.runtime % 60}m`
       : null,
   );
-  const genreList = $derived(entry.genres.slice(0, 2).join(', '));
+  const metaLabel = $derived([entry.year, duration].filter(Boolean).join(' · '));
   const isUpcoming = $derived(
     entry.effectiveReleaseDate != null && entry.effectiveReleaseDate > new Date(),
   );
@@ -40,7 +40,7 @@
 <article class="media-row">
   <a href={movieUrl} aria-label={entry.title} class="media-row-thumb-link">
     <div class="media-row-thumb">
-      <img src={entry.cover.url.thumb} alt={entry.title} loading="lazy" />
+      <img src={entry.poster.url.thumb} alt={entry.title} loading="lazy" />
       {#if isUpcoming}
         <CountdownBadge releaseDate={entry.effectiveReleaseDate} />
       {/if}
@@ -52,12 +52,12 @@
       {entry.title}
     </a>
 
-    {#if duration || genreList}
-      <p class="media-row-meta">
-        {#if duration}{duration}{/if}
-        {#if duration && genreList} • {/if}
-        {#if genreList}{genreList}{/if}
-      </p>
+    {#if metaLabel}
+      <p class="media-row-meta">{metaLabel}</p>
+    {/if}
+
+    {#if entry.overview}
+      <p class="media-row-subtitle">{entry.overview}</p>
     {/if}
   </div>
 

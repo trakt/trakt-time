@@ -33,10 +33,6 @@
     isPremiere ? 'PREMIERE' : isFinale ? 'FINALE' : null,
   );
 
-  const thumbnailUrl = $derived(
-    entry.cover.url ?? entry.show.cover.url.thumb,
-  );
-
   const airInfo = $derived(
     [entry.show.airs?.time, entry.show.network].filter(Boolean),
   );
@@ -45,8 +41,9 @@
 <article class="media-row">
   <a href={episodeUrl} aria-label={entry.title} class="media-row-thumb-link">
     <div class="media-row-thumb">
-      {#if thumbnailUrl}
-        <img src={thumbnailUrl} alt={entry.show.title} loading="lazy" />
+      <img src={entry.show.poster.url.thumb} alt={entry.show.title} loading="lazy" />
+      {#if badgeLabel}
+        <span class="media-row-thumb-tag">{badgeLabel}</span>
       {/if}
     </div>
   </a>
@@ -58,9 +55,6 @@
 
     <div class="media-row-meta">
       <span>{seasonLabel} {episodeLabel}{extraCount}</span>
-      {#if badgeLabel}
-        <span class="episode-badge">{badgeLabel}</span>
-      {/if}
     </div>
 
     <a href={episodeUrl} aria-label={entry.title} class="media-row-subtitle">

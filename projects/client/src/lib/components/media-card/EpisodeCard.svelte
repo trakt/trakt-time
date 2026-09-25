@@ -42,7 +42,10 @@
 <article class="media-row">
   <a href={episodeUrl} aria-label={entry.title} class="media-row-thumb-link">
     <div class="media-row-thumb">
-      <img src={entry.show.cover.url.thumb} alt={entry.show.title} loading="lazy" />
+      <img src={entry.show.poster.url.thumb} alt={entry.show.title} loading="lazy" />
+      {#if badgeLabel}
+        <span class="media-row-thumb-tag">{badgeLabel}</span>
+      {/if}
     </div>
   </a>
 
@@ -53,9 +56,6 @@
 
     <div class="media-row-meta">
       <span>{seasonLabel} {episodeLabel} · {progressLabel}</span>
-      {#if badgeLabel}
-        <span class="episode-badge" data-status={status}>{badgeLabel}</span>
-      {/if}
     </div>
 
     <a href={episodeUrl} aria-label={entry.title} class="media-row-subtitle">
