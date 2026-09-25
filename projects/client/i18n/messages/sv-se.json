@@ -496,5 +496,8 @@
   "import_step_sync_body": "Kontrollera antalet och starta",
   "import_liberator_hint": "Exporterar hela din TV Time-historik",
   "import_gdpr_hint": "Från TV Times integritetsportal",
-  "button_label_view_profile": "Visa profil"
+  "button_label_view_profile": "Visa profil",
+  "text_profile_header": "Profilhuvud",
+  "option_text_profile_header_posters": "Affischer",
+  "option_text_profile_header_cover": "Omslag"
 }

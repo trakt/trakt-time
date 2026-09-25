@@ -8,6 +8,7 @@
   import ShareIcon from '$lib/components/icons/ShareIcon.svelte';
   import SegmentedControl from '$lib/components/segmented-control/SegmentedControl.svelte';
   import { getLocale } from '$lib/features/i18n/index.ts';
+  import { useProfileHeader } from '$lib/features/profile-header/useProfileHeader.ts';
   import ProfileImage from './_internal/ProfileImage.svelte';
   import ProfileHeaderSkeleton from './_internal/ProfileHeaderSkeleton.svelte';
   import ProfilePosterWall from './_internal/ProfilePosterWall.svelte';
@@ -133,6 +134,11 @@
     favoritePosters.length > 0 ? favoritePosters : watchlistPosters,
   );
 
+  const { profileHeader } = useProfileHeader();
+  const coverUrl = $derived(
+    $profileHeader === 'cover' ? profile?.cover?.url : null,
+  );
+
   const ratingsCount = $derived(
     stats
       ? stats.shows.ratings + stats.movies.ratings + stats.episodes.ratings
@@ -214,7 +220,7 @@
   <ProfileHeaderSkeleton />
 {:else}
   <div class="profile-header">
-    <ProfilePosterWall coverUrl={profile.cover?.url} posters={wallPosters} />
+    <ProfilePosterWall {coverUrl} posters={wallPosters} />
     <div class="profile-identity">
       <div class="profile-avatar" class:is-vip={profile.isVip}>
         <ProfileImage

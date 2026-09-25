@@ -496,5 +496,8 @@
   "import_step_sync_body": "Controleer het aantal en start",
   "import_liberator_hint": "Exporteert je volledige TV Time-geschiedenis",
   "import_gdpr_hint": "Via het privacyportaal van TV Time",
-  "button_label_view_profile": "Profiel bekijken"
+  "button_label_view_profile": "Profiel bekijken",
+  "text_profile_header": "Profielkop",
+  "option_text_profile_header_posters": "Posters",
+  "option_text_profile_header_cover": "Omslag"
 }
