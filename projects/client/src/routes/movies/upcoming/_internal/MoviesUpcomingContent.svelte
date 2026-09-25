@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { capitalizeFirst } from '$lib/utils/string/capitalizeFirst.ts';
   import { languageTag } from '$lib/features/i18n/index.ts';
   import { daysFromToday, toLocalDayKey } from '$lib/utils/date/toLocalDayKey.ts';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
@@ -23,15 +24,26 @@
   function toGroupLabel(dateKey: string): string {
     const diffDays = daysFromToday(dateKey);
 
-    if (diffDays <= 0) return 'TODAY';
+    if (diffDays <= 0) {
+      return capitalizeFirst(
+        new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(0, 'day'),
+        locale,
+      );
+    }
 
     const date = new Date(dateKey + 'T12:00:00');
 
     if (diffDays <= 7) {
-      return new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(date).toUpperCase();
+      return capitalizeFirst(
+        new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(date),
+        locale,
+      );
     }
 
-    return new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }).format(date).toUpperCase();
+    return capitalizeFirst(
+      new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }).format(date),
+      locale,
+    );
   }
 
   type MovieGroup = { key: string; label: string; items: MovieEntry[] };

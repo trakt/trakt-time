@@ -5,50 +5,230 @@
  * tokens in `overrides.css` the single source of truth for theming.
  */
 
-/* Pill rendered above media cards linking back to the parent show. */
-.show-title-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ni-2);
-  background-color: var(--trakttime-tag-background);
-  color: var(--trakttime-tag-foreground);
-  font-size: 0.625rem;
+.group-header-title {
+  font-family: var(--trakttime-font-heading);
+  font-size: 1.25rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 3px var(--ni-8);
-  border-radius: var(--border-radius-xxl);
-  text-decoration: none;
-  width: fit-content;
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  transition: background-color var(--transition-increment) ease-in-out;
+  color: var(--color-text-primary);
 }
 
-.show-title-pill:hover {
-  background-color: color-mix(
-    in srgb,
-    var(--trakttime-tag-background) 88%,
-    var(--color-background)
+.media-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-m);
+  min-height: var(--trakttime-row-height);
+  margin: 0 var(--gap-m) var(--gap-xs);
+  padding-inline-end: var(--gap-m);
+  background-color: var(--color-card-background);
+  border-radius: var(--trakttime-radius-card);
+  overflow: hidden;
+}
+
+.media-row[data-variant='history'] {
+  opacity: 0.45;
+  transition: opacity var(--transition-increment) ease-in-out;
+
+  &:hover,
+  &:focus-within {
+    opacity: 0.85;
+  }
+}
+
+.media-row-thumb-link {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: block;
+  text-decoration: none;
+}
+
+.media-row-thumb {
+  position: relative;
+  width: var(--trakttime-row-thumb-width);
+  height: 100%;
+  min-height: var(--trakttime-row-height);
+  background-color: var(--color-floating-background);
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.media-row-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ni-2);
+  padding: var(--gap-s) 0;
+}
+
+.media-row-title,
+.media-row-subtitle {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+
+.media-row-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.media-row-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+
+  > span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  > .episode-badge {
+    flex-shrink: 0;
+  }
+}
+
+p.media-row-meta {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.media-row-subtitle {
+  font-size: 0.875rem;
+  color: color-mix(in srgb, var(--color-text-secondary) 70%, transparent);
+}
+
+.episode-badge {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--trakttime-accent);
+  border: var(--ni-1) solid var(--trakttime-accent);
+  padding: var(--ni-1) var(--ni-6);
+  border-radius: var(--trakttime-radius-pill);
+}
+
+.watched-btn {
+  flex-shrink: 0;
+  background: none;
+  border: var(--border-thickness-xs) solid
+    color-mix(in srgb, var(--color-text-secondary) 45%, transparent);
+  border-radius: 50%;
+  width: var(--trakttime-watched-btn-size);
+  height: var(--trakttime-watched-btn-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color var(--transition-increment) ease-in-out,
+    background var(--transition-increment) ease-in-out,
+    color var(--transition-increment) ease-in-out;
+
+  svg {
+    width: 45%;
+    height: 45%;
+  }
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--trakttime-accent);
+    color: var(--trakttime-accent);
+  }
+
+  &.is-watched {
+    border-color: var(--trakttime-accent);
+    background: var(--trakttime-accent);
+    color: var(--trakttime-accent-foreground);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .watched-btn.is-watched:hover,
+  .watched-btn.is-watched:focus-visible {
+    border-color: var(--red-400);
+    background: var(--red-400);
+    color: var(--trakttime-accent-foreground);
+  }
+}
+
+.segmented-tabs {
+  position: sticky;
+  top: 0;
+  z-index: var(--layer-floating);
+  display: flex;
+  justify-content: center;
+  padding: var(--gap-s) var(--gap-m);
+  background: linear-gradient(
+    var(--color-background) 60%,
+    transparent
   );
 }
 
-.show-title-chevron {
-  opacity: 0.6;
+.segmented-tabs-list {
+  display: flex;
+  gap: var(--ni-4);
+  padding: var(--ni-4);
+  background-color: var(--color-card-background);
+  border-radius: var(--trakttime-radius-pill);
 }
 
-/* Section divider used to label rows ("WATCH NEXT", "WATCHED HISTORY", …). */
-.group-header-pill {
-  background-color: var(--trakttime-tag-background);
-  color: var(--trakttime-tag-foreground);
-  font-size: 0.625rem;
+.segmented-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--ni-104);
+  padding: var(--gap-xs) var(--gap-m);
+  font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: var(--ni-4) var(--ni-12);
-  border-radius: var(--border-radius-xxl);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--trakttime-radius-pill);
+  transition:
+    color var(--transition-increment) ease-in-out,
+    background-color var(--transition-increment) ease-in-out;
+
+  &[data-active='true'] {
+    color: var(--color-text-primary);
+    background-color: var(--color-floating-background);
+  }
+}
+
+.icon-button-round {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ni-44);
+  height: var(--ni-44);
+  border-radius: 50%;
+  color: var(--color-text-primary);
+  background-color: var(--trakttime-control-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 /* Summary-page shell — used by movies, shows, and episodes. ----------------

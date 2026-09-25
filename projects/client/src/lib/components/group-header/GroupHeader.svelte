@@ -3,13 +3,11 @@
 </script>
 
 <div class="group-header">
-  <span class="group-header-pill">{label}</span>
+  <h2 class="group-header-title">{label}</h2>
 </div>
 
 <style lang="scss">
   .group-header {
-    display: flex;
-    justify-content: center;
-    padding: var(--gap-s) 0;
+    padding: var(--gap-m) var(--gap-m) var(--gap-s);
   }
 </style>
