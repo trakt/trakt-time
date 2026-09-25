@@ -91,16 +91,16 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
 <div
-  class="sheet-backdrop"
+  class="bottom-sheet-backdrop"
   onclick={onBackdropClick}
   role="dialog"
   aria-modal="true"
   aria-label={m.header_thread()}
   tabindex="-1"
 >
-  <div class="sheet">
+  <div class="bottom-sheet sheet">
     <header class="sheet-header">
-      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="bottom-sheet-handle" aria-hidden="true"></div>
       <div class="sheet-title-row">
         <span class="sheet-title">{m.header_thread()}</span>
         <button
@@ -201,63 +201,17 @@
 </div>
 
 <style lang="scss">
-  .sheet-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: var(--layer-overlay);
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    animation: fade-in 0.2s ease;
-  }
-
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
   .sheet {
-    width: 100%;
-    max-width: var(--trakttime-max-width);
     height: 92dvh;
-    box-sizing: border-box;
-    padding-bottom: calc(
-      var(--trakttime-bottom-nav-height) + env(safe-area-inset-bottom, 0px)
-    );
-    background: var(--color-card-background);
-    border-radius: var(--border-radius-l) var(--border-radius-l) 0 0;
     display: flex;
     flex-direction: column;
-    animation: slide-up 0.25s cubic-bezier(0.32, 0.72, 0, 1);
     overflow: hidden;
-  }
-
-  @keyframes slide-up {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
   }
 
   .sheet-header {
     flex-shrink: 0;
     padding: var(--gap-s) var(--gap-m) var(--gap-xs);
     border-bottom: var(--ni-1) solid var(--color-border);
-  }
-
-  .sheet-handle {
-    width: var(--ni-36);
-    height: var(--ni-4);
-    border-radius: var(--ni-2);
-    background: var(--color-border);
-    margin: 0 auto var(--gap-xs);
   }
 
   .sheet-title-row {

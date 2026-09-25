@@ -71,15 +71,15 @@
 {#if isOpen}
   <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
   <div
-    class="sheet-backdrop"
+    class="bottom-sheet-backdrop"
     onclick={onBackdropClick}
     role="dialog"
     aria-modal="true"
     aria-label={m.button_label_add_new_comment()}
     tabindex="-1"
   >
-    <div class="sheet">
-      <div class="sheet-handle"></div>
+    <div class="bottom-sheet sheet">
+      <div class="bottom-sheet-handle"></div>
       <p class="sheet-title">{title}</p>
 
       <textarea
@@ -130,58 +130,12 @@
 {/if}
 
 <style lang="scss">
-  .sheet-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: var(--layer-overlay);
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    animation: fade-in 0.2s ease;
-  }
-
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
   .sheet {
-    width: 100%;
-    max-width: var(--trakttime-max-width);
-    background: var(--color-card-background);
-    border-radius: var(--border-radius-l) var(--border-radius-l) 0 0;
-    padding: var(--gap-s) var(--gap-m)
-      calc(
-        var(--trakttime-bottom-nav-height) + var(--gap-m) +
-          env(safe-area-inset-bottom, 0px)
-      );
+    padding-top: var(--gap-s);
+    padding-inline: var(--gap-m);
     display: flex;
     flex-direction: column;
     gap: var(--gap-m);
-    animation: slide-up 0.25s cubic-bezier(0.32, 0.72, 0, 1);
-  }
-
-  @keyframes slide-up {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-
-  .sheet-handle {
-    width: var(--ni-36);
-    height: var(--ni-4);
-    border-radius: var(--ni-2);
-    background: var(--color-border);
-    align-self: center;
-    margin-bottom: var(--gap-xs);
   }
 
   .sheet-title {
