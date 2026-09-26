@@ -47,19 +47,25 @@ export function useFollowUser({ slug, username }: UseFollowUserProps) {
   const pending = isAuthorized.pipe(
     switchMap((authorized) =>
       authorized
-        ? pendingQuery.pipe(map((query) => query.data ?? []))
+        ? pendingQuery.pipe(map((query) => query.data))
         : of<UserProfile[]>([])
     ),
   );
 
-  const followStatus = combineLatest([network, pending]).pipe(
+  const followState = combineLatest([network, pending]);
+
+  const followStatus = followState.pipe(
     map(([$network, $pending]) =>
       toFollowStatus({
         slug,
         following: $network?.following ?? [],
-        pending: $pending,
+        pending: $pending ?? [],
       })
     ),
+  );
+
+  const isFollowStatusKnown = followState.pipe(
+    map(([$network, $pending]) => $network != null && $pending != null),
   );
 
   const withUpdating = async (action: () => Promise<unknown>) => {
@@ -93,6 +99,7 @@ export function useFollowUser({ slug, username }: UseFollowUserProps) {
 
   return {
     followStatus,
+    isFollowStatusKnown,
     isUpdatingFollow,
     followUser,
     unfollowUser,

@@ -10,6 +10,7 @@
   import { usePaginatedListQuery } from '$lib/sections/lists/stores/usePaginatedListQuery.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import ProfileListRow from './ProfileListRow.svelte';
+  import ProfileListSkeleton from './ProfileListSkeleton.svelte';
   import { PROGRESS_TABS, toProgressBucket } from './toProgressBucket.ts';
 
   const PREVIEW_COUNT = 3;
@@ -23,15 +24,21 @@
     }),
   );
 
-  const watching = usePaginatedListQuery(
+  const watchingQuery = usePaginatedListQuery(
     progressWatchedQuery({ limit: PREVIEW_COUNT, intent: 'continue' }),
-  ).list;
-  const completed = usePaginatedListQuery(
+  );
+  const completedQuery = usePaginatedListQuery(
     progressWatchedQuery({ limit: COMPLETED_PAGE_SIZE, intent: 'completed' }),
-  ).list;
-  const dropped = usePaginatedListQuery(
+  );
+  const droppedQuery = usePaginatedListQuery(
     droppedShowsQuery({ limit: PREVIEW_COUNT }),
-  ).list;
+  );
+  const watching = watchingQuery.list;
+  const completed = completedQuery.list;
+  const dropped = droppedQuery.list;
+  const watchingLoading = watchingQuery.isLoading;
+  const completedLoading = completedQuery.isLoading;
+  const droppedLoading = droppedQuery.isLoading;
 
   const options = [
     { value: 'in-progress' as const, label: m.button_text_progress_in_progress() },
@@ -49,6 +56,12 @@
     }).slice(0, PREVIEW_COUNT),
   );
 
+  const isLoading = $derived.by(() => {
+    if (tab === 'in-progress') return $watchingLoading && $watching.length === 0;
+    if (tab === 'dropped') return $droppedLoading && $dropped.length === 0;
+    return $completedLoading && $completed.length === 0;
+  });
+
   const toShare = (entry: ProgressEntry) =>
     entry.type === 'watched' && entry.total > 0
       ? (entry.completed / entry.total) * 100
@@ -65,7 +78,11 @@
   />
 </div>
 
-{#if entries.length === 0}
+{#if isLoading}
+  <div class="progress-card">
+    <ProfileListSkeleton count={PREVIEW_COUNT} />
+  </div>
+{:else if entries.length === 0}
   <p class="progress-empty">{m.text_no_activity()}</p>
 {:else}
   <div class="progress-card">
@@ -114,8 +131,13 @@
   }
 
   .progress-empty {
-    margin: 0;
-    padding: var(--gap-l) var(--trakttime-page-gutter);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc((var(--ni-60) + var(--gap-s) * 2) * 3 + var(--ni-2));
+    margin: 0 var(--trakttime-page-gutter);
+    border-radius: var(--border-radius-xl);
+    background: var(--color-card-background);
     color: var(--color-text-secondary);
     font-size: 0.875rem;
     text-align: center;

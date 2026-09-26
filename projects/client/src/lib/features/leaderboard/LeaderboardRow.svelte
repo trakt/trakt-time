@@ -9,9 +9,14 @@
   import { toShortWatchTime } from '$lib/sections/profile/_internal/toUnitLabelParts.ts';
   import { toWatchTime } from '$lib/sections/profile/_internal/toWatchTime.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
+  import { useUser } from '$lib/features/auth/stores/useUser.ts';
   import { useLeaderboard } from './useLeaderboard.ts';
 
-  const { entries, viewerRank } = useLeaderboard();
+  const { entries, viewerRank, isLoading } = useLeaderboard();
+  const { network } = useUser();
+  const mayFollowAnyone = $derived(
+    $network == null || $network.following.length > 0,
+  );
 
   let isSheetOpen = $state(false);
 
@@ -19,7 +24,12 @@
   const rankedCount = $derived($entries.filter((entry) => !entry.locked).length);
 </script>
 
-{#if $entries.length > 0}
+{#if $isLoading && mayFollowAnyone}
+  <div class="leaderboard-row leaderboard-row--skeleton" aria-hidden="true">
+    <TrophyIcon />
+    <span class="leaderboard-row-text">{m.header_leaderboard()}</span>
+  </div>
+{:else if $entries.length > 0}
   <button
     type="button"
     class="leaderboard-row"
@@ -75,7 +85,10 @@
 {/if}
 
 <style lang="scss">
+  @use '$style/scss/mixins/index' as *;
+
   .leaderboard-row {
+    position: relative;
     display: flex;
     align-items: center;
     gap: var(--gap-s);
@@ -109,6 +122,23 @@
     &:focus-visible {
       outline: var(--ni-2) solid var(--trakttime-accent);
       outline-offset: calc(var(--ni-2) * -1);
+    }
+  }
+
+  .leaderboard-row--skeleton {
+    cursor: default;
+
+    > :global(svg),
+    .leaderboard-row-text {
+      visibility: hidden;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: var(--gap-s) var(--gap-m);
+      border-radius: var(--border-radius-s);
+      @include shimmer-bg-elevated;
     }
   }
 

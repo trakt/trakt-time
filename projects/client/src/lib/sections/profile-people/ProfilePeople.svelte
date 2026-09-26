@@ -1,6 +1,5 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
   import CloseIcon from '$lib/components/icons/CloseIcon.svelte';
   import CheckIcon from '$lib/components/icons/CheckIcon.svelte';
   import SegmentedControl from '$lib/components/segmented-control/SegmentedControl.svelte';
@@ -8,6 +7,7 @@
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import FollowButton from '$lib/features/social/FollowButton.svelte';
   import UserRow from '$lib/features/social/UserRow.svelte';
+  import UserRowSkeleton from '$lib/features/social/UserRowSkeleton.svelte';
   import { useFollowRequests } from '$lib/features/social/useFollowRequests.ts';
   import * as m from '$lib/paraglide/messages.js';
   import type { UserProfile } from '$lib/requests/models/UserProfile.ts';
@@ -26,7 +26,15 @@
   const { user } = useUser();
   const followingResult = $derived(useQuery(followingQuery({ slug })));
   const followersResult = $derived(useQuery(followersQuery({ slug })));
-  const { requests, pendingRequestIds, approve, deny } = useFollowRequests();
+  const {
+    requests,
+    isLoading: requestsLoading,
+    pendingRequestIds,
+    approve,
+    deny,
+  } = useFollowRequests();
+
+  const SKELETON_COUNT = 8;
 
   const tab = $derived(
     toPeopleTab({ value: page.url.searchParams.get('tab'), isOwner }),
@@ -74,7 +82,9 @@
 </div>
 
 {#if tab === 'requests'}
-  {#if $requests.length === 0}
+  {#if $requestsLoading && $requests.length === 0}
+    <div class="people-card"><UserRowSkeleton count={2} /></div>
+  {:else if $requests.length === 0}
     <p class="people-empty">{m.list_placeholder_follow_requests()}</p>
   {:else}
     <div class="people-card">
@@ -109,7 +119,7 @@
     </div>
   {/if}
 {:else if isLoading && profiles.length === 0}
-  <div class="people-loading"><LoadingIndicator /></div>
+  <div class="people-card"><UserRowSkeleton count={SKELETON_COUNT} /></div>
 {:else if profiles.length === 0}
   <p class="people-empty">{emptyText}</p>
 {:else}
@@ -150,8 +160,7 @@
     }
   }
 
-  .people-empty,
-  .people-loading {
+  .people-empty {
     display: flex;
     justify-content: center;
     margin: 0;

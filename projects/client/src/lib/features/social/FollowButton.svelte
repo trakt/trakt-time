@@ -13,8 +13,14 @@
 
   const { slug, username, size = 'normal' }: Props = $props();
 
-  const { followStatus, isUpdatingFollow, followUser, unfollowUser, cancelFollowRequest } =
-    $derived(useFollowUser({ slug, username }));
+  const {
+    followStatus,
+    isFollowStatusKnown,
+    isUpdatingFollow,
+    followUser,
+    unfollowUser,
+    cancelFollowRequest,
+  } = $derived(useFollowUser({ slug, username }));
 
   const onclick = () => {
     if ($followStatus === 'following') return unfollowUser();
@@ -31,6 +37,11 @@
   });
 </script>
 
+{#if !$isFollowStatusKnown}
+  <span class="follow-button follow-button--skeleton" data-size={size} aria-hidden="true">
+    {m.button_text_following()}
+  </span>
+{:else}
 <button
   type="button"
   class="follow-button"
@@ -53,8 +64,11 @@
     {m.button_text_follow()}
   {/if}
 </button>
+{/if}
 
 <style lang="scss">
+  @use '$style/scss/mixins/index' as *;
+
   .follow-button {
     display: inline-flex;
     align-items: center;
@@ -113,5 +127,10 @@
       outline: var(--ni-2) solid var(--trakttime-accent);
       outline-offset: var(--ni-2);
     }
+  }
+
+  .follow-button--skeleton {
+    color: transparent;
+    @include shimmer-bg-elevated;
   }
 </style>
