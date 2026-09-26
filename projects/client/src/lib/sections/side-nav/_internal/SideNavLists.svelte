@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import { page } from '$app/state';
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import * as m from '$lib/paraglide/messages.js';
@@ -15,7 +16,7 @@
     <h2 class="side-nav-lists-title">{m.header_my_lists()}</h2>
     {#each lists as list (list.id)}
       <a
-        href="/lists/{list.id}?name={encodeURIComponent(list.name)}"
+        href={UrlBuilder.lists.personal(list)}
         class="side-nav-list"
         data-active={page.url.pathname === `/lists/${list.id}`}
       >

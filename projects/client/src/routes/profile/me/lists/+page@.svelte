@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
@@ -28,7 +29,7 @@
     <div class="lists-grid">
       {#each lists as list (list.id)}
         <a
-          href="/lists/{list.id}?name={encodeURIComponent(list.name)}"
+          href={UrlBuilder.lists.personal(list)}
           class="list-card"
         >
           <span class="list-name">{list.name}</span>

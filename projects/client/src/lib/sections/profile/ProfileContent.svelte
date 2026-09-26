@@ -76,7 +76,6 @@
   );
   const lists = $derived($listsQuery.data ?? []);
   const listsLoading = $derived($listsQuery.isLoading);
-  const listOwnerId = $derived(isOwner ? 'me' : slug);
 
   const watchlistShowsResult = $derived(
     // intent 'default': profile previews show the raw watchlist. Anything
@@ -603,10 +602,10 @@
         <div class="lists-card">
           {#each lists.slice(0, LISTS_PREVIEW_COUNT) as list (list.id)}
             <a
-              href="/lists/{list.id}?name={encodeURIComponent(list.name)}"
+              href={UrlBuilder.lists.personal(list)}
               class="list-row"
             >
-              <ListPosterStack userId={listOwnerId} listId={list.id} />
+              <ListPosterStack userId={String(list.ownerId)} listId={list.id} />
               <span class="list-text">
                 <span class="list-name">{list.name}</span>
                 <span class="list-count">{list.count} {m.text_items_unit()}</span>

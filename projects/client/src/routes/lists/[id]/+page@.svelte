@@ -10,11 +10,14 @@
   import PosterCard from '$lib/components/poster-card/PosterCard.svelte';
   import * as m from '$lib/paraglide/messages.js';
 
-  const listId = page.params.id ?? '';
+  const listId = $derived(page.params.id ?? '');
   const listName = $derived(page.url.searchParams.get('name') ?? 'List');
+  const ownerId = $derived(page.url.searchParams.get('owner') ?? 'me');
 
-  const { list, isLoading, hasNextPage, fetchNextPage } = usePaginatedListQuery(
-    userListItemsQuery({ userId: 'me', listId, limit: 20 }),
+  const { list, isLoading, hasNextPage, fetchNextPage } = $derived(
+    usePaginatedListQuery(
+      userListItemsQuery({ userId: ownerId, listId, limit: 20 }),
+    ),
   );
 
   const items = $derived(

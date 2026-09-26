@@ -143,6 +143,16 @@ describe('UrlBuilder', () => {
   });
 
   describe('lists', () => {
+    it('builds a personal list url carrying its name and owner', () => {
+      expect(
+        UrlBuilder.lists.personal({
+          id: 31942812,
+          name: '2026 Fall Shows',
+          ownerId: 1,
+        }),
+      ).toBe('/lists/31942812?name=2026+Fall+Shows&owner=1');
+    });
+
     it('builds smart list urls', () => {
       expect(UrlBuilder.lists.smart.create()).toBe('/lists/smart/create');
       expect(UrlBuilder.lists.smart.view(7)).toBe('/lists/smart/view/7');
