@@ -166,7 +166,6 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: start;
-      gap: var(--gap-l);
       padding-inline-end: var(--trakttime-page-gutter);
     }
   }

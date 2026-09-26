@@ -104,7 +104,6 @@
 
     @media (min-width: 1024px) {
       body {
-        max-width: var(--trakttime-app-max-width);
         padding-inline-start: var(--trakttime-sidebar-width);
         box-sizing: border-box;
       }

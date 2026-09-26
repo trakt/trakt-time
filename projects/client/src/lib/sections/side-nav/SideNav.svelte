@@ -55,7 +55,7 @@
       position: fixed;
       top: 0;
       bottom: 0;
-      left: max(0px, calc(50% - var(--trakttime-app-max-width) / 2));
+      left: 0;
       z-index: var(--layer-overlay);
       width: var(--trakttime-sidebar-width);
       box-sizing: border-box;
