@@ -1,29 +1,25 @@
 <script lang="ts">
   import UserAvatar from '$lib/components/avatar/UserAvatar.svelte';
-  import { useQuery } from '$lib/features/query/useQuery.ts';
+  import type { NowPlayingItem } from '$lib/requests/models/NowPlayingItem.ts';
   import type { UserProfile } from '$lib/requests/models/UserProfile.ts';
-  import { userWatchingQuery } from '$lib/requests/queries/users/userWatchingQuery.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
 
-  const { profile }: { profile: UserProfile } = $props();
+  const { profile, item }: { profile: UserProfile; item: NowPlayingItem } =
+    $props();
 
   const slug = $derived(profile.slug ?? profile.username);
-  const watching = $derived(useQuery(userWatchingQuery({ slug })));
-  const item = $derived($watching.data);
   const title = $derived(
-    item ? (item.type === 'episode' ? item.show.title : item.media.title) : '',
+    item.type === 'episode' ? item.show.title : item.media.title,
   );
 </script>
 
-{#if item}
-  <a class="watching-now-item" href={UrlBuilder.profile.user(slug)}>
-    <span class="watching-now-ring">
-      <UserAvatar name={profile.username} src={profile.avatar.url} size="l" />
-    </span>
-    <span class="watching-now-name">{profile.username}</span>
-    <span class="watching-now-title">{title}</span>
-  </a>
-{/if}
+<a class="watching-now-item" href={UrlBuilder.profile.user(slug)}>
+  <span class="watching-now-ring">
+    <UserAvatar name={profile.username} src={profile.avatar.url} size="l" />
+  </span>
+  <span class="watching-now-name">{profile.username}</span>
+  <span class="watching-now-title">{title}</span>
+</a>
 
 <style lang="scss">
   .watching-now-item {
