@@ -68,6 +68,19 @@
   }
 }
 
+@mixin desktop-side-panel {
+  @include for-desktop {
+    inset: 0 0 0 auto;
+    width: var(--ni-480);
+    max-width: 100%;
+    margin: 0;
+    border-left: var(--ni-1) solid var(--color-border);
+    box-shadow:
+      var(--shadow-dialog),
+      0 0 0 100vmax color-mix(in srgb, var(--shade-1000) 55%, transparent);
+  }
+}
+
 @mixin default-link-style {
   text-decoration-color: var(--color-link-active);
 

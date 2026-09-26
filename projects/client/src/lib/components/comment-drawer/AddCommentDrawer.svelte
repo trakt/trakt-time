@@ -160,6 +160,8 @@
 {/if}
 
 <style lang="scss">
+  @use '$style/scss/mixins/index' as *;
+
   .composer {
     position: fixed;
     inset: 0;
@@ -174,6 +176,8 @@
     box-sizing: border-box;
     background: var(--color-background);
     animation: composer-in 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+
+    @include desktop-side-panel;
   }
 
   .composer-header {

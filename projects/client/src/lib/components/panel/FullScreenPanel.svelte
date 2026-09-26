@@ -50,6 +50,8 @@
 </div>
 
 <style lang="scss">
+  @use '$style/scss/mixins/index' as *;
+
   .full-screen-panel {
     position: fixed;
     inset: 0;
@@ -62,6 +64,8 @@
     padding-top: env(safe-area-inset-top, 0px);
     background: var(--color-background);
     animation: panel-in 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+
+    @include desktop-side-panel;
 
     &:focus {
       outline: none;

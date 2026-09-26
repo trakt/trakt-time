@@ -74,6 +74,8 @@
 </div>
 
 <style lang="scss">
+  @use '$style/scss/mixins/index' as *;
+
   .gif-picker {
     position: fixed;
     inset: 0;
@@ -87,6 +89,8 @@
     box-sizing: border-box;
     background: var(--color-background);
     animation: gif-picker-in 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+
+    @include desktop-side-panel;
   }
 
   .gif-picker-header {
