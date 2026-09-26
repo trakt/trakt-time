@@ -614,5 +614,9 @@
   "list_title_social_activity": "Sociale activiteit",
   "text_social_activities_placeholder": "Niemand die je volgt heeft dit nog bekeken, beoordeeld, gerecenseerd of aan de kijklijst toegevoegd.",
   "link_label_view_social_activities": "Sociale activiteiten bekijken voor {title}",
-  "text_watched_by_following": "Gezien door mensen die je volgt"
+  "text_watched_by_following": "Gezien door mensen die je volgt",
+  "page_title_friends": "Vrienden",
+  "header_watching_now": "Kijkt nu",
+  "text_filter_all": "Alles",
+  "text_friends_feed_empty": "Volg mensen om hier te zien wat ze kijken."
 }

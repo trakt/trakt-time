@@ -614,5 +614,9 @@
   "list_title_social_activity": "Soziale Aktivität",
   "text_social_activities_placeholder": "Niemand, dem du folgst, hat dies bisher angesehen, bewertet, rezensiert oder auf die Merkliste gesetzt.",
   "link_label_view_social_activities": "Soziale Aktivitäten für {title} anzeigen",
-  "text_watched_by_following": "Gesehen von Leuten, denen du folgst"
+  "text_watched_by_following": "Gesehen von Leuten, denen du folgst",
+  "page_title_friends": "Freunde",
+  "header_watching_now": "Schauen gerade",
+  "text_filter_all": "Alle",
+  "text_friends_feed_empty": "Folge Leuten, um hier zu sehen, was sie schauen."
 }

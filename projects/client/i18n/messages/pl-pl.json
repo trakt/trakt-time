@@ -614,5 +614,9 @@
   "list_title_social_activity": "Aktywność innych",
   "text_social_activities_placeholder": "Nikt z obserwowanych przez Ciebie osób jeszcze tego nie obejrzał, nie ocenił, nie zrecenzował ani nie dodał do obserwowanych.",
   "link_label_view_social_activities": "Pokaż aktywności społecznościowe dla {title}",
-  "text_watched_by_following": "Obejrzane przez osoby, które obserwujesz"
+  "text_watched_by_following": "Obejrzane przez osoby, które obserwujesz",
+  "page_title_friends": "Znajomi",
+  "header_watching_now": "Oglądają teraz",
+  "text_filter_all": "Wszystko",
+  "text_friends_feed_empty": "Obserwuj innych, aby widzieć tutaj, co oglądają."
 }

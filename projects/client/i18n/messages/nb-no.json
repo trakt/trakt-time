@@ -614,5 +614,9 @@
   "list_title_social_activity": "Sosial aktivitet",
   "text_social_activities_placeholder": "Ingen du følger har sett, vurdert, anmeldt eller lagt til ønskelisten ennå.",
   "link_label_view_social_activities": "Se sosiale aktiviteter for {title}",
-  "text_watched_by_following": "Sett av folk du følger"
+  "text_watched_by_following": "Sett av folk du følger",
+  "page_title_friends": "Venner",
+  "header_watching_now": "Ser nå",
+  "text_filter_all": "Alle",
+  "text_friends_feed_empty": "Følg folk for å se hva de ser på her."
 }

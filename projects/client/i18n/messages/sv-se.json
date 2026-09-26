@@ -614,5 +614,9 @@
   "list_title_social_activity": "Social aktivitet",
   "text_social_activities_placeholder": "Ingen du följer har tittat på, betygsatt, recenserat eller lagt till på bevakningslistan ännu.",
   "link_label_view_social_activities": "Visa sociala aktiviteter för {title}",
-  "text_watched_by_following": "Sett av personer du följer"
+  "text_watched_by_following": "Sett av personer du följer",
+  "page_title_friends": "Vänner",
+  "header_watching_now": "Tittar nu",
+  "text_filter_all": "Alla",
+  "text_friends_feed_empty": "Följ personer för att se vad de tittar på här."
 }

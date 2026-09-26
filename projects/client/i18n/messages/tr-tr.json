@@ -614,5 +614,9 @@
   "list_title_social_activity": "Sosyal Etkinlik",
   "text_social_activities_placeholder": "Takip ettiklerinizden hiçbiri henüz bunu izlemedi, puanlamadı, incelemedi veya izleme listesine eklemedi.",
   "link_label_view_social_activities": "{title} için sosyal etkinlikleri görüntüle",
-  "text_watched_by_following": "Takip ettiğin kişiler izledi"
+  "text_watched_by_following": "Takip ettiğin kişiler izledi",
+  "page_title_friends": "Arkadaşlar",
+  "header_watching_now": "Şu an izliyor",
+  "text_filter_all": "Tümü",
+  "text_friends_feed_empty": "Neler izlediklerini burada görmek için insanları takip et."
 }

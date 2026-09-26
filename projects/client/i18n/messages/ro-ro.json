@@ -614,5 +614,9 @@
   "list_title_social_activity": "Activitate socială",
   "text_social_activities_placeholder": "Niciuna dintre persoanele pe care le urmărești nu a vizionat, evaluat, recenzat sau adăugat la lista de vizionare încă.",
   "link_label_view_social_activities": "Vezi activitățile sociale pentru {title}",
-  "text_watched_by_following": "Văzut de persoanele pe care le urmărești"
+  "text_watched_by_following": "Văzut de persoanele pe care le urmărești",
+  "page_title_friends": "Prieteni",
+  "header_watching_now": "Se uită acum",
+  "text_filter_all": "Toate",
+  "text_friends_feed_empty": "Urmărește persoane ca să vezi aici ce se uită."
 }
