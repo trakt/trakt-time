@@ -228,6 +228,9 @@ export const UrlBuilder = {
     me: (library: string) => `/users/me/library?library=${library}`,
   },
   lists: {
+    personal: (
+      { id, name, ownerId }: { id: number; name: string; ownerId: number },
+    ) => `/lists/${id}${buildParamString({ name, owner: ownerId })}`,
     smart: {
       create: () => '/lists/smart/create',
       all: () => '/lists/smart/view',
