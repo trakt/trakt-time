@@ -21,6 +21,21 @@
   /* Always-light overlay text — sits on top of poster art, theme-invariant. */
   --trakttime-overlay-text-primary: var(--shade-10);
   --trakttime-overlay-text-secondary: var(--shade-300);
+  --trakttime-overlay-chip-background: color-mix(
+    in srgb,
+    var(--shade-1000) 72%,
+    transparent
+  );
+  --trakttime-overlay-control-background: color-mix(
+    in srgb,
+    var(--shade-1000) 55%,
+    transparent
+  );
+  --trakttime-overlay-control-border: color-mix(
+    in srgb,
+    var(--shade-10) 45%,
+    transparent
+  );
 
   /* Dimensional tokens */
   --trakttime-max-width: 1024px;
@@ -44,11 +59,19 @@
   --trakttime-loading-top: 120px;
 
   --trakttime-sidebar-width: 0px;
+  --trakttime-page-gutter: var(--gap-m);
   --trakttime-column-center: calc(50% + var(--trakttime-sidebar-width) / 2);
+}
+
+@media (min-width: 481px) {
+  :root {
+    --trakttime-page-gutter: var(--gap-l);
+  }
 }
 
 @media (min-width: 1024px) {
   :root {
+    --trakttime-page-gutter: var(--gap-xl);
     --trakttime-sidebar-width: 248px;
     --trakttime-max-width: 1352px;
     --trakttime-app-max-width: calc(

@@ -533,5 +533,9 @@
   "button_label_view_profile": "Profiel bekijken",
   "text_profile_header": "Profielkop",
   "option_text_profile_header_posters": "Posters",
-  "option_text_profile_header_cover": "Omslag"
+  "option_text_profile_header_cover": "Omslag",
+  "header_this_week": "Deze week",
+  "header_next_week": "Volgende week",
+  "text_nothing_scheduled": "Niets gepland",
+  "header_airing_soon": "Binnenkort te zien"
 }

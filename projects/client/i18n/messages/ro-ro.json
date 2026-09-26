@@ -533,5 +533,9 @@
   "button_label_view_profile": "Vezi profilul",
   "text_profile_header": "Antet profil",
   "option_text_profile_header_posters": "Postere",
-  "option_text_profile_header_cover": "Copertă"
+  "option_text_profile_header_cover": "Copertă",
+  "header_this_week": "Săptămâna aceasta",
+  "header_next_week": "Săptămâna viitoare",
+  "text_nothing_scheduled": "Nimic programat",
+  "header_airing_soon": "În curând"
 }

@@ -6,6 +6,7 @@ import {
   breakpointTabletLgMin,
   breakpointTabletSmMax,
   breakpointTabletSmMin,
+  breakpointWide,
 } from '$style/scss/variables/index.ts';
 import { fromEvent, Observable, of } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
@@ -17,6 +18,7 @@ export const WellKnownMediaQuery = {
   tabletLarge:
     `(min-width: ${breakpointTabletLgMin}) and (max-width: ${breakpointTabletLgMax})`,
   desktop: `(min-width: ${breakpointDesktop})`,
+  wide: `(min-width: ${breakpointWide})`,
   mouse: '(hover: hover) and (pointer: fine)',
   touch: '(hover: none) and (pointer: coarse)',
 };

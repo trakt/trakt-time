@@ -533,5 +533,9 @@
   "button_label_view_profile": "Переглянути профіль",
   "text_profile_header": "Шапка профілю",
   "option_text_profile_header_posters": "Постери",
-  "option_text_profile_header_cover": "Обкладинка"
+  "option_text_profile_header_cover": "Обкладинка",
+  "header_this_week": "Цього тижня",
+  "header_next_week": "Наступного тижня",
+  "text_nothing_scheduled": "Нічого не заплановано",
+  "header_airing_soon": "Незабаром в ефірі"
 }

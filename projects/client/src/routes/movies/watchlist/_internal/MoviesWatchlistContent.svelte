@@ -71,20 +71,24 @@
         isEnabled={reveal.isReady}
       />
       <GroupHeader label={m.header_watched_history()} />
-      {#each historyEntries as entry (entry.key)}
-        <WatchedMovieHistoryRow {entry} />
-      {/each}
+      <div class="media-grid">
+        {#each historyEntries as entry (entry.key)}
+          <WatchedMovieHistoryRow {entry} />
+        {/each}
+      </div>
     {/if}
 
     {#if $list.length > 0}
       <div class="watchlist-anchor" bind:this={watchlistAnchor}>
         <GroupHeader label={m.header_watchlist()} />
       </div>
-      {#each $list as item (item.id)}
-        {#if item.type === 'movie'}
-          <MovieCard entry={item.entry} />
-        {/if}
-      {/each}
+      <div class="media-grid">
+        {#each $list as item (item.id)}
+          {#if item.type === 'movie'}
+            <MovieCard entry={item.entry} />
+          {/if}
+        {/each}
+      </div>
     {/if}
 
     <InfiniteScrollTrigger

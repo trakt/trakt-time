@@ -533,5 +533,9 @@
   "button_label_view_profile": "查看个人资料",
   "text_profile_header": "个人资料页头",
   "option_text_profile_header_posters": "海报",
-  "option_text_profile_header_cover": "封面"
+  "option_text_profile_header_cover": "封面",
+  "header_this_week": "本周",
+  "header_next_week": "下周",
+  "text_nothing_scheduled": "暂无安排",
+  "header_airing_soon": "即将播出"
 }

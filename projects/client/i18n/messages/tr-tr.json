@@ -533,5 +533,9 @@
   "button_label_view_profile": "Profili gör",
   "text_profile_header": "Profil başlığı",
   "option_text_profile_header_posters": "Afişler",
-  "option_text_profile_header_cover": "Kapak"
+  "option_text_profile_header_cover": "Kapak",
+  "header_this_week": "Bu hafta",
+  "header_next_week": "Gelecek hafta",
+  "text_nothing_scheduled": "Planlanmış bir şey yok",
+  "header_airing_soon": "Yakında yayında"
 }

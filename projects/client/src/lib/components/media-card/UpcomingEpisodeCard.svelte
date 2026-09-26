@@ -72,6 +72,8 @@
 </article>
 
 <style lang="scss">
+  @use '$style/scss/mixins/index' as *;
+
   .air-info {
     flex-shrink: 0;
     max-width: 28%;
@@ -86,6 +88,31 @@
       font-size: 1rem;
       font-weight: 600;
       color: var(--color-text-primary);
+    }
+  }
+
+  @include for-desktop {
+    :global(.upcoming-day) .air-info {
+      display: contents;
+      text-align: start;
+
+      span:first-child {
+        position: absolute;
+        top: var(--gap-xs);
+        left: var(--gap-xs);
+        padding: var(--ni-2) var(--ni-6);
+        border-radius: var(--border-radius-xs);
+        background: var(--trakttime-overlay-chip-background);
+        color: var(--trakttime-overlay-text-primary);
+        font-size: 0.75rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+
+      span:last-child:not(:first-child) {
+        font-size: 0.75rem;
+        color: var(--color-text-secondary);
+      }
     }
   }
 </style>

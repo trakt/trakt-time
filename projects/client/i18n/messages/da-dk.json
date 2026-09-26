@@ -533,5 +533,9 @@
   "button_label_view_profile": "Se profil",
   "text_profile_header": "Profiloverskrift",
   "option_text_profile_header_posters": "Plakater",
-  "option_text_profile_header_cover": "Cover"
+  "option_text_profile_header_cover": "Cover",
+  "header_this_week": "Denne uge",
+  "header_next_week": "Næste uge",
+  "text_nothing_scheduled": "Intet planlagt",
+  "header_airing_soon": "Snart i tv"
 }

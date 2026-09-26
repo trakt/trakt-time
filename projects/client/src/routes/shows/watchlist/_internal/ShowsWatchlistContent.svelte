@@ -12,8 +12,12 @@
   import type { UpNextEntry } from '$lib/requests/models/UpNextEntry.ts';
   import type { EpisodeActivityHistory } from '$lib/requests/queries/users/episodeActivityHistoryQuery.ts';
   import * as m from '$lib/paraglide/messages.js';
+  import AiringSoon from '$lib/sections/lists/upcoming/AiringSoon.svelte';
+  import { useMedia, WellKnownMediaQuery } from '$lib/stores/css/useMedia.ts';
 
   const DAYS_30 = 30 * 24 * 60 * 60 * 1000;
+
+  const isWide = useMedia(WellKnownMediaQuery.wide);
 
   const { list, isLoading, hasNextPage, fetchNextPage } = useUpNextList({
     type: 'show',
@@ -94,56 +98,85 @@
   });
 </script>
 
-<div class="watchlist-page" class:ready={reveal.isReady}>
-  {#if ($isLoading || $historyLoading) && $list.length === 0 && historyEntries.length === 0}
-    <div class="loading-state">
-      <WatchlistSkeleton />
-    </div>
-  {:else if groups.length === 0 && historyEntries.length === 0}
-    <div class="empty-state">
-      <p>{m.text_empty_show_watchlist()}</p>
-      <CtaLink href="/settings">{m.welcome_tvtime_import_cta()}</CtaLink>
-      <CtaLink href="/discover">{m.cta_explore_shows()}</CtaLink>
-    </div>
-  {:else}
-    {#if historyEntries.length > 0}
-      <InfiniteScrollTrigger
-        hasMore={$historyHasNextPage}
-        isLoading={$historyLoading}
-        count={historyEntries.length}
-        onload={loadOlderHistory}
-        isEnabled={reveal.isReady}
-      />
-      <GroupHeader label={m.header_watched_history()} />
-      {#each historyEntries as entry (entry.key)}
-        <WatchedHistoryRow {entry} />
-      {/each}
-    {/if}
-
-    {#each groups as group, groupIndex (group.id)}
-      {#if groupIndex === 0}
-        <div class="watch-next-anchor" bind:this={watchNextAnchor}>
-          <GroupHeader label={group.label} />
+<div class="watchlist-layout">
+  <div class="watchlist-page" class:ready={reveal.isReady}>
+    {#if ($isLoading || $historyLoading) && $list.length === 0 && historyEntries.length === 0}
+      <div class="loading-state">
+        <WatchlistSkeleton />
+      </div>
+    {:else if groups.length === 0 && historyEntries.length === 0}
+      <div class="empty-state">
+        <p>{m.text_empty_show_watchlist()}</p>
+        <CtaLink href="/settings">{m.welcome_tvtime_import_cta()}</CtaLink>
+        <CtaLink href="/discover">{m.cta_explore_shows()}</CtaLink>
+      </div>
+    {:else}
+      {#if historyEntries.length > 0}
+        <InfiniteScrollTrigger
+          hasMore={$historyHasNextPage}
+          isLoading={$historyLoading}
+          count={historyEntries.length}
+          onload={loadOlderHistory}
+          isEnabled={reveal.isReady}
+        />
+        <GroupHeader label={m.header_watched_history()} />
+        <div class="media-grid">
+          {#each historyEntries as entry (entry.key)}
+            <WatchedHistoryRow {entry} />
+          {/each}
         </div>
-      {:else}
-        <GroupHeader label={group.label} />
       {/if}
-      {#each group.items as entry (entry.show.id)}
-        <EpisodeCard {entry} />
-      {/each}
-    {/each}
 
-    <InfiniteScrollTrigger
-      hasMore={$hasNextPage}
-      isLoading={$isLoading}
-      count={$list.length}
-      onload={fetchNextPage}
-    />
+      {#each groups as group, groupIndex (group.id)}
+        {#if groupIndex === 0}
+          <div class="watch-next-anchor" bind:this={watchNextAnchor}>
+            <GroupHeader label={group.label} />
+          </div>
+        {:else}
+          <GroupHeader label={group.label} />
+        {/if}
+        <div class="media-grid" data-layout="tiles">
+          {#each group.items as entry (entry.show.id)}
+            <EpisodeCard {entry} />
+          {/each}
+        </div>
+      {/each}
+
+      <InfiniteScrollTrigger
+        hasMore={$hasNextPage}
+        isLoading={$isLoading}
+        count={$list.length}
+        onload={fetchNextPage}
+      />
+    {/if}
+  </div>
+
+  {#if $isWide}
+    <aside class="watchlist-rail">
+      <AiringSoon />
+    </aside>
   {/if}
 </div>
 
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
+
+  .watchlist-layout {
+    @include for-wide {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: var(--gap-l);
+      padding-inline-end: var(--trakttime-page-gutter);
+    }
+  }
+
+  .watchlist-rail {
+    position: sticky;
+    top: var(--ni-96);
+    width: var(--ni-300);
+    margin-top: var(--gap-m);
+  }
 
   .watchlist-page {
     display: flex;

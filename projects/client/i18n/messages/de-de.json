@@ -533,5 +533,9 @@
   "button_label_view_profile": "Profil ansehen",
   "text_profile_header": "Profilkopf",
   "option_text_profile_header_posters": "Poster",
-  "option_text_profile_header_cover": "Titelbild"
+  "option_text_profile_header_cover": "Titelbild",
+  "header_this_week": "Diese Woche",
+  "header_next_week": "Nächste Woche",
+  "text_nothing_scheduled": "Nichts geplant",
+  "header_airing_soon": "Demnächst"
 }

@@ -533,5 +533,9 @@
   "button_label_view_profile": "Ver perfil",
   "text_profile_header": "Cabeçalho do perfil",
   "option_text_profile_header_posters": "Cartazes",
-  "option_text_profile_header_cover": "Capa"
+  "option_text_profile_header_cover": "Capa",
+  "header_this_week": "Esta semana",
+  "header_next_week": "Próxima semana",
+  "text_nothing_scheduled": "Nada agendado",
+  "header_airing_soon": "Em breve"
 }

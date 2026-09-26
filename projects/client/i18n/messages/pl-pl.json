@@ -533,5 +533,9 @@
   "button_label_view_profile": "Zobacz profil",
   "text_profile_header": "Nagłówek profilu",
   "option_text_profile_header_posters": "Plakaty",
-  "option_text_profile_header_cover": "Okładka"
+  "option_text_profile_header_cover": "Okładka",
+  "header_this_week": "W tym tygodniu",
+  "header_next_week": "W przyszłym tygodniu",
+  "text_nothing_scheduled": "Nic nie zaplanowano",
+  "header_airing_soon": "Wkrótce w emisji"
 }

@@ -533,5 +533,9 @@
   "button_label_view_profile": "Vedi profilo",
   "text_profile_header": "Intestazione profilo",
   "option_text_profile_header_posters": "Locandine",
-  "option_text_profile_header_cover": "Copertina"
+  "option_text_profile_header_cover": "Copertina",
+  "header_this_week": "Questa settimana",
+  "header_next_week": "La prossima settimana",
+  "text_nothing_scheduled": "Niente in programma",
+  "header_airing_soon": "In arrivo"
 }
