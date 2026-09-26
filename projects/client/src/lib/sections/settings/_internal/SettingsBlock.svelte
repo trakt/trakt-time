@@ -1,8 +1,9 @@
 <script lang="ts">
-  const { title, children }: ChildrenProps & { title: string } = $props();
+  const { title, id, children }: ChildrenProps & { title: string; id?: string } =
+    $props();
 </script>
 
-<section class="trakt-settings-block">
+<section class="trakt-settings-block" {id}>
   <h2 class="trakt-settings-block-title">{title}</h2>
   <div class="trakt-settings-block-content">
     {@render children()}
@@ -14,6 +15,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-xs);
+    scroll-margin-top: var(--ni-72);
   }
 
   .trakt-settings-block-title {

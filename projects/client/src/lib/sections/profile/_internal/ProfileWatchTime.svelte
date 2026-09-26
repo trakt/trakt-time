@@ -73,7 +73,11 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-xs);
-    padding: 0 var(--gap-m);
+    padding: 0 var(--trakttime-page-gutter);
+
+    @include for-tablet-sm-and-up {
+      gap: var(--gap-s);
+    }
   }
 
   .watch-card {
@@ -171,6 +175,10 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--gap-xs);
+
+    @include for-tablet-sm-and-up {
+      gap: var(--gap-s);
+    }
   }
 
   .watch-tile {
@@ -215,6 +223,19 @@
     &--tile {
       width: var(--ni-64);
       height: 1.5rem;
+    }
+  }
+
+  @include for-tablet-sm-and-up {
+    @include for-tablet-lg-and-below {
+      .watch-time {
+        display: grid;
+        grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+      }
+
+      .watch-tiles {
+        grid-template-columns: 1fr;
+      }
     }
   }
 </style>

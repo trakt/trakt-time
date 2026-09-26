@@ -50,6 +50,12 @@
   }
 }
 
+@mixin for-tablet-lg-and-up {
+  @media (min-width: $breakpoint-tablet-lg-min) {
+    @content;
+  }
+}
+
 @mixin for-desktop {
   @media (min-width: $breakpoint-desktop) {
     @content;

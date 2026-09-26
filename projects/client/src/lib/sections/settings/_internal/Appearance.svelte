@@ -10,7 +10,7 @@
   import SettingsRow from "./SettingsRow.svelte";
 </script>
 
-<SettingsBlock title={m.header_appearance()}>
+<SettingsBlock id="appearance" title={m.header_appearance()}>
   <SettingsRow title={m.text_theme()} tone="purple">
     {#snippet icon()}
       <DarkMode />
