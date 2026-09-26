@@ -595,5 +595,17 @@
   "text_private_profile_description": "Som om der ikke var nok skjult i forvejen. {username}'s hemmeligheder forbliver deres egne.",
   "page_title_social": "Social",
   "button_label_view_all_social": "Se alle sociale forbindelser",
-  "text_info_follow_requested": "{username} anmodede om at følge dig."
+  "text_info_follow_requested": "{username} anmodede om at følge dig.",
+  "text_sort_comments_popular": "Populære",
+  "text_sort_comments_recent": "Seneste",
+  "translated_value_reaction_like": "Synes godt om",
+  "translated_value_reaction_dislike": "Synes ikke godt om",
+  "translated_value_reaction_love": "Elsker",
+  "translated_value_reaction_laugh": "Griner",
+  "translated_value_reaction_shocked": "Chokeret",
+  "translated_value_reaction_bravo": "Bravo",
+  "translated_value_reaction_spoiler": "Spoiler",
+  "button_label_popup_reactions": "Reaktioner",
+  "button_label_react": "Reager med {reaction}",
+  "header_comment_reactions": "Anmeldelsesreaktioner"
 }

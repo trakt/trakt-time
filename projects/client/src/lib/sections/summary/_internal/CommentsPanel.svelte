@@ -6,6 +6,8 @@
   import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
   import FullScreenPanel from '$lib/components/panel/FullScreenPanel.svelte';
   import RenderFor from '$lib/guards/RenderFor.svelte';
+  import SegmentedControl from '$lib/components/segmented-control/SegmentedControl.svelte';
+  import type { CommentSortType } from '$lib/requests/models/CommentSortType.ts';
   import * as m from '$lib/paraglide/messages.js';
   import type { MediaComment } from '$lib/requests/models/MediaComment.ts';
   import { useCommentDeleteAction } from '$lib/sections/summary/components/comments/_internal/useCommentDeleteAction.ts';
@@ -17,8 +19,14 @@
 
   let composerOpen = $state(false);
   let threadComment = $state<MediaComment | null>(null);
+  let sort = $state<CommentSortType>('likes');
 
-  const commentsResult = $derived(useMediaComments(props));
+  const sortOptions = [
+    { value: 'likes' as const, label: m.text_sort_comments_popular() },
+    { value: 'newest' as const, label: m.text_sort_comments_recent() },
+  ];
+
+  const commentsResult = $derived(useMediaComments({ ...props, sort }));
 
   const commentList = $derived(commentsResult.list);
   const isLoading = $derived(commentsResult.isLoading);
@@ -29,6 +37,14 @@
 </script>
 
 <FullScreenPanel title={m.list_title_comments()} onClose={props.onClose}>
+  <div class="comments-sort">
+    <SegmentedControl
+      label={m.list_title_comments()}
+      value={sort}
+      options={sortOptions}
+      onChange={(value) => (sort = value)}
+    />
+  </div>
   {#if $isLoading && $commentList.length === 0}
     <div class="comments-list" aria-hidden="true">
       {#each Array(SKELETON_COUNT) as _, i (`cs-${i}`)}
@@ -88,6 +104,10 @@
 {/if}
 
 <style lang="scss">
+  .comments-sort {
+    padding-top: var(--gap-xs);
+  }
+
   .comments-list {
     display: flex;
     flex-direction: column;

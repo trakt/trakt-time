@@ -1,3 +1,4 @@
+import type { CommentSortType } from '$lib/requests/models/CommentSortType.ts';
 import { useComments } from '$lib/sections/summary/components/comments/_internal/useComments.ts';
 
 const COMMENTS_PAGE_SIZE = 10;
@@ -7,6 +8,7 @@ export type MediaCommentsProps =
     slug: string;
     mediaId: number;
     mediaTitle: string;
+    sort?: CommentSortType;
   }
   & (
     | { type: 'movie' | 'show' }
@@ -14,6 +16,8 @@ export type MediaCommentsProps =
   );
 
 export function useMediaComments(props: MediaCommentsProps) {
+  const sort = props.sort ?? 'likes';
+
   if (props.type === 'episode') {
     return useComments({
       type: 'episode',
@@ -21,7 +25,7 @@ export function useMediaComments(props: MediaCommentsProps) {
       season: props.season,
       episode: props.episode,
       id: props.mediaId,
-      sort: 'likes',
+      sort,
       limit: COMMENTS_PAGE_SIZE,
     });
   }
@@ -29,7 +33,7 @@ export function useMediaComments(props: MediaCommentsProps) {
   return useComments({
     type: props.type,
     slug: props.slug,
-    sort: 'likes',
+    sort,
     limit: COMMENTS_PAGE_SIZE,
   });
 }

@@ -595,5 +595,17 @@
   "text_private_profile_description": "De parcă nu ar fi fost deja destule ascunse, secretele lui {username} rămân ale lor.",
   "page_title_social": "Social",
   "button_label_view_all_social": "Vezi toate conexiunile sociale",
-  "text_info_follow_requested": "{username} a solicitat să te urmărească."
+  "text_info_follow_requested": "{username} a solicitat să te urmărească.",
+  "text_sort_comments_popular": "Populare",
+  "text_sort_comments_recent": "Recente",
+  "translated_value_reaction_like": "Apreciere",
+  "translated_value_reaction_dislike": "Nu-mi place",
+  "translated_value_reaction_love": "Iubesc",
+  "translated_value_reaction_laugh": "Râd",
+  "translated_value_reaction_shocked": "Șocat",
+  "translated_value_reaction_bravo": "Bravo",
+  "translated_value_reaction_spoiler": "Spoiler",
+  "button_label_popup_reactions": "Reacții",
+  "button_label_react": "Reacționează cu {reaction}",
+  "header_comment_reactions": "Reacții la recenzie"
 }

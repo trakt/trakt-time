@@ -3,7 +3,9 @@
   import { Marked } from 'marked';
   import { useUser } from '$lib/features/auth/stores/useUser.ts';
   import ChatBubbleIcon from '$lib/components/icons/ChatBubbleIcon.svelte';
-  import HeartIcon from '$lib/components/icons/HeartIcon.svelte';
+  import UserAvatar from '$lib/components/avatar/UserAvatar.svelte';
+  import CommentReactions from '$lib/features/reactions/CommentReactions.svelte';
+  import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import { spoilerExtension } from '$lib/sections/summary/components/comments/_internal/marked/spoilerExtension.ts';
   import type { MediaComment } from '$lib/requests/models/MediaComment.ts';
   import StarIcon from '$lib/components/icons/StarIcon.svelte';
@@ -26,7 +28,6 @@
   );
 
   let spoilerRevealed = $state(false);
-  let avatarFailed = $state(false);
   let expanded = $state(false);
   let commentEl: HTMLElement | undefined = $state(undefined);
   let isOverflowing = $state(false);
@@ -59,19 +60,13 @@
 
 <article class="comment-card">
   <header class="comment-header">
-    <div class="comment-avatar">
-      {#if comment.user.avatar.url && !avatarFailed}
-        <img
-          src={comment.user.avatar.url}
-          alt=""
-          loading="lazy"
-          onerror={() => (avatarFailed = true)}
-        />
-      {:else}
-        <div class="avatar-placeholder">{displayName.charAt(0).toUpperCase()}</div>
-      {/if}
-    </div>
-    <span class="comment-author">{displayName}</span>
+    <a
+      class="comment-author-link"
+      href={UrlBuilder.profile.user(comment.user.slug ?? comment.user.username)}
+    >
+      <UserAvatar name={displayName} src={comment.user.avatar.url} size="xs" />
+      <span class="comment-author">{displayName}</span>
+    </a>
     {#if userStars}
       <span class="comment-rating" aria-label={m.text_star_rating_label({ rating: userStars })}>
         <StarIcon fill="full" />
@@ -114,10 +109,7 @@
   {/if}
 
   <footer class="comment-footer">
-    <span class="comment-action">
-      <HeartIcon />
-      {comment.likeCount}
-    </span>
+    <CommentReactions id={comment.id} />
     {#if onOpenThread}
       <button
         type="button"
@@ -166,31 +158,24 @@
     min-width: 0;
   }
 
-  .comment-avatar {
-    flex-shrink: 0;
-    width: var(--ni-32);
-    height: var(--ni-32);
-    border-radius: 50%;
-    overflow: hidden;
-    background: var(--color-card-background);
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-  }
-
-  .avatar-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
+  .comment-author-link {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--color-text-secondary);
+    gap: var(--gap-xs);
+    min-width: 0;
+    text-decoration: none;
+
+    &:focus-visible {
+      outline: var(--ni-2) solid var(--trakttime-accent);
+      outline-offset: var(--ni-2);
+      border-radius: var(--border-radius-s);
+    }
+
+    @media (hover: hover) {
+      &:hover .comment-author {
+        color: var(--color-text-emphasis);
+      }
+    }
   }
 
   .comment-author {
@@ -336,8 +321,9 @@
 
   .comment-footer {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: var(--gap-l);
+    gap: var(--gap-xs) var(--gap-m);
   }
 
   .comment-action {

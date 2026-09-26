@@ -595,5 +595,17 @@
   "text_private_profile_description": "As if there wasn't enough hidden already, {username}'s secrets remain their own.",
   "page_title_social": "Social",
   "button_label_view_all_social": "View all social connections",
-  "text_info_follow_requested": "{username} requested to follow you."
+  "text_info_follow_requested": "{username} requested to follow you.",
+  "text_sort_comments_popular": "Popular",
+  "text_sort_comments_recent": "Recent",
+  "translated_value_reaction_like": "Like",
+  "translated_value_reaction_dislike": "Dislike",
+  "translated_value_reaction_love": "Love",
+  "translated_value_reaction_laugh": "Laugh",
+  "translated_value_reaction_shocked": "Shocked",
+  "translated_value_reaction_bravo": "Bravo",
+  "translated_value_reaction_spoiler": "Spoiler",
+  "button_label_popup_reactions": "Reactions",
+  "button_label_react": "React with {reaction}",
+  "header_comment_reactions": "Review reactions"
 }

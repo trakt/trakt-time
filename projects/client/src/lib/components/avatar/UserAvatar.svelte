@@ -32,8 +32,8 @@
     font-size: 1rem;
 
     &[data-size='xs'] {
-      width: var(--ni-28);
-      height: var(--ni-28);
+      width: var(--ni-32);
+      height: var(--ni-32);
       font-size: 0.75rem;
     }
 
