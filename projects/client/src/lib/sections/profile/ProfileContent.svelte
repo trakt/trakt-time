@@ -36,6 +36,13 @@
   import { useFollowRequests } from '$lib/features/social/useFollowRequests.ts';
   import { isSameSlug } from '$lib/features/social/isSameSlug.ts';
   import ProfileActionsSheet from './_internal/ProfileActionsSheet.svelte';
+  import ProfileThisMonth from './_internal/ProfileThisMonth.svelte';
+  import ProfileScreenTime from './_internal/ProfileScreenTime.svelte';
+  import ProfileRecentlyWatched from './_internal/ProfileRecentlyWatched.svelte';
+  import ProfileMyActivity from './_internal/ProfileMyActivity.svelte';
+  import ProfileProgress from './_internal/ProfileProgress.svelte';
+  import ProfilePeopleRow from './_internal/ProfilePeopleRow.svelte';
+  import { useProfileActivity } from './_internal/useProfileActivity.ts';
 
   type Props = {
     slug: string;
@@ -181,6 +188,29 @@
     `${UrlBuilder.profile.social(slug)}?tab=${tab}`;
 
   let isActionsSheetOpen = $state(false);
+
+  const activity = $derived(
+    profile && !isHidden ? useProfileActivity({ slug, isOwner }) : null,
+  );
+  const month = $derived(activity?.month);
+  const screenTime = $derived(activity?.screenTime);
+  const recent = $derived(activity?.recent);
+  const activityLoading = $derived(activity?.isLoading);
+
+  const previousMonth = (() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  })();
+  const monthInReviewHref = $derived(
+    UrlBuilder.og.monthInReview(
+      profile?.slug ?? slug,
+      previousMonth.getFullYear(),
+      previousMonth.getMonth() + 1,
+    ),
+  );
+  const previousMonthName = new Intl.DateTimeFormat(getLocale(), {
+    month: 'long',
+  }).format(previousMonth);
 
   const listsHref = $derived(
     isOwner ? '/profile/me/lists' : `/profile/${slug}/lists`,
@@ -363,6 +393,38 @@
       </section>
     {:else}
     <section class="profile-section">
+      {@render sectionHeader(m.text_this_month(), null, '')}
+      <ProfileThisMonth month={$activityLoading === false ? ($month ?? null) : null}>
+        {#snippet footer()}
+          <a
+            class="profile-footer-link"
+            href={monthInReviewHref}
+            target="_blank"
+            rel="noopener"
+            aria-label={m.button_label_month_in_review({ month: previousMonthName })}
+          >
+            {m.button_text_month_in_review({ month: previousMonthName })}
+            <ChevronRightIcon />
+          </a>
+        {/snippet}
+      </ProfileThisMonth>
+    </section>
+
+    {#if isOwner && $screenTime}
+      <section class="profile-section">
+        {@render sectionHeader(m.header_screen_time(), null, '')}
+        <ProfileScreenTime screenTime={$screenTime} />
+      </section>
+    {/if}
+
+    {#if $recent && $recent.length > 0}
+      <section class="profile-section">
+        {@render sectionHeader(m.list_title_recently_watched(), null, '')}
+        <ProfileRecentlyWatched recent={$recent} />
+      </section>
+    {/if}
+
+    <section class="profile-section">
       {@render sectionHeader(m.header_time_watched(), null, '')}
       <ProfileWatchTime {stats} />
     </section>
@@ -465,6 +527,27 @@
           {/each}
         </div>
       {/if}
+    </section>
+
+    {#if isOwner}
+      <section class="profile-section">
+        {@render sectionHeader(m.list_title_activity(), null, '')}
+        <ProfileMyActivity {slug} />
+      </section>
+
+      <section class="profile-section">
+        {@render sectionHeader(m.list_title_progress(), null, '')}
+        <ProfileProgress />
+      </section>
+    {/if}
+
+    <section class="profile-section">
+      {@render sectionHeader(
+        m.list_title_social(),
+        socialHref('following'),
+        m.button_label_view_all_social(),
+      )}
+      <ProfilePeopleRow {slug} />
     </section>
 
     <section class="profile-section">
@@ -837,6 +920,28 @@
     :global(svg) {
       width: var(--trakttime-icon-sm);
       height: var(--trakttime-icon-sm);
+    }
+  }
+
+  .profile-footer-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-xs);
+    padding: var(--gap-s) var(--gap-m);
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+
+    :global(svg) {
+      width: var(--trakttime-icon-md);
+      height: var(--trakttime-icon-md);
+      color: var(--color-text-secondary);
+    }
+
+    &:active {
+      background: var(--color-floating-background);
     }
   }
 
