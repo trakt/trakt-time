@@ -104,7 +104,16 @@
 
     @media (min-width: 1024px) {
       body {
-        padding-inline-start: var(--trakttime-sidebar-width);
+        --trakttime-content-inset: max(
+          0px,
+          (100% - var(--trakttime-sidebar-width) - var(--trakttime-max-width)) / 2
+        );
+
+        max-width: none;
+        padding-inline: calc(
+            var(--trakttime-sidebar-width) + var(--trakttime-content-inset)
+          )
+          var(--trakttime-content-inset);
         box-sizing: border-box;
       }
     }
