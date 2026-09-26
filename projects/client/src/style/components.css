@@ -331,6 +331,38 @@ p.media-row-meta {
   background: var(--color-border);
 }
 
+@media (min-width: 481px) {
+  .bottom-sheet {
+    max-width: var(--ni-520);
+  }
+}
+
+@media (min-width: 1024px) {
+  .bottom-sheet-backdrop {
+    align-items: center;
+    padding-inline-start: var(--trakttime-sidebar-width);
+  }
+
+  .bottom-sheet {
+    max-height: calc(100dvh - var(--gap-xxl) * 2);
+    padding-bottom: var(--gap-m);
+    border-radius: var(--border-radius-xxl);
+    box-shadow: var(--shadow-dialog);
+    animation: bottom-sheet-pop-in 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .bottom-sheet-handle {
+    visibility: hidden;
+  }
+}
+
+@keyframes bottom-sheet-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
 @keyframes bottom-sheet-fade-in {
   from {
     opacity: 0;
