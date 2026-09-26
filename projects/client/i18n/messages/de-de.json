@@ -595,5 +595,17 @@
   "text_private_profile_description": "Als gäbe es nicht schon genug Verstecktes, bleiben die Geheimnisse von {username} ihre/seine eigenen.",
   "page_title_social": "Soziales",
   "button_label_view_all_social": "Alle sozialen Verbindungen anzeigen",
-  "text_info_follow_requested": "{username} hat angefragt, dir zu folgen."
+  "text_info_follow_requested": "{username} hat angefragt, dir zu folgen.",
+  "text_sort_comments_popular": "Beliebt",
+  "text_sort_comments_recent": "Neueste",
+  "translated_value_reaction_like": "Gefällt mir",
+  "translated_value_reaction_dislike": "Gefällt mir nicht",
+  "translated_value_reaction_love": "Liebe",
+  "translated_value_reaction_laugh": "Lachen",
+  "translated_value_reaction_shocked": "Schockiert",
+  "translated_value_reaction_bravo": "Bravo",
+  "translated_value_reaction_spoiler": "Spoiler",
+  "button_label_popup_reactions": "Reaktionen",
+  "button_label_react": "Mit {reaction} reagieren",
+  "header_comment_reactions": "Rezensionsreaktionen"
 }

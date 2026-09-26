@@ -595,5 +595,17 @@
   "text_private_profile_description": "Som om det inte redan var tillräckligt dolt. {username}s hemligheter förblir deras egna.",
   "page_title_social": "Socialt",
   "button_label_view_all_social": "Visa alla sociala anslutningar",
-  "text_info_follow_requested": "{username} har begärt att få följa dig."
+  "text_info_follow_requested": "{username} har begärt att få följa dig.",
+  "text_sort_comments_popular": "Populärt",
+  "text_sort_comments_recent": "Senaste",
+  "translated_value_reaction_like": "Gilla",
+  "translated_value_reaction_dislike": "Ogilla",
+  "translated_value_reaction_love": "Älska",
+  "translated_value_reaction_laugh": "Skratt",
+  "translated_value_reaction_shocked": "Chockad",
+  "translated_value_reaction_bravo": "Bravo",
+  "translated_value_reaction_spoiler": "Spoiler",
+  "button_label_popup_reactions": "Reaktioner",
+  "button_label_react": "Reagera med {reaction}",
+  "header_comment_reactions": "Recensionsreaktioner"
 }

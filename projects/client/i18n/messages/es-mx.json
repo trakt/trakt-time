@@ -595,5 +595,17 @@
   "text_private_profile_description": "Como si no hubiera suficiente oculto ya, los secretos de {username} siguen siendo suyos.",
   "page_title_social": "Social",
   "button_label_view_all_social": "Ver todas las conexiones sociales",
-  "text_info_follow_requested": "{username} solicitó seguirte."
+  "text_info_follow_requested": "{username} solicitó seguirte.",
+  "text_sort_comments_popular": "Popular",
+  "text_sort_comments_recent": "Reciente",
+  "translated_value_reaction_like": "Me gusta",
+  "translated_value_reaction_dislike": "No me gusta",
+  "translated_value_reaction_love": "Me encanta",
+  "translated_value_reaction_laugh": "Risa",
+  "translated_value_reaction_shocked": "Impactado",
+  "translated_value_reaction_bravo": "Bravo",
+  "translated_value_reaction_spoiler": "Spoiler",
+  "button_label_popup_reactions": "Reacciones",
+  "button_label_react": "Reaccionar con {reaction}",
+  "header_comment_reactions": "Reacciones de la reseña"
 }

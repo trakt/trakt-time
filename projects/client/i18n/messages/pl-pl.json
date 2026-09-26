@@ -595,5 +595,17 @@
   "text_private_profile_description": "Sekrety {username} pozostają jego/jej własnością.",
   "page_title_social": "Społeczność",
   "button_label_view_all_social": "Wyświetl wszystkie połączenia społecznościowe",
-  "text_info_follow_requested": "{username} poprosił(a) o obserwowanie Ciebie."
+  "text_info_follow_requested": "{username} poprosił(a) o obserwowanie Ciebie.",
+  "text_sort_comments_popular": "Popularne",
+  "text_sort_comments_recent": "Najnowsze",
+  "translated_value_reaction_like": "Polubienie",
+  "translated_value_reaction_dislike": "Niepolubienie",
+  "translated_value_reaction_love": "Miłość",
+  "translated_value_reaction_laugh": "Śmiech",
+  "translated_value_reaction_shocked": "Szok",
+  "translated_value_reaction_bravo": "Brawo",
+  "translated_value_reaction_spoiler": "Spoiler",
+  "button_label_popup_reactions": "Reakcje",
+  "button_label_react": "Zareaguj: {reaction}",
+  "header_comment_reactions": "Reakcje na recenzje"
 }

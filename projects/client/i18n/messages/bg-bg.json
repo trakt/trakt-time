@@ -595,5 +595,17 @@
   "text_private_profile_description": "Сякаш нямаше достатъчно скрито вече. Тайните на {username} си остават техни.",
   "page_title_social": "Социални",
   "button_label_view_all_social": "Преглед на всички социални връзки",
-  "text_info_follow_requested": "{username} поиска да ви последва."
+  "text_info_follow_requested": "{username} поиска да ви последва.",
+  "text_sort_comments_popular": "Популярни",
+  "text_sort_comments_recent": "Скорошни",
+  "translated_value_reaction_like": "Харесвам",
+  "translated_value_reaction_dislike": "Не харесвам",
+  "translated_value_reaction_love": "Обичам",
+  "translated_value_reaction_laugh": "Смях",
+  "translated_value_reaction_shocked": "Шокиран",
+  "translated_value_reaction_bravo": "Браво",
+  "translated_value_reaction_spoiler": "Спойлер",
+  "button_label_popup_reactions": "Реакции",
+  "button_label_react": "Реагирай с {reaction}",
+  "header_comment_reactions": "Реакции към рецензия"
 }
