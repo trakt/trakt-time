@@ -33,6 +33,8 @@
 </div>
 
 <style lang="scss">
+  @use '$style/scss/mixins/index' as *;
+
   .vip-page {
     display: flex;
     flex-direction: column;
@@ -46,5 +48,9 @@
     /* clear the fixed back bar */
     padding: calc(var(--gap-l) + var(--ni-48)) var(--gap-m)
       var(--trakttime-bottom-nav-height);
+
+    @include for-desktop {
+      max-width: var(--ni-920);
+    }
   }
 </style>

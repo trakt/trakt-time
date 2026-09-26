@@ -77,10 +77,7 @@
     --trakttime-cover-height: 520px;
     --trakttime-cover-offset: -240px;
     --trakttime-sidebar-width: 248px;
-    --trakttime-max-width: 1352px;
-    --trakttime-app-max-width: calc(
-      var(--trakttime-sidebar-width) + var(--trakttime-max-width)
-    );
+    --trakttime-max-width: none;
   }
 }
 
