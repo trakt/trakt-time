@@ -20,7 +20,7 @@
 
 @mixin for-tablet-sm {
   @media (min-width: $breakpoint-tablet-sm-min)
-      and (max-width: $breakpoint-tablet-sm-max) {
+    and (max-width: $breakpoint-tablet-sm-max) {
     @content;
   }
 }
@@ -33,7 +33,7 @@
 
 @mixin for-tablet-lg {
   @media (min-width: $breakpoint-tablet-lg-min)
-      and (max-width: $breakpoint-tablet-lg-max) {
+    and (max-width: $breakpoint-tablet-lg-max) {
     @content;
   }
 }
@@ -44,8 +44,20 @@
   }
 }
 
+@mixin for-tablet-sm-and-up {
+  @media (min-width: $breakpoint-tablet-sm-min) {
+    @content;
+  }
+}
+
 @mixin for-desktop {
   @media (min-width: $breakpoint-desktop) {
+    @content;
+  }
+}
+
+@mixin for-wide {
+  @media (min-width: $breakpoint-wide) {
     @content;
   }
 }

@@ -1,21 +1,10 @@
 <script lang="ts">
-  import { page } from '$app/state';
-  import DiscoverIcon from '$lib/components/icons/DiscoverIcon.svelte';
-  import MovieIcon from '$lib/components/icons/MovieIcon.svelte';
-  import ProfileIcon from '$lib/components/icons/ProfileIcon.svelte';
-  import ShowIcon from '$lib/components/icons/ShowIcon.svelte';
   import * as m from '$lib/paraglide/messages.js';
+  import { useMainNavTabs } from '$lib/sections/main-nav/useMainNavTabs.svelte.ts';
 
-  const tabs = $derived([
-    { href: '/shows', label: m.page_title_shows(), icon: ShowIcon },
-    { href: '/movies', label: m.page_title_movies(), icon: MovieIcon },
-    { href: '/discover', label: m.page_title_discover(), icon: DiscoverIcon },
-    { href: '/profile', label: m.page_title_profile(), icon: ProfileIcon },
-  ] as const);
-
-  const pathname = $derived(page.url.pathname);
-  const isActive = $derived((href: string) => pathname.startsWith(href));
-  const activeIndex = $derived(tabs.findIndex(({ href }) => isActive(href)));
+  const nav = useMainNavTabs();
+  const tabs = $derived(nav.tabs);
+  const activeIndex = $derived(nav.activeIndex);
 </script>
 
 <nav
@@ -29,8 +18,8 @@
     class:is-hidden={activeIndex === -1}
     aria-hidden="true"
   ></span>
-  {#each tabs as { href, label, icon: Icon }}
-    <a {href} aria-label={label} class="bottom-nav-tab" data-active={isActive(href)}>
+  {#each tabs as { href, label, icon: Icon }, index}
+    <a {href} aria-label={label} class="bottom-nav-tab" data-active={index === activeIndex}>
       <Icon />
       <span class="tab-label">{label}</span>
     </a>
@@ -66,6 +55,14 @@
     border-radius: var(--trakttime-radius-pill);
     box-shadow: 0 var(--ni-8) var(--ni-32)
       color-mix(in srgb, var(--shade-1000) 35%, transparent);
+
+    @include for-tablet-sm-and-up {
+      max-width: var(--trakttime-bottom-nav-compact-width);
+    }
+
+    @include for-desktop {
+      display: none;
+    }
 
     .bottom-nav-indicator {
       position: absolute;
@@ -132,5 +129,9 @@
       var(--trakttime-bottom-nav-height) + var(--gap-l) +
         env(safe-area-inset-bottom, 0px)
     );
+
+    @include for-desktop {
+      display: none;
+    }
   }
 </style>

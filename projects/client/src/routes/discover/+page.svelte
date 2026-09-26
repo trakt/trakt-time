@@ -1,4 +1,10 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
+  import {
+    DISCOVER_SEARCH_PARAM,
+    toDiscoverSearchUrl,
+  } from '$lib/features/search/discoverSearchUrl.ts';
   import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import ChevronRightIcon from '$lib/components/icons/ChevronRightIcon.svelte';
@@ -26,25 +32,36 @@
 
   const { search, clear, results, isSearching } = useSearch();
 
-  let searchQuery = $state('');
+  const searchQuery = $derived(
+    page.url.searchParams.get(DISCOVER_SEARCH_PARAM) ?? '',
+  );
 
   const isSearchActive = $derived(searchQuery.trim().length > 0);
   const searchResults = $derived($results);
   const searchLoading = $derived($isSearching);
 
-  function onSearchInput(e: Event) {
-    const term = (e.target as HTMLInputElement).value;
-    searchQuery = term;
-    if (term.trim()) {
-      search(term, 'media');
+  $effect(() => {
+    if (searchQuery.trim()) {
+      search(searchQuery, 'media');
     } else {
       clear();
     }
+  });
+
+  function updateSearchQuery(term: string) {
+    goto(toDiscoverSearchUrl(term), {
+      replaceState: true,
+      keepFocus: true,
+      noScroll: true,
+    });
+  }
+
+  function onSearchInput(e: Event) {
+    updateSearchQuery((e.target as HTMLInputElement).value);
   }
 
   function clearSearch() {
-    searchQuery = '';
-    clear();
+    updateSearchQuery('');
   }
 </script>
 
@@ -265,6 +282,10 @@
     z-index: var(--layer-floating);
     padding: var(--gap-s) var(--gap-m);
     background: linear-gradient(var(--color-background) 70%, transparent);
+
+    @include for-desktop {
+      display: none;
+    }
   }
 
   .search-form {

@@ -51,7 +51,7 @@
   .back-bar {
     position: fixed;
     top: 0;
-    left: 50%;
+    left: var(--trakttime-column-center);
     transform: translateX(-50%);
     width: 100%;
     max-width: var(--trakttime-max-width);
