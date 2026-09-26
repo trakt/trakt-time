@@ -21,5 +21,7 @@ export function useMediaSocial(target: MediaSocialQueryTarget) {
     ),
   );
 
-  return { entries };
+  const isLoading = query.pipe(map(($query) => $query.isLoading));
+
+  return { entries, isLoading };
 }

@@ -109,7 +109,6 @@
   {/if}
 
   <footer class="comment-footer">
-    <CommentReactions id={comment.id} />
     {#if onOpenThread}
       <button
         type="button"
@@ -126,6 +125,7 @@
         {comment.replyCount}
       </span>
     {/if}
+    <CommentReactions id={comment.id} />
     {#if isOwn && onDelete}
       <button
         type="button"
@@ -323,6 +323,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    min-height: var(--ni-32);
     gap: var(--gap-xs) var(--gap-m);
   }
 
