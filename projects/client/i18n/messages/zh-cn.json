@@ -614,5 +614,9 @@
   "list_title_social_activity": "社交动态",
   "text_social_activities_placeholder": "你关注的人尚未观看、评分、评论或添加到待看列表。",
   "link_label_view_social_activities": "查看{title}的社交动态",
-  "text_watched_by_following": "你关注的人看过"
+  "text_watched_by_following": "你关注的人看过",
+  "page_title_friends": "好友",
+  "header_watching_now": "正在观看",
+  "text_filter_all": "全部",
+  "text_friends_feed_empty": "关注其他人，即可在这里看到他们在看什么。"
 }

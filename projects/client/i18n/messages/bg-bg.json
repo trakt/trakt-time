@@ -614,5 +614,9 @@
   "list_title_social_activity": "Социална активност",
   "text_social_activities_placeholder": "Никой от тези, които следвате, все още не е гледал, оценил, прегледал или добавил това към списъка си за гледане.",
   "link_label_view_social_activities": "Преглед на социалните дейности за {title}",
-  "text_watched_by_following": "Гледано от хора, които следвате"
+  "text_watched_by_following": "Гледано от хора, които следвате",
+  "page_title_friends": "Приятели",
+  "header_watching_now": "Гледат в момента",
+  "text_filter_all": "Всички",
+  "text_friends_feed_empty": "Следвайте хора, за да виждате тук какво гледат."
 }

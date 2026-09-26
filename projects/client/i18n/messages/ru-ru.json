@@ -614,5 +614,9 @@
   "list_title_social_activity": "Социальная активность",
   "text_social_activities_placeholder": "Никто из тех, на кого вы подписаны, еще не смотрел, не оценил, не рецензировал и не добавил это в список просмотра.",
   "link_label_view_social_activities": "Посмотреть социальную активность для {title}",
-  "text_watched_by_following": "Смотрели люди, на которых вы подписаны"
+  "text_watched_by_following": "Смотрели люди, на которых вы подписаны",
+  "page_title_friends": "Друзья",
+  "header_watching_now": "Смотрят сейчас",
+  "text_filter_all": "Все",
+  "text_friends_feed_empty": "Подпишитесь на людей, чтобы видеть здесь, что они смотрят."
 }

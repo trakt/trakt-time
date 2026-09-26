@@ -614,5 +614,9 @@
   "list_title_social_activity": "Atividade Social",
   "text_social_activities_placeholder": "Ninguém que você segue assistiu, avaliou, comentou ou adicionou à lista para assistir ainda.",
   "link_label_view_social_activities": "Ver atividades sociais para {title}",
-  "text_watched_by_following": "Assistido por pessoas que você segue"
+  "text_watched_by_following": "Assistido por pessoas que você segue",
+  "page_title_friends": "Amigos",
+  "header_watching_now": "Assistindo agora",
+  "text_filter_all": "Tudo",
+  "text_friends_feed_empty": "Siga pessoas para ver aqui o que elas assistem."
 }

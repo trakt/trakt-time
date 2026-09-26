@@ -614,5 +614,9 @@
   "list_title_social_activity": "Social Activity",
   "text_social_activities_placeholder": "No one you follow has watched, rated, reviewed, or watchlisted this yet.",
   "link_label_view_social_activities": "View social activities for {title}",
-  "text_watched_by_following": "Watched by people you follow"
+  "text_watched_by_following": "Watched by people you follow",
+  "page_title_friends": "Friends",
+  "header_watching_now": "Watching now",
+  "text_filter_all": "All",
+  "text_friends_feed_empty": "Follow people to see what they watch here."
 }

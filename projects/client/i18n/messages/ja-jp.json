@@ -614,5 +614,9 @@
   "list_title_social_activity": "ソーシャルアクティビティ",
   "text_social_activities_placeholder": "フォローしているユーザーは、まだこれを視聴、評価、レビュー、またはウォッチリストに追加していません。",
   "link_label_view_social_activities": "{title}のソーシャルアクティビティを表示",
-  "text_watched_by_following": "フォロー中のユーザーが視聴済み"
+  "text_watched_by_following": "フォロー中のユーザーが視聴済み",
+  "page_title_friends": "フレンド",
+  "header_watching_now": "視聴中",
+  "text_filter_all": "すべて",
+  "text_friends_feed_empty": "ユーザーをフォローすると、視聴内容がここに表示されます。"
 }
