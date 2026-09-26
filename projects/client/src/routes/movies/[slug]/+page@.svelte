@@ -10,6 +10,7 @@
   import { moviePeopleQuery } from '$lib/requests/queries/movies/moviePeopleQuery.ts';
   import { movieIntlQuery } from '$lib/requests/queries/movies/movieIntlQuery.ts';
   import RenderFor from '$lib/guards/RenderFor.svelte';
+  import WatchedByFollowing from '$lib/features/social-activity/WatchedByFollowing.svelte';
   import { useRelatedList } from '$lib/sections/lists/stores/useRelatedList.ts';
   import SentimentSection from '$lib/sections/summary/components/sentiment/SentimentSection.svelte';
   import TriviaSection from '$lib/sections/summary/components/trivia/TriviaSection.svelte';
@@ -171,6 +172,13 @@
         </div>
 
         <MediaGenres genres={movie.genres} />
+
+        <RenderFor audience="authenticated">
+          <WatchedByFollowing
+            target={{ type: 'movie', slug }}
+            title={intl?.title ?? movie.title}
+          />
+        </RenderFor>
 
         {#if intl?.tagline ?? movie.tagline}
           <p class="summary-tagline">"{intl?.tagline ?? movie.tagline}"</p>

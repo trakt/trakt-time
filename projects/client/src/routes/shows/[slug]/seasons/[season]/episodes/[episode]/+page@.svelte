@@ -15,6 +15,7 @@
   import { toAdjacentEpisodes } from './_internal/toAdjacentEpisodes.ts';
   import EpisodeRating from './_internal/EpisodeRating.svelte';
   import RenderFor from '$lib/guards/RenderFor.svelte';
+  import WatchedByFollowing from '$lib/features/social-activity/WatchedByFollowing.svelte';
   import {
     EpisodeFinaleType,
     EpisodePremiereType,
@@ -233,6 +234,13 @@
           </RenderFor>
         {/if}
       {/if}
+
+      <RenderFor audience="authenticated">
+        <WatchedByFollowing
+          target={{ type: 'episode', slug, season, episode: episodeNum }}
+          title={intl?.title ?? episode.title}
+        />
+      </RenderFor>
 
       {#if intl?.overview ?? episode.overview}
         <p class="summary-overview">{intl?.overview ?? episode.overview}</p>

@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Спойлер",
   "button_label_popup_reactions": "Реакции",
   "button_label_react": "Реагирай с {reaction}",
-  "header_comment_reactions": "Реакции към рецензия"
+  "header_comment_reactions": "Реакции към рецензия",
+  "tag_text_plays": "{number} гледания",
+  "tag_text_reviewed": "Рецензирано",
+  "tag_text_watchlisted": "В списъка за гледане",
+  "list_title_social_activity": "Социална активност",
+  "text_social_activities_placeholder": "Никой от тези, които следвате, все още не е гледал, оценил, прегледал или добавил това към списъка си за гледане.",
+  "link_label_view_social_activities": "Преглед на социалните дейности за {title}",
+  "text_watched_by_following": "Гледано от хора, които следвате"
 }

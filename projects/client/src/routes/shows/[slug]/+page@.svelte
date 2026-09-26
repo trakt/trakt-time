@@ -13,6 +13,7 @@
   import SeasonRow from './_internal/SeasonRow.svelte';
   import SeasonListSkeleton from './_internal/SeasonListSkeleton.svelte';
   import RenderFor from '$lib/guards/RenderFor.svelte';
+  import WatchedByFollowing from '$lib/features/social-activity/WatchedByFollowing.svelte';
   import { useRelatedList } from '$lib/sections/lists/stores/useRelatedList.ts';
   import SentimentSection from '$lib/sections/summary/components/sentiment/SentimentSection.svelte';
   import TriviaSection from '$lib/sections/summary/components/trivia/TriviaSection.svelte';
@@ -199,6 +200,13 @@
         </div>
 
         <MediaGenres genres={show.genres} />
+
+        <RenderFor audience="authenticated">
+          <WatchedByFollowing
+            target={{ type: 'show', slug }}
+            title={intl?.title ?? show.title}
+          />
+        </RenderFor>
 
         {#if intl?.tagline ?? show.tagline}
           <p class="summary-tagline">"{intl?.tagline ?? show.tagline}"</p>

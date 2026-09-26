@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Spoiler",
   "button_label_popup_reactions": "Tepkiler",
   "button_label_react": "{reaction} ile tepki ver",
-  "header_comment_reactions": "Yorum tepkileri"
+  "header_comment_reactions": "Yorum tepkileri",
+  "tag_text_plays": "{number} oynatma",
+  "tag_text_reviewed": "Yorumlandı",
+  "tag_text_watchlisted": "İzleme Listesinde",
+  "list_title_social_activity": "Sosyal Etkinlik",
+  "text_social_activities_placeholder": "Takip ettiklerinizden hiçbiri henüz bunu izlemedi, puanlamadı, incelemedi veya izleme listesine eklemedi.",
+  "link_label_view_social_activities": "{title} için sosyal etkinlikleri görüntüle",
+  "text_watched_by_following": "Takip ettiğin kişiler izledi"
 }

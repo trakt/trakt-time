@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Spoiler",
   "button_label_popup_reactions": "Reacties",
   "button_label_react": "Reageer met {reaction}",
-  "header_comment_reactions": "Recensie reacties"
+  "header_comment_reactions": "Recensie reacties",
+  "tag_text_plays": "{number} weergaven",
+  "tag_text_reviewed": "Gerecenseerd",
+  "tag_text_watchlisted": "Op kijklijst",
+  "list_title_social_activity": "Sociale activiteit",
+  "text_social_activities_placeholder": "Niemand die je volgt heeft dit nog bekeken, beoordeeld, gerecenseerd of aan de kijklijst toegevoegd.",
+  "link_label_view_social_activities": "Sociale activiteiten bekijken voor {title}",
+  "text_watched_by_following": "Gezien door mensen die je volgt"
 }

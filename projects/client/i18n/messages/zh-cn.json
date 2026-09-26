@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "剧透",
   "button_label_popup_reactions": "反应",
   "button_label_react": "使用 {reaction} 反应",
-  "header_comment_reactions": "评论反应"
+  "header_comment_reactions": "评论反应",
+  "tag_text_plays": "{number} 次播放",
+  "tag_text_reviewed": "已评论",
+  "tag_text_watchlisted": "已加入待看列表",
+  "list_title_social_activity": "社交动态",
+  "text_social_activities_placeholder": "你关注的人尚未观看、评分、评论或添加到待看列表。",
+  "link_label_view_social_activities": "查看{title}的社交动态",
+  "text_watched_by_following": "你关注的人看过"
 }

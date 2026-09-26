@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Spoiler",
   "button_label_popup_reactions": "Reacții",
   "button_label_react": "Reacționează cu {reaction}",
-  "header_comment_reactions": "Reacții la recenzie"
+  "header_comment_reactions": "Reacții la recenzie",
+  "tag_text_plays": "{number} vizionări",
+  "tag_text_reviewed": "Recenzat",
+  "tag_text_watchlisted": "Pe lista de vizionare",
+  "list_title_social_activity": "Activitate socială",
+  "text_social_activities_placeholder": "Niciuna dintre persoanele pe care le urmărești nu a vizionat, evaluat, recenzat sau adăugat la lista de vizionare încă.",
+  "link_label_view_social_activities": "Vezi activitățile sociale pentru {title}",
+  "text_watched_by_following": "Văzut de persoanele pe care le urmărești"
 }
