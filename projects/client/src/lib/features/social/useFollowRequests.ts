@@ -45,8 +45,17 @@ export function useFollowRequests() {
       );
   };
 
+  const isLoading = isAuthorized.pipe(
+    switchMap((authorized) =>
+      authorized
+        ? requestsQuery.pipe(map((query) => query.isLoading))
+        : of(false)
+    ),
+  );
+
   return {
     requests,
+    isLoading,
     pendingRequestIds,
     approve: (requestId: number) => respond(requestId, approveFollowRequest),
     deny: (requestId: number) => respond(requestId, denyFollowRequest),

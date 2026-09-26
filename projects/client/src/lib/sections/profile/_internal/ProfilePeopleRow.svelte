@@ -27,9 +27,9 @@
   const following = $derived(useQuery(followingQuery({ slug })));
   const followers = $derived(useQuery(followersQuery({ slug })));
 
-  const profiles = $derived(
-    (tab === 'following' ? $following.data : $followers.data) ?? [],
-  );
+  const activeQuery = $derived(tab === 'following' ? $following : $followers);
+  const profiles = $derived(activeQuery.data ?? []);
+  const isLoading = $derived(activeQuery.isLoading && profiles.length === 0);
 
   const options = [
     { value: 'following' as const, label: m.button_text_following() },
@@ -47,7 +47,16 @@
   />
 </div>
 
-{#if profiles.length === 0}
+{#if isLoading}
+  <div class="people-row" aria-hidden="true">
+    {#each Array(PREVIEW_COUNT) as _, index (index)}
+      <span class="people-item">
+        <span class="people-skeleton people-skeleton--avatar"></span>
+        <span class="people-skeleton people-skeleton--name"></span>
+      </span>
+    {/each}
+  </div>
+{:else if profiles.length === 0}
   <p class="people-empty">
     {tab === 'following' ? m.list_placeholder_following() : m.list_placeholder_followers()}
   </p>
@@ -103,9 +112,30 @@
     color: var(--color-text-primary);
   }
 
+  .people-skeleton {
+    display: block;
+    @include shimmer-bg;
+  }
+
+  .people-skeleton--avatar {
+    width: var(--ni-64);
+    height: var(--ni-64);
+    border-radius: 50%;
+  }
+
+  .people-skeleton--name {
+    width: var(--ni-48);
+    height: 0.9375rem;
+    border-radius: var(--border-radius-s);
+  }
+
   .people-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(var(--ni-64) + var(--gap-xxs) + 0.9375rem);
     margin: 0;
-    padding: var(--gap-l) var(--trakttime-page-gutter);
+    padding: 0 var(--trakttime-page-gutter);
     color: var(--color-text-secondary);
     font-size: 0.875rem;
     text-align: center;

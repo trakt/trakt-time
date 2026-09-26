@@ -48,7 +48,12 @@
   });
 </script>
 
-{#if match && match.score > 0}
+{#if $matchQuery.isLoading}
+  <span class="match-pill match-pill--skeleton" aria-label={m.match_pill_loading_aria_label()}>
+    <span class="match-pill-score">00%</span>
+    <span class="match-pill-label">{m.match_label_crossover()}</span>
+  </span>
+{:else if match && match.score > 0}
   <button
     type="button"
     class="match-pill"
@@ -126,6 +131,8 @@
     display: inline-flex;
     align-items: center;
     gap: var(--gap-xs);
+    box-sizing: border-box;
+    height: var(--ni-32);
     margin-top: var(--gap-s);
     padding: var(--ni-4) var(--gap-s) var(--ni-4) var(--ni-4);
     border: var(--ni-1) solid
@@ -141,6 +148,18 @@
     &:focus-visible {
       outline: var(--ni-2) solid var(--trakttime-accent);
       outline-offset: var(--ni-2);
+    }
+  }
+
+  .match-pill--skeleton {
+    border-color: transparent;
+    color: transparent;
+    cursor: default;
+    @include shimmer-bg;
+
+    .match-pill-score {
+      background: none;
+      color: transparent;
     }
   }
 

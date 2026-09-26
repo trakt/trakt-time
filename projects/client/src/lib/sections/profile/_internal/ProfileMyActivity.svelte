@@ -19,6 +19,7 @@
   import { formatStars, toStarsFromUserRating } from '$lib/utils/rating/toStars.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import ProfileListRow from './ProfileListRow.svelte';
+  import ProfileListSkeleton from './ProfileListSkeleton.svelte';
 
   const { slug }: { slug: string } = $props();
 
@@ -34,11 +35,20 @@
     }),
   );
 
-  const ratings = $derived(
-    usePaginatedListQuery(userRatingsQuery({ slug, limit: PREVIEW_COUNT })).list,
+  const ratingsQuery = $derived(
+    usePaginatedListQuery(userRatingsQuery({ slug, limit: PREVIEW_COUNT })),
   );
-  const comments = $derived(
-    usePaginatedListQuery(userCommentsQuery({ slug, limit: PREVIEW_COUNT })).list,
+  const commentsQuery = $derived(
+    usePaginatedListQuery(userCommentsQuery({ slug, limit: PREVIEW_COUNT })),
+  );
+  const ratings = $derived(ratingsQuery.list);
+  const comments = $derived(commentsQuery.list);
+  const ratingsLoading = $derived(ratingsQuery.isLoading);
+  const commentsLoading = $derived(commentsQuery.isLoading);
+  const isLoading = $derived(
+    tab === 'ratings'
+      ? $ratingsLoading && $ratings.length === 0
+      : $commentsLoading && $comments.length === 0,
   );
 
   const options = [
@@ -103,7 +113,11 @@
   />
 </div>
 
-{#if tab === 'ratings'}
+{#if isLoading}
+  <div class="activity-card">
+    <ProfileListSkeleton count={PREVIEW_COUNT} />
+  </div>
+{:else if tab === 'ratings'}
   {#if $ratings.length === 0}
     <p class="activity-empty">{m.text_no_activity()}</p>
   {:else}
@@ -161,8 +175,13 @@
   }
 
   .activity-empty {
-    margin: 0;
-    padding: var(--gap-l) var(--trakttime-page-gutter);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc((var(--ni-60) + var(--gap-s) * 2) * 3 + var(--ni-2));
+    margin: 0 var(--trakttime-page-gutter);
+    border-radius: var(--border-radius-xl);
+    background: var(--color-card-background);
     color: var(--color-text-secondary);
     font-size: 0.875rem;
     text-align: center;

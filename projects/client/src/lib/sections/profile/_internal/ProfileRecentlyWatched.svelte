@@ -1,12 +1,15 @@
 <script lang="ts">
   import CrossOriginImage from '$lib/features/image/components/CrossOriginImage.svelte';
   import { languageTag } from '$lib/features/i18n/index.ts';
+  import * as m from '$lib/paraglide/messages.js';
   import { toCompactAge } from '$lib/utils/date/toCompactAge.ts';
   import { episodeActivityTitle } from '$lib/utils/intl/episodeActivityTitle.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import type { RecentWatch } from './useProfileActivity.ts';
 
-  const { recent }: { recent: ReadonlyArray<RecentWatch> } = $props();
+  const { recent }: { recent: ReadonlyArray<RecentWatch> | null } = $props();
+
+  const SKELETON_COUNT = 4;
 
   const toCard = (entry: RecentWatch) =>
     entry.type === 'movie'
@@ -31,6 +34,19 @@
     toCompactAge({ date, now: new Date(), locale: languageTag() });
 </script>
 
+{#if recent == null}
+  <div class="recent-row" aria-hidden="true">
+    {#each Array(SKELETON_COUNT) as _, index (index)}
+      <span class="recent-card">
+        <span class="recent-cover recent-skeleton"></span>
+        <span class="recent-skeleton recent-skeleton--title"></span>
+        <span class="recent-skeleton recent-skeleton--detail"></span>
+      </span>
+    {/each}
+  </div>
+{:else if recent.length === 0}
+  <p class="recent-empty">{m.text_no_activity()}</p>
+{:else}
 <div class="recent-row">
   {#each recent as entry (entry.key)}
     {@const card = toCard(entry)}
@@ -45,6 +61,7 @@
     </a>
   {/each}
 </div>
+{/if}
 
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
@@ -84,6 +101,32 @@
       object-fit: cover;
       display: block;
     }
+  }
+
+  .recent-skeleton {
+    border-radius: var(--border-radius-s);
+    @include shimmer-bg;
+  }
+
+  .recent-skeleton--title {
+    width: 70%;
+    height: 1.0625rem;
+  }
+
+  .recent-skeleton--detail {
+    width: 45%;
+    height: 0.9375rem;
+  }
+
+  .recent-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(var(--ni-220) * 9 / 16 + var(--ni-4) * 3 + 1.9375rem);
+    margin: 0;
+    padding: 0 var(--trakttime-page-gutter);
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
   }
 
   .recent-title,

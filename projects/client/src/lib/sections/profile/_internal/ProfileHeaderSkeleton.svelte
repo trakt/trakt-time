@@ -1,3 +1,7 @@
+<script lang="ts">
+  const { hasMatchPill = false }: { hasMatchPill?: boolean } = $props();
+</script>
+
 <div class="profile-header-skeleton" aria-hidden="true">
   <div class="profile-skeleton-cover"></div>
   <div class="profile-skeleton-identity">
@@ -7,6 +11,9 @@
       <div class="profile-skeleton-line profile-skeleton-line--name"></div>
       <div class="profile-skeleton-line profile-skeleton-line--about"></div>
       <div class="profile-skeleton-line profile-skeleton-line--joined"></div>
+      {#if hasMatchPill}
+        <div class="profile-skeleton-line profile-skeleton-line--match"></div>
+      {/if}
     </div>
   </div>
 </div>
@@ -56,6 +63,13 @@
     @include shimmer-bg;
 
     /* Heights track the username / full-name line boxes. */
+    &--match {
+      width: var(--ni-120);
+      height: var(--ni-32);
+      margin-top: var(--gap-s);
+      border-radius: var(--trakttime-radius-pill);
+    }
+
     &--username {
       width: var(--ni-160);
       height: 1.875rem;

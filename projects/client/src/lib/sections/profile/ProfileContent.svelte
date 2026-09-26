@@ -187,28 +187,37 @@
       title: profile?.name?.full || profile?.username || slug,
     });
 
-  const { network } = useUser();
+  const { network, user } = useUser();
   const { isAuthorized } = useAuth();
-  const { requests } = useFollowRequests();
+  const { requests, isLoading: requestsLoading } = useFollowRequests();
   const isFollowing = $derived(
     $network?.following.some((user) => isSameSlug(user.slug, slug)) ?? false,
   );
-  const isHidden = $derived(
-    Boolean(profile?.private) && !isOwner && !isFollowing,
+  const isVisibilityKnown = $derived(
+    profile != null && (!profile.private || isOwner || $network != null),
   );
-  const canInteract = $derived(!isOwner && profile != null && $isAuthorized);
+  const isHidden = $derived(
+    isVisibilityKnown && Boolean(profile?.private) && !isOwner && !isFollowing,
+  );
+  const showRequestsBanner = $derived(
+    isOwner && $user.isPrivate && ($requestsLoading || $requests.length > 0),
+  );
+  const canInteract = $derived(!isOwner && $isAuthorized);
   const socialHref = (tab: 'following' | 'followers' | 'requests') =>
     `${UrlBuilder.profile.social(slug)}?tab=${tab}`;
 
   let isActionsSheetOpen = $state(false);
 
   const activity = $derived(
-    profile && !isHidden ? useProfileActivity({ slug, isOwner }) : null,
+    isVisibilityKnown && !isHidden
+      ? useProfileActivity({ slug, isOwner })
+      : null,
   );
   const month = $derived(activity?.month);
   const screenTime = $derived(activity?.screenTime);
   const recent = $derived(activity?.recent);
   const activityLoading = $derived(activity?.isLoading);
+  const isActivityReady = $derived($activityLoading === false);
 
   const previousMonth = (() => {
     const now = new Date();
@@ -288,7 +297,7 @@
 <div class="profile-layout">
   {#if !profile}
     <div class="profile-header-skeleton">
-      <ProfileHeaderSkeleton />
+      <ProfileHeaderSkeleton hasMatchPill={!isOwner && $isAuthorized} />
     </div>
   {:else}
     <div class="profile-header">
@@ -344,6 +353,8 @@
   >
     {#if canInteract && profile}
       <FollowButton {slug} username={profile.username} />
+    {:else if canInteract}
+      <span class="profile-pill profile-pill--skeleton" aria-hidden="true"></span>
     {/if}
     {#if isOwner}
       <a
@@ -363,6 +374,7 @@
       <button
         type="button"
         class="profile-pill profile-pill--icon"
+        disabled={!profile}
         aria-label={m.header_more_options()}
         onclick={() => (isActionsSheetOpen = true)}
       >
@@ -371,7 +383,9 @@
     {/if}
   </div>
 
-  {#if isOwner && $requests.length > 0}
+  {#if showRequestsBanner && $requests.length === 0}
+    <div class="profile-requests profile-requests--skeleton" aria-hidden="true"></div>
+  {:else if showRequestsBanner}
     <a class="profile-requests" href={socialHref('requests')}>
       <span class="profile-requests-avatars">
         {#each $requests.slice(0, 3) as request (request.id)}
@@ -412,7 +426,7 @@
     {:else}
     <section class="profile-section">
       {@render sectionHeader(m.text_this_month(), null, '')}
-      <ProfileThisMonth month={$activityLoading === false ? ($month ?? null) : null}>
+      <ProfileThisMonth month={isActivityReady ? ($month ?? null) : null}>
         {#snippet footer()}
           <a
             class="profile-footer-link"
@@ -431,19 +445,17 @@
       </ProfileThisMonth>
     </section>
 
-    {#if isOwner && $screenTime}
+    {#if isOwner}
       <section class="profile-section">
         {@render sectionHeader(m.header_screen_time(), null, '')}
-        <ProfileScreenTime screenTime={$screenTime} />
+        <ProfileScreenTime screenTime={isActivityReady ? ($screenTime ?? null) : null} />
       </section>
     {/if}
 
-    {#if $recent && $recent.length > 0}
-      <section class="profile-section">
-        {@render sectionHeader(m.list_title_recently_watched(), null, '')}
-        <ProfileRecentlyWatched recent={$recent} />
-      </section>
-    {/if}
+    <section class="profile-section">
+      {@render sectionHeader(m.list_title_recently_watched(), null, '')}
+      <ProfileRecentlyWatched recent={isActivityReady ? ($recent ?? null) : null} />
+    </section>
 
     <section class="profile-section">
       {@render sectionHeader(m.header_time_watched(), null, '')}
@@ -796,6 +808,12 @@
     }
   }
 
+  .profile-requests--skeleton {
+    height: var(--ni-32);
+    border-color: transparent;
+    @include shimmer-bg;
+  }
+
   .profile-requests-avatars {
     display: flex;
 
@@ -898,6 +916,10 @@
 
     &--icon {
       padding: 0;
+    }
+
+    &--skeleton {
+      @include shimmer-bg-elevated;
     }
 
     &:active {
