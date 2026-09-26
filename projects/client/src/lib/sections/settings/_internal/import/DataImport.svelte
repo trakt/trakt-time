@@ -282,7 +282,7 @@
   }
 </script>
 
-<SettingsBlock title={m.header_your_data()}>
+<SettingsBlock id="your-data" title={m.header_your_data()}>
   <SettingsRow
     title={m.header_import_data()}
     subtitle={m.import_data_intro()}

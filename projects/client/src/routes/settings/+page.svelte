@@ -4,6 +4,7 @@
   import AccountCard from '$lib/sections/settings/_internal/AccountCard.svelte';
   import Appearance from '$lib/sections/settings/_internal/Appearance.svelte';
   import SettingsBlock from '$lib/sections/settings/_internal/SettingsBlock.svelte';
+  import SettingsNav from '$lib/sections/settings/_internal/SettingsNav.svelte';
   import SettingsRow from '$lib/sections/settings/_internal/SettingsRow.svelte';
   import VipSettings from '$lib/sections/settings/_internal/VipSettings.svelte';
   import DataImport from '$lib/sections/settings/_internal/import/DataImport.svelte';
@@ -25,26 +26,33 @@
   {#if !$isAuthorized}
     <LoginGate {login} />
   {:else}
-    <AccountCard />
-    <VipSettings />
-    <Appearance />
-    <DataImport />
-    <SettingsBlock title={m.header_about()}>
-      <SettingsRow
-        href="/compare"
-        title={m.compare_index_title()}
-        subtitle={m.compare_settings_hint()}
-        tone="blue"
-      >
-        {#snippet icon()}
-          <QuestionIcon />
-        {/snippet}
-        <ChevronRightIcon />
-      </SettingsRow>
-    </SettingsBlock>
-    <SettingsBlock title={m.header_account()}>
-      <LogoutButton style="row" />
-    </SettingsBlock>
+    <div class="settings-aside">
+      <AccountCard />
+      <VipSettings />
+      <div class="settings-aside-nav">
+        <SettingsNav />
+      </div>
+    </div>
+    <div class="settings-main">
+      <Appearance />
+      <DataImport />
+      <SettingsBlock id="about" title={m.header_about()}>
+        <SettingsRow
+          href="/compare"
+          title={m.compare_index_title()}
+          subtitle={m.compare_settings_hint()}
+          tone="blue"
+        >
+          {#snippet icon()}
+            <QuestionIcon />
+          {/snippet}
+          <ChevronRightIcon />
+        </SettingsRow>
+      </SettingsBlock>
+      <SettingsBlock id="account" title={m.header_account()}>
+        <LogoutButton style="row" />
+      </SettingsBlock>
+    </div>
   {/if}
 </div>
 
@@ -55,6 +63,62 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-l);
-    padding: var(--ni-72) var(--gap-m) var(--trakttime-bottom-nav-height);
+    padding: var(--ni-72) var(--trakttime-page-gutter)
+      var(--trakttime-bottom-nav-height);
+
+    @include for-tablet-sm-and-up {
+      width: 100%;
+      max-width: var(--ni-640);
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    @include for-desktop {
+      display: grid;
+      grid-template-columns: var(--ni-300) minmax(0, var(--ni-640));
+      justify-content: center;
+      align-items: start;
+      gap: var(--gap-xl);
+      max-width: none;
+    }
+  }
+
+  .settings-aside,
+  .settings-main {
+    display: contents;
+  }
+
+  .settings-aside-nav {
+    display: none;
+  }
+
+  @include for-tablet-sm-and-up {
+    .settings-aside {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(var(--ni-240), 1fr));
+      align-items: start;
+      gap: var(--gap-m);
+    }
+  }
+
+  @include for-desktop {
+    .settings-aside {
+      position: sticky;
+      top: var(--ni-72);
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-m);
+    }
+
+    .settings-aside-nav {
+      display: block;
+    }
+
+    .settings-main {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-l);
+      min-width: 0;
+    }
   }
 </style>

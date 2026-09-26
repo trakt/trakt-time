@@ -216,199 +216,214 @@
   </div>
 {/snippet}
 
-{#if !profile}
-  <ProfileHeaderSkeleton />
-{:else}
-  <div class="profile-header">
-    <ProfilePosterWall {coverUrl} posters={wallPosters} />
-    <div class="profile-identity">
-      <div class="profile-avatar" class:is-vip={profile.isVip}>
-        <ProfileImage
-          name={profile.username}
-          src={profile.avatar.url}
-          isEditable={isOwner}
-        />
-      </div>
-      <div class="profile-name-row">
-        <h1 class="profile-username">{profile.name?.full || profile.username}</h1>
-        {#if profile.isVip}
-          <VipBadge isDirector={profile.isDirector} />
-        {/if}
-      </div>
-      <p class="profile-handle">
-        {[`@${profile.username}`, profile.location].filter(Boolean).join(' · ')}
-      </p>
-      <p class="profile-about">{profile.about ?? ''}</p>
-      <p class="profile-joined">{joinedText}</p>
+<div class="profile-layout">
+  {#if !profile}
+    <div class="profile-header-skeleton">
+      <ProfileHeaderSkeleton />
     </div>
-  </div>
-{/if}
-
-<div class="profile-counts">
-  {@render countCell(stats?.network.following, m.text_count_following())}
-  {@render countCell(stats?.network.followers, m.text_count_followers())}
-  {@render countCell(ratingsCount, m.text_count_ratings())}
-</div>
-
-<div class="profile-actions" class:has-settings={isOwner}>
-  {#if isOwner}
-    <a
-      href="/settings"
-      class="profile-pill profile-pill--primary"
-      data-sveltekit-preload-data="hover"
-    >
-      <SettingsIcon />
-      {m.page_title_settings()}
-    </a>
-  {/if}
-  <button type="button" class="profile-pill" onclick={shareProfile}>
-    <ShareIcon />
-    {shareLink.isCopied ? m.text_link_copied() : m.button_text_share()}
-  </button>
-</div>
-
-<section class="profile-section">
-  {@render sectionHeader(m.header_time_watched(), null, '')}
-  <ProfileWatchTime {stats} />
-</section>
-
-<section class="profile-section">
-  {@render sectionHeader(m.header_favorites(), null, '')}
-  <div class="shelf-toggle">
-    <SegmentedControl
-      label={m.header_favorites()}
-      value={favoritesType}
-      options={shelfOptions}
-      onChange={(type) => setShelfType('favorites', type)}
-    />
-  </div>
-  {#if favoritesType === 'show'}
-    {#if $favoriteShowsLoading && $favoriteShows.length === 0}
-      {@render skeletonRow('fs')}
-    {:else if $favoriteShows.length === 0}
-      {@render emptyRow(m.text_no_favorite_shows())}
-    {:else}
-      <div class="poster-row" role="list">
-        {#each $favoriteShows as item (item.key)}
-          <PosterCard
-            type={item.item.type}
-            href={item.item.type === 'show' ? UrlBuilder.show(item.item.slug) : UrlBuilder.movie(item.item.slug)}
-            id={item.item.id}
-            title={item.item.title}
-            posterUrl={item.item.poster.url.thumb}
-            mode="favorite"
-          />
-        {/each}
-      </div>
-    {/if}
-  {:else if $favoriteMoviesLoading && $favoriteMovies.length === 0}
-    {@render skeletonRow('fm')}
-  {:else if $favoriteMovies.length === 0}
-    {@render emptyRow(m.text_no_favorite_movies())}
   {:else}
-    <div class="poster-row" role="list">
-      {#each $favoriteMovies as item (item.key)}
-        <PosterCard
-          type={item.item.type}
-          href={item.item.type === 'show' ? UrlBuilder.show(item.item.slug) : UrlBuilder.movie(item.item.slug)}
-          id={item.item.id}
-          title={item.item.title}
-          posterUrl={item.item.poster.url.thumb}
-          mode="favorite"
-        />
-      {/each}
-    </div>
-  {/if}
-</section>
-
-<section class="profile-section">
-  {@render sectionHeader(m.header_watchlist(), watchlistHref, watchlistLabel)}
-  <div class="shelf-toggle">
-    <SegmentedControl
-      label={m.header_watchlist()}
-      value={watchlistType}
-      options={shelfOptions}
-      onChange={(type) => setShelfType('watchlist', type)}
-    />
-  </div>
-  {#if watchlistType === 'show'}
-    {#if $watchlistShowsLoading && $watchlistShows.length === 0}
-      {@render skeletonRow('s')}
-    {:else if $watchlistShows.length === 0}
-      {@render emptyRow(m.text_empty_show_watchlist(), true)}
-    {:else}
-      <div class="poster-row" role="list">
-        {#each $watchlistShows as item (item.key)}
-          {#if item.type === 'show'}
-            <PosterCard
-              type="show"
-              href={UrlBuilder.show(item.entry.slug)}
-              id={item.entry.id}
-              title={item.entry.title}
-              posterUrl={item.entry.poster.url.thumb}
-            />
+    <div class="profile-header">
+      <div class="profile-wall">
+        <ProfilePosterWall {coverUrl} posters={wallPosters} />
+      </div>
+      <div class="profile-identity">
+        <div class="profile-avatar" class:is-vip={profile.isVip}>
+          <ProfileImage
+            name={profile.username}
+            src={profile.avatar.url}
+            isEditable={isOwner}
+          />
+        </div>
+        <div class="profile-name-row">
+          <h1 class="profile-username">{profile.name?.full || profile.username}</h1>
+          {#if profile.isVip}
+            <VipBadge isDirector={profile.isDirector} />
           {/if}
-        {/each}
+        </div>
+        <p class="profile-handle">
+          {[`@${profile.username}`, profile.location].filter(Boolean).join(' · ')}
+        </p>
+        <p class="profile-about">{profile.about ?? ''}</p>
+        <p class="profile-joined">{joinedText}</p>
       </div>
-    {/if}
-  {:else if $watchlistMoviesLoading && $watchlistMovies.length === 0}
-    {@render skeletonRow('m')}
-  {:else if $watchlistMovies.length === 0}
-    {@render emptyRow(m.text_empty_movie_watchlist(), true)}
-  {:else}
-    <div class="poster-row" role="list">
-      {#each $watchlistMovies as item (item.key)}
-        {#if item.type === 'movie'}
-          <PosterCard
-            type="movie"
-            href={UrlBuilder.movie(item.entry.slug)}
-            id={item.entry.id}
-            title={item.entry.title}
-            posterUrl={item.entry.poster.url.thumb}
-          />
-        {/if}
-      {/each}
     </div>
   {/if}
-</section>
 
-<section class="profile-section">
-  {@render sectionHeader(
-    isOwner ? m.header_my_lists() : m.page_title_lists(),
-    lists.length > LISTS_PREVIEW_COUNT ? listsHref : null,
-    m.button_label_view_all_lists(),
-  )}
-  {#if listsLoading && lists.length === 0}
-    <div class="lists-card" aria-hidden="true">
-      {#each Array(3) as _, i (`l-${i}`)}
-        <div class="list-row list-row-skeleton"></div>
-      {/each}
-    </div>
-  {:else if lists.length === 0}
-    <div class="lists-empty">
-      <p>{m.text_no_lists()}</p>
-    </div>
-  {:else}
-    <div class="lists-card">
-      {#each lists.slice(0, LISTS_PREVIEW_COUNT) as list (list.id)}
-        <a
-          href="/lists/{list.id}?name={encodeURIComponent(list.name)}"
-          class="list-row"
-        >
-          <ListPosterStack userId={listOwnerId} listId={list.id} />
-          <span class="list-text">
-            <span class="list-name">{list.name}</span>
-            <span class="list-count">{list.count} {m.text_items_unit()}</span>
-          </span>
-          <span class="list-chevron"><ChevronRightIcon /></span>
-        </a>
-      {/each}
-    </div>
-  {/if}
-</section>
+  <div class="profile-counts">
+    {@render countCell(stats?.network.following, m.text_count_following())}
+    {@render countCell(stats?.network.followers, m.text_count_followers())}
+    {@render countCell(ratingsCount, m.text_count_ratings())}
+  </div>
+
+  <div class="profile-actions" class:has-settings={isOwner}>
+    {#if isOwner}
+      <a
+        href="/settings"
+        class="profile-pill profile-pill--primary"
+        data-sveltekit-preload-data="hover"
+      >
+        <SettingsIcon />
+        {m.page_title_settings()}
+      </a>
+    {/if}
+    <button type="button" class="profile-pill" onclick={shareProfile}>
+      <ShareIcon />
+      {shareLink.isCopied ? m.text_link_copied() : m.button_text_share()}
+    </button>
+  </div>
+
+  <div class="profile-body">
+    <section class="profile-section">
+      {@render sectionHeader(m.header_time_watched(), null, '')}
+      <ProfileWatchTime {stats} />
+    </section>
+
+    <section class="profile-section">
+      {@render sectionHeader(m.header_favorites(), null, '')}
+      <div class="shelf-toggle">
+        <SegmentedControl
+          label={m.header_favorites()}
+          value={favoritesType}
+          options={shelfOptions}
+          onChange={(type) => setShelfType('favorites', type)}
+        />
+      </div>
+      {#if favoritesType === 'show'}
+        {#if $favoriteShowsLoading && $favoriteShows.length === 0}
+          {@render skeletonRow('fs')}
+        {:else if $favoriteShows.length === 0}
+          {@render emptyRow(m.text_no_favorite_shows())}
+        {:else}
+          <div class="poster-row" role="list">
+            {#each $favoriteShows as item (item.key)}
+              <PosterCard
+                type={item.item.type}
+                href={item.item.type === 'show' ? UrlBuilder.show(item.item.slug) : UrlBuilder.movie(item.item.slug)}
+                id={item.item.id}
+                title={item.item.title}
+                posterUrl={item.item.poster.url.thumb}
+                mode="favorite"
+              />
+            {/each}
+          </div>
+        {/if}
+      {:else if $favoriteMoviesLoading && $favoriteMovies.length === 0}
+        {@render skeletonRow('fm')}
+      {:else if $favoriteMovies.length === 0}
+        {@render emptyRow(m.text_no_favorite_movies())}
+      {:else}
+        <div class="poster-row" role="list">
+          {#each $favoriteMovies as item (item.key)}
+            <PosterCard
+              type={item.item.type}
+              href={item.item.type === 'show' ? UrlBuilder.show(item.item.slug) : UrlBuilder.movie(item.item.slug)}
+              id={item.item.id}
+              title={item.item.title}
+              posterUrl={item.item.poster.url.thumb}
+              mode="favorite"
+            />
+          {/each}
+        </div>
+      {/if}
+    </section>
+
+    <section class="profile-section">
+      {@render sectionHeader(m.header_watchlist(), watchlistHref, watchlistLabel)}
+      <div class="shelf-toggle">
+        <SegmentedControl
+          label={m.header_watchlist()}
+          value={watchlistType}
+          options={shelfOptions}
+          onChange={(type) => setShelfType('watchlist', type)}
+        />
+      </div>
+      {#if watchlistType === 'show'}
+        {#if $watchlistShowsLoading && $watchlistShows.length === 0}
+          {@render skeletonRow('s')}
+        {:else if $watchlistShows.length === 0}
+          {@render emptyRow(m.text_empty_show_watchlist(), true)}
+        {:else}
+          <div class="poster-row" role="list">
+            {#each $watchlistShows as item (item.key)}
+              {#if item.type === 'show'}
+                <PosterCard
+                  type="show"
+                  href={UrlBuilder.show(item.entry.slug)}
+                  id={item.entry.id}
+                  title={item.entry.title}
+                  posterUrl={item.entry.poster.url.thumb}
+                />
+              {/if}
+            {/each}
+          </div>
+        {/if}
+      {:else if $watchlistMoviesLoading && $watchlistMovies.length === 0}
+        {@render skeletonRow('m')}
+      {:else if $watchlistMovies.length === 0}
+        {@render emptyRow(m.text_empty_movie_watchlist(), true)}
+      {:else}
+        <div class="poster-row" role="list">
+          {#each $watchlistMovies as item (item.key)}
+            {#if item.type === 'movie'}
+              <PosterCard
+                type="movie"
+                href={UrlBuilder.movie(item.entry.slug)}
+                id={item.entry.id}
+                title={item.entry.title}
+                posterUrl={item.entry.poster.url.thumb}
+              />
+            {/if}
+          {/each}
+        </div>
+      {/if}
+    </section>
+
+    <section class="profile-section">
+      {@render sectionHeader(
+        isOwner ? m.header_my_lists() : m.page_title_lists(),
+        lists.length > LISTS_PREVIEW_COUNT ? listsHref : null,
+        m.button_label_view_all_lists(),
+      )}
+      {#if listsLoading && lists.length === 0}
+        <div class="lists-card" aria-hidden="true">
+          {#each Array(3) as _, i (`l-${i}`)}
+            <div class="list-row list-row-skeleton"></div>
+          {/each}
+        </div>
+      {:else if lists.length === 0}
+        <div class="lists-empty">
+          <p>{m.text_no_lists()}</p>
+        </div>
+      {:else}
+        <div class="lists-card">
+          {#each lists.slice(0, LISTS_PREVIEW_COUNT) as list (list.id)}
+            <a
+              href="/lists/{list.id}?name={encodeURIComponent(list.name)}"
+              class="list-row"
+            >
+              <ListPosterStack userId={listOwnerId} listId={list.id} />
+              <span class="list-text">
+                <span class="list-name">{list.name}</span>
+                <span class="list-count">{list.count} {m.text_items_unit()}</span>
+              </span>
+              <span class="list-chevron"><ChevronRightIcon /></span>
+            </a>
+          {/each}
+        </div>
+      {/if}
+    </section>
+  </div>
+</div>
 
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
+
+  .profile-layout,
+  .profile-body,
+  .profile-wall,
+  .profile-header-skeleton {
+    display: contents;
+  }
 
   .profile-header {
     display: flex;
@@ -419,7 +434,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 var(--gap-m) var(--gap-m);
+    padding: 0 var(--trakttime-page-gutter) var(--gap-m);
     margin-top: var(--trakttime-profile-offset);
     position: relative;
     text-align: center;
@@ -495,7 +510,7 @@
   .profile-counts {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    margin: 0 var(--gap-m);
+    margin: 0 var(--trakttime-page-gutter);
     padding: var(--gap-s) 0;
     border-radius: var(--border-radius-xl);
     background: var(--color-card-background);
@@ -538,7 +553,7 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--gap-xs);
-    margin: var(--gap-s) var(--gap-m) 0;
+    margin: var(--gap-s) var(--trakttime-page-gutter) 0;
 
     &.has-settings {
       grid-template-columns: 1fr 1fr;
@@ -592,7 +607,7 @@
     align-items: baseline;
     justify-content: space-between;
     gap: var(--gap-s);
-    padding: 0 var(--gap-m) var(--gap-s);
+    padding: 0 var(--trakttime-page-gutter) var(--gap-s);
   }
 
   .section-title {
@@ -618,13 +633,13 @@
   }
 
   .shelf-toggle {
-    padding: 0 var(--gap-m) var(--gap-s);
+    padding: 0 var(--trakttime-page-gutter) var(--gap-s);
   }
 
   .lists-card {
     display: flex;
     flex-direction: column;
-    margin: 0 var(--gap-m);
+    margin: 0 var(--trakttime-page-gutter);
     border-radius: var(--border-radius-xl);
     background: var(--color-card-background);
     overflow: hidden;
@@ -690,7 +705,7 @@
     align-items: center;
     justify-content: center;
     min-height: calc((var(--ni-48) + var(--gap-s) * 2) * 3);
-    padding: 0 var(--gap-m);
+    padding: 0 var(--trakttime-page-gutter);
     color: var(--color-text-secondary);
     font-size: 0.875rem;
     text-align: center;
@@ -702,13 +717,13 @@
 
   .poster-row {
     @include scrollable-row;
-    padding: 0 var(--gap-m);
+    padding: 0 var(--trakttime-page-gutter);
   }
 
   .poster-row-skeleton {
     display: flex;
     gap: var(--gap-s);
-    padding: 0 var(--gap-m);
+    padding: 0 var(--trakttime-page-gutter);
     overflow: hidden;
   }
 
@@ -720,13 +735,94 @@
     gap: var(--gap-s);
     /* Match poster-card footprint: 2:3 image + title line-height + gap */
     min-height: calc(var(--trakttime-poster-card-width) * 1.5 + 1rem + var(--gap-xxs));
-    padding: 0 var(--gap-m);
+    padding: 0 var(--trakttime-page-gutter);
     color: var(--color-text-secondary);
     font-size: 0.875rem;
     text-align: center;
 
     p {
       margin: 0;
+    }
+  }
+
+  @include for-tablet-lg-and-up {
+    .lists-card {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .list-row {
+      & + & {
+        border-top: none;
+      }
+
+      &:nth-child(odd) {
+        border-inline-end: var(--ni-1) solid var(--color-border);
+      }
+
+      &:nth-child(n + 3) {
+        border-top: var(--ni-1) solid var(--color-border);
+      }
+    }
+  }
+
+  @include for-desktop {
+    .profile-layout {
+      display: grid;
+      grid-template-columns: var(--ni-340) minmax(0, 1fr);
+      grid-template-rows: auto auto auto auto 1fr;
+      grid-template-areas:
+        'header header'
+        'identity body'
+        'counts body'
+        'actions body'
+        '. body';
+      align-items: start;
+    }
+
+    .profile-header {
+      display: contents;
+    }
+
+    .profile-wall,
+    .profile-header-skeleton {
+      display: block;
+      grid-area: header;
+    }
+
+    .profile-identity {
+      grid-area: identity;
+      padding-inline-end: 0;
+    }
+
+    .profile-counts {
+      grid-area: counts;
+      margin-inline-end: 0;
+    }
+
+    .profile-actions {
+      grid-area: actions;
+      margin-inline-end: 0;
+    }
+
+    .profile-body {
+      display: block;
+      grid-area: body;
+      padding-top: var(--gap-m);
+    }
+
+    .poster-row,
+    .poster-row-skeleton {
+      --trakttime-poster-card-width: 100%;
+
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(var(--ni-144), 1fr));
+      gap: var(--gap-l) var(--gap-m);
+      overflow: visible;
+    }
+
+    .poster-row-empty {
+      min-height: var(--ni-240);
     }
   }
 </style>
