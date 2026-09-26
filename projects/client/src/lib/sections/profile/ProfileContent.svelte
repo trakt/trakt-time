@@ -43,6 +43,9 @@
   import ProfileProgress from './_internal/ProfileProgress.svelte';
   import ProfilePeopleRow from './_internal/ProfilePeopleRow.svelte';
   import { useProfileActivity } from './_internal/useProfileActivity.ts';
+  import MatchPill from '$lib/features/match/MatchPill.svelte';
+  import LeaderboardRow from '$lib/features/leaderboard/LeaderboardRow.svelte';
+  import RenderFor from '$lib/guards/RenderFor.svelte';
 
   type Props = {
     slug: string;
@@ -146,6 +149,16 @@
       $watchlistMovies.map((item) => item.entry.poster.url.thumb),
     ),
   );
+  const matchFavorites = $derived(
+    [...$favoriteShows, ...$favoriteMovies].map(({ item }) => ({
+      id: item.id,
+      type: item.type,
+      slug: item.slug,
+      title: item.title,
+      posterUrl: item.poster.url.thumb,
+    })),
+  );
+
   const wallPosters = $derived(
     favoritePosters.length > 0 ? favoritePosters : watchlistPosters,
   );
@@ -301,6 +314,11 @@
         </p>
         <p class="profile-about">{profile.about ?? ''}</p>
         <p class="profile-joined">{joinedText}</p>
+        {#if !isOwner}
+          <RenderFor audience="authenticated">
+            <MatchPill {profile} favorites={matchFavorites} />
+          </RenderFor>
+        {/if}
       </div>
     </div>
   {/if}
@@ -406,6 +424,9 @@
             {m.button_text_month_in_review({ month: previousMonthName })}
             <ChevronRightIcon />
           </a>
+          {#if isOwner}
+            <LeaderboardRow />
+          {/if}
         {/snippet}
       </ProfileThisMonth>
     </section>
