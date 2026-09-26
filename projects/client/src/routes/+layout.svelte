@@ -24,6 +24,7 @@
   import RenderFor from "$lib/guards/RenderFor.svelte";
   import BottomNav from "$lib/sections/bottom-nav/BottomNav.svelte";
   import SideNav from "$lib/sections/side-nav/SideNav.svelte";
+  import ReportDialogProvider from "$lib/features/report/ReportDialogProvider.svelte";
   import MarkAsWatchedDrawerProvider from "$lib/sections/media-actions/mark-as-watched/MarkAsWatchedDrawerProvider.svelte";
   import NavbarToastContent from "$lib/sections/toast/NavbarToastContent.svelte";
   import { isPWA } from "$lib/utils/devices/isPWA.ts";
@@ -145,6 +146,7 @@
                           <ToastProvider>
                             <ConfirmationProvider>
                               <MarkAsWatchedDrawerProvider />
+                              <ReportDialogProvider />
                               <CoverImage />
 
                               <ThemeProvider theme={data.theme}>

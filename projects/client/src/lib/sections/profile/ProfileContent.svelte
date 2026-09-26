@@ -27,6 +27,15 @@
   import ChevronRightIcon from '$lib/components/icons/ChevronRightIcon.svelte';
   import PosterCard from '$lib/components/poster-card/PosterCard.svelte';
   import PosterSkeleton from '$lib/components/poster-card/PosterSkeleton.svelte';
+  import MoreIcon from '$lib/components/icons/MoreIcon.svelte';
+  import LockIcon from '$lib/components/icons/LockIcon.svelte';
+  import UserAvatar from '$lib/components/avatar/UserAvatar.svelte';
+  import { useUser } from '$lib/features/auth/stores/useUser.ts';
+  import { useAuth } from '$lib/features/auth/stores/useAuth.ts';
+  import FollowButton from '$lib/features/social/FollowButton.svelte';
+  import { useFollowRequests } from '$lib/features/social/useFollowRequests.ts';
+  import { isSameSlug } from '$lib/features/social/isSameSlug.ts';
+  import ProfileActionsSheet from './_internal/ProfileActionsSheet.svelte';
 
   type Props = {
     slug: string;
@@ -158,6 +167,21 @@
       title: profile?.name?.full || profile?.username || slug,
     });
 
+  const { network } = useUser();
+  const { isAuthorized } = useAuth();
+  const { requests } = useFollowRequests();
+  const isFollowing = $derived(
+    $network?.following.some((user) => isSameSlug(user.slug, slug)) ?? false,
+  );
+  const isHidden = $derived(
+    Boolean(profile?.private) && !isOwner && !isFollowing,
+  );
+  const canInteract = $derived(!isOwner && profile != null && $isAuthorized);
+  const socialHref = (tab: 'following' | 'followers' | 'requests') =>
+    `${UrlBuilder.profile.social(slug)}?tab=${tab}`;
+
+  let isActionsSheetOpen = $state(false);
+
   const listsHref = $derived(
     isOwner ? '/profile/me/lists' : `/profile/${slug}/lists`,
   );
@@ -205,15 +229,17 @@
   </div>
 {/snippet}
 
-{#snippet countCell(value: number | undefined, label: string)}
-  <div class="count-cell">
+{#snippet countCell(value: number | undefined, label: string, href?: string)}
+  <svelte:element this={href ? 'a' : 'div'} {href} class="count-cell">
     {#if value != null}
       <span class="count-value">{value.toLocaleString()}</span>
+    {:else if !$statsQuery.isLoading}
+      <span class="count-value">–</span>
     {:else}
       <span class="count-value count-value--skeleton" aria-hidden="true"></span>
     {/if}
     <span class="count-label">{label}</span>
-  </div>
+  </svelte:element>
 {/snippet}
 
 <div class="profile-layout">
@@ -250,12 +276,27 @@
   {/if}
 
   <div class="profile-counts">
-    {@render countCell(stats?.network.following, m.text_count_following())}
-    {@render countCell(stats?.network.followers, m.text_count_followers())}
+    {@render countCell(
+      stats?.network.following,
+      m.text_count_following(),
+      isHidden ? undefined : socialHref('following'),
+    )}
+    {@render countCell(
+      stats?.network.followers,
+      m.text_count_followers(),
+      isHidden ? undefined : socialHref('followers'),
+    )}
     {@render countCell(ratingsCount, m.text_count_ratings())}
   </div>
 
-  <div class="profile-actions" class:has-settings={isOwner}>
+  <div
+    class="profile-actions"
+    class:has-settings={isOwner}
+    class:has-follow={canInteract}
+  >
+    {#if canInteract && profile}
+      <FollowButton {slug} username={profile.username} />
+    {/if}
     {#if isOwner}
       <a
         href="/settings"
@@ -270,9 +311,57 @@
       <ShareIcon />
       {shareLink.isCopied ? m.text_link_copied() : m.button_text_share()}
     </button>
+    {#if canInteract}
+      <button
+        type="button"
+        class="profile-pill profile-pill--icon"
+        aria-label={m.header_more_options()}
+        onclick={() => (isActionsSheetOpen = true)}
+      >
+        <MoreIcon />
+      </button>
+    {/if}
   </div>
 
+  {#if isOwner && $requests.length > 0}
+    <a class="profile-requests" href={socialHref('requests')}>
+      <span class="profile-requests-avatars">
+        {#each $requests.slice(0, 3) as request (request.id)}
+          <UserAvatar
+            name={request.user.username}
+            src={request.user.avatar.url}
+            size="xs"
+          />
+        {/each}
+      </span>
+      <span class="profile-requests-text">{m.button_label_follow_requests()}</span>
+      <span class="profile-requests-count">{$requests.length}</span>
+      <ChevronRightIcon />
+    </a>
+  {/if}
+
+  {#if isActionsSheetOpen && profile}
+    <ProfileActionsSheet
+      {slug}
+      username={profile.username}
+      onClose={() => (isActionsSheetOpen = false)}
+    />
+  {/if}
+
   <div class="profile-body">
+    {#if isHidden}
+      <section class="profile-private">
+        <span class="profile-private-icon"><LockIcon /></span>
+        <span class="profile-private-text">
+          <strong>{m.header_private_profile()}</strong>
+          <span>
+            {m.text_private_profile_description({
+              username: profile?.username ?? slug,
+            })}
+          </span>
+        </span>
+      </section>
+    {:else}
     <section class="profile-section">
       {@render sectionHeader(m.header_time_watched(), null, '')}
       <ProfileWatchTime {stats} />
@@ -412,6 +501,7 @@
         </div>
       {/if}
     </section>
+    {/if}
   </div>
 </div>
 
@@ -528,6 +618,21 @@
     }
   }
 
+  a.count-cell {
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus-visible {
+      outline: var(--ni-2) solid var(--trakttime-accent);
+      outline-offset: var(--ni-2);
+      border-radius: var(--border-radius-s);
+    }
+
+    &:active {
+      opacity: 0.8;
+    }
+  }
+
   .count-value {
     font-family: var(--trakttime-font-heading);
     font-size: 1.125rem;
@@ -558,6 +663,105 @@
     &.has-settings {
       grid-template-columns: 1fr 1fr;
     }
+
+    &.has-follow {
+      grid-template-columns: 1fr 1fr var(--ni-44);
+    }
+  }
+
+  .profile-requests {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-s);
+    margin: var(--gap-s) var(--trakttime-page-gutter) 0;
+    padding: var(--gap-s) var(--gap-m);
+    border: var(--ni-1) solid color-mix(in srgb, var(--color-text-emphasis) 30%, transparent);
+    border-radius: var(--border-radius-xl);
+    background: var(--color-card-background);
+    color: var(--color-text-primary);
+    text-decoration: none;
+
+    > :global(svg) {
+      width: var(--trakttime-icon-md);
+      height: var(--trakttime-icon-md);
+      color: var(--color-text-secondary);
+    }
+
+    &:active {
+      background: var(--color-floating-background);
+    }
+  }
+
+  .profile-requests-avatars {
+    display: flex;
+
+    > :global(* + *) {
+      margin-inline-start: calc(var(--gap-xs) * -1);
+    }
+
+    > :global(*) {
+      box-shadow: 0 0 0 var(--ni-2) var(--color-card-background);
+    }
+  }
+
+  .profile-requests-text {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .profile-requests-count {
+    min-width: var(--ni-22);
+    padding: 0 var(--gap-xxs);
+    border-radius: var(--trakttime-radius-pill);
+    background: var(--trakttime-gradient);
+    color: var(--trakttime-accent-foreground);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: var(--ni-22);
+    text-align: center;
+  }
+
+  .profile-private {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-m);
+    margin: var(--gap-xl) var(--trakttime-page-gutter) 0;
+    padding: var(--gap-m);
+    border-radius: var(--border-radius-xl);
+    background: var(--color-card-background);
+  }
+
+  .profile-private-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--ni-44);
+    height: var(--ni-44);
+    border-radius: 50%;
+    background: var(--color-floating-background);
+    color: var(--color-text-emphasis);
+
+    :global(svg) {
+      width: var(--ni-20);
+      height: var(--ni-20);
+    }
+  }
+
+  .profile-private-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ni-2);
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+
+    strong {
+      font-family: var(--trakttime-font-heading);
+      font-size: 1rem;
+      color: var(--color-text-primary);
+    }
   }
 
   .profile-pill {
@@ -586,6 +790,10 @@
     &--primary {
       background: var(--color-text-primary);
       color: var(--color-background);
+    }
+
+    &--icon {
+      padding: 0;
     }
 
     &:active {
@@ -770,12 +978,13 @@
     .profile-layout {
       display: grid;
       grid-template-columns: var(--ni-340) minmax(0, 1fr);
-      grid-template-rows: auto auto auto auto 1fr;
+      grid-template-rows: auto auto auto auto auto 1fr;
       grid-template-areas:
         'header header'
         'identity body'
         'counts body'
         'actions body'
+        'requests body'
         '. body';
       align-items: start;
     }
@@ -802,6 +1011,11 @@
 
     .profile-actions {
       grid-area: actions;
+      margin-inline-end: 0;
+    }
+
+    .profile-requests {
+      grid-area: requests;
       margin-inline-end: 0;
     }
 
