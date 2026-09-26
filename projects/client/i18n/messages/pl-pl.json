@@ -539,5 +539,7 @@
   "text_nothing_scheduled": "Nic nie zaplanowano",
   "header_airing_soon": "Wkrótce w emisji",
   "button_label_scroll_back": "Przewiń wstecz",
-  "button_label_scroll_forward": "Przewiń dalej"
+  "button_label_scroll_forward": "Przewiń dalej",
+  "header_network": "Stacja",
+  "header_release_date": "Data premiery"
 }

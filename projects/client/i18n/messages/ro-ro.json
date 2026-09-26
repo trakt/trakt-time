@@ -539,5 +539,7 @@
   "text_nothing_scheduled": "Nimic programat",
   "header_airing_soon": "În curând",
   "button_label_scroll_back": "Derulează înapoi",
-  "button_label_scroll_forward": "Derulează înainte"
+  "button_label_scroll_forward": "Derulează înainte",
+  "header_network": "Rețea",
+  "header_release_date": "Data lansării"
 }

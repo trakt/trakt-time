@@ -539,5 +539,7 @@
   "text_nothing_scheduled": "予定なし",
   "header_airing_soon": "まもなく放送",
   "button_label_scroll_back": "前へスクロール",
-  "button_label_scroll_forward": "次へスクロール"
+  "button_label_scroll_forward": "次へスクロール",
+  "header_network": "放送局",
+  "header_release_date": "公開日"
 }

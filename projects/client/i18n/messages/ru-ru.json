@@ -539,5 +539,7 @@
   "text_nothing_scheduled": "Ничего не запланировано",
   "header_airing_soon": "Скоро в эфире",
   "button_label_scroll_back": "Прокрутить назад",
-  "button_label_scroll_forward": "Прокрутить вперёд"
+  "button_label_scroll_forward": "Прокрутить вперёд",
+  "header_network": "Канал",
+  "header_release_date": "Дата выхода"
 }

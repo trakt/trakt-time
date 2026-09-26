@@ -539,5 +539,7 @@
   "text_nothing_scheduled": "Nada programado",
   "header_airing_soon": "Em breve",
   "button_label_scroll_back": "Rolar para trás",
-  "button_label_scroll_forward": "Rolar para frente"
+  "button_label_scroll_forward": "Rolar para frente",
+  "header_network": "Emissora",
+  "header_release_date": "Data de lançamento"
 }

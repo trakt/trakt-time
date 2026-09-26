@@ -101,6 +101,12 @@
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--gap-m);
 
+    @include for-tablet-sm-and-up {
+      margin: 0;
+      padding: 0;
+      scroll-padding-inline: 0;
+    }
+
     li {
       flex-shrink: 0;
       scroll-snap-align: start;

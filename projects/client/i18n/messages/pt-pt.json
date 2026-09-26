@@ -539,5 +539,7 @@
   "text_nothing_scheduled": "Nada agendado",
   "header_airing_soon": "Em breve",
   "button_label_scroll_back": "Deslizar para trás",
-  "button_label_scroll_forward": "Deslizar para a frente"
+  "button_label_scroll_forward": "Deslizar para a frente",
+  "header_network": "Canal",
+  "header_release_date": "Data de estreia"
 }

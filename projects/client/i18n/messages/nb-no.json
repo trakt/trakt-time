@@ -539,5 +539,7 @@
   "text_nothing_scheduled": "Ingenting planlagt",
   "header_airing_soon": "Sendes snart",
   "button_label_scroll_back": "Rull tilbake",
-  "button_label_scroll_forward": "Rull fremover"
+  "button_label_scroll_forward": "Rull fremover",
+  "header_network": "Kanal",
+  "header_release_date": "Utgivelsesdato"
 }

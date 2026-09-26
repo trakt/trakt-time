@@ -539,5 +539,7 @@
   "text_nothing_scheduled": "Planlanmış bir şey yok",
   "header_airing_soon": "Yakında yayında",
   "button_label_scroll_back": "Geri kaydır",
-  "button_label_scroll_forward": "İleri kaydır"
+  "button_label_scroll_forward": "İleri kaydır",
+  "header_network": "Kanal",
+  "header_release_date": "Yayın tarihi"
 }

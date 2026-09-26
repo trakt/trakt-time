@@ -539,5 +539,7 @@
   "text_nothing_scheduled": "暂无安排",
   "header_airing_soon": "即将播出",
   "button_label_scroll_back": "向后滚动",
-  "button_label_scroll_forward": "向前滚动"
+  "button_label_scroll_forward": "向前滚动",
+  "header_network": "播出平台",
+  "header_release_date": "上映日期"
 }
