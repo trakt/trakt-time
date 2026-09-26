@@ -23,6 +23,7 @@
   import WSInvalidator from "$lib/features/websocket/WSInvalidator.svelte";
   import RenderFor from "$lib/guards/RenderFor.svelte";
   import BottomNav from "$lib/sections/bottom-nav/BottomNav.svelte";
+  import SideNav from "$lib/sections/side-nav/SideNav.svelte";
   import MarkAsWatchedDrawerProvider from "$lib/sections/media-actions/mark-as-watched/MarkAsWatchedDrawerProvider.svelte";
   import NavbarToastContent from "$lib/sections/toast/NavbarToastContent.svelte";
   import { isPWA } from "$lib/utils/devices/isPWA.ts";
@@ -101,6 +102,14 @@
       font-family: "Inter", Arial, sans-serif;
     }
 
+    @media (min-width: 1024px) {
+      body {
+        max-width: var(--trakttime-app-max-width);
+        padding-inline-start: var(--trakttime-sidebar-width);
+        box-sizing: border-box;
+      }
+    }
+
     body:has(dialog[open]),
     body.dialog-open {
       overflow: hidden;
@@ -134,6 +143,7 @@
                                 {@render children()}
 
                                 <RenderFor audience="all">
+                                  <SideNav />
                                   <BottomNav />
                                 </RenderFor>
 

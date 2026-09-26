@@ -3,6 +3,7 @@
 /* Trakt Time design tokens */
 :root {
   --trakttime-bottom-nav-height: 64px;
+  --trakttime-bottom-nav-compact-width: 440px;
   --trakttime-accent: var(--purple-500);
   --trakttime-accent-foreground: var(--shade-10);
   --trakttime-gradient: linear-gradient(
@@ -41,6 +42,19 @@
   --trakttime-icon-sm: 18px;
   --trakttime-icon-md: 20px;
   --trakttime-loading-top: 120px;
+
+  --trakttime-sidebar-width: 0px;
+  --trakttime-column-center: calc(50% + var(--trakttime-sidebar-width) / 2);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --trakttime-sidebar-width: 248px;
+    --trakttime-max-width: 1352px;
+    --trakttime-app-max-width: calc(
+      var(--trakttime-sidebar-width) + var(--trakttime-max-width)
+    );
+  }
 }
 
 /* Dark theme — near-black base like TVTime */
