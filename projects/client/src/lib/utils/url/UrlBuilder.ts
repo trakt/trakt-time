@@ -277,6 +277,8 @@ export const UrlBuilder = {
     privacy: () => 'https://trakt.tv/privacy',
     support: (username?: string) => ogSupportFactory(username),
     forums: () => 'https://forums.trakt.tv/c/trakt',
+    monthInReview: (slug: string, year: number, month: number) =>
+      `https://trakt.tv/users/${slug}/mir/${year}/${month}`,
     widgets: {
       yir: (slug: string, year: string) =>
         `https://widgets.trakt.tv/users/${slug}/yir.jpg?year=${year}`,
