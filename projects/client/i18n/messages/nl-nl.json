@@ -537,5 +537,7 @@
   "header_this_week": "Deze week",
   "header_next_week": "Volgende week",
   "text_nothing_scheduled": "Niets gepland",
-  "header_airing_soon": "Binnenkort te zien"
+  "header_airing_soon": "Binnenkort te zien",
+  "button_label_scroll_back": "Terug scrollen",
+  "button_label_scroll_forward": "Verder scrollen"
 }

@@ -15,8 +15,11 @@
   import { useTrendingList } from '$lib/sections/lists/trending/useTrendingList.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import PosterCard from '$lib/components/poster-card/PosterCard.svelte';
+  import ScrollRow from '$lib/components/scroll-row/ScrollRow.svelte';
+  import DiscoverSpotlight from '$lib/sections/discover/DiscoverSpotlight.svelte';
 
   const SECTION_LIMIT = 10;
+  const SPOTLIGHT_LIMIT = 5;
 
   const { list: showRecommendedList, isLoading: showRecommendedLoading } =
     useRecommendedList({ type: 'show', limit: SECTION_LIMIT, filter: {} });
@@ -125,6 +128,8 @@
       {/if}
     </div>
   {:else}
+    <DiscoverSpotlight items={$showTrendingList.slice(0, SPOTLIGHT_LIMIT)} />
+
     <section class="discover-section">
       <a
         href="/recommended/shows"
@@ -135,13 +140,13 @@
         <span class="chevron"><ChevronRightIcon /></span>
       </a>
       {#if $showRecommendedLoading && $showRecommendedList.length === 0}
-        <div class="poster-row" aria-hidden="true">
+        <ScrollRow aria-hidden="true">
           {#each Array(SECTION_LIMIT) as _, i (`sr-${i}`)}
             <PosterSkeleton />
           {/each}
-        </div>
+        </ScrollRow>
       {:else}
-        <div class="poster-row" role="list">
+        <ScrollRow role="list">
           {#each $showRecommendedList as item (item.id)}
             <PosterCard
               type="show"
@@ -151,7 +156,7 @@
               posterUrl={item.poster.url.thumb}
             />
           {/each}
-        </div>
+        </ScrollRow>
       {/if}
     </section>
 
@@ -165,13 +170,13 @@
         <span class="chevron"><ChevronRightIcon /></span>
       </a>
       {#if $showTrendingLoading && $showTrendingList.length === 0}
-        <div class="poster-row" aria-hidden="true">
+        <ScrollRow aria-hidden="true">
           {#each Array(SECTION_LIMIT) as _, i (`st-${i}`)}
             <PosterSkeleton />
           {/each}
-        </div>
+        </ScrollRow>
       {:else}
-        <div class="poster-row" role="list">
+        <ScrollRow role="list">
           {#each $showTrendingList as item (item.id)}
             <PosterCard
               type="show"
@@ -181,7 +186,7 @@
               posterUrl={item.poster.url.thumb}
             />
           {/each}
-        </div>
+        </ScrollRow>
       {/if}
     </section>
 
@@ -205,13 +210,13 @@
         <span class="chevron"><ChevronRightIcon /></span>
       </a>
       {#if $movieRecommendedLoading && $movieRecommendedList.length === 0}
-        <div class="poster-row" aria-hidden="true">
+        <ScrollRow aria-hidden="true">
           {#each Array(SECTION_LIMIT) as _, i (`mr-${i}`)}
             <PosterSkeleton />
           {/each}
-        </div>
+        </ScrollRow>
       {:else}
-        <div class="poster-row" role="list">
+        <ScrollRow role="list">
           {#each $movieRecommendedList as item (item.id)}
             <PosterCard
               type="movie"
@@ -221,7 +226,7 @@
               posterUrl={item.poster.url.thumb}
             />
           {/each}
-        </div>
+        </ScrollRow>
       {/if}
     </section>
 
@@ -235,13 +240,13 @@
         <span class="chevron"><ChevronRightIcon /></span>
       </a>
       {#if $movieTrendingLoading && $movieTrendingList.length === 0}
-        <div class="poster-row" aria-hidden="true">
+        <ScrollRow aria-hidden="true">
           {#each Array(SECTION_LIMIT) as _, i (`mt-${i}`)}
             <PosterSkeleton />
           {/each}
-        </div>
+        </ScrollRow>
       {:else}
-        <div class="poster-row" role="list">
+        <ScrollRow role="list">
           {#each $movieTrendingList as item (item.id)}
             <PosterCard
               type="movie"
@@ -251,7 +256,7 @@
               posterUrl={item.poster.url.thumb}
             />
           {/each}
-        </div>
+        </ScrollRow>
       {/if}
     </section>
 
@@ -341,7 +346,7 @@
 
   .search-results {
     flex: 1;
-    padding: var(--gap-m);
+    padding: var(--gap-m) var(--trakttime-page-gutter);
   }
 
   .empty-search {
@@ -369,7 +374,7 @@
     display: flex;
     align-items: center;
     gap: var(--gap-xxs);
-    padding: 0 var(--gap-m) var(--gap-s);
+    padding: 0 var(--trakttime-page-gutter) var(--gap-s);
     text-decoration: none;
     color: inherit;
 
@@ -397,16 +402,11 @@
     }
   }
 
-  .poster-row {
-    @include scrollable-row;
-    padding: 0 var(--gap-m);
-  }
-
   .browse-cta {
     display: flex;
     align-items: center;
     gap: var(--gap-s);
-    margin: 0 var(--gap-m) var(--gap-m);
+    margin: 0 var(--trakttime-page-gutter) var(--gap-m);
     padding: var(--gap-s) var(--gap-l);
     background: var(--color-card-background);
     color: var(--color-text-primary);

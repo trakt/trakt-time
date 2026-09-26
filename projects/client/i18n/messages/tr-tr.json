@@ -537,5 +537,7 @@
   "header_this_week": "Bu hafta",
   "header_next_week": "Gelecek hafta",
   "text_nothing_scheduled": "Planlanmış bir şey yok",
-  "header_airing_soon": "Yakında yayında"
+  "header_airing_soon": "Yakında yayında",
+  "button_label_scroll_back": "Geri kaydır",
+  "button_label_scroll_forward": "İleri kaydır"
 }

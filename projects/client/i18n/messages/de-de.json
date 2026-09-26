@@ -537,5 +537,7 @@
   "header_this_week": "Diese Woche",
   "header_next_week": "Nächste Woche",
   "text_nothing_scheduled": "Nichts geplant",
-  "header_airing_soon": "Demnächst"
+  "header_airing_soon": "Demnächst",
+  "button_label_scroll_back": "Zurückblättern",
+  "button_label_scroll_forward": "Weiterblättern"
 }

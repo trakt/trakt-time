@@ -537,5 +537,7 @@
   "header_this_week": "Тази седмица",
   "header_next_week": "Следващата седмица",
   "text_nothing_scheduled": "Няма нищо планирано",
-  "header_airing_soon": "Предстоящи излъчвания"
+  "header_airing_soon": "Предстоящи излъчвания",
+  "button_label_scroll_back": "Превърти назад",
+  "button_label_scroll_forward": "Превърти напред"
 }

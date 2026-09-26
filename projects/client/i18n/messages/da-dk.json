@@ -537,5 +537,7 @@
   "header_this_week": "Denne uge",
   "header_next_week": "Næste uge",
   "text_nothing_scheduled": "Intet planlagt",
-  "header_airing_soon": "Snart i tv"
+  "header_airing_soon": "Snart i tv",
+  "button_label_scroll_back": "Rul tilbage",
+  "button_label_scroll_forward": "Rul frem"
 }

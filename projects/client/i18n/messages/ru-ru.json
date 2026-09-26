@@ -537,5 +537,7 @@
   "header_this_week": "На этой неделе",
   "header_next_week": "На следующей неделе",
   "text_nothing_scheduled": "Ничего не запланировано",
-  "header_airing_soon": "Скоро в эфире"
+  "header_airing_soon": "Скоро в эфире",
+  "button_label_scroll_back": "Прокрутить назад",
+  "button_label_scroll_forward": "Прокрутить вперёд"
 }

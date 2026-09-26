@@ -537,5 +537,7 @@
   "header_this_week": "今週",
   "header_next_week": "来週",
   "text_nothing_scheduled": "予定なし",
-  "header_airing_soon": "まもなく放送"
+  "header_airing_soon": "まもなく放送",
+  "button_label_scroll_back": "前へスクロール",
+  "button_label_scroll_forward": "次へスクロール"
 }

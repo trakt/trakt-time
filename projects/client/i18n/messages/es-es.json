@@ -537,5 +537,7 @@
   "header_this_week": "Esta semana",
   "header_next_week": "La semana que viene",
   "text_nothing_scheduled": "Nada programado",
-  "header_airing_soon": "Próximos estrenos"
+  "header_airing_soon": "Próximos estrenos",
+  "button_label_scroll_back": "Desplazar atrás",
+  "button_label_scroll_forward": "Desplazar adelante"
 }
