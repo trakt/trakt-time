@@ -4,6 +4,7 @@
   import StarIcon from '$lib/components/icons/StarIcon.svelte';
   import { languageTag } from '$lib/features/i18n/index.ts';
   import UserRow from '$lib/features/social/UserRow.svelte';
+  import { useUser } from '$lib/features/auth/stores/useUser.ts';
   import * as m from '$lib/paraglide/messages.js';
   import type { MediaSocialQueryTarget } from '$lib/requests/queries/media/mediaSocialQuery.ts';
   import { formatStars, toStarsFromUserRating } from '$lib/utils/rating/toStars.ts';
@@ -19,7 +20,11 @@
 
   const AVATAR_PREVIEW_COUNT = 3;
 
-  const { entries } = $derived(useMediaSocial(target));
+  const { entries, isLoading } = $derived(useMediaSocial(target));
+  const { network } = useUser();
+  const mayFollowAnyone = $derived(
+    $network == null || $network.following.length > 0,
+  );
 
   let isSheetOpen = $state(false);
 
@@ -41,7 +46,15 @@
     formatStars({ value: toStarsFromUserRating(rating), locale: languageTag() });
 </script>
 
-{#if $entries.length > 0}
+{#if $isLoading && mayFollowAnyone}
+  <span class="watched-by watched-by--skeleton" aria-hidden="true">
+    <span class="watched-by-avatars">
+      <UserAvatar name="" size="xs" />
+      <UserAvatar name="" size="xs" />
+    </span>
+    <span class="watched-by-text">{m.text_watched_by_following()}</span>
+  </span>
+{:else if $entries.length > 0}
   <button
     type="button"
     class="watched-by"
@@ -85,6 +98,8 @@
 {/if}
 
 <style lang="scss">
+  @use '$style/scss/mixins/index' as *;
+
   .watched-by {
     display: inline-flex;
     align-items: center;
@@ -110,6 +125,17 @@
 
     &:active {
       opacity: 0.8;
+    }
+  }
+
+  .watched-by--skeleton {
+    border-color: transparent;
+    color: transparent;
+    cursor: default;
+    @include shimmer-bg;
+
+    :global(.user-avatar) {
+      visibility: hidden;
     }
   }
 

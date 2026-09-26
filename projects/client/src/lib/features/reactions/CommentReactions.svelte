@@ -34,6 +34,19 @@
 </script>
 
 <div class="comment-reactions">
+  {#if $isAuthorized}
+    <button
+      type="button"
+      class="reaction-chip reaction-add"
+      aria-expanded={isPickerOpen}
+      aria-label={m.button_label_popup_reactions()}
+      disabled={$isReacting}
+      onclick={() => (isPickerOpen = !isPickerOpen)}
+    >
+      <PlusIcon />
+    </button>
+  {/if}
+
   {#each $summary as { reaction, count } (reaction)}
     <button
       type="button"
@@ -48,19 +61,6 @@
       {count}
     </button>
   {/each}
-
-  {#if $isAuthorized}
-    <button
-      type="button"
-      class="reaction-chip reaction-add"
-      aria-expanded={isPickerOpen}
-      aria-label={m.button_label_popup_reactions()}
-      disabled={$isReacting}
-      onclick={() => (isPickerOpen = !isPickerOpen)}
-    >
-      <PlusIcon />
-    </button>
-  {/if}
 
   {#if isPickerOpen}
     <div class="reaction-picker" role="group" aria-label={m.button_label_popup_reactions()}>
