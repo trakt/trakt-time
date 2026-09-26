@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Spoiler",
   "button_label_popup_reactions": "Reaktioner",
   "button_label_react": "Reager med {reaction}",
-  "header_comment_reactions": "Anmeldelsesreaktioner"
+  "header_comment_reactions": "Anmeldelsesreaktioner",
+  "tag_text_plays": "{number} visninger",
+  "tag_text_reviewed": "Anmeldt",
+  "tag_text_watchlisted": "På huskeliste",
+  "list_title_social_activity": "Social aktivitet",
+  "text_social_activities_placeholder": "Ingen du følger har endnu set, bedømt, anmeldt eller sat dette på huskelisten.",
+  "link_label_view_social_activities": "Se sociale aktiviteter for {title}",
+  "text_watched_by_following": "Set af folk, du følger"
 }

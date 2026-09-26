@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Spoiler",
   "button_label_popup_reactions": "Reaksjoner",
   "button_label_react": "Reager med {reaction}",
-  "header_comment_reactions": "Anmeldelsesreaksjoner"
+  "header_comment_reactions": "Anmeldelsesreaksjoner",
+  "tag_text_plays": "{number} avspillinger",
+  "tag_text_reviewed": "Anmeldt",
+  "tag_text_watchlisted": "Ønskelistet",
+  "list_title_social_activity": "Sosial aktivitet",
+  "text_social_activities_placeholder": "Ingen du følger har sett, vurdert, anmeldt eller lagt til ønskelisten ennå.",
+  "link_label_view_social_activities": "Se sosiale aktiviteter for {title}",
+  "text_watched_by_following": "Sett av folk du følger"
 }

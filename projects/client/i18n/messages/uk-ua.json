@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Спойлер",
   "button_label_popup_reactions": "Реакції",
   "button_label_react": "Відреагувати {reaction}",
-  "header_comment_reactions": "Реакції на відгук"
+  "header_comment_reactions": "Реакції на відгук",
+  "tag_text_plays": "{number} переглядів",
+  "tag_text_reviewed": "Відгукнуто",
+  "tag_text_watchlisted": "У списку перегляду",
+  "list_title_social_activity": "Соціальна активність",
+  "text_social_activities_placeholder": "Ніхто з тих, на кого ви підписані, ще не переглядав, не оцінював, не писав відгуків і не додавав це до списку перегляду.",
+  "link_label_view_social_activities": "Переглянути соціальні активності для {title}",
+  "text_watched_by_following": "Переглянули люди, на яких ви підписані"
 }

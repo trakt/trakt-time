@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Spoiler",
   "button_label_popup_reactions": "Reactions",
   "button_label_react": "React with {reaction}",
-  "header_comment_reactions": "Review reactions"
+  "header_comment_reactions": "Review reactions",
+  "tag_text_plays": "{number} plays",
+  "tag_text_reviewed": "Reviewed",
+  "tag_text_watchlisted": "Watchlisted",
+  "list_title_social_activity": "Social Activity",
+  "text_social_activities_placeholder": "No one you follow has watched, rated, reviewed, or watchlisted this yet.",
+  "link_label_view_social_activities": "View social activities for {title}",
+  "text_watched_by_following": "Watched by people you follow"
 }

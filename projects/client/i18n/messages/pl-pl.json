@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Spoiler",
   "button_label_popup_reactions": "Reakcje",
   "button_label_react": "Zareaguj: {reaction}",
-  "header_comment_reactions": "Reakcje na recenzje"
+  "header_comment_reactions": "Reakcje na recenzje",
+  "tag_text_plays": "{number} odtworzeń",
+  "tag_text_reviewed": "Zrecenzowane",
+  "tag_text_watchlisted": "Obserwowane",
+  "list_title_social_activity": "Aktywność innych",
+  "text_social_activities_placeholder": "Nikt z obserwowanych przez Ciebie osób jeszcze tego nie obejrzał, nie ocenił, nie zrecenzował ani nie dodał do obserwowanych.",
+  "link_label_view_social_activities": "Pokaż aktywności społecznościowe dla {title}",
+  "text_watched_by_following": "Obejrzane przez osoby, które obserwujesz"
 }

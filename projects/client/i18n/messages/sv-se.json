@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Spoiler",
   "button_label_popup_reactions": "Reaktioner",
   "button_label_react": "Reagera med {reaction}",
-  "header_comment_reactions": "Recensionsreaktioner"
+  "header_comment_reactions": "Recensionsreaktioner",
+  "tag_text_plays": "{number} visningar",
+  "tag_text_reviewed": "Recenserad",
+  "tag_text_watchlisted": "Bevakad",
+  "list_title_social_activity": "Social aktivitet",
+  "text_social_activities_placeholder": "Ingen du följer har tittat på, betygsatt, recenserat eller lagt till på bevakningslistan ännu.",
+  "link_label_view_social_activities": "Visa sociala aktiviteter för {title}",
+  "text_watched_by_following": "Sett av personer du följer"
 }

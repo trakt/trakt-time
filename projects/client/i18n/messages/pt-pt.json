@@ -607,5 +607,12 @@
   "translated_value_reaction_spoiler": "Spoiler",
   "button_label_popup_reactions": "Reações",
   "button_label_react": "Reagir com {reaction}",
-  "header_comment_reactions": "Reações à crítica"
+  "header_comment_reactions": "Reações à crítica",
+  "tag_text_plays": "{number} visualizações",
+  "tag_text_reviewed": "Com crítica",
+  "tag_text_watchlisted": "Na lista para ver",
+  "list_title_social_activity": "Atividade social",
+  "text_social_activities_placeholder": "Ainda ninguém que segues viu, classificou, fez uma crítica ou adicionou este conteúdo à lista para ver.",
+  "link_label_view_social_activities": "Ver atividades sociais de {title}",
+  "text_watched_by_following": "Visto por pessoas que segues"
 }
