@@ -533,5 +533,9 @@
   "button_label_view_profile": "Виж профила",
   "text_profile_header": "Горна част на профила",
   "option_text_profile_header_posters": "Постери",
-  "option_text_profile_header_cover": "Корица"
+  "option_text_profile_header_cover": "Корица",
+  "header_this_week": "Тази седмица",
+  "header_next_week": "Следващата седмица",
+  "text_nothing_scheduled": "Няма нищо планирано",
+  "header_airing_soon": "Предстоящи излъчвания"
 }

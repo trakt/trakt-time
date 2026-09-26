@@ -11,6 +11,7 @@
 
 <div class="shows-layout">
   <nav class="segmented-tabs" aria-label={m.button_label_shows_navigation()}>
+    <h1 class="segmented-tabs-title">{m.page_title_shows()}</h1>
     <div class="segmented-tabs-list">
       <a
         href="/shows/watchlist"

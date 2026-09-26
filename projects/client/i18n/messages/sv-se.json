@@ -533,5 +533,9 @@
   "button_label_view_profile": "Visa profil",
   "text_profile_header": "Profilhuvud",
   "option_text_profile_header_posters": "Affischer",
-  "option_text_profile_header_cover": "Omslag"
+  "option_text_profile_header_cover": "Omslag",
+  "header_this_week": "Den här veckan",
+  "header_next_week": "Nästa vecka",
+  "text_nothing_scheduled": "Inget planerat",
+  "header_airing_soon": "Sänds snart"
 }

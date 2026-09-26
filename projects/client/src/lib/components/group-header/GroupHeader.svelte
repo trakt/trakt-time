@@ -8,6 +8,6 @@
 
 <style lang="scss">
   .group-header {
-    padding: var(--gap-m) var(--gap-m) var(--gap-s);
+    padding: var(--gap-m) var(--trakttime-page-gutter) var(--gap-s);
   }
 </style>

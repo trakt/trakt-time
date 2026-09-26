@@ -533,5 +533,9 @@
   "button_label_view_profile": "View profile",
   "text_profile_header": "Profile header",
   "option_text_profile_header_posters": "Posters",
-  "option_text_profile_header_cover": "Cover"
+  "option_text_profile_header_cover": "Cover",
+  "header_this_week": "This week",
+  "header_next_week": "Next week",
+  "text_nothing_scheduled": "Nothing scheduled",
+  "header_airing_soon": "Airing soon"
 }

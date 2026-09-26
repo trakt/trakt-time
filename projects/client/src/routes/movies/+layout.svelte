@@ -11,6 +11,7 @@
 
 <div class="movies-layout">
   <nav class="segmented-tabs" aria-label={m.button_label_movies_navigation()}>
+    <h1 class="segmented-tabs-title">{m.page_title_movies()}</h1>
     <div class="segmented-tabs-list">
       <a
         href="/movies/watchlist"

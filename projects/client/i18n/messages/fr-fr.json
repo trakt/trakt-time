@@ -533,5 +533,9 @@
   "button_label_view_profile": "Voir le profil",
   "text_profile_header": "En-tête du profil",
   "option_text_profile_header_posters": "Affiches",
-  "option_text_profile_header_cover": "Couverture"
+  "option_text_profile_header_cover": "Couverture",
+  "header_this_week": "Cette semaine",
+  "header_next_week": "La semaine prochaine",
+  "text_nothing_scheduled": "Rien de prévu",
+  "header_airing_soon": "Bientôt à l'antenne"
 }

@@ -533,5 +533,9 @@
   "button_label_view_profile": "Se profil",
   "text_profile_header": "Profiltopp",
   "option_text_profile_header_posters": "Plakater",
-  "option_text_profile_header_cover": "Forsidebilde"
+  "option_text_profile_header_cover": "Forsidebilde",
+  "header_this_week": "Denne uken",
+  "header_next_week": "Neste uke",
+  "text_nothing_scheduled": "Ingenting planlagt",
+  "header_airing_soon": "Sendes snart"
 }
