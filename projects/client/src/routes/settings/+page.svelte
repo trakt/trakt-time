@@ -107,6 +107,7 @@
       top: var(--ni-72);
       display: flex;
       flex-direction: column;
+      align-items: stretch;
       gap: var(--gap-m);
     }
 

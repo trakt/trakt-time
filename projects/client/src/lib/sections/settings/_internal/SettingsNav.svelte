@@ -1,5 +1,10 @@
 <script lang="ts">
   import * as m from '$lib/paraglide/messages.js';
+  import { on } from 'svelte/events';
+  import { toActiveSectionId } from './toActiveSectionId.ts';
+
+  const ACTIVATION_RATIO = 0.3;
+  const BOTTOM_TOLERANCE_PX = 2;
 
   const sections = $derived([
     { id: 'appearance', label: m.header_appearance() },
@@ -9,22 +14,51 @@
   ]);
 
   let activeId = $state('appearance');
+  let pinnedId: string | null = null;
+
+  function readActiveSectionId() {
+    const root = document.documentElement;
+    return toActiveSectionId({
+      sections: sections
+        .map(({ id }) => document.getElementById(id))
+        .filter((element): element is HTMLElement => element != null)
+        .map((element) => ({
+          id: element.id,
+          top: element.getBoundingClientRect().top,
+        })),
+      activationLine: globalThis.innerHeight * ACTIVATION_RATIO,
+      isAtBottom: globalThis.innerHeight + globalThis.scrollY >=
+        root.scrollHeight - BOTTOM_TOLERANCE_PX,
+    });
+  }
+
+  function syncActiveSection() {
+    if (pinnedId) return;
+    activeId = readActiveSectionId() ?? activeId;
+  }
+
+  function unpin() {
+    pinnedId = null;
+  }
+
+  function pin(id: string) {
+    pinnedId = id;
+    activeId = id;
+  }
 
   $effect(() => {
-    const targets = sections
-      .map(({ id }) => document.getElementById(id))
-      .filter((element): element is HTMLElement => element != null);
+    syncActiveSection();
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.find((entry) => entry.isIntersecting);
-        if (visible) activeId = visible.target.id;
-      },
-      { rootMargin: '-20% 0px -60% 0px' },
-    );
+    const window = globalThis.window;
+    const cleanups = [
+      on(window, 'scroll', syncActiveSection, { passive: true }),
+      on(window, 'resize', syncActiveSection, { passive: true }),
+      on(window, 'wheel', unpin, { passive: true }),
+      on(window, 'touchmove', unpin, { passive: true }),
+      on(window, 'keydown', unpin),
+    ];
 
-    targets.forEach((target) => observer.observe(target));
-    return () => observer.disconnect();
+    return () => cleanups.forEach((cleanup) => cleanup());
   });
 </script>
 
@@ -34,6 +68,7 @@
       href="#{section.id}"
       class="settings-nav-link"
       aria-current={activeId === section.id ? 'location' : undefined}
+      onclick={() => pin(section.id)}
     >
       {section.label}
     </a>
