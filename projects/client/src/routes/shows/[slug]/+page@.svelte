@@ -19,6 +19,8 @@
   import CastSection from '$lib/sections/summary/_internal/CastSection.svelte';
   import WhereToWatchSection from '$lib/sections/summary/components/where-to-watch/WhereToWatchSection.svelte';
   import CommentsSection from '$lib/sections/summary/_internal/CommentsSection.svelte';
+  import SummaryAside from '$lib/sections/summary/components/aside/SummaryAside.svelte';
+  import { toMediaDetails } from '$lib/sections/summary/components/details/toMediaDetails.ts';
   import MediaActionsRow from '$lib/sections/summary/_internal/MediaActionsRow.svelte';
   import MoreActionsButton from '$lib/sections/summary/_internal/MoreActionsButton.svelte';
   import MediaCoverHero from '$lib/sections/summary/_internal/MediaCoverHero.svelte';
@@ -30,7 +32,7 @@
   import MediaActionsSheet from '$lib/components/media-actions-sheet/MediaActionsSheet.svelte';
   import { hasAired } from '$lib/utils/media/hasAired.ts';
   import { findRegionalIntl } from '$lib/utils/media/findRegionalIntl.ts';
-  import { getLanguageAndRegion, languageTag } from '$lib/features/i18n/index.ts';
+  import { getLanguageAndRegion, getLocale, languageTag } from '$lib/features/i18n/index.ts';
   import * as m from '$lib/paraglide/messages.js';
 
   const { data }: PageProps = $props();
@@ -67,6 +69,17 @@
   }
 
   const locale = $derived(languageTag());
+  const details = $derived(
+    show
+      ? toMediaDetails({
+        media: show,
+        releaseDate: show.airDate,
+        network: show.network,
+        locale: getLocale(),
+        language: locale,
+      })
+      : [],
+  );
   const region = $derived(getLanguageAndRegion());
   const intlQuery = $derived(
     useQuery(
@@ -146,108 +159,115 @@
   {:else if show}
     <MediaCoverHero coverUrl={show.cover.url.medium} tint={show.colors?.[0]} />
 
-    <div class="summary-content">
-      <div class="summary-header">
-        <div class="summary-info">
-          <h1 class="summary-title">{intl?.title ?? show.title}</h1>
-          <div class="summary-meta">
-            {#if show.year}<span>{show.year}</span>{/if}
-            {#if show.network}<span>{show.network}</span>{/if}
-            {#if show.certification}
-              <span class="summary-cert-badge">{show.certification}</span>
+    <div class="summary-content summary-split">
+      <SummaryAside posterUrl={show.poster.url.medium} {details}>
+        <MediaActionsRow
+          watchedProps={{
+            type: 'show',
+            media: {
+              id: show.id,
+              effectiveReleaseDate: show.effectiveReleaseDate,
+              episode: { count: show.episode.count },
+            },
+          }}
+          title={intl?.title ?? show.title}
+          watchlist={{ type: 'show', id: show.id }}
+        />
+      </SummaryAside>
+
+      <div class="summary-main">
+        <div class="summary-header">
+          <img class="summary-header-poster" src={show.poster.url.medium} alt="" loading="lazy" />
+          <div class="summary-info">
+            <h1 class="summary-title">{intl?.title ?? show.title}</h1>
+            <div class="summary-meta">
+              {#if show.year}<span>{show.year}</span>{/if}
+              {#if show.network}<span>{show.network}</span>{/if}
+              {#if show.certification}
+                <span class="summary-cert-badge">{show.certification}</span>
+              {/if}
+            </div>
+            {#if statusLabel}
+              <span class="status-badge" data-status={show.status}>
+                {statusLabel}
+              </span>
+            {/if}
+            {#if ratingScore}
+              <MediaRating score={ratingScore} extraLabel={episodeCountLabel} />
             {/if}
           </div>
-          {#if statusLabel}
-            <span class="status-badge" data-status={show.status}>
-              {statusLabel}
-            </span>
-          {/if}
-          {#if ratingScore}
-            <MediaRating score={ratingScore} extraLabel={episodeCountLabel} />
-          {/if}
         </div>
-      </div>
 
-      <MediaActionsRow
-        watchedProps={{
-          type: 'show',
-          media: {
-            id: show.id,
-            effectiveReleaseDate: show.effectiveReleaseDate,
-            episode: { count: show.episode.count },
-          },
-        }}
-        title={intl?.title ?? show.title}
-        watchlist={{ type: 'show', id: show.id }}
-      />
+        <MediaGenres genres={show.genres} />
 
-      <MediaGenres genres={show.genres} />
-
-      {#if intl?.tagline ?? show.tagline}
-        <p class="summary-tagline">"{intl?.tagline ?? show.tagline}"</p>
-      {/if}
-
-      {#if intl?.overview ?? show.overview}
-        <p class="summary-overview">{intl?.overview ?? show.overview}</p>
-      {/if}
-
-      <WhereToWatchSection type="show" {slug} />
-
-      <RenderFor audience="authenticated">
-        <SentimentSection type="show" {slug} />
-        <TriviaSection type="show" {slug} />
-      </RenderFor>
-
-      {#if seasons.length > 0}
-        <section class="summary-section">
-          <h2 class="summary-section-title">{m.header_seasons()}</h2>
-          <ul class="seasons-list">
-            {#each seasons as season (season.id)}
-              <SeasonRow
-                {slug}
-                {season}
-                {seasons}
-                showId={show.id}
-                showTitle={intl?.title ?? show.title}
-                isOpen={openSeason === season.number}
-                onToggle={() => toggleSeason(season.number)}
-              />
-            {/each}
-          </ul>
-        </section>
-      {/if}
-
-      <CastSection {cast} isLoading={castLoading} />
-
-      <section class="summary-section">
-        <h2 class="summary-section-title">{m.header_more_like_this()}</h2>
-        {#if $relatedLoading && $relatedList.length === 0}
-          <div class="poster-row" aria-hidden="true">
-            {#each Array(6) as _, i (`sk-${i}`)}
-              <PosterSkeleton />
-            {/each}
-          </div>
-        {:else if $relatedList.length > 0}
-          <div class="poster-row" role="list">
-            {#each $relatedList as item (item.id)}
-              <PosterCard
-                type="show"
-                href={UrlBuilder.show(item.slug)}
-                id={item.id}
-                title={item.title}
-                posterUrl={item.poster.url.thumb}
-              />
-            {/each}
-          </div>
+        {#if intl?.tagline ?? show.tagline}
+          <p class="summary-tagline">"{intl?.tagline ?? show.tagline}"</p>
         {/if}
-      </section>
 
-      <CommentsSection
-        type="show"
-        {slug}
-        mediaId={show.id}
-        mediaTitle={intl?.title ?? show.title}
-      />
+        {#if intl?.overview ?? show.overview}
+          <p class="summary-overview">{intl?.overview ?? show.overview}</p>
+        {/if}
+
+        <WhereToWatchSection type="show" {slug} />
+
+        <div class="summary-insights">
+          <RenderFor audience="authenticated">
+            <SentimentSection type="show" {slug} />
+            <TriviaSection type="show" {slug} />
+          </RenderFor>
+        </div>
+
+        {#if seasons.length > 0}
+          <section class="summary-section">
+            <h2 class="summary-section-title">{m.header_seasons()}</h2>
+            <ul class="seasons-list">
+              {#each seasons as season (season.id)}
+                <SeasonRow
+                  {slug}
+                  {season}
+                  {seasons}
+                  showId={show.id}
+                  showTitle={intl?.title ?? show.title}
+                  isOpen={openSeason === season.number}
+                  onToggle={() => toggleSeason(season.number)}
+                />
+              {/each}
+            </ul>
+          </section>
+        {/if}
+
+        <CastSection {cast} isLoading={castLoading} />
+
+        <section class="summary-section">
+          <h2 class="summary-section-title">{m.header_more_like_this()}</h2>
+          {#if $relatedLoading && $relatedList.length === 0}
+            <div class="poster-row" aria-hidden="true">
+              {#each Array(6) as _, i (`sk-${i}`)}
+                <PosterSkeleton />
+              {/each}
+            </div>
+          {:else if $relatedList.length > 0}
+            <div class="poster-row" role="list">
+              {#each $relatedList as item (item.id)}
+                <PosterCard
+                  type="show"
+                  href={UrlBuilder.show(item.slug)}
+                  id={item.id}
+                  title={item.title}
+                  posterUrl={item.poster.url.thumb}
+                />
+              {/each}
+            </div>
+          {/if}
+        </section>
+
+        <CommentsSection
+          type="show"
+          {slug}
+          mediaId={show.id}
+          mediaTitle={intl?.title ?? show.title}
+        />
+      </div>
     </div>
 
     <MediaActionsSheet
@@ -316,8 +336,8 @@
 
   .poster-row {
     @include scrollable-row;
-    margin: 0 calc(-1 * var(--gap-m));
-    padding: 0 var(--gap-m);
+    margin: 0 calc(-1 * var(--trakttime-page-gutter));
+    padding: 0 var(--trakttime-page-gutter);
   }
 
 </style>

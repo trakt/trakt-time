@@ -53,7 +53,7 @@
     top: 0;
     left: var(--trakttime-column-center);
     transform: translateX(-50%);
-    width: 100%;
+    width: calc(100% - var(--trakttime-sidebar-width));
     max-width: var(--trakttime-max-width);
     z-index: var(--layer-floating);
     display: grid;

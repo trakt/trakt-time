@@ -539,5 +539,7 @@
   "text_nothing_scheduled": "Nothing scheduled",
   "header_airing_soon": "Airing soon",
   "button_label_scroll_back": "Scroll back",
-  "button_label_scroll_forward": "Scroll forward"
+  "button_label_scroll_forward": "Scroll forward",
+  "header_network": "Network",
+  "header_release_date": "Release date"
 }

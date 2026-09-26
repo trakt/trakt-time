@@ -74,6 +74,8 @@
   :root {
     --trakttime-page-gutter: var(--gap-xl);
     --trakttime-poster-card-width: var(--ni-164);
+    --trakttime-cover-height: 520px;
+    --trakttime-cover-offset: -240px;
     --trakttime-sidebar-width: 248px;
     --trakttime-max-width: 1352px;
     --trakttime-app-max-width: calc(
