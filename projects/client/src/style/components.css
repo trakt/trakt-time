@@ -223,6 +223,19 @@ p.media-row-meta {
   gap: var(--gap-m) var(--gap-s);
 }
 
+@media (min-width: 481px) {
+  .poster-grid {
+    grid-template-columns: repeat(auto-fill, minmax(var(--ni-120), 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .poster-grid {
+    grid-template-columns: repeat(auto-fill, minmax(var(--ni-148), 1fr));
+    gap: var(--gap-l) var(--gap-m);
+  }
+}
+
 .segmented-tabs {
   position: sticky;
   top: 0;

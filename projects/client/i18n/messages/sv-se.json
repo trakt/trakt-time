@@ -537,5 +537,7 @@
   "header_this_week": "Den här veckan",
   "header_next_week": "Nästa vecka",
   "text_nothing_scheduled": "Inget planerat",
-  "header_airing_soon": "Sänds snart"
+  "header_airing_soon": "Sänds snart",
+  "button_label_scroll_back": "Skrolla bakåt",
+  "button_label_scroll_forward": "Skrolla framåt"
 }

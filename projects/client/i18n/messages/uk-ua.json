@@ -537,5 +537,7 @@
   "header_this_week": "Цього тижня",
   "header_next_week": "Наступного тижня",
   "text_nothing_scheduled": "Нічого не заплановано",
-  "header_airing_soon": "Незабаром в ефірі"
+  "header_airing_soon": "Незабаром в ефірі",
+  "button_label_scroll_back": "Прокрутити назад",
+  "button_label_scroll_forward": "Прокрутити вперед"
 }

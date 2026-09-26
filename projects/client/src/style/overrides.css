@@ -66,12 +66,14 @@
 @media (min-width: 481px) {
   :root {
     --trakttime-page-gutter: var(--gap-l);
+    --trakttime-poster-card-width: var(--ni-132);
   }
 }
 
 @media (min-width: 1024px) {
   :root {
     --trakttime-page-gutter: var(--gap-xl);
+    --trakttime-poster-card-width: var(--ni-164);
     --trakttime-sidebar-width: 248px;
     --trakttime-max-width: 1352px;
     --trakttime-app-max-width: calc(

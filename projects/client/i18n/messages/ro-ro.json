@@ -537,5 +537,7 @@
   "header_this_week": "Săptămâna aceasta",
   "header_next_week": "Săptămâna viitoare",
   "text_nothing_scheduled": "Nimic programat",
-  "header_airing_soon": "În curând"
+  "header_airing_soon": "În curând",
+  "button_label_scroll_back": "Derulează înapoi",
+  "button_label_scroll_forward": "Derulează înainte"
 }

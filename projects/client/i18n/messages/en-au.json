@@ -537,5 +537,7 @@
   "header_this_week": "This week",
   "header_next_week": "Next week",
   "text_nothing_scheduled": "Nothing scheduled",
-  "header_airing_soon": "Airing soon"
+  "header_airing_soon": "Airing soon",
+  "button_label_scroll_back": "Scroll back",
+  "button_label_scroll_forward": "Scroll forward"
 }

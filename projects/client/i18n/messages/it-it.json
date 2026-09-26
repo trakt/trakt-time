@@ -537,5 +537,7 @@
   "header_this_week": "Questa settimana",
   "header_next_week": "La prossima settimana",
   "text_nothing_scheduled": "Niente in programma",
-  "header_airing_soon": "In arrivo"
+  "header_airing_soon": "In arrivo",
+  "button_label_scroll_back": "Scorri indietro",
+  "button_label_scroll_forward": "Scorri avanti"
 }

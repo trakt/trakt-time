@@ -537,5 +537,7 @@
   "header_this_week": "Cette semaine",
   "header_next_week": "La semaine prochaine",
   "text_nothing_scheduled": "Rien de prévu",
-  "header_airing_soon": "Bientôt en ondes"
+  "header_airing_soon": "Bientôt en ondes",
+  "button_label_scroll_back": "Défiler vers l'arrière",
+  "button_label_scroll_forward": "Défiler vers l'avant"
 }
