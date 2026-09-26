@@ -1,8 +1,8 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { untrack } from 'svelte';
   import GroupHeader from '$lib/components/group-header/GroupHeader.svelte';
   import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
-  import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
   import CtaLink from '$lib/components/link/CtaLink.svelte';
   import { languageTag } from '$lib/features/i18n/index.ts';
   import * as m from '$lib/paraglide/messages.js';
@@ -12,7 +12,9 @@
   import { replaceSearchParam } from '$lib/utils/url/replaceSearchParam.ts';
   import { toSearchParamValue } from '$lib/utils/url/toSearchParamValue.ts';
   import FeedItem from './_internal/FeedItem.svelte';
+  import FeedItemSkeleton from './_internal/FeedItemSkeleton.svelte';
   import WatchingNowItem from './_internal/WatchingNowItem.svelte';
+  import { useWatchingNow } from './_internal/useWatchingNow.ts';
   import { toDayGroups } from './_internal/toDayGroups.ts';
   import { toPastDayLabel } from './_internal/toPastDayLabel.ts';
 
@@ -21,6 +23,7 @@
 
   const FEED_PAGE_SIZE = 25;
   const WATCHING_NOW_CANDIDATES = 12;
+  const SKELETON_COUNT = 6;
 
   const { list, isLoading, hasNextPage, fetchNextPage } = usePaginatedListQuery(
     socialActivityQuery({ limit: FEED_PAGE_SIZE }),
@@ -50,8 +53,22 @@
   const groups = $derived(toDayGroups(visible));
 
   const recentlyActive = $derived(
-    toUniqueProfiles($list.flatMap((activity) => activity.users))
-      .slice(0, WATCHING_NOW_CANDIDATES),
+    toUniqueProfiles(
+      $list.slice(0, FEED_PAGE_SIZE).flatMap((activity) => activity.users),
+    ).slice(0, WATCHING_NOW_CANDIDATES),
+  );
+  const candidateKey = $derived(
+    recentlyActive.map((profile) => profile.key).join(','),
+  );
+  const watchingNow = $derived.by(() => {
+    candidateKey;
+    return untrack(() => useWatchingNow(recentlyActive));
+  });
+  const watching = $derived(watchingNow.watching);
+  const watchingLoading = $derived(watchingNow.isLoading);
+
+  const isSettled = $derived(
+    !($isLoading && $list.length === 0) && !$watchingLoading,
   );
 </script>
 
@@ -72,25 +89,27 @@
   </div>
 </div>
 
-{#if recentlyActive.length > 0}
-  <section class="watching-now">
-    <GroupHeader label={m.header_watching_now()} />
-    <div class="watching-now-row">
-      {#each recentlyActive as profile (profile.key)}
-        <WatchingNowItem {profile} />
-      {/each}
-    </div>
-  </section>
-{/if}
-
-{#if $isLoading && $list.length === 0}
-  <div class="friends-state"><LoadingIndicator /></div>
+{#if !isSettled}
+  <div class="friends-skeleton">
+    <FeedItemSkeleton count={SKELETON_COUNT} />
+  </div>
 {:else if $list.length === 0}
   <div class="friends-state">
     <p>{m.text_friends_feed_empty()}</p>
     <CtaLink href="/discover">{m.page_title_discover()}</CtaLink>
   </div>
 {:else}
+  {#if $watching.length > 0}
+    <section class="watching-now">
+      <GroupHeader label={m.header_watching_now()} />
+      <div class="watching-now-row">
+        {#each $watching as { profile, item } (profile.key)}
+          <WatchingNowItem {profile} {item} />
+        {/each}
+      </div>
+    </section>
+  {/if}
+
   {#each groups as group (group.dayKey)}
     <section class="friends-day">
       <GroupHeader label={toPastDayLabel(group.dayKey, languageTag())} />
@@ -121,8 +140,8 @@
     }
   }
 
-  .watching-now:not(:has(:global(.watching-now-item))) {
-    display: none;
+  .friends-skeleton {
+    padding-top: calc(var(--gap-m) + 1.75rem + var(--gap-s));
   }
 
   .watching-now-row {
