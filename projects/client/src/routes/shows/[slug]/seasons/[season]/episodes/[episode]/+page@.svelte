@@ -26,6 +26,7 @@
   import CommentsSection from '$lib/sections/summary/_internal/CommentsSection.svelte';
   import MediaActionsRow from '$lib/sections/summary/_internal/MediaActionsRow.svelte';
   import CheckInRow from '$lib/sections/summary/_internal/CheckInRow.svelte';
+  import SeriesCompleteStamp from '$lib/features/delight/components/SeriesCompleteStamp.svelte';
   import MediaCoverHero from '$lib/sections/summary/_internal/MediaCoverHero.svelte';
   import MediaRating from '$lib/sections/summary/_internal/MediaRating.svelte';
   import SummarySkeleton from '$lib/sections/summary/_internal/SummarySkeleton.svelte';
@@ -145,6 +146,8 @@
       Object.values(EpisodePremiereType).includes(episode.type as never),
   );
 
+  let isSeriesComplete = $state(false);
+
   const isFinale = $derived(
     episode?.type != null &&
       Object.values(EpisodeFinaleType).includes(episode.type as never),
@@ -166,7 +169,7 @@
   })}
 />
 
-<div class="summary-page">
+<div class="summary-page" class:is-series-complete={isSeriesComplete}>
   <BackBar href={showUrl} label={show?.title ?? ''} variant="overlay" />
 
   {#if isLoading}
@@ -212,6 +215,18 @@
           </div>
 
           <h1 class="summary-title">{intl?.title ?? episode.title}</h1>
+
+          {#if episodeWatchedProps && show}
+            <SeriesCompleteStamp
+              watchedProps={episodeWatchedProps}
+              showId={show.id}
+              episodeType={episode.type}
+              showStatus={show.status}
+              episodeCount={show.episode.count}
+              totalRuntime={show.totalRuntime}
+              bind:isComplete={isSeriesComplete}
+            />
+          {/if}
 
           <div class="summary-meta">
             {#if airDateLabel}<span>{airDateLabel}</span>{/if}
@@ -272,6 +287,16 @@
 </div>
 
 <style lang="scss">
+  .summary-page {
+    :global(.summary-cover-hero) {
+      transition: filter 1200ms ease-in-out;
+    }
+
+    &.is-series-complete :global(.summary-cover-hero) {
+      filter: grayscale(1);
+    }
+  }
+
   .episode-code-row {
     display: flex;
     align-items: center;

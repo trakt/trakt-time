@@ -685,5 +685,6 @@
   "delight_recap_watched": "Ви переглянули",
   "delight_recap_top_show": "Головний серіал",
   "delight_recap_top_genre": "Головний жанр",
-  "delight_recap_caption": "{month} · торкніться, щоб закрити"
+  "delight_recap_caption": "{month} · торкніться, щоб закрити",
+  "delight_series_complete": "Серіал завершено"
 }

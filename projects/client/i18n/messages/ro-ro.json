@@ -685,5 +685,6 @@
   "delight_recap_watched": "Ai urmărit",
   "delight_recap_top_show": "Serialul preferat",
   "delight_recap_top_genre": "Genul preferat",
-  "delight_recap_caption": "{month} · atinge pentru a închide"
+  "delight_recap_caption": "{month} · atinge pentru a închide",
+  "delight_series_complete": "Serial încheiat"
 }
