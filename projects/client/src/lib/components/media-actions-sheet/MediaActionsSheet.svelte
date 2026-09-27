@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { useUser } from '$lib/features/auth/stores/useUser.ts';
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import { useFavorites } from '$lib/sections/media-actions/favorite/useFavorites.ts';
   import { useHasWatched } from '$lib/sections/media-actions/mark-as-watched/useHasWatched.ts';
@@ -18,6 +19,11 @@
   import CreateListRow from './CreateListRow.svelte';
   import ListToggleItem from './ListToggleItem.svelte';
   import * as m from '$lib/paraglide/messages.js';
+  import { celebrate } from '$lib/features/delight/celebrate.ts';
+  import BigHeart from '$lib/features/delight/effects/BigHeart.svelte';
+  import { useDelight } from '$lib/features/delight/useDelight.ts';
+  import { FeatureFlag } from '$lib/features/feature-flag/models/FeatureFlag.ts';
+  import { useFeatureFlag } from '$lib/features/feature-flag/useFeatureFlag.ts';
 
   type Props = {
     type: 'show' | 'movie';
@@ -29,6 +35,7 @@
     watchedProps?: MarkAsWatchedStoreProps;
     isOpen: boolean;
     onClose: () => void;
+    onDropDelight?: (isDropped: boolean) => void;
   };
 
   const {
@@ -40,7 +47,12 @@
     watchedProps,
     isOpen,
     onClose,
+    onDropDelight,
   }: Props = $props();
+
+  const { isEnabled: isIconic } = useFeatureFlag(FeatureFlag.Delighters);
+  const favoriteDelight = useDelight('favorite');
+  const dropDelight = useDelight('drop');
 
   const { isFavorited, isUpdatingFavorite, addToFavorites, removeFromFavorites } =
     $derived(useFavorites({ type, id, title }));
@@ -82,10 +94,41 @@
 
   const { listedOnIds } = $derived(useListedOnIds({ type, slug }));
 
-  function toggleFavorite() {
-    if ($isFavorited) removeFromFavorites();
-    else addToFavorites();
+  async function addFavoriteWithDelight(pill: HTMLElement) {
+    const adding = addToFavorites();
+    if (await favoriteDelight.claim()) {
+      celebrate({ effect: BigHeart, at: pill, haptic: [8, 60, 8] });
+    }
+    await adding;
   }
+
+  function toggleFavorite(event: MouseEvent) {
+    if ($isFavorited) removeFromFavorites();
+    else addFavoriteWithDelight(event.currentTarget as HTMLElement);
+  }
+
+  let wasDropped: boolean | null = null;
+
+  async function fadeOutDropped() {
+    if (!(await dropDelight.claim())) return;
+
+    onClose();
+    onDropDelight?.(true);
+  }
+
+  const { dropped } = useUser();
+
+  $effect(() => {
+    const isNowDropped = $isDropped;
+    if ($dropped == null) return;
+
+    const previous = wasDropped;
+    wasDropped = isNowDropped;
+    if (previous === null || previous === isNowDropped) return;
+
+    if (isNowDropped) fadeOutDropped();
+    else onDropDelight?.(false);
+  });
 
   function toggleWatchlist() {
     if ($isWatchlisted) removeFromWatchlist();
@@ -151,10 +194,11 @@
           <p class="watch-first-hint">{m.hint_mark_as_watched_to_rate()}</p>
         {/if}
 
-        <div class="action-pills">
+        <div class="action-pills" class:is-iconic={$isIconic}>
           <button
             type="button"
             class="action-pill"
+            data-action="favorite"
             class:is-active={$isFavorited}
             disabled={favoriteDisabled}
             onclick={toggleFavorite}
@@ -174,6 +218,7 @@
           <button
             type="button"
             class="action-pill"
+            data-action="watchlist"
             class:is-active={$isWatchlisted}
             disabled={$isWatchlistUpdating}
             onclick={toggleWatchlist}
@@ -204,10 +249,12 @@
             <button
               type="button"
               class="action-pill"
+              data-action="drop"
               class:is-active={$isDropped}
               disabled={$isUpdatingDrop}
               onclick={() => ($isDropped ? restoreShow() : dropShow())}
               aria-pressed={$isDropped}
+              aria-label={$isDropped ? m.button_text_restore_show() : m.button_text_drop_show()}
             >
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 {#if $isDropped}
@@ -369,6 +416,56 @@
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+  }
+
+  .action-pills.is-iconic {
+    .action-pill {
+      --pill-color: var(--trakttime-accent);
+
+      min-height: var(--ni-64);
+      color: var(--pill-color);
+      transition:
+        color var(--transition-increment) ease-in-out,
+        background var(--transition-increment) ease-in-out,
+        transform var(--transition-increment) ease-out;
+
+      span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      svg,
+      :global(svg) {
+        width: var(--ni-28);
+        height: var(--ni-28);
+        filter: drop-shadow(
+          0 var(--ni-2) var(--ni-6) color-mix(in srgb, var(--pill-color) 35%, transparent)
+        );
+      }
+
+      &[data-action='favorite'] {
+        --pill-color: var(--rose-500);
+      }
+
+      &[data-action='drop'] {
+        --pill-color: var(--orange-500);
+      }
+
+      &.is-active {
+        color: var(--pill-color);
+        background: color-mix(in srgb, var(--pill-color) 16%, transparent);
+        box-shadow: inset 0 0 0 var(--border-thickness-xs)
+          color-mix(in srgb, var(--pill-color) 40%, transparent);
+      }
+
+      &:active:not(:disabled) {
+        transform: scale(0.92);
+      }
     }
   }
 
