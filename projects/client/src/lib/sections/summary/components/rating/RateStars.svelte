@@ -3,7 +3,6 @@
   import { celebrate } from '$lib/features/delight/celebrate.ts';
   import { ratingDelight } from '$lib/features/delight/delightRules.ts';
   import PopcornBurst from '$lib/features/delight/effects/PopcornBurst.svelte';
-  import RainCloud from '$lib/features/delight/effects/RainCloud.svelte';
   import RottenTomato from '$lib/features/delight/effects/RottenTomato.svelte';
   import { useDelight } from '$lib/features/delight/useDelight.ts';
   import { languageTag } from '$lib/features/i18n/index.ts';
@@ -34,10 +33,8 @@
 
   const highDelight = useDelight('rating-high');
   const lowDelight = useDelight('rating-low');
-  const SOGGY_DURATION = 1900;
 
   let root: HTMLElement | null = $state(null);
-  let isSoggy = $state(false);
 
   function starAt(value: number) {
     return root?.querySelector(
@@ -51,17 +48,8 @@
   }
 
   async function playLow(star: Element) {
-    const variant = await lowDelight.claim({ variants: ['tomato', 'rain'] });
-    if (!variant) return;
-
-    if (variant === 'tomato') {
-      celebrate({ effect: RottenTomato, at: star, haptic: [10, 40, 10] });
-      return;
-    }
-
-    celebrate({ effect: RainCloud, at: star });
-    isSoggy = true;
-    setTimeout(() => (isSoggy = false), SOGGY_DURATION);
+    if (!(await lowDelight.claim())) return;
+    celebrate({ effect: RottenTomato, at: star, haptic: [10, 40, 10] });
   }
 
   function delight(value: number) {
@@ -85,7 +73,7 @@
   }
 </script>
 
-<div class="rate-stars" class:is-soggy={isSoggy} bind:this={root}>
+<div class="rate-stars" bind:this={root}>
   <div class="rate-stars-heading">
     <span class="rate-stars-label">{m.header_rate_now()}</span>
     {#if tally}
@@ -162,15 +150,7 @@
     width: var(--ni-32);
     height: var(--ni-32);
     color: var(--trakttime-accent);
-    transition:
-      color 0.15s ease,
-      filter var(--transition-duration-short) ease,
-      opacity var(--transition-duration-short) ease;
-  }
-
-  .is-soggy :global(.rate-stars-row svg) {
-    filter: grayscale(1);
-    opacity: 0.5;
+    transition: color 0.15s ease;
   }
 
   :global(.rate-stars-row[data-disabled]) {
