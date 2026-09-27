@@ -18,6 +18,12 @@ import {
   map,
   Subject,
 } from 'rxjs';
+import {
+  ratingOverrideKey,
+  ratingOverrides,
+  setRatingOverride,
+} from './_internal/ratingOverrides.ts';
+import { resolveRating } from './_internal/resolveRating.ts';
 
 const postDelay = time.seconds(0.5);
 
@@ -54,7 +60,9 @@ export function useRatings({ type, id }: WatchlistStoreProps) {
   const { track } = useTrack(AnalyticsEvent.Rate);
   const { dismiss } = useLastWatched();
 
-  const rating = ratings.pipe(
+  const overrideKey = ratingOverrideKey(type, id);
+
+  const serverRating = ratings.pipe(
     map(($ratings) => {
       if (!$ratings) {
         return;
@@ -69,6 +77,16 @@ export function useRatings({ type, id }: WatchlistStoreProps) {
           return $ratings.episodes.get(id);
       }
     }),
+  );
+
+  const rating = combineLatest([serverRating, ratingOverrides]).pipe(
+    map(([$serverRating, $overrides]) =>
+      resolveRating({
+        server: $serverRating,
+        override: $overrides[overrideKey],
+        now: Date.now(),
+      })
+    ),
   );
 
   const isFavorited = favorites.pipe(
@@ -130,7 +148,13 @@ export function useRatings({ type, id }: WatchlistStoreProps) {
 
     track({ action: hasRating ? 'changed' : 'added', rating: newRating });
 
-    await addRatingRequest({ body: toAddPayload(type, id, newRating) });
+    const savedAt = Date.now();
+    const isSaved = await addRatingRequest({
+      body: toAddPayload(type, id, newRating),
+    });
+    if (isSaved) {
+      setRatingOverride(overrideKey, { rating: newRating, savedAt });
+    }
     await invalidate(InvalidateAction.Rated(type));
 
     pendingRating.next(null);
@@ -148,9 +172,13 @@ export function useRatings({ type, id }: WatchlistStoreProps) {
     pendingRating.next(0);
 
     track({ action: 'removed' });
-    await removeRatingRequest({
+    const savedAt = Date.now();
+    const isRemoved = await removeRatingRequest({
       body: toRemovePayload(type, id),
     });
+    if (isRemoved) {
+      setRatingOverride(overrideKey, { rating: null, savedAt });
+    }
     await invalidate(InvalidateAction.Rated(type));
     pendingRating.next(null);
   };
