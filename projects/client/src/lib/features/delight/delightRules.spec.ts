@@ -4,6 +4,8 @@ import {
   bingeCount,
   bucketFor,
   checkInSummary,
+  easeOutCubic,
+  isHighMatch,
   isNewSeason,
   latestAiredSeason,
   ratingDelight,
@@ -259,5 +261,23 @@ describe('checkInSummary', () => {
     expect(summary(['after'])).toBe('after');
     expect(summary(['during'])).toBe('during');
     expect(summary(['during', 'after'])).toBe('both');
+  });
+});
+
+describe('isHighMatch', () => {
+  it('celebrates matches of 80% or more', () => {
+    expect(isHighMatch(79)).toBe(false);
+    expect(isHighMatch(80)).toBe(true);
+    expect(isHighMatch(96)).toBe(true);
+  });
+});
+
+describe('easeOutCubic', () => {
+  it('starts at 0, ends at 1 and clamps outside that range', () => {
+    expect(easeOutCubic(0)).toBe(0);
+    expect(easeOutCubic(1)).toBe(1);
+    expect(easeOutCubic(-1)).toBe(0);
+    expect(easeOutCubic(2)).toBe(1);
+    expect(easeOutCubic(0.5)).toBeCloseTo(0.875);
   });
 });

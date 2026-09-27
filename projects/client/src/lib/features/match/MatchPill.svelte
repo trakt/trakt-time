@@ -9,6 +9,11 @@
   import { userMatchQuery } from '$lib/requests/queries/users/userMatchQuery.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import { matchLabel } from './matchLabel.ts';
+  import { celebrate } from '$lib/features/delight/celebrate.ts';
+  import { countUp } from '$lib/features/delight/countUp.ts';
+  import { isHighMatch } from '$lib/features/delight/delightRules.ts';
+  import Sparkles from '$lib/features/delight/effects/Sparkles.svelte';
+  import { useDelight } from '$lib/features/delight/useDelight.ts';
 
   type SharedPoster = {
     id: number;
@@ -33,6 +38,29 @@
   const match = $derived($matchQuery.data);
 
   let isSheetOpen = $state(false);
+  let revealedScore: number | null = $state(null);
+  let gauge: HTMLElement | null = $state(null);
+
+  const matchDelight = useDelight('taste-match');
+  const REVEAL_DURATION = 1300;
+  const shownScore = $derived(revealedScore ?? match?.score ?? 0);
+
+  async function revealMatch(score: number) {
+    if (!(await matchDelight.claim({ onceKey: slug }))) return;
+
+    await countUp({
+      to: score,
+      duration: REVEAL_DURATION,
+      onUpdate: (value) => (revealedScore = value),
+    });
+    revealedScore = null;
+    if (gauge && isHighMatch(score)) celebrate({ effect: Sparkles, at: gauge });
+  }
+
+  function openSheet() {
+    isSheetOpen = true;
+    if (match) revealMatch(match.score);
+  }
 
   const label = $derived(match ? matchLabel(match.score) : '');
 
@@ -58,7 +86,7 @@
     type="button"
     class="match-pill"
     aria-label={m.match_pill_aria_label({ score: match.score, label })}
-    onclick={() => (isSheetOpen = true)}
+    onclick={openSheet}
   >
     <span class="match-pill-score">{match.score}%</span>
     <span class="match-pill-label">{label}</span>
@@ -73,9 +101,13 @@
   >
     <div class="match-hero">
       <UserAvatar name={$user.username} src={$user.avatar.url} size="l" />
-      <div class="match-gauge" style:--match-score="{match.score * 3.6}deg">
+      <div
+        class="match-gauge"
+        style:--match-score="{shownScore * 3.6}deg"
+        bind:this={gauge}
+      >
         <div class="match-gauge-inner">
-          <span class="match-gauge-score">{match.score}%</span>
+          <span class="match-gauge-score">{shownScore}%</span>
           <span class="match-gauge-label">{label}</span>
         </div>
       </div>
@@ -210,6 +242,7 @@
     font-size: 1.875rem;
     font-weight: 800;
     color: var(--color-text-primary);
+    font-variant-numeric: tabular-nums;
   }
 
   .match-gauge-label {
