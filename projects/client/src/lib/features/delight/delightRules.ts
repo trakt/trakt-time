@@ -154,3 +154,13 @@ export function checkInSummary(
   if (hasAfter) return { endsAt, creditsScene: 'after' };
   return { endsAt, creditsScene: null };
 }
+
+const HIGH_MATCH_SCORE = 80;
+
+export function isHighMatch(score: number): boolean {
+  return score >= HIGH_MATCH_SCORE;
+}
+
+export function easeOutCubic(progress: number): number {
+  return 1 - Math.pow(1 - Math.min(Math.max(progress, 0), 1), 3);
+}
