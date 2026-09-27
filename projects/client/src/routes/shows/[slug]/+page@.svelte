@@ -42,6 +42,7 @@
   const slug = $derived(page.params.slug ?? '');
 
   let actionsOpen = $state(false);
+  let isFadedOut = $state(false);
   $effect(() => {
     slug;
     actionsOpen = false;
@@ -142,7 +143,7 @@
   })}
 />
 
-<div class="summary-page">
+<div class="summary-page" class:is-faded-out={isFadedOut}>
   <BackBar href="/shows/watchlist" label={m.page_title_shows()} variant="overlay">
     {#snippet action()}
       {#if show}
@@ -296,12 +297,25 @@
       }}
       isOpen={actionsOpen}
       onClose={() => (actionsOpen = false)}
+      onDropDelight={(isDropped) => (isFadedOut = isDropped)}
     />
   {/if}
 </div>
 
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
+
+  .summary-page {
+    :global(.summary-cover-hero),
+    .summary-content {
+      transition: filter 1600ms ease-in-out;
+    }
+
+    &.is-faded-out :global(.summary-cover-hero),
+    &.is-faded-out .summary-content {
+      filter: grayscale(1);
+    }
+  }
 
   .seasons-list {
     list-style: none;
