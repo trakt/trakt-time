@@ -671,5 +671,12 @@
   "delight_season_complete": "Completa",
   "delight_all_caught_up": "Sei in pari",
   "delight_binge_count": "{count} di fila",
-  "delight_binge_mode": "Modalità maratona · {count}"
+  "delight_binge_mode": "Modalità maratona · {count}",
+  "delight_check_in": "Fai check-in",
+  "delight_ends_at": "Finisce verso le {time}",
+  "delight_scene_after_credits": "Scena dopo i titoli di coda",
+  "delight_scene_during_credits": "Scena durante i titoli di coda",
+  "delight_scenes_during_and_after_credits": "Scene durante e dopo i titoli di coda",
+  "delight_admit_one": "Ingresso",
+  "delight_watching_stamp": "In visione"
 }

@@ -25,6 +25,7 @@
   import CastSection from '$lib/sections/summary/_internal/CastSection.svelte';
   import CommentsSection from '$lib/sections/summary/_internal/CommentsSection.svelte';
   import MediaActionsRow from '$lib/sections/summary/_internal/MediaActionsRow.svelte';
+  import CheckInRow from '$lib/sections/summary/_internal/CheckInRow.svelte';
   import MediaCoverHero from '$lib/sections/summary/_internal/MediaCoverHero.svelte';
   import MediaRating from '$lib/sections/summary/_internal/MediaRating.svelte';
   import SummarySkeleton from '$lib/sections/summary/_internal/SummarySkeleton.svelte';
@@ -230,6 +231,12 @@
         />
         {#if episodeHasAired}
           <RenderFor audience="authenticated">
+            <CheckInRow
+              watchedProps={episodeWatchedProps}
+              title={intl?.title ?? episode.title}
+              runtime={episode.runtime}
+              postCredits={episode.postCredits}
+            />
             <EpisodeRating id={episodeWatchedProps.media.id} watchedProps={episodeWatchedProps} />
           </RenderFor>
         {/if}

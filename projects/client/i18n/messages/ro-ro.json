@@ -671,5 +671,12 @@
   "delight_season_complete": "Complet",
   "delight_all_caught_up": "Ești la zi",
   "delight_binge_count": "{count} la rând",
-  "delight_binge_mode": "Mod maraton · {count}"
+  "delight_binge_mode": "Mod maraton · {count}",
+  "delight_check_in": "Check-in",
+  "delight_ends_at": "Se termină în jur de {time}",
+  "delight_scene_after_credits": "Scenă după generic",
+  "delight_scene_during_credits": "Scenă în timpul genericului",
+  "delight_scenes_during_and_after_credits": "Scene în timpul și după generic",
+  "delight_admit_one": "Bilet",
+  "delight_watching_stamp": "Vizionez"
 }
