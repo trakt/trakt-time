@@ -685,5 +685,6 @@
   "delight_recap_watched": "Изгледахте",
   "delight_recap_top_show": "Топ сериал",
   "delight_recap_top_genre": "Топ жанр",
-  "delight_recap_caption": "{month} · докоснете, за да затворите"
+  "delight_recap_caption": "{month} · докоснете, за да затворите",
+  "delight_series_complete": "Сериалът е завършен"
 }

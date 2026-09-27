@@ -685,5 +685,6 @@
   "delight_recap_watched": "Je keek",
   "delight_recap_top_show": "Topserie",
   "delight_recap_top_genre": "Topgenre",
-  "delight_recap_caption": "{month} · tik om te sluiten"
+  "delight_recap_caption": "{month} · tik om te sluiten",
+  "delight_series_complete": "Serie voltooid"
 }

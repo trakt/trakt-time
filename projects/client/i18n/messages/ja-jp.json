@@ -685,5 +685,6 @@
   "delight_recap_watched": "視聴時間",
   "delight_recap_top_show": "トップ番組",
   "delight_recap_top_genre": "トップジャンル",
-  "delight_recap_caption": "{month} · タップして閉じる"
+  "delight_recap_caption": "{month} · タップして閉じる",
+  "delight_series_complete": "シリーズ完走"
 }

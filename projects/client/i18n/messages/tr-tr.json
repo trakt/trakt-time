@@ -685,5 +685,6 @@
   "delight_recap_watched": "İzlediğin süre",
   "delight_recap_top_show": "En çok izlenen dizi",
   "delight_recap_top_genre": "En çok izlenen tür",
-  "delight_recap_caption": "{month} · kapatmak için dokun"
+  "delight_recap_caption": "{month} · kapatmak için dokun",
+  "delight_series_complete": "Dizi tamamlandı"
 }

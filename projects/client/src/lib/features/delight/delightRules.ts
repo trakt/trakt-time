@@ -179,3 +179,9 @@ export function crossedMilestone(
   );
   return crossed.length ? Math.max(...crossed) : null;
 }
+
+export function isSeriesFinale(
+  { episodeType, hasEnded }: { episodeType: string; hasEnded: boolean },
+): boolean {
+  return episodeType === 'series_finale' && hasEnded;
+}

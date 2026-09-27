@@ -685,5 +685,6 @@
   "delight_recap_watched": "You watched",
   "delight_recap_top_show": "Top show",
   "delight_recap_top_genre": "Top genre",
-  "delight_recap_caption": "{month} · tap to close"
+  "delight_recap_caption": "{month} · tap to close",
+  "delight_series_complete": "Series complete"
 }

@@ -685,5 +685,6 @@
   "delight_recap_watched": "Du tittade",
   "delight_recap_top_show": "Toppserie",
   "delight_recap_top_genre": "Toppgenre",
-  "delight_recap_caption": "{month} · tryck för att stänga"
+  "delight_recap_caption": "{month} · tryck för att stänga",
+  "delight_series_complete": "Serien klar"
 }

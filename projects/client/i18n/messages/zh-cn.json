@@ -685,5 +685,6 @@
   "delight_recap_watched": "你看了",
   "delight_recap_top_show": "最常看的剧",
   "delight_recap_top_genre": "最常看的类型",
-  "delight_recap_caption": "{month} · 点按关闭"
+  "delight_recap_caption": "{month} · 点按关闭",
+  "delight_series_complete": "全剧看完"
 }

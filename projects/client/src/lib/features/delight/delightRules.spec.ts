@@ -8,6 +8,7 @@ import {
   easeOutCubic,
   isHighMatch,
   isNewSeason,
+  isSeriesFinale,
   latestAiredSeason,
   ratingDelight,
   seasonMilestone,
@@ -300,5 +301,16 @@ describe('crossedMilestone', () => {
       .toBeNull();
     expect(crossedMilestone({ before: 1000, after: 999, thresholds }))
       .toBeNull();
+  });
+});
+
+describe('isSeriesFinale', () => {
+  it('only counts the series finale of a show that has ended', () => {
+    expect(isSeriesFinale({ episodeType: 'series_finale', hasEnded: true }))
+      .toBe(true);
+    expect(isSeriesFinale({ episodeType: 'series_finale', hasEnded: false }))
+      .toBe(false);
+    expect(isSeriesFinale({ episodeType: 'season_finale', hasEnded: true }))
+      .toBe(false);
   });
 });

@@ -685,5 +685,6 @@
   "delight_recap_watched": "Obejrzano",
   "delight_recap_top_show": "Najczęstszy serial",
   "delight_recap_top_genre": "Najczęstszy gatunek",
-  "delight_recap_caption": "{month} · dotknij, aby zamknąć"
+  "delight_recap_caption": "{month} · dotknij, aby zamknąć",
+  "delight_series_complete": "Serial ukończony"
 }
