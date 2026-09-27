@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Сцена по време на надписите",
   "delight_scenes_during_and_after_credits": "Сцени по време и след надписите",
   "delight_admit_one": "Един вход",
-  "delight_watching_stamp": "Гледам"
+  "delight_watching_stamp": "Гледам",
+  "delight_milestone_reached": "Постигнат рекорд",
+  "delight_recap_ready": "Вашият {month} е готов",
+  "delight_recap_open": "Докоснете, за да отворите",
+  "delight_recap_watched": "Изгледахте",
+  "delight_recap_top_show": "Топ сериал",
+  "delight_recap_top_genre": "Топ жанр",
+  "delight_recap_caption": "{month} · докоснете, за да затворите"
 }

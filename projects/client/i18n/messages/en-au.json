@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Scene during the credits",
   "delight_scenes_during_and_after_credits": "Scenes during and after the credits",
   "delight_admit_one": "Admit one",
-  "delight_watching_stamp": "Watching"
+  "delight_watching_stamp": "Watching",
+  "delight_milestone_reached": "Milestone reached",
+  "delight_recap_ready": "Your {month} is ready",
+  "delight_recap_open": "Tap to open",
+  "delight_recap_watched": "You watched",
+  "delight_recap_top_show": "Top show",
+  "delight_recap_top_genre": "Top genre",
+  "delight_recap_caption": "{month} · tap to close"
 }

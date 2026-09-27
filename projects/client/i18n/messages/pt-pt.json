@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Cena durante os créditos",
   "delight_scenes_during_and_after_credits": "Cenas durante e após os créditos",
   "delight_admit_one": "Entrada",
-  "delight_watching_stamp": "A ver"
+  "delight_watching_stamp": "A ver",
+  "delight_milestone_reached": "Marco alcançado",
+  "delight_recap_ready": "O seu {month} está pronto",
+  "delight_recap_open": "Toque para abrir",
+  "delight_recap_watched": "Viu",
+  "delight_recap_top_show": "Série favorita",
+  "delight_recap_top_genre": "Género favorito",
+  "delight_recap_caption": "{month} · toque para fechar"
 }

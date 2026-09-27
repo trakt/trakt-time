@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Scène tijdens de aftiteling",
   "delight_scenes_during_and_after_credits": "Scènes tijdens en na de aftiteling",
   "delight_admit_one": "Toegang",
-  "delight_watching_stamp": "Kijkt"
+  "delight_watching_stamp": "Kijkt",
+  "delight_milestone_reached": "Mijlpaal bereikt",
+  "delight_recap_ready": "Jouw {month} staat klaar",
+  "delight_recap_open": "Tik om te openen",
+  "delight_recap_watched": "Je keek",
+  "delight_recap_top_show": "Topserie",
+  "delight_recap_top_genre": "Topgenre",
+  "delight_recap_caption": "{month} · tik om te sluiten"
 }

@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Szene während des Abspanns",
   "delight_scenes_during_and_after_credits": "Szenen während und nach dem Abspann",
   "delight_admit_one": "Einzelticket",
-  "delight_watching_stamp": "Läuft"
+  "delight_watching_stamp": "Läuft",
+  "delight_milestone_reached": "Meilenstein erreicht",
+  "delight_recap_ready": "Dein {month} ist fertig",
+  "delight_recap_open": "Zum Öffnen tippen",
+  "delight_recap_watched": "Du hast geschaut",
+  "delight_recap_top_show": "Top-Serie",
+  "delight_recap_top_genre": "Top-Genre",
+  "delight_recap_caption": "{month} · zum Schließen tippen"
 }

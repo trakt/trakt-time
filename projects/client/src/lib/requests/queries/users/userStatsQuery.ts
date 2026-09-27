@@ -1,5 +1,6 @@
 import { defineQuery } from '$lib/features/query/defineQuery.ts';
 import { api, type ApiParams } from '$lib/requests/api.ts';
+import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
 import { time } from '$lib/utils/timing/time.ts';
 import { z } from 'zod';
 
@@ -42,7 +43,10 @@ const userStatsRequest = ({ fetch, slug }: UserStatsParams) =>
 
 export const userStatsQuery = defineQuery({
   key: 'userStats',
-  invalidations: [],
+  invalidations: [
+    InvalidateAction.MarkAsWatched('episode'),
+    InvalidateAction.MarkAsWatched('movie'),
+  ],
   dependencies: (params) => [params.slug],
   request: userStatsRequest,
   mapper: (response) => response.body,

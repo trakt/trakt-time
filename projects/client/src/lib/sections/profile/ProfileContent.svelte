@@ -37,6 +37,7 @@
   import { isSameSlug } from '$lib/features/social/isSameSlug.ts';
   import ProfileActionsSheet from './_internal/ProfileActionsSheet.svelte';
   import ProfileThisMonth from './_internal/ProfileThisMonth.svelte';
+  import ProfileRecapCard from './_internal/ProfileRecapCard.svelte';
   import ProfileScreenTime from './_internal/ProfileScreenTime.svelte';
   import ProfileRecentlyWatched from './_internal/ProfileRecentlyWatched.svelte';
   import ProfileMyActivity from './_internal/ProfileMyActivity.svelte';
@@ -215,6 +216,7 @@
   const month = $derived(activity?.month);
   const screenTime = $derived(activity?.screenTime);
   const recent = $derived(activity?.recent);
+  const lastMonth = $derived(activity?.lastMonth);
   const activityLoading = $derived(activity?.isLoading);
   const isActivityReady = $derived($activityLoading === false);
 
@@ -423,6 +425,11 @@
         </span>
       </section>
     {:else}
+    {#if isOwner}
+      <ProfileRecapCard
+        recap={$activityLoading === false ? ($lastMonth ?? null) : null}
+      />
+    {/if}
     <section class="profile-section">
       {@render sectionHeader(m.text_this_month(), null, '')}
       <ProfileThisMonth month={isActivityReady ? ($month ?? null) : null}>
@@ -458,7 +465,7 @@
 
     <section class="profile-section">
       {@render sectionHeader(m.header_time_watched(), null, '')}
-      <ProfileWatchTime {stats} />
+      <ProfileWatchTime {stats} {isOwner} />
     </section>
 
     <section class="profile-section">

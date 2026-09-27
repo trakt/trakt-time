@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Jenerik sırasında sahne",
   "delight_scenes_during_and_after_credits": "Jenerik sırasında ve sonrasında sahneler",
   "delight_admit_one": "Tek kişilik",
-  "delight_watching_stamp": "İzliyor"
+  "delight_watching_stamp": "İzliyor",
+  "delight_milestone_reached": "Kilometre taşına ulaşıldı",
+  "delight_recap_ready": "{month} özetin hazır",
+  "delight_recap_open": "Açmak için dokun",
+  "delight_recap_watched": "İzlediğin süre",
+  "delight_recap_top_show": "En çok izlenen dizi",
+  "delight_recap_top_genre": "En çok izlenen tür",
+  "delight_recap_caption": "{month} · kapatmak için dokun"
 }

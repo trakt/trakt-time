@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "片尾字幕中有彩蛋",
   "delight_scenes_during_and_after_credits": "片尾字幕中和之后都有彩蛋",
   "delight_admit_one": "入场券",
-  "delight_watching_stamp": "观看中"
+  "delight_watching_stamp": "观看中",
+  "delight_milestone_reached": "达成里程碑",
+  "delight_recap_ready": "你的{month}回顾已就绪",
+  "delight_recap_open": "点按打开",
+  "delight_recap_watched": "你看了",
+  "delight_recap_top_show": "最常看的剧",
+  "delight_recap_top_genre": "最常看的类型",
+  "delight_recap_caption": "{month} · 点按关闭"
 }

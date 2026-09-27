@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Сцена во время титров",
   "delight_scenes_during_and_after_credits": "Сцены во время и после титров",
   "delight_admit_one": "Билет",
-  "delight_watching_stamp": "Смотрю"
+  "delight_watching_stamp": "Смотрю",
+  "delight_milestone_reached": "Рубеж достигнут",
+  "delight_recap_ready": "Ваш {month} готов",
+  "delight_recap_open": "Нажмите, чтобы открыть",
+  "delight_recap_watched": "Вы посмотрели",
+  "delight_recap_top_show": "Главный сериал",
+  "delight_recap_top_genre": "Главный жанр",
+  "delight_recap_caption": "{month} · нажмите, чтобы закрыть"
 }

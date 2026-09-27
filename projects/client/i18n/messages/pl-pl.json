@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Scena w trakcie napisów",
   "delight_scenes_during_and_after_credits": "Sceny w trakcie i po napisach",
   "delight_admit_one": "Bilet",
-  "delight_watching_stamp": "Oglądam"
+  "delight_watching_stamp": "Oglądam",
+  "delight_milestone_reached": "Kamień milowy osiągnięty",
+  "delight_recap_ready": "Twój {month} jest gotowy",
+  "delight_recap_open": "Dotknij, aby otworzyć",
+  "delight_recap_watched": "Obejrzano",
+  "delight_recap_top_show": "Najczęstszy serial",
+  "delight_recap_top_genre": "Najczęstszy gatunek",
+  "delight_recap_caption": "{month} · dotknij, aby zamknąć"
 }

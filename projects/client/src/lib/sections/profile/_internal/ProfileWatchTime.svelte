@@ -1,11 +1,27 @@
 <script lang="ts">
+  import {
+    readMilestoneBaseline,
+    writeMilestoneBaseline,
+  } from '$lib/features/delight/_internal/milestoneBaseline.ts';
+  import { vibrate } from '$lib/features/delight/_internal/motion.ts';
+  import { countUp } from '$lib/features/delight/countUp.ts';
+  import {
+    findMilestone,
+    type Milestone,
+    type MilestoneKind,
+    milestoneBadge,
+  } from '$lib/features/delight/findMilestone.ts';
+  import { useDelight } from '$lib/features/delight/useDelight.ts';
   import { getLocale } from '$lib/features/i18n/index.ts';
   import * as m from '$lib/paraglide/messages.js';
   import type { UserStats } from '$lib/requests/queries/users/userStatsQuery.ts';
   import { toShortWatchTime, toUnitLabelParts } from './toUnitLabelParts.ts';
   import { toWatchTime } from './toWatchTime.ts';
 
-  const { stats }: { stats: UserStats | null } = $props();
+  const { stats, isOwner = false }: {
+    stats: UserStats | null;
+    isOwner?: boolean;
+  } = $props();
 
   const locale = getLocale();
 
@@ -16,15 +32,70 @@
   const total = $derived(
     toWatchTime(totalMinutes).map((part) => toUnitLabelParts(part, locale)),
   );
+  const milestoneDelight = useDelight('milestone');
+  const ROLL_DURATION = 1400;
+
+  let milestone: Milestone | null = $state(null);
+  let rollingValue: number | null = $state(null);
+  let hasCheckedMilestone = false;
+
+  async function celebrateMilestone(found: Milestone) {
+    const onceKey = `${found.kind}:${found.threshold}`;
+    if (!(await milestoneDelight.claim({ onceKey }))) return;
+
+    milestone = found;
+    vibrate(14);
+    await countUp({
+      from: found.from,
+      to: found.to,
+      duration: ROLL_DURATION,
+      onUpdate: (value) => (rollingValue = value),
+    });
+    rollingValue = null;
+  }
+
+  $effect(() => {
+    if (!stats || !isOwner || hasCheckedMilestone) return;
+    hasCheckedMilestone = true;
+
+    const after = {
+      episodes: stats.episodes.plays,
+      movies: stats.movies.watched,
+      hours: Math.floor(totalMinutes / 60),
+    };
+    const before = readMilestoneBaseline();
+    writeMilestoneBaseline(after);
+    if (!before) return;
+
+    const found = findMilestone({ before, after });
+    if (found) celebrateMilestone(found);
+  });
+
+  const shown = (kind: MilestoneKind, value: number | undefined) =>
+    milestone?.kind === kind && rollingValue !== null ? rollingValue : value;
+
   const episodeShare = $derived(
     totalMinutes === 0 ? 0 : (episodeMinutes / totalMinutes) * 100,
   );
 </script>
 
-{#snippet tile(value: number | undefined, label: string)}
+{#snippet medal(kind: MilestoneKind)}
+  {#if milestone?.kind === kind}
+    <span class="watch-medal" aria-label={m.delight_milestone_reached()}>
+      {milestoneBadge(milestone.threshold)}
+    </span>
+  {/if}
+{/snippet}
+
+{#snippet tile(value: number | undefined, label: string, kind?: MilestoneKind)}
   <div class="watch-tile">
+    {#if kind}
+      {@render medal(kind)}
+    {/if}
     {#if value != null}
-      <span class="watch-tile-value">{value.toLocaleString()}</span>
+      <span class="watch-tile-value">
+        {(kind ? shown(kind, value) : value)?.toLocaleString()}
+      </span>
     {:else}
       <span class="watch-skeleton watch-skeleton--tile" aria-hidden="true"></span>
     {/if}
@@ -34,6 +105,7 @@
 
 <div class="watch-time">
   <div class="watch-card">
+    {@render medal('hours')}
     <span class="watch-eyebrow">{m.stat_label_shows_and_movies()}</span>
     {#if stats}
       <div class="watch-total">
@@ -60,14 +132,55 @@
     {/if}
   </div>
   <div class="watch-tiles">
-    {@render tile(stats?.episodes.plays, m.stat_label_episodes_watched())}
-    {@render tile(stats?.movies.watched, m.stat_label_movies_watched())}
+    {@render tile(stats?.episodes.plays, m.stat_label_episodes_watched(), 'episodes')}
+    {@render tile(stats?.movies.watched, m.stat_label_movies_watched(), 'movies')}
     {@render tile(stats?.shows.watched, m.stat_label_shows_watched())}
   </div>
 </div>
 
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
+
+  .watch-medal {
+    position: absolute;
+    top: calc(var(--ni-12) * -1);
+    inset-inline-end: var(--gap-xs);
+    display: grid;
+    place-items: center;
+    width: var(--ni-40);
+    height: var(--ni-40);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--yellow-200), var(--yellow-500));
+    box-shadow:
+      inset 0 0 0 var(--ni-2) color-mix(in srgb, var(--shade-10) 60%, transparent),
+      0 var(--ni-4) var(--ni-12) color-mix(in srgb, var(--yellow-700) 40%, transparent);
+    color: var(--yellow-900);
+    font-family: var(--trakttime-font-heading);
+    font-size: 0.8125rem;
+    font-weight: 800;
+    animation: medal-drop 620ms cubic-bezier(0.3, 0.7, 0.4, 1) 300ms both;
+  }
+
+  @keyframes medal-drop {
+    0% {
+      opacity: 0;
+      transform: translateY(-80px) rotate(-14deg);
+    }
+    70% {
+      opacity: 1;
+      transform: translateY(6px) rotate(4deg);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .watch-medal {
+      animation: none;
+    }
+  }
 
   .watch-time {
     display: flex;
@@ -81,6 +194,7 @@
   }
 
   .watch-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--gap-s);
@@ -182,6 +296,7 @@
   }
 
   .watch-tile {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--ni-4);

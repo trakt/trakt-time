@@ -45,5 +45,10 @@ export function useDelight(kind: DelightKind) {
     return variant;
   }
 
-  return { claim };
+  function isFresh(onceKey: string): boolean {
+    memory ??= createDelightMemory();
+    return shouldFire({ onceKey: `${kind}:${onceKey}`, fired: memory.fired() });
+  }
+
+  return { claim, isFresh, isEnabled };
 }

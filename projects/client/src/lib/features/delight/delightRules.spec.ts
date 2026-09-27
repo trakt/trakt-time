@@ -4,6 +4,7 @@ import {
   bingeCount,
   bucketFor,
   checkInSummary,
+  crossedMilestone,
   easeOutCubic,
   isHighMatch,
   isNewSeason,
@@ -279,5 +280,25 @@ describe('easeOutCubic', () => {
     expect(easeOutCubic(-1)).toBe(0);
     expect(easeOutCubic(2)).toBe(1);
     expect(easeOutCubic(0.5)).toBeCloseTo(0.875);
+  });
+});
+
+describe('crossedMilestone', () => {
+  const thresholds = [100, 500, 1000];
+
+  it('finds the round number just passed', () => {
+    expect(crossedMilestone({ before: 999, after: 1000, thresholds }))
+      .toBe(1000);
+  });
+
+  it('picks the biggest one when several are passed at once', () => {
+    expect(crossedMilestone({ before: 90, after: 620, thresholds })).toBe(500);
+  });
+
+  it('ignores milestones passed before and counts going down', () => {
+    expect(crossedMilestone({ before: 1200, after: 1300, thresholds }))
+      .toBeNull();
+    expect(crossedMilestone({ before: 1000, after: 999, thresholds }))
+      .toBeNull();
   });
 });
