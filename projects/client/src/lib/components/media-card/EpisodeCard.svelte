@@ -1,5 +1,6 @@
 <script lang="ts">
   import TrackIcon from '$lib/components/icons/TrackIcon.svelte';
+  import { onMount } from 'svelte';
   import { useMarkAsWatched } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
   import type { UpNextEntry } from '$lib/requests/models/UpNextEntry.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
@@ -7,6 +8,7 @@
   import { episodeStatusLabel } from '$lib/utils/media/episodeStatusLabel.ts';
   import * as m from '$lib/paraglide/messages.js';
   import { celebrate } from '$lib/features/delight/celebrate.ts';
+  import { isNewSeason } from '$lib/features/delight/delightRules.ts';
   import Sparkles from '$lib/features/delight/effects/Sparkles.svelte';
   import { tickAndRing } from '$lib/features/delight/tickAndRing.ts';
   import { useDelight } from '$lib/features/delight/useDelight.ts';
@@ -41,6 +43,28 @@
       }),
     );
 
+  const newSeasonDelight = useDelight('new-season');
+  const GLOW_DURATION = 2300;
+  let isGlowing = $state(false);
+
+  async function glowNewSeason() {
+    const onceKey = `${entry.show.id}:${entry.season}`;
+    if (!(await newSeasonDelight.claim({ onceKey }))) return;
+
+    isGlowing = true;
+    setTimeout(() => (isGlowing = false), GLOW_DURATION);
+  }
+
+  onMount(() => {
+    const isNew = isNewSeason({
+      type: entry.type,
+      number: entry.number,
+      releaseDate: entry.effectiveReleaseDate,
+      now: new Date(),
+    });
+    if (isNew) glowNewSeason();
+  });
+
   const checkDelight = useDelight('episode-check');
   const caughtUpDelight = useDelight('caught-up');
   let watchedButton: HTMLButtonElement | null = $state(null);
@@ -71,7 +95,7 @@
   }
 </script>
 
-<article class="media-row episode-card">
+<article class="media-row episode-card" class:is-new-season={isGlowing}>
   <a href={episodeUrl} aria-label={entry.title} class="media-row-thumb-link">
     <div class="media-row-thumb">
       <img src={entry.show.poster.url.thumb} alt={entry.show.title} loading="lazy" />
@@ -122,6 +146,29 @@
 
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
+
+  .episode-card.is-new-season {
+    animation: new-season-glow 900ms ease-out 400ms 2 both;
+  }
+
+  @keyframes new-season-glow {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--yellow-400) 0%, transparent);
+    }
+    40% {
+      box-shadow: 0 0 0 var(--ni-4) color-mix(in srgb, var(--yellow-400) 60%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 var(--ni-12) color-mix(in srgb, var(--yellow-400) 0%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .episode-card.is-new-season {
+      animation: none;
+      box-shadow: 0 0 0 var(--ni-2) var(--yellow-400);
+    }
+  }
 
   .watched-btn.is-caught-up {
     border-color: transparent;

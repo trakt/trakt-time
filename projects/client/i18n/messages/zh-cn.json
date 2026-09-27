@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "免费会员",
   "preview_feature_description_leaderboard": "根据观看时长对您关注的人进行排名，查看您在他们中的位置。",
   "delight_season_complete": "已看完",
-  "delight_all_caught_up": "已全部追完"
+  "delight_all_caught_up": "已全部追完",
+  "delight_binge_count": "连看 {count} 集",
+  "delight_binge_mode": "狂追模式 · {count}"
 }

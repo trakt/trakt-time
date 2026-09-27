@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Membri gratuiți",
   "preview_feature_description_leaderboard": "Clasați persoanele pe care le urmăriți după timpul de vizionare și vedeți unde vă situați printre ele.",
   "delight_season_complete": "Complet",
-  "delight_all_caught_up": "Ești la zi"
+  "delight_all_caught_up": "Ești la zi",
+  "delight_binge_count": "{count} la rând",
+  "delight_binge_mode": "Mod maraton · {count}"
 }

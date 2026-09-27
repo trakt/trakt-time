@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Free members",
   "preview_feature_description_leaderboard": "Rank the people you follow by watch time and see where you land among them.",
   "delight_season_complete": "Complete",
-  "delight_all_caught_up": "All caught up"
+  "delight_all_caught_up": "All caught up",
+  "delight_binge_count": "{count} in a row",
+  "delight_binge_mode": "Binge mode · {count}"
 }

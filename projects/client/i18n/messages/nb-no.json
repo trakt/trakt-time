@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Gratismedlemmer",
   "preview_feature_description_leaderboard": "Ranger personene du følger etter seertid og se hvor du lander blant dem.",
   "delight_season_complete": "Fullført",
-  "delight_all_caught_up": "Helt à jour"
+  "delight_all_caught_up": "Helt à jour",
+  "delight_binge_count": "{count} på rad",
+  "delight_binge_mode": "Binge-modus · {count}"
 }

@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Kostenlose Mitglieder",
   "preview_feature_description_leaderboard": "Rangiere die Personen, denen du folgst, nach Wiedergabezeit und sieh, wo du unter ihnen landest.",
   "delight_season_complete": "Fertig",
-  "delight_all_caught_up": "Alles nachgeholt"
+  "delight_all_caught_up": "Alles nachgeholt",
+  "delight_binge_count": "{count} am Stück",
+  "delight_binge_mode": "Binge-Modus · {count}"
 }

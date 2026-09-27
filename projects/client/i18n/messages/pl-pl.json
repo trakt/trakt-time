@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Darmowi członkowie",
   "preview_feature_description_leaderboard": "Oceniaj osoby, które obserwujesz, według czasu oglądania i sprawdź, gdzie znajdziesz się wśród nich.",
   "delight_season_complete": "Ukończony",
-  "delight_all_caught_up": "Wszystko nadrobione"
+  "delight_all_caught_up": "Wszystko nadrobione",
+  "delight_binge_count": "{count} z rzędu",
+  "delight_binge_mode": "Tryb maratonu · {count}"
 }

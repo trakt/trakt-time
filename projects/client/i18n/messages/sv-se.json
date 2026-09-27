@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Gratismedlemmar",
   "preview_feature_description_leaderboard": "Rankar de personer du följer efter tittartid och se var du hamnar bland dem.",
   "delight_season_complete": "Klar",
-  "delight_all_caught_up": "Helt ikapp"
+  "delight_all_caught_up": "Helt ikapp",
+  "delight_binge_count": "{count} i rad",
+  "delight_binge_mode": "Hetsläge · {count}"
 }

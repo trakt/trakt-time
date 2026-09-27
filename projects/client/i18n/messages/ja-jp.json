@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "無料メンバー",
   "preview_feature_description_leaderboard": "フォローしている人の視聴時間でランキングを作成し、その中で自分がどこに位置するかを確認できます。",
   "delight_season_complete": "完了",
-  "delight_all_caught_up": "すべて視聴済み"
+  "delight_all_caught_up": "すべて視聴済み",
+  "delight_binge_count": "{count}話連続",
+  "delight_binge_mode": "一気見モード · {count}"
 }
