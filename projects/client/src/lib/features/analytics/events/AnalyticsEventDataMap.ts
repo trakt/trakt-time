@@ -55,6 +55,7 @@ type ImportFailedType = { source: string; error: string };
 type ExportInitiatedType = { isVip: string };
 type ExportCompletedType = { duration: number; endpointCount: number };
 type ExportFailedType = { error: string };
+type DelighterShownType = { id: string; variant: string };
 
 export type AnalyticsEventDataMap = {
   [AnalyticsEvent.EnterLite]: never;
@@ -129,4 +130,6 @@ export type AnalyticsEventDataMap = {
   [AnalyticsEvent.ExportInitiated]: ExportInitiatedType;
   [AnalyticsEvent.ExportCompleted]: ExportCompletedType;
   [AnalyticsEvent.ExportFailed]: ExportFailedType;
+
+  [AnalyticsEvent.DelighterShown]: DelighterShownType;
 };
