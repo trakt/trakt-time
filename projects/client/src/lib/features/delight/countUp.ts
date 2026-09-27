@@ -2,13 +2,14 @@ import { prefersReducedMotion } from './_internal/motion.ts';
 import { easeOutCubic } from './delightRules.ts';
 
 type CountUpParams = {
+  from?: number;
   to: number;
   duration: number;
   onUpdate: (value: number) => void;
 };
 
 export function countUp(
-  { to, duration, onUpdate }: CountUpParams,
+  { from = 0, to, duration, onUpdate }: CountUpParams,
 ): Promise<void> {
   if (prefersReducedMotion()) {
     onUpdate(to);
@@ -19,7 +20,7 @@ export function countUp(
     const start = performance.now();
     const tick = (now: number) => {
       const progress = (now - start) / duration;
-      onUpdate(Math.round(to * easeOutCubic(progress)));
+      onUpdate(Math.round(from + (to - from) * easeOutCubic(progress)));
       if (progress < 1) requestAnimationFrame(tick);
       else resolve();
     };

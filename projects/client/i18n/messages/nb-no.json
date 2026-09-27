@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Scene under rulleteksten",
   "delight_scenes_during_and_after_credits": "Scener under og etter rulleteksten",
   "delight_admit_one": "Én billett",
-  "delight_watching_stamp": "Ser nå"
+  "delight_watching_stamp": "Ser nå",
+  "delight_milestone_reached": "Milepæl nådd",
+  "delight_recap_ready": "Din {month} er klar",
+  "delight_recap_open": "Trykk for å åpne",
+  "delight_recap_watched": "Du så",
+  "delight_recap_top_show": "Toppserie",
+  "delight_recap_top_genre": "Toppsjanger",
+  "delight_recap_caption": "{month} · trykk for å lukke"
 }

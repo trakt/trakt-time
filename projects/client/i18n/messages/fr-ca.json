@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Scène pendant le générique",
   "delight_scenes_during_and_after_credits": "Scènes pendant et après le générique",
   "delight_admit_one": "Entrée",
-  "delight_watching_stamp": "En cours"
+  "delight_watching_stamp": "En cours",
+  "delight_milestone_reached": "Palier atteint",
+  "delight_recap_ready": "Votre bilan de {month} est prêt",
+  "delight_recap_open": "Touchez pour ouvrir",
+  "delight_recap_watched": "Vous avez regardé",
+  "delight_recap_top_show": "Série préférée",
+  "delight_recap_top_genre": "Genre préféré",
+  "delight_recap_caption": "{month} · touchez pour fermer"
 }

@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "エンドロール中にシーンあり",
   "delight_scenes_during_and_after_credits": "エンドロール中と後にシーンあり",
   "delight_admit_one": "入場券",
-  "delight_watching_stamp": "視聴中"
+  "delight_watching_stamp": "視聴中",
+  "delight_milestone_reached": "マイルストーン達成",
+  "delight_recap_ready": "{month}のまとめができました",
+  "delight_recap_open": "タップして開く",
+  "delight_recap_watched": "視聴時間",
+  "delight_recap_top_show": "トップ番組",
+  "delight_recap_top_genre": "トップジャンル",
+  "delight_recap_caption": "{month} · タップして閉じる"
 }

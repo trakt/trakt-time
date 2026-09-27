@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Scene under rulleteksterne",
   "delight_scenes_during_and_after_credits": "Scener under og efter rulleteksterne",
   "delight_admit_one": "Én adgang",
-  "delight_watching_stamp": "Ser nu"
+  "delight_watching_stamp": "Ser nu",
+  "delight_milestone_reached": "Milepæl nået",
+  "delight_recap_ready": "Din {month} er klar",
+  "delight_recap_open": "Tryk for at åbne",
+  "delight_recap_watched": "Du så",
+  "delight_recap_top_show": "Topserie",
+  "delight_recap_top_genre": "Topgenre",
+  "delight_recap_caption": "{month} · tryk for at lukke"
 }

@@ -164,3 +164,18 @@ export function isHighMatch(score: number): boolean {
 export function easeOutCubic(progress: number): number {
   return 1 - Math.pow(1 - Math.min(Math.max(progress, 0), 1), 3);
 }
+
+type CrossedMilestoneParams = {
+  before: number;
+  after: number;
+  thresholds: ReadonlyArray<number>;
+};
+
+export function crossedMilestone(
+  { before, after, thresholds }: CrossedMilestoneParams,
+): number | null {
+  const crossed = thresholds.filter((threshold) =>
+    before < threshold && threshold <= after
+  );
+  return crossed.length ? Math.max(...crossed) : null;
+}

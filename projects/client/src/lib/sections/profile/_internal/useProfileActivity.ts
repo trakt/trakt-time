@@ -7,6 +7,7 @@ import {
 import { showActivityHistoryQuery } from '$lib/requests/queries/users/showActivityHistoryQuery.ts';
 import { usePaginatedListQuery } from '$lib/sections/lists/stores/usePaginatedListQuery.ts';
 import { combineLatest, map } from 'rxjs';
+import { type RecapWatch, toMonthRecap } from './toMonthRecap.ts';
 import { toMonthStats, toScreenTime, type Watch } from './toWatchStats.ts';
 
 const HISTORY_WINDOW_IN_DAYS = 60;
@@ -20,6 +21,13 @@ const toWatch = (entry: RecentWatch): Watch => ({
   runtime: entry.type === 'movie'
     ? entry.movie.runtime
     : entry.episode.runtime || entry.show.runtime,
+});
+
+const toRecapWatch = (entry: RecentWatch): RecapWatch => ({
+  watchedAt: entry.watchedAt,
+  minutes: toWatch(entry).runtime,
+  showTitle: entry.type === 'episode' ? entry.show.title : null,
+  genres: entry.type === 'movie' ? entry.movie.genres : entry.show.genres,
 });
 
 function toHistoryWindow(now: Date) {
@@ -87,6 +95,11 @@ export function useProfileActivity(
     ),
     screenTime: watches.pipe(
       map(($watches) => toScreenTime({ watches: $watches, now })),
+    ),
+    lastMonth: history.pipe(
+      map((entries) =>
+        toMonthRecap({ watches: entries.map(toRecapWatch), now })
+      ),
     ),
   };
 }

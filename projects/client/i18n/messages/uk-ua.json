@@ -678,5 +678,12 @@
   "delight_scene_during_credits": "Сцена під час титрів",
   "delight_scenes_during_and_after_credits": "Сцени під час і після титрів",
   "delight_admit_one": "Квиток",
-  "delight_watching_stamp": "Дивлюся"
+  "delight_watching_stamp": "Дивлюся",
+  "delight_milestone_reached": "Рубіж досягнуто",
+  "delight_recap_ready": "Ваш {month} готовий",
+  "delight_recap_open": "Торкніться, щоб відкрити",
+  "delight_recap_watched": "Ви переглянули",
+  "delight_recap_top_show": "Головний серіал",
+  "delight_recap_top_genre": "Головний жанр",
+  "delight_recap_caption": "{month} · торкніться, щоб закрити"
 }
