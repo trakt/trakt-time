@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
+  activeBinge,
+  bingeCount,
   bucketFor,
+  isNewSeason,
   latestAiredSeason,
   ratingDelight,
   seasonMilestone,
@@ -148,5 +151,90 @@ describe('latestAiredSeason', () => {
       seasons: [{ number: 1, airDate: new Date('2027-01-01') }],
       now,
     })).toBeNull();
+  });
+});
+
+describe('bingeCount', () => {
+  const now = new Date('2026-09-27T22:00:00Z');
+  const minutesAgo = (minutes: number) =>
+    new Date(now.getTime() - minutes * 60 * 1000);
+
+  it('counts every episode watched in the current sitting', () => {
+    expect(bingeCount({
+      watchedDates: [minutesAgo(5), minutesAgo(55), minutesAgo(110)],
+      now,
+    })).toBe(3);
+  });
+
+  it('stops at the first long break', () => {
+    expect(bingeCount({
+      watchedDates: [minutesAgo(5), minutesAgo(55), minutesAgo(60 * 24)],
+      now,
+    })).toBe(2);
+  });
+
+  it('is zero once the sitting is over', () => {
+    expect(bingeCount({ watchedDates: [minutesAgo(60 * 5)], now })).toBe(0);
+  });
+
+  it('is zero without history', () => {
+    expect(bingeCount({ watchedDates: [], now })).toBe(0);
+  });
+});
+
+describe('activeBinge', () => {
+  const now = new Date('2026-09-27T22:00:00Z');
+  const minutesAgo = (minutes: number) =>
+    new Date(now.getTime() - minutes * 60 * 1000);
+
+  it('picks the show with the longest current sitting', () => {
+    expect(activeBinge({
+      shows: [
+        { id: 1, watchedDates: [minutesAgo(10)] },
+        {
+          id: 2,
+          watchedDates: [minutesAgo(5), minutesAgo(50), minutesAgo(95)],
+        },
+      ],
+      now,
+    })).toEqual({ showId: 2, count: 3 });
+  });
+
+  it('is empty when nothing is being watched', () => {
+    expect(activeBinge({ shows: [], now })).toBeNull();
+  });
+});
+
+describe('isNewSeason', () => {
+  const now = new Date('2026-09-27');
+
+  it('glows for the first episode of a season that just premiered', () => {
+    expect(isNewSeason({
+      type: 'season_premiere',
+      number: 1,
+      releaseDate: new Date('2026-09-20'),
+      now,
+    })).toBe(true);
+  });
+
+  it('ignores old premieres, other episodes and brand new shows', () => {
+    expect(isNewSeason({
+      type: 'season_premiere',
+      number: 1,
+      releaseDate: new Date('2026-06-01'),
+      now,
+    })).toBe(false);
+    expect(isNewSeason({
+      type: 'standard',
+      number: 2,
+      releaseDate: new Date('2026-09-20'),
+      now,
+    })).toBe(false);
+    expect(isNewSeason({
+      type: 'series_premiere',
+      number: 1,
+      releaseDate: new Date('2026-09-20'),
+      now,
+    })).toBe(false);
   });
 });

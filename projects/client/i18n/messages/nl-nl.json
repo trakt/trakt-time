@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Gratis leden",
   "preview_feature_description_leaderboard": "Rangschik de mensen die je volgt op kijktijd en zie waar jij eindigt.",
   "delight_season_complete": "Voltooid",
-  "delight_all_caught_up": "Helemaal bij"
+  "delight_all_caught_up": "Helemaal bij",
+  "delight_binge_count": "{count} achter elkaar",
+  "delight_binge_mode": "Bingemodus · {count}"
 }

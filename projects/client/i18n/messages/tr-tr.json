@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Ücretsiz üyeler",
   "preview_feature_description_leaderboard": "Takip ettiğin kişileri izleme süresine göre sırala ve aralarında nerede olduğunu gör.",
   "delight_season_complete": "Tamamlandı",
-  "delight_all_caught_up": "Hepsini yakaladın"
+  "delight_all_caught_up": "Hepsini yakaladın",
+  "delight_binge_count": "Arka arkaya {count}",
+  "delight_binge_mode": "Maraton modu · {count}"
 }

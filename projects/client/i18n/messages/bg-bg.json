@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Безплатни членове",
   "preview_feature_description_leaderboard": "Класирайте хората, които следите, по време на гледане и вижте къде се намирате сред тях.",
   "delight_season_complete": "Завършен",
-  "delight_all_caught_up": "Наваксахте всичко"
+  "delight_all_caught_up": "Наваксахте всичко",
+  "delight_binge_count": "{count} поредни",
+  "delight_binge_mode": "Маратон · {count}"
 }

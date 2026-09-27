@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Miembros gratis",
   "preview_feature_description_leaderboard": "Clasifica a las personas que sigues por tiempo de visualización y ve dónde te encuentras entre ellas.",
   "delight_season_complete": "Completa",
-  "delight_all_caught_up": "Estás al día"
+  "delight_all_caught_up": "Estás al día",
+  "delight_binge_count": "{count} seguidos",
+  "delight_binge_mode": "Modo maratón · {count}"
 }

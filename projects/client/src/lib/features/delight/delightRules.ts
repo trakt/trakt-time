@@ -76,3 +76,60 @@ export function latestAiredSeason(
 
   return aired.length ? Math.max(...aired) : null;
 }
+
+const SITTING_GAP = 3 * 60 * 60 * 1000;
+
+type BingeCountParams = {
+  watchedDates: ReadonlyArray<Date>;
+  now: Date;
+};
+
+export function bingeCount({ watchedDates, now }: BingeCountParams): number {
+  const [latest, ...earlier] = [...watchedDates]
+    .map((date) => date.getTime())
+    .sort((a, b) => b - a);
+
+  if (latest === undefined || now.getTime() - latest > SITTING_GAP) return 0;
+
+  const inSitting = earlier.findIndex((time, index) =>
+    (index === 0 ? latest : earlier[index - 1]!) - time > SITTING_GAP
+  );
+
+  return 1 + (inSitting === -1 ? earlier.length : inSitting);
+}
+
+type ActiveBingeParams = {
+  shows: Iterable<{ id: number; watchedDates: ReadonlyArray<Date> }>;
+  now: Date;
+};
+
+export function activeBinge(
+  { shows, now }: ActiveBingeParams,
+): { showId: number; count: number } | null {
+  return [...shows]
+    .map((show) => ({
+      showId: show.id,
+      count: bingeCount({ watchedDates: show.watchedDates, now }),
+    }))
+    .reduce<{ showId: number; count: number } | null>(
+      (best, current) => current.count > (best?.count ?? 0) ? current : best,
+      null,
+    );
+}
+
+const NEW_SEASON_WINDOW = 14 * 24 * 60 * 60 * 1000;
+
+type NewSeasonParams = {
+  type: string;
+  number: number;
+  releaseDate: Date;
+  now: Date;
+};
+
+export function isNewSeason(
+  { type, number, releaseDate, now }: NewSeasonParams,
+): boolean {
+  const elapsed = now.getTime() - releaseDate.getTime();
+  return type === 'season_premiere' && number === 1 && elapsed >= 0 &&
+    elapsed <= NEW_SEASON_WINDOW;
+}

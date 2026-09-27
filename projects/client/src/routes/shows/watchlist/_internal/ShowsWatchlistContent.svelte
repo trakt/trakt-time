@@ -3,6 +3,7 @@
   import EpisodeCard from '$lib/components/media-card/EpisodeCard.svelte';
   import WatchedHistoryRow from '$lib/components/media-card/WatchedHistoryRow.svelte';
   import GroupHeader from '$lib/components/group-header/GroupHeader.svelte';
+  import BingeStreak from '$lib/features/delight/components/BingeStreak.svelte';
   import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
   import WatchlistSkeleton from '$lib/sections/lists/components/WatchlistSkeleton.svelte';
   import { useUpNextList } from '$lib/sections/lists/progress/useUpNextList.ts';
@@ -130,7 +131,11 @@
       {#each groups as group, groupIndex (group.id)}
         {#if groupIndex === 0}
           <div class="watch-next-anchor" bind:this={watchNextAnchor}>
-            <GroupHeader label={group.label} />
+            <GroupHeader label={group.label}>
+              {#snippet trailing()}
+                <BingeStreak />
+              {/snippet}
+            </GroupHeader>
           </div>
         {:else}
           <GroupHeader label={group.label} />

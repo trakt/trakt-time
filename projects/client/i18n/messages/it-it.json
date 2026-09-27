@@ -669,5 +669,7 @@
   "text_leaderboard_free_section": "Membri gratuiti",
   "preview_feature_description_leaderboard": "Classifica le persone che segui in base al tempo di visione e scopri dove ti posizioni tra loro.",
   "delight_season_complete": "Completa",
-  "delight_all_caught_up": "Sei in pari"
+  "delight_all_caught_up": "Sei in pari",
+  "delight_binge_count": "{count} di fila",
+  "delight_binge_mode": "Modalità maratona · {count}"
 }
