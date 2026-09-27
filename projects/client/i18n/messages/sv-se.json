@@ -671,5 +671,12 @@
   "delight_season_complete": "Klar",
   "delight_all_caught_up": "Helt ikapp",
   "delight_binge_count": "{count} i rad",
-  "delight_binge_mode": "Hetsläge · {count}"
+  "delight_binge_mode": "Hetsläge · {count}",
+  "delight_check_in": "Checka in",
+  "delight_ends_at": "Slutar runt {time}",
+  "delight_scene_after_credits": "Scen efter eftertexterna",
+  "delight_scene_during_credits": "Scen under eftertexterna",
+  "delight_scenes_during_and_after_credits": "Scener under och efter eftertexterna",
+  "delight_admit_one": "En biljett",
+  "delight_watching_stamp": "Tittar"
 }

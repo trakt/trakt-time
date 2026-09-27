@@ -3,6 +3,7 @@ import {
   activeBinge,
   bingeCount,
   bucketFor,
+  checkInSummary,
   isNewSeason,
   latestAiredSeason,
   ratingDelight,
@@ -236,5 +237,27 @@ describe('isNewSeason', () => {
       releaseDate: new Date('2026-09-20'),
       now,
     })).toBe(false);
+  });
+});
+
+describe('checkInSummary', () => {
+  const startedAt = new Date('2026-09-27T20:30:00Z');
+
+  it('ends one runtime after the check-in', () => {
+    expect(checkInSummary({ startedAt, runtimeMinutes: 167, postCredits: [] }))
+      .toEqual({
+        endsAt: new Date('2026-09-27T23:17:00Z'),
+        creditsScene: null,
+      });
+  });
+
+  it('names the credits scenes', () => {
+    const summary = (postCredits: ReadonlyArray<'during' | 'after'>) =>
+      checkInSummary({ startedAt, runtimeMinutes: 100, postCredits })
+        .creditsScene;
+
+    expect(summary(['after'])).toBe('after');
+    expect(summary(['during'])).toBe('during');
+    expect(summary(['during', 'after'])).toBe('both');
   });
 });

@@ -20,6 +20,7 @@
   import SummaryAside from '$lib/sections/summary/components/aside/SummaryAside.svelte';
   import { toMediaDetails } from '$lib/sections/summary/components/details/toMediaDetails.ts';
   import MediaActionsRow from '$lib/sections/summary/_internal/MediaActionsRow.svelte';
+  import CheckInRow from '$lib/sections/summary/_internal/CheckInRow.svelte';
   import MoreActionsButton from '$lib/sections/summary/_internal/MoreActionsButton.svelte';
   import MediaCoverHero from '$lib/sections/summary/_internal/MediaCoverHero.svelte';
   import MediaGenres from '$lib/sections/summary/_internal/MediaGenres.svelte';
@@ -151,6 +152,21 @@
           title={intl?.title ?? movie.title}
           watchlist={{ type: 'movie', id: movie.id }}
         />
+        <RenderFor audience="authenticated">
+          <CheckInRow
+            watchedProps={{
+              type: 'movie',
+              media: {
+                id: movie.id,
+                effectiveReleaseDate: movie.effectiveReleaseDate,
+                status: movie.status,
+              },
+            }}
+            title={intl?.title ?? movie.title}
+            runtime={movie.runtime}
+            postCredits={movie.postCredits}
+          />
+        </RenderFor>
       </SummaryAside>
 
       <div class="summary-main">

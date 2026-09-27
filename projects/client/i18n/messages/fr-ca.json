@@ -671,5 +671,12 @@
   "delight_season_complete": "Terminée",
   "delight_all_caught_up": "Vous êtes à jour",
   "delight_binge_count": "{count} d'affilée",
-  "delight_binge_mode": "Mode marathon · {count}"
+  "delight_binge_mode": "Mode marathon · {count}",
+  "delight_check_in": "Je regarde",
+  "delight_ends_at": "Se termine vers {time}",
+  "delight_scene_after_credits": "Scène après le générique",
+  "delight_scene_during_credits": "Scène pendant le générique",
+  "delight_scenes_during_and_after_credits": "Scènes pendant et après le générique",
+  "delight_admit_one": "Entrée",
+  "delight_watching_stamp": "En cours"
 }

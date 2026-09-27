@@ -133,3 +133,24 @@ export function isNewSeason(
   return type === 'season_premiere' && number === 1 && elapsed >= 0 &&
     elapsed <= NEW_SEASON_WINDOW;
 }
+
+type CreditsScene = 'during' | 'after' | 'both';
+
+type CheckInSummaryParams = {
+  startedAt: Date;
+  runtimeMinutes: number;
+  postCredits: ReadonlyArray<'during' | 'after'>;
+};
+
+export function checkInSummary(
+  { startedAt, runtimeMinutes, postCredits }: CheckInSummaryParams,
+): { endsAt: Date; creditsScene: CreditsScene | null } {
+  const endsAt = new Date(startedAt.getTime() + runtimeMinutes * 60 * 1000);
+  const hasDuring = postCredits.includes('during');
+  const hasAfter = postCredits.includes('after');
+
+  if (hasDuring && hasAfter) return { endsAt, creditsScene: 'both' };
+  if (hasDuring) return { endsAt, creditsScene: 'during' };
+  if (hasAfter) return { endsAt, creditsScene: 'after' };
+  return { endsAt, creditsScene: null };
+}

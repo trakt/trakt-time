@@ -671,5 +671,12 @@
   "delight_season_complete": "Færdig",
   "delight_all_caught_up": "Helt opdateret",
   "delight_binge_count": "{count} i træk",
-  "delight_binge_mode": "Binge-tilstand · {count}"
+  "delight_binge_mode": "Binge-tilstand · {count}",
+  "delight_check_in": "Tjek ind",
+  "delight_ends_at": "Slutter omkring {time}",
+  "delight_scene_after_credits": "Scene efter rulleteksterne",
+  "delight_scene_during_credits": "Scene under rulleteksterne",
+  "delight_scenes_during_and_after_credits": "Scener under og efter rulleteksterne",
+  "delight_admit_one": "Én adgang",
+  "delight_watching_stamp": "Ser nu"
 }

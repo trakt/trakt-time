@@ -671,5 +671,12 @@
   "delight_season_complete": "Завършен",
   "delight_all_caught_up": "Наваксахте всичко",
   "delight_binge_count": "{count} поредни",
-  "delight_binge_mode": "Маратон · {count}"
+  "delight_binge_mode": "Маратон · {count}",
+  "delight_check_in": "Отметни",
+  "delight_ends_at": "Свършва около {time}",
+  "delight_scene_after_credits": "Сцена след надписите",
+  "delight_scene_during_credits": "Сцена по време на надписите",
+  "delight_scenes_during_and_after_credits": "Сцени по време и след надписите",
+  "delight_admit_one": "Един вход",
+  "delight_watching_stamp": "Гледам"
 }
