@@ -1,4 +1,5 @@
 <script lang="ts">
+  import NavBadge from '$lib/features/delight/components/NavBadge.svelte';
   import { useAuth } from '$lib/features/auth/stores/useAuth.ts';
   import { SITE_NAME } from '$lib/features/seo/constants.ts';
   import RenderFor from '$lib/guards/RenderFor.svelte';
@@ -22,9 +23,15 @@
 
   <nav class="side-nav-tabs" aria-label={m.button_label_main_navigation()}>
     {#each nav.tabs as { href, label, icon: Icon }, index (href)}
-      <a {href} class="side-nav-tab" data-active={index === nav.activeIndex}>
+      <a
+        {href}
+        class="side-nav-tab"
+        data-active={index === nav.activeIndex}
+        data-nav-tab={href}
+      >
         <Icon />
         {label}
+        <NavBadge {href} isActive={index === nav.activeIndex} />
       </a>
     {/each}
   </nav>
@@ -93,6 +100,7 @@
   }
 
   .side-nav-tab {
+    position: relative;
     display: flex;
     align-items: center;
     gap: var(--gap-s);
@@ -115,6 +123,12 @@
     &:focus-visible {
       outline: var(--border-thickness-xs) solid var(--trakttime-accent);
       outline-offset: calc(-1 * var(--border-thickness-xs));
+    }
+
+    :global(.trakt-nav-badge) {
+      top: 50%;
+      inset-inline-end: var(--gap-s);
+      translate: 0 -50%;
     }
 
     &[data-active='true'] {

@@ -5,6 +5,8 @@
   import { useFavorites } from '$lib/sections/media-actions/favorite/useFavorites.ts';
   import { useWatchlist } from '$lib/sections/media-actions/watchlist/useWatchlist.ts';
   import * as m from '$lib/paraglide/messages.js';
+  import { flyToWatchlist } from '$lib/features/delight/flyToWatchlist.ts';
+  import { useDelight } from '$lib/features/delight/useDelight.ts';
 
   type Props = {
     type: 'show' | 'movie';
@@ -24,19 +26,33 @@
   const { isWatchlisted, addToWatchlist, removeFromWatchlist, isWatchlistUpdating } =
     $derived(useWatchlist({ type, media: { id } }));
 
+  const watchlistDelight = useDelight('watchlist');
+  let frame: HTMLElement | null = $state(null);
+
+  async function addWithDelight() {
+    const poster = frame;
+    const adding = addToWatchlist();
+    if (poster && (await watchlistDelight.claim())) {
+      flyToWatchlist({ poster, imageUrl: posterUrl, type });
+    }
+    await adding;
+  }
+
   const onActionClick = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (mode === 'favorite') {
       removeFromFavorites();
+    } else if ($isWatchlisted) {
+      removeFromWatchlist();
     } else {
-      ($isWatchlisted ? removeFromWatchlist : addToWatchlist)();
+      addWithDelight();
     }
   };
 </script>
 
 <div class="poster-card">
-  <div class="poster-frame">
+  <div class="poster-frame" bind:this={frame}>
     <Link {href} label={title}>
       <CrossOriginImage src={posterUrl} alt={title} />
     </Link>
