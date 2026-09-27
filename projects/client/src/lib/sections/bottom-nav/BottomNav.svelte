@@ -1,5 +1,6 @@
 <script lang="ts">
   import * as m from '$lib/paraglide/messages.js';
+  import NavBadge from '$lib/features/delight/components/NavBadge.svelte';
   import { useMainNavTabs } from '$lib/sections/main-nav/useMainNavTabs.svelte.ts';
 
   const nav = useMainNavTabs();
@@ -19,9 +20,16 @@
     aria-hidden="true"
   ></span>
   {#each tabs as { href, label, icon: Icon }, index}
-    <a {href} aria-label={label} class="bottom-nav-tab" data-active={index === activeIndex}>
+    <a
+      {href}
+      aria-label={label}
+      class="bottom-nav-tab"
+      data-active={index === activeIndex}
+      data-nav-tab={href}
+    >
       <Icon />
       <span class="tab-label">{label}</span>
+      <NavBadge {href} isActive={index === activeIndex} />
     </a>
   {/each}
 </nav>
