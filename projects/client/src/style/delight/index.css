@@ -1,0 +1,18 @@
+.trakt-delight-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-top);
+  overflow: hidden;
+  pointer-events: none;
+
+  --rtl-sign: 1;
+}
+
+:root[dir="rtl"] .trakt-delight-layer {
+  --rtl-sign: -1;
+}
+
+[data-delight-glow] {
+  filter: drop-shadow(0 0 var(--ni-8) var(--yellow-400));
+  transition: filter var(--transition-duration-short) ease-out;
+}

@@ -1,0 +1,16 @@
+export type DelightKind =
+  | 'rating-high'
+  | 'rating-low'
+  | 'episode-check'
+  | 'season-complete'
+  | 'caught-up'
+  | 'binge'
+  | 'watchlist'
+  | 'favorite'
+  | 'drop'
+  | 'check-in'
+  | 'taste-match'
+  | 'milestone'
+  | 'recap'
+  | 'finale'
+  | 'new-season';

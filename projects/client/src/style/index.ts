@@ -5,6 +5,7 @@ import './palette/purple.css';
 import './palette/red.css';
 import './palette/rose.css';
 import './palette/shade.css';
+import './palette/yellow.css';
 
 import './numeric-increments/index.css';
 import './sizing/index.css';
@@ -20,6 +21,7 @@ import './theme/modes.scss';
 import './typography/index.css';
 
 import './animations/index.css';
+import './delight/index.css';
 
 import './layers/index.css';
 
