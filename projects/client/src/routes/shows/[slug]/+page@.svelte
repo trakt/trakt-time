@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { hasEnded } from '$lib/utils/media/hasEnded.ts';
   import SeoHead from '$lib/features/seo/SeoHead.svelte';
   import { toShowSeo } from '$lib/features/seo/media/toShowSeo.ts';
   import type { PageProps } from './$types.ts';
@@ -238,6 +239,7 @@
                   showTitle={intl?.title ?? show.title}
                   isOpen={openSeason === season.number}
                   onToggle={() => toggleSeason(season.number)}
+                  hasEnded={hasEnded(show.status)}
                 />
               {/each}
             </ul>

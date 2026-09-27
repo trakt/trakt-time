@@ -667,5 +667,7 @@
   "text_leaderboard_upsell_footer": "Uppgradera till VIP för att se din rankning bland dina vänner",
   "button_label_open_leaderboard": "Öppna följarlistan",
   "text_leaderboard_free_section": "Gratismedlemmar",
-  "preview_feature_description_leaderboard": "Rankar de personer du följer efter tittartid och se var du hamnar bland dem."
+  "preview_feature_description_leaderboard": "Rankar de personer du följer efter tittartid och se var du hamnar bland dem.",
+  "delight_season_complete": "Klar",
+  "delight_all_caught_up": "Helt ikapp"
 }

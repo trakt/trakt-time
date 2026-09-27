@@ -667,5 +667,7 @@
   "text_leaderboard_upsell_footer": "Passez au statut VIP pour voir votre classement parmi vos amis",
   "button_label_open_leaderboard": "Ouvrir le classement des abonnements",
   "text_leaderboard_free_section": "Membres gratuits",
-  "preview_feature_description_leaderboard": "Classez les personnes que vous suivez par temps de visionnement et voyez où vous vous situez parmi elles."
+  "preview_feature_description_leaderboard": "Classez les personnes que vous suivez par temps de visionnement et voyez où vous vous situez parmi elles.",
+  "delight_season_complete": "Terminée",
+  "delight_all_caught_up": "Vous êtes à jour"
 }

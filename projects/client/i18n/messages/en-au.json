@@ -667,5 +667,7 @@
   "text_leaderboard_upsell_footer": "Upgrade to VIP to see where you rank amongst your friends",
   "button_label_open_leaderboard": "Open follows leaderboard",
   "text_leaderboard_free_section": "Free members",
-  "preview_feature_description_leaderboard": "Rank the people you follow by watch time and see where you land among them."
+  "preview_feature_description_leaderboard": "Rank the people you follow by watch time and see where you land among them.",
+  "delight_season_complete": "Complete",
+  "delight_all_caught_up": "All caught up"
 }

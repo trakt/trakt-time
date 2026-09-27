@@ -38,3 +38,41 @@ export function bucketFor<T extends string>(
   const index = hash(`${experiment}:${seed}`) % variants.length;
   return variants[index] as T;
 }
+
+type SeasonEpisode = { id: number; releaseDate: Date };
+
+type SeasonMilestoneParams = {
+  episodes: ReadonlyArray<SeasonEpisode>;
+  watchedIds: ReadonlySet<number>;
+  isLatestAiredSeason: boolean;
+  hasEnded: boolean;
+  now: Date;
+};
+
+export function seasonMilestone(
+  { episodes, watchedIds, isLatestAiredSeason, hasEnded, now }:
+    SeasonMilestoneParams,
+): 'caught-up' | 'season-complete' | null {
+  const aired = episodes.filter((episode) => episode.releaseDate <= now);
+  if (aired.length === 0) return null;
+  if (!aired.every((episode) => watchedIds.has(episode.id))) return null;
+
+  if (isLatestAiredSeason && !hasEnded) return 'caught-up';
+  if (aired.length === episodes.length) return 'season-complete';
+  return null;
+}
+
+type LatestAiredSeasonParams = {
+  seasons: ReadonlyArray<{ number: number; airDate: Date }>;
+  now: Date;
+};
+
+export function latestAiredSeason(
+  { seasons, now }: LatestAiredSeasonParams,
+): number | null {
+  const aired = seasons
+    .filter((season) => season.number > 0 && season.airDate <= now)
+    .map((season) => season.number);
+
+  return aired.length ? Math.max(...aired) : null;
+}

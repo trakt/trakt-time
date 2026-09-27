@@ -667,5 +667,7 @@
   "text_leaderboard_upsell_footer": "Opgrader til VIP for at se din placering blandt dine venner",
   "button_label_open_leaderboard": "Åbn følger-rangliste",
   "text_leaderboard_free_section": "Gratis medlemmer",
-  "preview_feature_description_leaderboard": "Ranger de personer, du følger, efter set tid, og se hvor du lander blandt dem."
+  "preview_feature_description_leaderboard": "Ranger de personer, du følger, efter set tid, og se hvor du lander blandt dem.",
+  "delight_season_complete": "Færdig",
+  "delight_all_caught_up": "Helt opdateret"
 }
