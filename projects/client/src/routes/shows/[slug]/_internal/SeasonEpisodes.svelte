@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { useUser } from '$lib/features/auth/stores/useUser.ts';
+  import { latestAiredSeason, seasonMilestone } from '$lib/features/delight/delightRules.ts';
   import { useQuery } from '$lib/features/query/useQuery.ts';
+  import { resolve } from '$lib/utils/store/resolve.ts';
   import { showSeasonEpisodesQuery } from '$lib/requests/queries/shows/showSeasonEpisodesQuery.ts';
   import type { EpisodeEntry } from '$lib/requests/models/EpisodeEntry.ts';
   import type { Season } from '$lib/requests/models/Season.ts';
@@ -13,8 +16,21 @@
     showTitle: string;
     episodeCount: number;
     seasons: ReadonlyArray<Season>;
+    hasEnded: boolean;
+    onMilestone: (milestone: 'caught-up' | 'season-complete') => void;
   };
-  const { slug, season, showId, showTitle, episodeCount, seasons }: Props = $props();
+  const {
+    slug,
+    season,
+    showId,
+    showTitle,
+    episodeCount,
+    seasons,
+    hasEnded,
+    onMilestone,
+  }: Props = $props();
+
+  const { history } = useUser();
 
   const query = $derived(useQuery(showSeasonEpisodesQuery({ slug, season })));
   const episodes = $derived($query.data ?? []);
@@ -22,8 +38,27 @@
 
   const { offerWatchedUntilHere } = $derived(useWatchedUntilHere({ slug, showId }));
 
-  const onWatched = (episode: EpisodeEntry) =>
+  async function checkMilestone(episode: EpisodeEntry) {
+    const now = new Date();
+    const watched = (await resolve(history).catch(() => null))?.shows.get(showId)?.episodes ?? [];
+    const milestone = seasonMilestone({
+      episodes: episodes.map(({ id, effectiveReleaseDate }) => ({
+        id,
+        releaseDate: effectiveReleaseDate,
+      })),
+      watchedIds: new Set([episode.id, ...watched.map(({ episodeId }) => episodeId)]),
+      isLatestAiredSeason: latestAiredSeason({ seasons, now }) === season,
+      hasEnded,
+      now,
+    });
+
+    if (milestone) onMilestone(milestone);
+  }
+
+  const onWatched = (episode: EpisodeEntry) => {
+    checkMilestone(episode);
     offerWatchedUntilHere({ episode, currentSeasonEpisodes: episodes, seasons });
+  };
 
   const skeletonCount = $derived(Math.max(episodeCount, 1));
 </script>

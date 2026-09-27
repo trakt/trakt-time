@@ -1,5 +1,9 @@
 <script lang="ts">
   import TrackIcon from '$lib/components/icons/TrackIcon.svelte';
+  import { celebrate } from '$lib/features/delight/celebrate.ts';
+  import { isCaughtUp } from '$lib/features/delight/caughtUp.ts';
+  import Sparkles from '$lib/features/delight/effects/Sparkles.svelte';
+  import { of } from 'rxjs';
   import type { MarkAsWatchedStoreProps } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
   import { useMarkAsWatched } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
   import * as m from '$lib/paraglide/messages.js';
@@ -9,6 +13,27 @@
 
   const { markAsWatched, removeWatched, isWatched, isMarkingAsWatched, isWatchable } =
     $derived(useMarkAsWatched(watchedProps));
+
+  const caughtUpShow = $derived(
+    watchedProps.type === 'show' && !Array.isArray(watchedProps.media)
+      ? isCaughtUp(watchedProps.media.id)
+      : of(false),
+  );
+  const isShowingCaughtUp = $derived($caughtUpShow && $isWatched);
+  const SPARKLE_DELAY = 700;
+
+  let pill: HTMLButtonElement | null = $state(null);
+
+  $effect(() => {
+    if (!isShowingCaughtUp || !pill) return;
+
+    const target = pill;
+    const timer = setTimeout(
+      () => celebrate({ effect: Sparkles, at: target }),
+      SPARKLE_DELAY,
+    );
+    return () => clearTimeout(timer);
+  });
 
   function toggleWatched() {
     if ($isWatched) removeWatched();
@@ -20,6 +45,8 @@
   <button
     class="watched-pill"
     class:is-watched={$isWatched}
+    class:is-caught-up={isShowingCaughtUp}
+    bind:this={pill}
     onclick={toggleWatched}
     disabled={$isMarkingAsWatched}
     aria-label={$isWatched
@@ -28,7 +55,13 @@
     type="button"
   >
     <TrackIcon state={$isWatched ? 'watched' : 'unwatched'} />
-    <span>{$isWatched ? m.tag_text_watched() : m.button_text_mark_as_watched()}</span>
+    <span>
+      {#if isShowingCaughtUp}
+        {m.delight_all_caught_up()}
+      {:else}
+        {$isWatched ? m.tag_text_watched() : m.button_text_mark_as_watched()}
+      {/if}
+    </span>
   </button>
 {/if}
 
@@ -64,6 +97,12 @@
       border-color: transparent;
       background: var(--trakttime-gradient);
       color: var(--trakttime-accent-foreground);
+    }
+
+    &.is-caught-up {
+      border-color: transparent;
+      background: var(--green-600);
+      color: var(--shade-10);
     }
 
     &:disabled {

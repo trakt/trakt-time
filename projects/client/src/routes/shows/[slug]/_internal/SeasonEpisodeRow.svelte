@@ -7,6 +7,8 @@
   import { getEpisodeStatus } from '$lib/utils/media/getEpisodeStatus.ts';
   import { episodeStatusLabel } from '$lib/utils/media/episodeStatusLabel.ts';
   import * as m from '$lib/paraglide/messages.js';
+  import { tickAndRing } from '$lib/features/delight/tickAndRing.ts';
+  import { useDelight } from '$lib/features/delight/useDelight.ts';
 
   type Props = {
     slug: string;
@@ -40,6 +42,9 @@
     ),
   );
 
+  const checkDelight = useDelight('episode-check');
+  let watchedButton: HTMLButtonElement | null = $state(null);
+
   async function toggle() {
     if ($isWatched) {
       removeWatched();
@@ -48,6 +53,7 @@
 
     await markAsWatched();
     onWatched(episode);
+    if (watchedButton && (await checkDelight.claim())) tickAndRing(watchedButton);
   }
 </script>
 
@@ -86,6 +92,7 @@
       class:is-watched={$isWatched}
       disabled={$isMarkingAsWatched}
       onclick={toggle}
+      bind:this={watchedButton}
       aria-label={$isWatched
         ? m.button_label_remove_from_watched({ title: episode.title })
         : m.button_label_mark_as_watched({ title: episode.title })}

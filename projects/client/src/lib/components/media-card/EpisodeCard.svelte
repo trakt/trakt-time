@@ -6,6 +6,11 @@
   import { getEpisodeStatus } from '$lib/utils/media/getEpisodeStatus.ts';
   import { episodeStatusLabel } from '$lib/utils/media/episodeStatusLabel.ts';
   import * as m from '$lib/paraglide/messages.js';
+  import { celebrate } from '$lib/features/delight/celebrate.ts';
+  import Sparkles from '$lib/features/delight/effects/Sparkles.svelte';
+  import { tickAndRing } from '$lib/features/delight/tickAndRing.ts';
+  import { useDelight } from '$lib/features/delight/useDelight.ts';
+  import { hasEnded } from '$lib/utils/media/hasEnded.ts';
 
   const { entry }: { entry: UpNextEntry } = $props();
 
@@ -36,9 +41,33 @@
       }),
     );
 
-  function toggleWatched() {
-    if ($isWatched) removeWatched();
-    else markAsWatched();
+  const checkDelight = useDelight('episode-check');
+  const caughtUpDelight = useDelight('caught-up');
+  let watchedButton: HTMLButtonElement | null = $state(null);
+  let isCaughtUp = $state(false);
+
+  async function celebrateCaughtUp(button: HTMLElement) {
+    if (!(await caughtUpDelight.claim())) return false;
+
+    isCaughtUp = true;
+    tickAndRing(button);
+    celebrate({ effect: Sparkles, at: button });
+    return true;
+  }
+
+  async function toggleWatched() {
+    if ($isWatched) {
+      removeWatched();
+      return;
+    }
+
+    const isLastAired = entry.remaining === 1 && !hasEnded(entry.show.status);
+    await markAsWatched();
+
+    const button = watchedButton;
+    if (!button) return;
+    if (isLastAired && (await celebrateCaughtUp(button))) return;
+    if (await checkDelight.claim()) tickAndRing(button);
   }
 </script>
 
@@ -77,11 +106,13 @@
     <button
       class="watched-btn"
       class:is-watched={$isWatched}
+      class:is-caught-up={isCaughtUp}
       aria-label={$isWatched
         ? m.button_label_remove_from_watched({ title: entry.title })
         : m.button_label_mark_as_watched({ title: entry.title })}
       disabled={$isMarkingAsWatched}
       onclick={toggleWatched}
+      bind:this={watchedButton}
       type="button"
     >
       <TrackIcon state={$isWatched ? 'watched' : 'unwatched'} />
@@ -91,6 +122,12 @@
 
 <style lang="scss">
   @use '$style/scss/mixins/index' as *;
+
+  .watched-btn.is-caught-up {
+    border-color: transparent;
+    background: var(--green-600);
+    color: var(--shade-10);
+  }
 
   .episode-card-cover {
     display: none;

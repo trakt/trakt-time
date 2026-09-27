@@ -667,5 +667,7 @@
   "text_leaderboard_upsell_footer": "Actualízate a VIP para ver tu posición entre tus amigos",
   "button_label_open_leaderboard": "Abrir clasificación de seguidos",
   "text_leaderboard_free_section": "Miembros gratis",
-  "preview_feature_description_leaderboard": "Clasifica a las personas que sigues por tiempo de visualización y ve dónde te encuentras entre ellas."
+  "preview_feature_description_leaderboard": "Clasifica a las personas que sigues por tiempo de visualización y ve dónde te encuentras entre ellas.",
+  "delight_season_complete": "Completa",
+  "delight_all_caught_up": "Estás al día"
 }

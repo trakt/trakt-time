@@ -667,5 +667,7 @@
   "text_leaderboard_upsell_footer": "升级为VIP，查看您在好友中的排名",
   "button_label_open_leaderboard": "打开关注排行榜",
   "text_leaderboard_free_section": "免费会员",
-  "preview_feature_description_leaderboard": "根据观看时长对您关注的人进行排名，查看您在他们中的位置。"
+  "preview_feature_description_leaderboard": "根据观看时长对您关注的人进行排名，查看您在他们中的位置。",
+  "delight_season_complete": "已看完",
+  "delight_all_caught_up": "已全部追完"
 }
