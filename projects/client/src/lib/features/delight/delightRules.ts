@@ -19,26 +19,6 @@ export function shouldFire({ onceKey, fired }: ShouldFireParams): boolean {
   return !fired.has(onceKey);
 }
 
-function hash(value: string): number {
-  return Array.from(value).reduce(
-    (acc, char) => Math.imul(acc ^ char.charCodeAt(0), 16777619) >>> 0,
-    2166136261,
-  );
-}
-
-type BucketParams<T extends string> = {
-  seed: string;
-  experiment: string;
-  variants: ReadonlyArray<T>;
-};
-
-export function bucketFor<T extends string>(
-  { seed, experiment, variants }: BucketParams<T>,
-): T {
-  const index = hash(`${experiment}:${seed}`) % variants.length;
-  return variants[index] as T;
-}
-
 type SeasonEpisode = { id: number; releaseDate: Date };
 
 type SeasonMilestoneParams = {

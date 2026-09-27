@@ -33,8 +33,8 @@
     }
     if (count === shownCount) return;
 
-    claim().then((variant) => {
-      if (!variant) return;
+    claim().then((isClaimed) => {
+      if (!isClaimed) return;
       shownCount = count;
     });
   });

@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import {
   activeBinge,
   bingeCount,
-  bucketFor,
   checkInSummary,
   crossedMilestone,
   easeOutCubic,
@@ -41,28 +40,6 @@ describe('shouldFire', () => {
     expect(shouldFire({ onceKey: 'finale:1', fired: new Set() })).toBe(true);
     expect(shouldFire({ onceKey: 'finale:1', fired: new Set(['finale:1']) }))
       .toBe(false);
-  });
-});
-
-describe('bucketFor', () => {
-  const variants = ['tomato', 'rain'] as const;
-
-  it('keeps a user in the same group', () => {
-    const first = bucketFor({ seed: 'sean', experiment: 'low', variants });
-    const second = bucketFor({ seed: 'sean', experiment: 'low', variants });
-
-    expect(first).toBe(second);
-  });
-
-  it('spreads users across every variant', () => {
-    const seen = new Set(
-      Array.from(
-        { length: 200 },
-        (_, i) => bucketFor({ seed: `user-${i}`, experiment: 'low', variants }),
-      ),
-    );
-
-    expect(seen).toEqual(new Set(variants));
   });
 });
 
