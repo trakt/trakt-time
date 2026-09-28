@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { languageTag } from '$lib/features/i18n/index.ts';
   import * as m from '$lib/paraglide/messages.js';
-  import { toHumanCurrency } from '$lib/utils/formatting/currency/toHumanCurrency.ts';
   import type { VipPlan } from './models/VipPlan.ts';
+  import { toVipPriceLabel } from './utils/toVipPriceLabel.ts';
 
   const {
     plan,
@@ -16,11 +15,8 @@
 
   const hasDiscount = $derived(plan.discount != null);
 
-  const formatCurrency = (price: number) =>
-    toHumanCurrency({ price, currency: 'usd', locale: languageTag() });
-
   const displayPrice = $derived(
-    formatCurrency(
+    toVipPriceLabel(
       plan.discount ? plan.discount.discountedAmountMonthly : plan.monthlyPrice,
     ),
   );
@@ -55,7 +51,7 @@
     </span>
     {#if hasDiscount}
       <span class="vip-plan-original-price">
-        {formatCurrency(plan.monthlyPrice)}/mo
+        {toVipPriceLabel(plan.monthlyPrice)}/mo
       </span>
     {/if}
     <span class="vip-plan-billed">{billedText}</span>
