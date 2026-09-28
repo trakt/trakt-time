@@ -13,6 +13,8 @@ import './sizing/index.css';
 import './layout/index.scss';
 import './layout/modes.scss';
 
+import './direction/index.css';
+
 import './transitions/index.css';
 
 import './theme/global.css';

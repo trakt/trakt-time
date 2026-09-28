@@ -1,0 +1,7 @@
+:root {
+  --rtl-sign: 1;
+}
+
+:root:dir(rtl) {
+  --rtl-sign: -1;
+}
