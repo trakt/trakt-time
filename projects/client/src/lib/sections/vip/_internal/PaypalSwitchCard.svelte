@@ -6,6 +6,7 @@
   import { useVip } from './useVip.ts';
   import { findTwoYearDealPlan } from './utils/findTwoYearDealPlan.ts';
   import { isPaypalGateway } from './utils/isPaypalGateway.ts';
+  import { toDealBilledLabel } from './utils/toDealBilledLabel.ts';
   import { toVipPriceLabel } from './utils/toVipPriceLabel.ts';
 
   const { subscription }: { subscription: VipSubscription | Nil } = $props();
@@ -31,7 +32,7 @@
           >
         </span>
         <span class="vip-paypal-switch-billed">
-          {m.text_vip_billed_biyearly()}
+          {toDealBilledLabel(dealPlan)}
         </span>
       {/if}
       <Button

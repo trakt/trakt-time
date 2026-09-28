@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "通过<b>{method}</b>退款<b>{amount}</b>",
   "text_vip_transaction_disputed": "对<b>{method}</b>收费提出异议",
   "text_vip_transaction_plan_changed": "更改了您的<b>{method}</b>套餐",
-  "text_vip_transaction_complimentary": "免费<b>VIP</b>会员资格"
+  "text_vip_transaction_complimentary": "免费<b>VIP</b>会员资格",
+  "tag_text_deal_price": "前两年",
+  "text_vip_billed_deal_first_term": "前两年 {price}，之后每两年 {renewalPrice}",
+  "header_vip_deal_welcome_back": "以 {price} 价格尊享两年 VIP",
+  "text_vip_deal_welcome_back": "首次支付 {price} 可享两年，之后每两年按 {renewalPrice} 自动续订。折扣将在结算时应用。",
+  "header_vip_deal_paypal_switch": "切换到银行卡。以 {price} 价格尊享两年 VIP",
+  "text_vip_deal_paypal_switch": "首次支付 {price} 可享两年，之后每两年按 {renewalPrice} 自动续订。折扣将在结算时应用。您将保留剩余的 VIP 时长；我们将在结算后自动取消 PayPal 订阅。"
 }

@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "Remboursé <b>{amount}</b> via <b>{method}</b>",
   "text_vip_transaction_disputed": "Contestation d'un frais <b>{method}</b>",
   "text_vip_transaction_plan_changed": "Modification de votre forfait <b>{method}</b>",
-  "text_vip_transaction_complimentary": "Abonnement <b>VIP</b> gratuit"
+  "text_vip_transaction_complimentary": "Abonnement <b>VIP</b> gratuit",
+  "tag_text_deal_price": "Les 2 premières années",
+  "text_vip_billed_deal_first_term": "{price} pour vos 2 premières années, puis {renewalPrice} tous les 2 ans",
+  "header_vip_deal_welcome_back": "Obtenez 2 ans de VIP pour {price}",
+  "text_vip_deal_welcome_back": "{price} à l'avance pour 2 ans, puis renouvellement automatique à {renewalPrice} tous les 2 ans. Rabais appliqué à la caisse.",
+  "header_vip_deal_paypal_switch": "Passez à la carte. Obtenez 2 ans de VIP pour {price}",
+  "text_vip_deal_paypal_switch": "{price} à l'avance pour 2 ans, puis renouvellement automatique à {renewalPrice} tous les 2 ans. Rabais appliqué à la caisse. Vous conservez votre temps VIP restant; nous annulerons automatiquement PayPal après le paiement."
 }

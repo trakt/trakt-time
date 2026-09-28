@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "Se reembolsaron <b>{amount}</b> vía <b>{method}</b>",
   "text_vip_transaction_disputed": "Se impugnó un cargo de <b>{method}</b>",
   "text_vip_transaction_plan_changed": "Se cambió tu plan de <b>{method}</b>",
-  "text_vip_transaction_complimentary": "Membresía <b>VIP</b> de cortesía"
+  "text_vip_transaction_complimentary": "Membresía <b>VIP</b> de cortesía",
+  "tag_text_deal_price": "Primeros 2 años",
+  "text_vip_billed_deal_first_term": "{price} para tus primeros 2 años, luego {renewalPrice} cada 2 años",
+  "header_vip_deal_welcome_back": "Obtén 2 años de VIP por {price}",
+  "text_vip_deal_welcome_back": "{price} por adelantado durante 2 años, luego se renueva automáticamente a {renewalPrice} cada 2 años. Descuento aplicado al finalizar la compra.",
+  "header_vip_deal_paypal_switch": "Cambia a tarjeta. Obtén 2 años de VIP por {price}",
+  "text_vip_deal_paypal_switch": "{price} por adelantado durante 2 años, luego se renueva automáticamente a {renewalPrice} cada 2 años. Descuento aplicado al finalizar la compra. Conservarás tu tiempo VIP restante; cancelaremos automáticamente PayPal después de la compra."
 }

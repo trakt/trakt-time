@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "<b>{amount}</b> terugbetaald via <b>{method}</b>",
   "text_vip_transaction_disputed": "Een <b>{method}</b>-afschrijving betwist",
   "text_vip_transaction_plan_changed": "Uw <b>{method}</b>-abonnement gewijzigd",
-  "text_vip_transaction_complimentary": "Gratis <b>VIP</b>-lidmaatschap"
+  "text_vip_transaction_complimentary": "Gratis <b>VIP</b>-lidmaatschap",
+  "tag_text_deal_price": "Eerste 2 jaar",
+  "text_vip_billed_deal_first_term": "{price} voor je eerste 2 jaar, daarna {renewalPrice} elke 2 jaar",
+  "header_vip_deal_welcome_back": "Ontvang 2 jaar VIP voor {price}",
+  "text_vip_deal_welcome_back": "{price} vooraf voor 2 jaar, daarna automatisch verlengd voor {renewalPrice} elke 2 jaar. Korting wordt toegepast bij het afrekenen.",
+  "header_vip_deal_paypal_switch": "Schakel over naar kaart. Ontvang 2 jaar VIP voor {price}",
+  "text_vip_deal_paypal_switch": "{price} vooraf voor 2 jaar, daarna automatisch verlengd voor {renewalPrice} elke 2 jaar. Korting wordt toegepast bij het afrekenen. Je behoudt je resterende VIP-tijd; we annuleren PayPal automatisch na het afrekenen."
 }

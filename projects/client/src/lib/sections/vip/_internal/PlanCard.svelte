@@ -1,17 +1,24 @@
 <script lang="ts">
   import * as m from '$lib/paraglide/messages.js';
   import type { VipPlan } from './models/VipPlan.ts';
+  import { isTwoYearDealPlan } from './utils/isTwoYearDealPlan.ts';
+  import { toDealBilledLabel } from './utils/toDealBilledLabel.ts';
   import { toVipPriceLabel } from './utils/toVipPriceLabel.ts';
 
   const {
     plan,
     disabled,
+    isRenewal,
     onSelect,
   }: {
     plan: VipPlan;
     disabled: boolean;
+    isRenewal: boolean;
     onSelect: (plan: VipPlan) => void;
   } = $props();
+
+  const dealPlan = $derived(isTwoYearDealPlan(plan) ? plan : null);
+  const isHighlighted = $derived(dealPlan != null || plan.isPopular);
 
   const hasDiscount = $derived(plan.discount != null);
 
@@ -22,6 +29,8 @@
   );
 
   const billedText = $derived.by(() => {
+    if (dealPlan) return toDealBilledLabel(dealPlan);
+
     switch (plan.type) {
       case 'monthly':
         return m.text_vip_billed_monthly();
@@ -36,12 +45,16 @@
 <button
   type="button"
   class="vip-plan-card"
-  class:is-popular={plan.isPopular}
+  class:is-popular={isHighlighted}
   {disabled}
   onclick={() => onSelect(plan)}
-  aria-label={m.button_label_vip_upgrade()}
+  aria-label={isRenewal
+    ? m.button_label_renew_vip()
+    : m.button_label_vip_upgrade()}
 >
-  {#if plan.isPopular}
+  {#if dealPlan}
+    <span class="vip-plan-popular-tag">{m.tag_text_deal_price()}</span>
+  {:else if plan.isPopular}
     <span class="vip-plan-popular-tag">{m.tag_text_most_popular()}</span>
   {/if}
 
@@ -57,7 +70,9 @@
     <span class="vip-plan-billed">{billedText}</span>
   </div>
 
-  <span class="vip-plan-upgrade-label">{m.button_text_vip_upgrade()}</span>
+  <span class="vip-plan-upgrade-label">
+    {isRenewal ? m.button_text_renew_vip() : m.button_text_vip_upgrade()}
+  </span>
 </button>
 
 <style lang="scss">

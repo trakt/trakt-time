@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "Zwrócono <b>{amount}</b> przez <b>{method}</b>",
   "text_vip_transaction_disputed": "Zakwestionowano opłatę <b>{method}</b>",
   "text_vip_transaction_plan_changed": "Zmieniono plan <b>{method}</b>",
-  "text_vip_transaction_complimentary": "Bezpłatne członkostwo <b>VIP</b>"
+  "text_vip_transaction_complimentary": "Bezpłatne członkostwo <b>VIP</b>",
+  "tag_text_deal_price": "Pierwsze 2 lata",
+  "text_vip_billed_deal_first_term": "{price} za pierwsze 2 lata, następnie {renewalPrice} co 2 lata",
+  "header_vip_deal_welcome_back": "Otrzymaj 2 lata VIP za {price}",
+  "text_vip_deal_welcome_back": "{price} z góry za 2 lata, następnie automatyczne odnowienie za {renewalPrice} co 2 lata. Zniżka zastosowana przy kasie.",
+  "header_vip_deal_paypal_switch": "Przełącz się na kartę. Otrzymaj 2 lata VIP za {price}",
+  "text_vip_deal_paypal_switch": "{price} z góry za 2 lata, następnie automatyczne odnowienie za {renewalPrice} co 2 lata. Zniżka zastosowana przy kasie. Zachowujesz pozostały czas VIP; automatycznie anulujemy PayPal po sfinalizowaniu zakupu."
 }
