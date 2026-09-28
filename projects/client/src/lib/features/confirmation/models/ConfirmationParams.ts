@@ -77,6 +77,7 @@ interface ConfirmationParamsMap {
   };
   [ConfirmationType.CancelVip]: {
     type: ConfirmationType.CancelVip;
+    renewsOn: string;
   };
   [ConfirmationType.CancelImport]: {
     type: ConfirmationType.CancelImport;

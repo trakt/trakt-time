@@ -136,7 +136,7 @@ export function mapToConfirmation<T extends ConfirmationType>(
     case ConfirmationType.CancelVip:
       return {
         buttonText: m.button_text_cancel_vip(),
-        message: m.warning_prompt_cancel_vip(),
+        message: m.warning_prompt_cancel_vip({ date: props.renewsOn }),
         operation: 'destructive',
       };
     case ConfirmationType.CancelImport:

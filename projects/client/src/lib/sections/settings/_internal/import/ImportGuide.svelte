@@ -3,7 +3,7 @@
     ImportNote,
     ImportSourceGuide,
   } from '../../import/ImportTypes.ts';
-  import { toLinkParts } from '../../import/toLinkParts.ts';
+  import { toLinkParts } from '$lib/utils/string/toLinkParts.ts';
 
   type ImportGuideProps = { guide: ImportSourceGuide };
 
