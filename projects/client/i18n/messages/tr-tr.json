@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "<b>{amount}</b> tutarı <b>{method}</b> aracılığıyla iade edildi",
   "text_vip_transaction_disputed": "Bir <b>{method}</b> ödemesine itiraz edildi",
   "text_vip_transaction_plan_changed": "<b>{method}</b> planınız değiştirildi",
-  "text_vip_transaction_complimentary": "Ücretsiz <b>VIP</b> üyeliği"
+  "text_vip_transaction_complimentary": "Ücretsiz <b>VIP</b> üyeliği",
+  "tag_text_deal_price": "İlk 2 Yıl",
+  "text_vip_billed_deal_first_term": "İlk 2 yılınız için {price}, ardından her 2 yılda bir {renewalPrice}",
+  "header_vip_deal_welcome_back": "{price} karşılığında 2 yıllık VIP edinin",
+  "text_vip_deal_welcome_back": "2 yıl için peşin {price}, ardından her 2 yılda bir {renewalPrice} olarak otomatik yenilenir. İndirim ödeme sırasında uygulanır.",
+  "header_vip_deal_paypal_switch": "Karta geçin. {price} karşılığında 2 yıllık VIP edinin",
+  "text_vip_deal_paypal_switch": "2 yıl için peşin {price}, ardından her 2 yılda bir {renewalPrice} olarak otomatik yenilenir. İndirim ödeme sırasında uygulanır. Kalan VIP sürenizi korursunuz; ödeme sonrası PayPal'ı otomatik olarak iptal ederiz."
 }

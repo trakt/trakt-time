@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "Refundert <b>{amount}</b> via <b>{method}</b>",
   "text_vip_transaction_disputed": "Bestred en <b>{method}</b>-belastning",
   "text_vip_transaction_plan_changed": "Endret din <b>{method}</b>-plan",
-  "text_vip_transaction_complimentary": "Kostnadsfritt <b>VIP</b>-medlemskap"
+  "text_vip_transaction_complimentary": "Kostnadsfritt <b>VIP</b>-medlemskap",
+  "tag_text_deal_price": "Første 2 år",
+  "text_vip_billed_deal_first_term": "{price} for dine første 2 år, deretter {renewalPrice} hvert 2. år",
+  "header_vip_deal_welcome_back": "Få 2 år med VIP for {price}",
+  "text_vip_deal_welcome_back": "{price} forskudd for 2 år, deretter fornyes automatisk til {renewalPrice} hvert 2. år. Rabatt anvendes i kassen.",
+  "header_vip_deal_paypal_switch": "Bytt til kort. Få 2 år med VIP for {price}",
+  "text_vip_deal_paypal_switch": "{price} forskudd for 2 år, deretter fornyes automatisk til {renewalPrice} hvert 2. år. Rabatt anvendes i kassen. Du beholder din resterende VIP-tid; vi kansellerer PayPal automatisk etter betaling."
 }

@@ -13,9 +13,8 @@
   const { isAuthorized, login } = useAuth();
   const { subscription, isLoading } = useVip();
 
-  const canResubscribe = $derived(
-    $subscription?.isCancelled || isPaypalGateway($subscription?.gateway),
-  );
+  const isPaypal = $derived(isPaypalGateway($subscription?.gateway));
+  const canResubscribe = $derived($subscription?.isCancelled || isPaypal);
 
   $effect(() => {
     if (!$isAuthorized || $isLoading || canResubscribe) return;
@@ -31,7 +30,7 @@
   {#if !$isAuthorized}
     <LoginGate {login} />
   {:else if !$isLoading && canResubscribe}
-    <VipSubscribe />
+    <VipSubscribe mode={isPaypal ? 'paypal-switch' : 'welcome-back'} />
   {/if}
 </div>
 

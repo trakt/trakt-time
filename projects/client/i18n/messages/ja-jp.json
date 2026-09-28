@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "<b>{method}</b>経由で<b>{amount}</b>が返金されました",
   "text_vip_transaction_disputed": "<b>{method}</b>の請求に対して異議が申し立てられました",
   "text_vip_transaction_plan_changed": "<b>{method}</b>プランが変更されました",
-  "text_vip_transaction_complimentary": "無料の<b>VIP</b>メンバーシップ"
+  "text_vip_transaction_complimentary": "無料の<b>VIP</b>メンバーシップ",
+  "tag_text_deal_price": "最初の2年間",
+  "text_vip_billed_deal_first_term": "最初の2年間は{price}、以降2年ごとに{renewalPrice}",
+  "header_vip_deal_welcome_back": "{price}で2年間VIP会員に",
+  "text_vip_deal_welcome_back": "{price}を2年間一括払い、以降2年ごとに{renewalPrice}で自動更新されます。割引は精算時に適用されます。",
+  "header_vip_deal_paypal_switch": "カード払いに変更。{price}で2年間VIP会員に",
+  "text_vip_deal_paypal_switch": "{price}を2年間一括払い、以降2年ごとに{renewalPrice}で自動更新されます。割引は精算時に適用されます。残り期間のVIPは継続され、PayPalは精算後に自動的にキャンセルされます。"
 }

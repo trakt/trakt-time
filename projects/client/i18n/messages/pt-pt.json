@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "Reembolso de <b>{amount}</b> através de <b>{method}</b>",
   "text_vip_transaction_disputed": "Contestaste uma cobrança por <b>{method}</b>",
   "text_vip_transaction_plan_changed": "Alteraste o teu plano <b>{method}</b>",
-  "text_vip_transaction_complimentary": "Subscrição <b>VIP</b> oferecida"
+  "text_vip_transaction_complimentary": "Subscrição <b>VIP</b> oferecida",
+  "tag_text_deal_price": "Primeiros 2 anos",
+  "text_vip_billed_deal_first_term": "{price} pelos primeiros 2 anos, depois {renewalPrice} a cada 2 anos",
+  "header_vip_deal_welcome_back": "Obtém 2 anos de VIP por {price}",
+  "text_vip_deal_welcome_back": "{price} a pagar de imediato por 2 anos. Depois, a subscrição renova-se automaticamente por {renewalPrice} a cada 2 anos. O desconto é aplicado no pagamento.",
+  "header_vip_deal_paypal_switch": "Muda para cartão. Obtém 2 anos de VIP por {price}",
+  "text_vip_deal_paypal_switch": "{price} a pagar de imediato por 2 anos. Depois, a subscrição renova-se automaticamente por {renewalPrice} a cada 2 anos. O desconto é aplicado no pagamento. Manténs o tempo de VIP que te resta; cancelamos automaticamente a subscrição do PayPal após o pagamento."
 }

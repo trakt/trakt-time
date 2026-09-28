@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "Відшкодовано <b>{amount}</b> через <b>{method}</b>",
   "text_vip_transaction_disputed": "Оскаржено списання через <b>{method}</b>",
   "text_vip_transaction_plan_changed": "Змінено ваш план через <b>{method}</b>",
-  "text_vip_transaction_complimentary": "Комплементарне <b>VIP</b> членство"
+  "text_vip_transaction_complimentary": "Комплементарне <b>VIP</b> членство",
+  "tag_text_deal_price": "Перші 2 роки",
+  "text_vip_billed_deal_first_term": "{price} за перші 2 роки, потім {renewalPrice} кожні 2 роки",
+  "header_vip_deal_welcome_back": "Отримайте 2 роки VIP за {price}",
+  "text_vip_deal_welcome_back": "{price} одразу за 2 роки, потім автоматичне поновлення за {renewalPrice} кожні 2 роки. Знижка застосовується при оформленні замовлення.",
+  "header_vip_deal_paypal_switch": "Перейдіть на картку. Отримайте 2 роки VIP за {price}",
+  "text_vip_deal_paypal_switch": "{price} одразу за 2 роки, потім автоматичне поновлення за {renewalPrice} кожні 2 роки. Знижка застосовується при оформленні замовлення. Ви зберігаєте свій залишковий VIP-час; ми автоматично скасовуємо PayPal після оформлення замовлення."
 }

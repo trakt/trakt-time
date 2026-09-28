@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "S-a rambursat <b>{amount}</b> prin <b>{method}</b>",
   "text_vip_transaction_disputed": "S-a contestat o plată prin <b>{method}</b>",
   "text_vip_transaction_plan_changed": "Ți-ai schimbat planul prin <b>{method}</b>",
-  "text_vip_transaction_complimentary": "Abonament <b>VIP</b> complementar"
+  "text_vip_transaction_complimentary": "Abonament <b>VIP</b> complementar",
+  "tag_text_deal_price": "Primii 2 ani",
+  "text_vip_billed_deal_first_term": "{price} pentru primii 2 ani, apoi {renewalPrice} la fiecare 2 ani",
+  "header_vip_deal_welcome_back": "Primește 2 ani de VIP pentru {price}",
+  "text_vip_deal_welcome_back": "{price} în avans pentru 2 ani, apoi se reînnoiește automat la {renewalPrice} la fiecare 2 ani. Reducere aplicată la finalizarea comenzii.",
+  "header_vip_deal_paypal_switch": "Treci la card. Primește 2 ani de VIP pentru {price}",
+  "text_vip_deal_paypal_switch": "{price} în avans pentru 2 ani, apoi se reînnoiește automat la {renewalPrice} la fiecare 2 ani. Reducere aplicată la finalizarea comenzii. Îți păstrezi timpul VIP rămas; anulăm automat PayPal după finalizarea comenzii."
 }

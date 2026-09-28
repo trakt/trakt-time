@@ -705,5 +705,11 @@
   "text_vip_transaction_refunded": "Refunded <b>{amount}</b> via <b>{method}</b>",
   "text_vip_transaction_disputed": "Disputed a <b>{method}</b> charge",
   "text_vip_transaction_plan_changed": "Changed your <b>{method}</b> plan",
-  "text_vip_transaction_complimentary": "Complimentary <b>VIP</b> membership"
+  "text_vip_transaction_complimentary": "Complimentary <b>VIP</b> membership",
+  "tag_text_deal_price": "First 2 Years",
+  "text_vip_billed_deal_first_term": "{price} for your first 2 years, then {renewalPrice} every 2 years",
+  "header_vip_deal_welcome_back": "Get 2 years of VIP for {price}",
+  "text_vip_deal_welcome_back": "{price} upfront for 2 years, then auto-renews at {renewalPrice} every 2 years. Discount applied at checkout.",
+  "header_vip_deal_paypal_switch": "Switch to card. Get 2 years of VIP for {price}",
+  "text_vip_deal_paypal_switch": "{price} upfront for 2 years, then auto-renews at {renewalPrice} every 2 years. Discount applied at checkout. You keep your remaining VIP time; we automatically cancel PayPal after checkout."
 }
