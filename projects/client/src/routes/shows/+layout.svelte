@@ -1,17 +1,32 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
   import { page } from '$app/state';
   import * as m from '$lib/paraglide/messages.js';
+  import { provideSectionHeader } from '$lib/sections/lists/upcoming/sectionHeaderContext.svelte.ts';
 
   const { children }: ChildrenProps = $props();
+
+  const sectionHeader = provideSectionHeader();
 
   const activeTab = $derived(
     page.url.pathname.includes('upcoming') ? 'upcoming' : 'watchlist',
   );
 </script>
 
-<div class="shows-layout">
-  <nav class="segmented-tabs" aria-label={m.button_label_shows_navigation()}>
-    <h1 class="segmented-tabs-title">{m.page_title_shows()}</h1>
+<div
+  class="shows-layout"
+  style:--trakttime-segmented-tabs-height="{sectionHeader.height}px"
+>
+  <nav
+    class="segmented-tabs"
+    aria-label={m.button_label_shows_navigation()}
+    bind:clientHeight={sectionHeader.height}
+  >
+    {#key sectionHeader.title}
+      <h1 class="segmented-tabs-title" in:fade={{ duration: 150 }}>
+        {sectionHeader.title ?? m.page_title_shows()}
+      </h1>
+    {/key}
     <div class="segmented-tabs-list">
       <a
         href="/shows/watchlist"

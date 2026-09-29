@@ -3,6 +3,8 @@
   import { languageTag } from '$lib/features/i18n/index.ts';
   import * as m from '$lib/paraglide/messages.js';
   import type { Snippet } from 'svelte';
+  import { useSectionHeader } from './sectionHeaderContext.svelte.ts';
+  import { trackWeekTitle } from './trackWeekTitle.ts';
   import { toUpcomingWeeks, type UpcomingWeek } from './toUpcomingWeeks.ts';
   import {
     toUpcomingDateLabel,
@@ -23,6 +25,8 @@
   const locale = languageTag();
   const today = new Date();
 
+  const sectionHeader = useSectionHeader();
+
   const weeks = $derived(toUpcomingWeeks({ items, toDayKey, today }));
 
   function toWeekTitle(week: UpcomingWeek<T>): string {
@@ -37,10 +41,10 @@
   }
 </script>
 
-<div class="upcoming-board">
+<div class="upcoming-board" use:trackWeekTitle={sectionHeader}>
   {#each weeks as week (week.index)}
     <section class="upcoming-week">
-      <h2 class="upcoming-week-title">{toWeekTitle(week)}</h2>
+      <h2 class="upcoming-week-title" data-week-title>{toWeekTitle(week)}</h2>
       <div class="upcoming-week-days">
         {#each week.days as day (day.key)}
           <div
@@ -146,12 +150,16 @@
     }
 
     .upcoming-day-header {
+      position: sticky;
+      top: var(--trakttime-segmented-tabs-height);
+      z-index: var(--layer-raised);
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       gap: var(--gap-xxs);
       margin: 0;
-      padding-bottom: var(--gap-xs);
+      padding-block: var(--gap-xs);
+      background-color: var(--color-background);
       border-bottom: var(--ni-1) solid var(--color-border);
       font-size: 0.875rem;
       font-weight: 700;
