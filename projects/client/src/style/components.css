@@ -261,6 +261,7 @@ p.media-row-meta {
 @media (min-width: 1024px) {
   .segmented-tabs {
     justify-content: flex-start;
+    background: var(--color-background);
     padding-block: var(--gap-l) var(--gap-s);
   }
 

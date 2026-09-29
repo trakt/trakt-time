@@ -92,6 +92,7 @@ module.exports = {
         'transition',
         'trending',
         'treeshake',
+        'upcoming',
         'url',
         'user',
         'watched',
