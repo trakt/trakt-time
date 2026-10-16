@@ -8,6 +8,7 @@
     type MarkAsWatchedStoreProps,
     useMarkAsWatched,
   } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
+  import MediaReactionsBadge from '$lib/features/media-reactions/MediaReactionsBadge.svelte';
   import RateStars from '$lib/sections/summary/components/rating/RateStars.svelte';
   import { useWatchlist } from '$lib/sections/media-actions/watchlist/useWatchlist.ts';
   import { useDropShow } from '$lib/sections/media-actions/drop/useDropShow.ts';
@@ -169,7 +170,13 @@
 
       {#if isRateable}
         <section class="sheet-section">
-          <RateStars {type} {id} isLocked={!$hasWatched} />
+          <RateStars {type} {id} isLocked={!$hasWatched}>
+            {#snippet trailing()}
+              {#key `${type}:${slug}`}
+                <MediaReactionsBadge {type} {slug} {id} variant="compact" />
+              {/key}
+            {/snippet}
+          </RateStars>
         </section>
       {/if}
 
