@@ -1,19 +1,53 @@
 <script lang="ts">
+  import SegmentedControl from '$lib/components/segmented-control/SegmentedControl.svelte';
   import CrossOriginImage from '$lib/features/image/components/CrossOriginImage.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { CastMember } from '$lib/requests/models/MediaCrew.ts';
+  import type { CastGroupType } from './CastGroup.ts';
+  import { toActiveCastGroupType, toCastGroups } from './toCastGroups.ts';
 
   type Props = {
     cast: ReadonlyArray<CastMember>;
+    guestStars?: ReadonlyArray<CastMember>;
     isLoading: boolean;
     emptyMessage?: string;
   };
 
-  const { cast, isLoading, emptyMessage }: Props = $props();
+  const { cast, guestStars, isLoading, emptyMessage }: Props = $props();
+
+  let selected = $state<CastGroupType>('main');
+
+  const groups = $derived(toCastGroups({ cast, guestStars: guestStars ?? [] }));
+  const activeType = $derived(toActiveCastGroupType({ groups, selected }));
+  const members = $derived(
+    groups.find((group) => group.type === activeType)?.members ?? [],
+  );
+
+  const labels: Record<CastGroupType, () => string> = {
+    main: m.header_main_cast,
+    supporting: m.header_supporting_cast,
+  };
+
+  const options = $derived(
+    groups.map((group) => ({
+      value: group.type,
+      label: labels[group.type](),
+    })),
+  );
 </script>
 
 <section class="media-section">
-  <h2 class="summary-section-title">{m.header_cast()}</h2>
+  <div class="cast-header" data-reserve={guestStars !== undefined}>
+    <h2 class="summary-section-title">{m.header_cast()}</h2>
+    {#if options.length > 1}
+      <SegmentedControl
+        label={m.header_cast()}
+        value={activeType}
+        {options}
+        onChange={(value) => (selected = value)}
+      />
+    {/if}
+  </div>
   {#if isLoading && cast.length === 0}
     <div class="cast-row" aria-hidden="true">
       {#each Array(6) as _, i (`csk-${i}`)}
@@ -24,27 +58,29 @@
         </div>
       {/each}
     </div>
-  {:else if cast.length > 0}
-    <div class="cast-row" role="list">
-      {#each cast as member, i (`${member.key}-${i}`)}
-        <a href="/people/{member.key}" class="cast-member">
-          <div class="cast-avatar">
-            {#if member.headshot.url.medium}
-              <CrossOriginImage
-                src={member.headshot.url.medium}
-                alt={member.name}
-              />
-            {:else}
-              <div class="cast-avatar-placeholder">
-                {member.name.charAt(0)}
-              </div>
-            {/if}
-          </div>
-          <p class="cast-name">{member.name}</p>
-          <p class="cast-character">{member.characterName}</p>
-        </a>
-      {/each}
-    </div>
+  {:else if members.length > 0}
+    {#key activeType}
+      <div class="cast-row" role="list">
+        {#each members as member, i (`${member.key}-${i}`)}
+          <a href="/people/{member.key}" class="cast-member">
+            <div class="cast-avatar">
+              {#if member.headshot.url.medium}
+                <CrossOriginImage
+                  src={member.headshot.url.medium}
+                  alt={member.name}
+                />
+              {:else}
+                <div class="cast-avatar-placeholder">
+                  {member.name.charAt(0)}
+                </div>
+              {/if}
+            </div>
+            <p class="cast-name">{member.name}</p>
+            <p class="cast-character">{member.characterName}</p>
+          </a>
+        {/each}
+      </div>
+    {/key}
   {:else if emptyMessage}
     <p class="cast-empty">{emptyMessage}</p>
   {/if}
@@ -57,6 +93,17 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-s);
+  }
+
+  .cast-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-s);
+
+    &[data-reserve='true'] {
+      min-height: var(--ni-40);
+    }
   }
 
   .cast-row {
