@@ -1,4 +1,12 @@
-import type { WatchTimePart } from './toWatchTime.ts';
+import { toUnitFormatter } from '$lib/utils/formatting/number/toUnitFormatter.ts';
+import type { WatchTimePart, WatchTimeUnit } from './toWatchTime.ts';
+
+const FALLBACK_UNIT_SUFFIX: Record<WatchTimeUnit, string> = {
+  year: 'y',
+  month: 'mo',
+  day: 'd',
+  hour: 'h',
+};
 
 type UnitLabelParts = {
   value: string;
@@ -34,11 +42,12 @@ export function toShortWatchTime(
   return parts
     .slice(0, 2)
     .map(({ unit, value }) =>
-      new Intl.NumberFormat(locale, {
-        style: 'unit',
+      toUnitFormatter({
+        locale,
         unit,
-        unitDisplay: 'narrow',
-      }).format(value)
+        suffix: FALLBACK_UNIT_SUFFIX[unit],
+        options: { unitDisplay: 'narrow' },
+      })(value)
     )
     .join(' ');
 }
