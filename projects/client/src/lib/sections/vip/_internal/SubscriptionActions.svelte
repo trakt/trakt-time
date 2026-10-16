@@ -11,6 +11,8 @@
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import { useVip } from './useVip.ts';
 
+  type SubscriptionFailure = 'missing' | 'manage' | 'cancel';
+
   const { subscription }: { subscription: VipSubscription } = $props();
 
   const { user } = useUser();
@@ -18,26 +20,53 @@
 
   const isStripe = $derived(subscription.gateway === 'stripe');
 
-  let isMissingSubscription = $state(false);
+  let failure = $state<SubscriptionFailure | null>(null);
 
-  const missingMessage = $derived(
-    toLinkParts(m.text_vip_subscription_missing_message()),
-  );
+  function toFailureCopy(kind: SubscriptionFailure | null) {
+    if (kind === 'missing') {
+      return {
+        title: m.text_vip_subscription_missing_title(),
+        message: m.text_vip_subscription_missing_message(),
+      };
+    }
+
+    return {
+      title: kind === 'manage'
+        ? m.text_vip_manage_failed_title()
+        : m.text_vip_cancel_failed_title(),
+      message: m.text_vip_subscription_failed_message(),
+    };
+  }
+
+  const failureCopy = $derived(toFailureCopy(failure));
+  const failureMessage = $derived(toLinkParts(failureCopy.message));
+
+  async function reportFailure<T>(
+    request: () => Promise<T>,
+    kind: SubscriptionFailure,
+  ): Promise<T> {
+    try {
+      return await request();
+    } catch (error) {
+      failure = kind;
+      throw error;
+    }
+  }
 
   const onManage = async () => {
-    const result = await manageSubscription();
+    const result = await reportFailure(manageSubscription, 'manage');
 
     if (result.kind === 'redirect') {
       globalThis.window.location.href = result.url;
       return;
     }
 
-    isMissingSubscription = result.kind === 'missing-subscription';
+    failure = result.kind === 'missing-subscription' ? 'missing' : 'manage';
   };
 
   const onCancel = async () => {
-    const isCancelled = await cancelSubscription();
-    isMissingSubscription = !isCancelled;
+    const isCancelled = await reportFailure(cancelSubscription, 'cancel');
+    failure = isCancelled ? null : 'missing';
   };
 
   const renewsOn = $derived(
@@ -108,15 +137,15 @@
   {/if}
 </div>
 
-{#if isMissingSubscription}
-  <div class="vip-subscription-missing" role="alert">
-    <strong>{m.text_vip_subscription_missing_title()}</strong>
+{#if failure}
+  <div class="vip-subscription-failure" role="alert">
+    <strong>{failureCopy.title}</strong>
     <p>
-      {missingMessage.before}{#if missingMessage.label}<a
+      {failureMessage.before}{#if failureMessage.label}<a
           href={UrlBuilder.og.support($user.slug)}
           target="_blank"
-          rel="noopener noreferrer">{missingMessage.label}</a
-        >{/if}{missingMessage.after}
+          rel="noopener noreferrer">{failureMessage.label}</a
+        >{/if}{failureMessage.after}
     </p>
   </div>
 {/if}
@@ -128,7 +157,7 @@
     gap: var(--gap-s);
   }
 
-  .vip-subscription-missing {
+  .vip-subscription-failure {
     display: flex;
     flex-direction: column;
     gap: var(--gap-xxs);
