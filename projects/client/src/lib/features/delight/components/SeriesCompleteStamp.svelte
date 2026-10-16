@@ -7,6 +7,7 @@
     type MarkAsWatchedStoreProps,
     useMarkAsWatched,
   } from "$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts";
+  import { toUnitFormatter } from "$lib/utils/formatting/number/toUnitFormatter.ts";
   import { hasEnded } from "$lib/utils/media/hasEnded.ts";
   import { vibrate } from "../_internal/motion.ts";
   import { isSeriesFinale } from "../delightRules.ts";
@@ -41,11 +42,12 @@
   const totals = $derived(
     [
       m.tag_text_number_of_episodes({ count: episodeCount }),
-      new Intl.NumberFormat(getLocale(), {
-        style: "unit",
+      toUnitFormatter({
+        locale: getLocale(),
         unit: "hour",
-        unitDisplay: "long",
-      }).format(Math.round(totalRuntime / 60)),
+        suffix: "h",
+        options: { unitDisplay: "long" },
+      })(Math.round(totalRuntime / 60)),
     ].join(" · "),
   );
 
