@@ -25,6 +25,9 @@
           <div class="summary-skeleton-line summary-skeleton-line--badge"></div>
         {/if}
         <div class="summary-skeleton-line summary-skeleton-line--rating"></div>
+        {#if variant !== 'episode'}
+          <div class="summary-skeleton-line summary-skeleton-line--reactions"></div>
+        {/if}
       </div>
     </div>
 
@@ -106,6 +109,13 @@
       width: 45%;
       height: 1.0625rem;
       animation-delay: 0.15s;
+    }
+
+    &--reactions {
+      width: var(--ni-96);
+      height: var(--ni-36);
+      border-radius: var(--trakttime-radius-pill);
+      animation-delay: 0.2s;
     }
 
     &--actions {
