@@ -4,6 +4,7 @@
   import AccountCard from '$lib/sections/settings/_internal/AccountCard.svelte';
   import Appearance from '$lib/sections/settings/_internal/Appearance.svelte';
   import EmailSettings from '$lib/sections/settings/_internal/EmailSettings.svelte';
+  import PasskeyRow from '$lib/sections/settings/_internal/PasskeyRow.svelte';
   import SettingsBlock from '$lib/sections/settings/_internal/SettingsBlock.svelte';
   import SettingsNav from '$lib/sections/settings/_internal/SettingsNav.svelte';
   import SettingsRow from '$lib/sections/settings/_internal/SettingsRow.svelte';
@@ -52,6 +53,7 @@
         </SettingsRow>
       </SettingsBlock>
       <SettingsBlock id="account" title={m.header_account()}>
+        <PasskeyRow />
         <LogoutButton style="row" />
       </SettingsBlock>
     </div>
