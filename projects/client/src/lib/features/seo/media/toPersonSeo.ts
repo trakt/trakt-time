@@ -1,4 +1,5 @@
 import type { PersonSummary } from '$lib/requests/models/PersonSummary.ts';
+import { stripMarkdownLinks } from '$lib/utils/markdown/stripMarkdownLinks.ts';
 import { toPersonJsonLd } from '../json-ld/toPersonJsonLd.ts';
 import type { SeoMeta } from '../models/SeoMeta.ts';
 import { toSeoDescription } from '../toSeoDescription.ts';
@@ -11,7 +12,7 @@ type PersonSeoParams = {
 export function toPersonSeo({ person, url }: PersonSeoParams): SeoMeta {
   if (!person) return { type: 'profile' };
 
-  const description = toSeoDescription(person.biography);
+  const description = toSeoDescription(stripMarkdownLinks(person.biography));
 
   return {
     title: person.name,
