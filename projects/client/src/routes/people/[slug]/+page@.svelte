@@ -6,6 +6,7 @@
   import BackBar from '$lib/components/back-bar/BackBar.svelte';
   import CrossOriginImage from '$lib/features/image/components/CrossOriginImage.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
+  import InlineMarkdown from '$lib/components/markdown/InlineMarkdown.svelte';
   import PosterSkeleton from '$lib/components/poster-card/PosterSkeleton.svelte';
   import { useQuery } from '$lib/features/query/useQuery.ts';
   import { peopleSummaryQuery } from '$lib/requests/queries/people/peopleSummaryQuery.ts';
@@ -95,7 +96,7 @@
       {#if person.biography}
         <section class="person-section">
           <h2 class="section-title">{m.header_biography()}</h2>
-          <p class="biography">{person.biography}</p>
+          <p class="biography"><InlineMarkdown text={person.biography} /></p>
         </section>
       {/if}
 
