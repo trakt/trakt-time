@@ -258,11 +258,24 @@ p.media-row-meta {
   font-weight: 800;
 }
 
+.segmented-tabs-action {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--trakttime-page-gutter);
+  display: flex;
+  align-items: center;
+}
+
 @media (min-width: 1024px) {
   .segmented-tabs {
     justify-content: flex-start;
     background: var(--color-background);
     padding-block: var(--gap-l) var(--gap-s);
+  }
+
+  .segmented-tabs-action {
+    position: static;
+    margin-inline-start: auto;
   }
 
   .segmented-tabs-title {

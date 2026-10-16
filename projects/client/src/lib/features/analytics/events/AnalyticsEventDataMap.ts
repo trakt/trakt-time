@@ -29,6 +29,7 @@ type ReactionType = {
   type: 'comment' | MediaType;
 };
 type CalendarType = { action: 'reset' | 'next' | 'previous' };
+type CalendarFeedType = { action: 'subscribe' | 'copy'; mode: DiscoverMode };
 type StreamOnType = SourceType;
 type CtaDataType = { type: CtaType };
 type DrilldownType = SourceType & { type?: string };
@@ -105,6 +106,7 @@ export type AnalyticsEventDataMap = {
   [AnalyticsEvent.ListLike]: LikeType;
 
   [AnalyticsEvent.CalendarPeriod]: CalendarType;
+  [AnalyticsEvent.CalendarFeed]: CalendarFeedType;
 
   [AnalyticsEvent.SeasonalFilter]: SeasonalFilterType;
 
