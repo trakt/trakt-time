@@ -1,4 +1,5 @@
 import { defineQuery } from '$lib/features/query/defineQuery.ts';
+import { getPeopleExtended } from '$lib/requests/_internal/getPeopleExtended.ts';
 import { mapToMediaCrew } from '$lib/requests/_internal/mapToMediaCrew.ts';
 import { api, type ApiParams } from '$lib/requests/api.ts';
 import { MediaCrewSchema } from '$lib/requests/models/MediaCrew.ts';
@@ -8,10 +9,11 @@ type EpisodePeopleParams = {
   slug: string;
   season: number;
   episode: number;
+  guestStars?: boolean;
 } & ApiParams;
 
 const episodePeopleRequest = (
-  { fetch, slug, season, episode }: EpisodePeopleParams,
+  { fetch, slug, season, episode, guestStars = false }: EpisodePeopleParams,
 ) =>
   api({ fetch })
     .shows
@@ -23,14 +25,16 @@ const episodePeopleRequest = (
         episode,
       },
       query: {
-        extended: 'images',
+        extended: getPeopleExtended(guestStars),
       },
     });
 
 export const episodePeopleQuery = defineQuery({
   key: 'episodePeople',
   invalidations: [],
-  dependencies: (params) => [params.slug, params.season, params.episode],
+  dependencies: (
+    params,
+  ) => [params.slug, params.season, params.episode, params.guestStars ?? false],
   request: episodePeopleRequest,
   mapper: (response) => mapToMediaCrew(response.body),
   schema: MediaCrewSchema,
