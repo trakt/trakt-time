@@ -3,6 +3,7 @@
 
   import CoverImage from "$lib/components/background/CoverImage.svelte";
   import CoverProvider from "$lib/components/background/CoverProvider.svelte";
+  import ActionToastHost from "$lib/features/action-toast/ActionToastHost.svelte";
   import AuthProvider from "$lib/features/auth/components/AuthProvider.svelte";
   import { markAppReady } from "$lib/features/boot-loader/markAppReady.ts";
   import BotProvider from "$lib/features/bot-verification/BotProvider.svelte";
@@ -160,6 +161,7 @@
                                 <RenderFor audience="authenticated">
                                   <NavbarToastContent />
                                 </RenderFor>
+                                <ActionToastHost />
                                 <QueryDevtools
                                   client={data.queryClient}
                                   buttonPosition="bottom-right"
