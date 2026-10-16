@@ -1,7 +1,13 @@
 import type { ExtendedMediaType } from './ExtendedMediaType.ts';
 import type { MediaType } from './MediaType.ts';
 
-type UserType = 'avatar' | 'settings' | 'follow' | 'cover' | 'block';
+type UserType =
+  | 'avatar'
+  | 'settings'
+  | 'follow'
+  | 'cover'
+  | 'block'
+  | 'email_settings';
 type ListType = 'edited' | 'deleted' | 'created' | 'like';
 type VipType = 'canceled' | 'updated';
 
@@ -97,6 +103,7 @@ export const InvalidateAction = {
     Settings: buildInvalidationKey('user', 'settings'),
     Follow: buildInvalidationKey('user', 'follow'),
     Block: buildInvalidationKey('user', 'block'),
+    EmailSettings: buildInvalidationKey('user', 'email_settings'),
   },
 
   CheckIn: buildInvalidationKey('check_in'),
