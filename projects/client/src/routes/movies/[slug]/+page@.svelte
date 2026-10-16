@@ -25,6 +25,7 @@
   import MediaCoverHero from '$lib/sections/summary/_internal/MediaCoverHero.svelte';
   import MediaGenres from '$lib/sections/summary/_internal/MediaGenres.svelte';
   import MediaRating from '$lib/sections/summary/_internal/MediaRating.svelte';
+  import MediaReactionsRow from '$lib/sections/summary/_internal/MediaReactionsRow.svelte';
   import SummarySkeleton from '$lib/sections/summary/_internal/SummarySkeleton.svelte';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import PosterCard from '$lib/components/poster-card/PosterCard.svelte';
@@ -184,6 +185,7 @@
             {#if ratingScore}
               <MediaRating score={ratingScore} />
             {/if}
+            <MediaReactionsRow type="movie" {slug} id={movie.id} />
           </div>
         </div>
 
