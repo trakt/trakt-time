@@ -1,3 +1,4 @@
+import { toLocalMarkdownLinks } from '$lib/utils/markdown/toLocalMarkdownLinks.ts';
 import { parseLocalDate } from '$lib/utils/date/parseLocalDate.ts';
 import type { PersonResponse } from '@trakt/api';
 import { crewPositionSchema } from '../models/CrewPosition.ts';
@@ -14,7 +15,7 @@ export const mapToPersonSummary = (
     slug: response.ids.slug,
     imdb: response.ids.imdb,
     name: response.name,
-    biography: response.biography ?? '',
+    biography: toLocalMarkdownLinks(response.biography ?? ''),
     knownFor:
       crewPositionSchema.safeParse(response.known_for_department).data ?? null,
     headshot: mapToHeadshot(response.images),

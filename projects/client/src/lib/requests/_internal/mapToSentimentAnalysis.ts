@@ -1,3 +1,4 @@
+import { toLocalMarkdownLinks } from '$lib/utils/markdown/toLocalMarkdownLinks.ts';
 import type { SentimentAnalysis } from '../models/SentimentAnalysis.ts';
 import type { SentimentResponse } from '../models/SentimentResponse.ts';
 
@@ -13,8 +14,8 @@ export function mapToSentimentAnalysis(
   }
 
   return {
-    analysis: response?.analysis ?? '',
-    highlight: response?.highlight ?? '',
+    analysis: toLocalMarkdownLinks(response.analysis ?? ''),
+    highlight: toLocalMarkdownLinks(response.highlight ?? ''),
     aspect: {
       pros: response.aspect.pros.map((item) => appendDot(item.theme)),
       cons: response.aspect.cons.map((item) => appendDot(item.theme)),

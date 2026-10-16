@@ -1,3 +1,4 @@
+import { toLocalMarkdownLinks } from '$lib/utils/markdown/toLocalMarkdownLinks.ts';
 import type { MediaTrivia } from '../models/MediaTrivia.ts';
 import type { TriviaResponse } from '../models/TriviaResponse.ts';
 
@@ -11,7 +12,7 @@ export function mapToTrivia(
 
   return {
     key,
-    text: response.text,
+    text: toLocalMarkdownLinks(response.text),
     isSpoiler: response.spoiler,
     category: response.category,
   };

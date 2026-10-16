@@ -11,7 +11,7 @@ const showSentimentRequest = async (
   { fetch, slug }: ShowSentimentParams,
 ) => {
   const response = await rawApiFetch(
-    { fetch, path: `/v3/media/show/${slug}/info/0/version/1` },
+    { fetch, path: `/v3/media/show/${slug}/info/0/version/2` },
   );
 
   return response.ok
@@ -23,7 +23,7 @@ const showSentimentRequest = async (
 };
 
 export const showSentimentQuery = defineQuery({
-  key: 'showSentiment',
+  key: 'showSentiment:v2',
   invalidations: [],
   dependencies: (params) => [params.slug],
   request: showSentimentRequest,

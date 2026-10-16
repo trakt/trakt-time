@@ -1,5 +1,6 @@
 import { defineQuery } from '$lib/features/query/defineQuery.ts';
 import { type ApiParams, rawApiFetch } from '$lib/requests/api.ts';
+import { toLocalMarkdownLinks } from '$lib/utils/markdown/toLocalMarkdownLinks.ts';
 import { time } from '$lib/utils/timing/time.ts';
 import z from 'zod';
 import { mapToTrivia } from '../../_internal/mapToTrivia.ts';
@@ -12,7 +13,7 @@ const showTriviaRequest = async (
   { fetch, slug }: ShowTriviaParams,
 ) => {
   const response = await rawApiFetch(
-    { fetch, path: `/v3/media/show/${slug}/info/5/version/1` },
+    { fetch, path: `/v3/media/show/${slug}/info/5/version/2` },
   );
 
   const body = response.ok ? await response.json() : { summary: [], items: [] };
@@ -24,7 +25,7 @@ const showTriviaRequest = async (
 };
 
 export const showTriviaQuery = defineQuery({
-  key: 'showTrivia',
+  key: 'showTrivia:v2',
   invalidations: [],
   dependencies: (params) => [params.slug],
   request: showTriviaRequest,
@@ -32,7 +33,7 @@ export const showTriviaQuery = defineQuery({
     items: response.body.items.map((entry) =>
       mapToTrivia('show_trivia', entry)
     ),
-    summary: response.body.summary,
+    summary: response.body.summary.map(toLocalMarkdownLinks),
   }),
   schema: z.object({
     items: MediaTriviaSchema.array(),
