@@ -134,7 +134,7 @@ export function usePostComment() {
       isCommenting.next(false);
 
       if (!isHttpError(commentError)) {
-        throw error;
+        throw commentError;
       }
 
       error.next(mapToCommentError(commentError.status));
