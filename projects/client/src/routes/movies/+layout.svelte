@@ -1,6 +1,8 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import { page } from '$app/state';
+  import CalendarFeedMenu from '$lib/features/calendar/CalendarFeedMenu.svelte';
+  import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import { provideSectionHeader } from '$lib/sections/lists/upcoming/sectionHeaderContext.svelte.ts';
 
@@ -45,6 +47,13 @@
         {m.tab_label_upcoming()}
       </a>
     </div>
+    {#if activeTab === 'upcoming'}
+      <RenderFor audience="vip">
+        <div class="segmented-tabs-action">
+          <CalendarFeedMenu mode="movie" />
+        </div>
+      </RenderFor>
+    {/if}
   </nav>
 
   <div class="tab-content">

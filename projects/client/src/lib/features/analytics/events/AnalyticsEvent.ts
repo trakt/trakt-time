@@ -64,6 +64,7 @@ export const AnalyticsEvent = {
   ListLike: buildEventKey(LIST_ACTION_PREFIX, 'like'),
 
   CalendarPeriod: buildEventKey(CALENDAR_ACTION_PREFIX, 'period'),
+  CalendarFeed: buildEventKey(CALENDAR_ACTION_PREFIX, 'feed'),
 
   SeasonalFilter: buildEventKey(SEASONAL_ACTION_PREFIX, 'filter'),
 
