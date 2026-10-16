@@ -1,0 +1,17 @@
+type ToTopReactionsParams<T extends string> = {
+  distribution: Partial<Record<T, number>>;
+  reactions: ReadonlyArray<T>;
+};
+
+const PREVIEW_LIMIT = 3;
+
+export function toTopReactions<T extends string>(
+  { distribution, reactions }: ToTopReactionsParams<T>,
+): ReadonlyArray<T> {
+  const countOf = (reaction: T) => distribution[reaction] ?? 0;
+
+  return reactions
+    .filter((reaction) => countOf(reaction) > 0)
+    .toSorted((a, b) => countOf(b) - countOf(a))
+    .slice(0, PREVIEW_LIMIT);
+}
