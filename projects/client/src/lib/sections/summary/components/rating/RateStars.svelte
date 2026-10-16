@@ -10,15 +10,17 @@
   import type { ExtendedMediaType } from '$lib/requests/models/ExtendedMediaType.ts';
   import { formatStars, STAR_COUNT, toStarsFromUserRating } from '$lib/utils/rating/toStars.ts';
   import { RatingGroup } from 'bits-ui';
+  import type { Snippet } from 'svelte';
   import { useRatings } from './useRatings.ts';
 
   type Props = {
     type: ExtendedMediaType;
     id: number;
     isLocked: boolean;
+    trailing?: Snippet;
   };
 
-  const { type, id, isLocked }: Props = $props();
+  const { type, id, isLocked, trailing }: Props = $props();
 
   const { pendingRating, isSubmitting, current, addRating, removeRating } =
     $derived(useRatings({ type, id }));
@@ -82,34 +84,44 @@
       <span class="rate-stars-hint">{m.text_rate_after_watching()}</span>
     {/if}
   </div>
-  <RatingGroup.Root
-    class="rate-stars-row"
-    value={stars}
-    onValueChange={onRatingChange}
-    allowHalf
-    max={STAR_COUNT}
-    disabled={$isSubmitting || isLocked}
-  >
-    {#snippet children({ items })}
-      {#each items as item (item.index)}
-        <RatingGroup.Item index={item.index} class="rate-star">
-          <StarIcon
-            fill={item.state === 'active'
-              ? 'full'
-              : item.state === 'partial'
-              ? 'half'
-              : 'none'}
-          />
-        </RatingGroup.Item>
-      {/each}
-    {/snippet}
-  </RatingGroup.Root>
+  <div class="rate-stars-controls">
+    <RatingGroup.Root
+      class="rate-stars-row"
+      value={stars}
+      onValueChange={onRatingChange}
+      allowHalf
+      max={STAR_COUNT}
+      disabled={$isSubmitting || isLocked}
+    >
+      {#snippet children({ items })}
+        {#each items as item (item.index)}
+          <RatingGroup.Item index={item.index} class="rate-star">
+            <StarIcon
+              fill={item.state === 'active'
+                ? 'full'
+                : item.state === 'partial'
+                ? 'half'
+                : 'none'}
+            />
+          </RatingGroup.Item>
+        {/each}
+      {/snippet}
+    </RatingGroup.Root>
+    {@render trailing?.()}
+  </div>
 </div>
 
 <style lang="scss">
   .rate-stars {
     display: flex;
     flex-direction: column;
+    gap: var(--gap-s);
+  }
+
+  .rate-stars-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: var(--gap-s);
   }
 
