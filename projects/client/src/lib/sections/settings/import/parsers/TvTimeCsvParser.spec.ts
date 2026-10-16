@@ -1,3 +1,4 @@
+import * as m from '$lib/features/i18n/messages.ts';
 import { zipSync } from 'fflate';
 import { describe, expect, it } from 'vitest';
 import { TvTimeCsvParser } from './TvTimeCsvParser.ts';
@@ -5,6 +6,11 @@ import { TvTimeCsvParser } from './TvTimeCsvParser.ts';
 const LIBERATOR_CSV = [
   'imdb_id,tvdb_id,type,title,season,episode,is_special,is_watched,watched_at,status,is_watchlisted,rating',
   'tt0903747,3859781,episode,Breaking Bad,3,7,false,true,2023-06-01T12:00:00Z,ended,false',
+].join('\n');
+
+const EXTRACTOR_CSV = [
+  'type,media_type,tmdb_id,imdb_id,tvdb_id,title,year,season,episode,watched_at,rating,review',
+  'watch,movie,,tt0163025,,Jurassic Park III,2001,,,2019-10-21T06:31:39Z,,',
 ].join('\n');
 
 const NATIVE_CSV = [
@@ -68,6 +74,30 @@ describe('TvTimeCsvParser', () => {
         ids: { imdb: 'tt0903747', tvdb: 3859781 },
         title: 'Breaking Bad',
       });
+    });
+
+    it('should route extractor files by their media_type column', async () => {
+      const result = await TvTimeCsvParser.parse([
+        csvFile(EXTRACTOR_CSV, 'tv-time-export.csv'),
+      ]);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        action: 'history',
+        type: 'movie',
+        ids: { imdb: 'tt0163025' },
+      });
+    });
+
+    it('should route extractor zips by their tv-time-export.csv entry', async () => {
+      const file = zipFile(
+        { 'tv-time-export.csv': EXTRACTOR_CSV },
+        'tv-time-export.zip',
+      );
+
+      const result = await TvTimeCsvParser.parse([file]);
+
+      expect(result).toHaveLength(1);
     });
 
     it('should route gdpr tracking files by their ep_id column', async () => {
@@ -170,6 +200,47 @@ describe('TvTimeCsvParser', () => {
       );
     });
 
+    it('should point out a trakt export uploaded as a TV Time export', async () => {
+      const file = zipFile(
+        {
+          'user-profile.json': '{}',
+          'user-settings.json': '{}',
+          'watched-shows.json': '[]',
+        },
+        'trakt-export-someone-1a2b3c.zip',
+      );
+
+      await expect(TvTimeCsvParser.parse([file])).rejects.toThrow(
+        m.import_error_tvtime_trakt_export(),
+      );
+    });
+
+    it('should point out a gdpr export without watch history', async () => {
+      const file = zipFile(
+        {
+          'gdpr-data/auth-prod-login.csv': 'email,provider\nx,email',
+          'gdpr-data/gdpr_requests.csv': 'id,status\n1,done',
+          'gdpr-data/user.csv': 'id,name\n1,someone',
+        },
+        'gdpr-data.zip',
+      );
+
+      await expect(TvTimeCsvParser.parse([file])).rejects.toThrow(
+        m.import_error_tvtime_no_history(),
+      );
+    });
+
+    it('should point out a zip holding only the summary page', async () => {
+      const file = zipFile(
+        { 'tvtime-summary-2026-07-05.html': '<html></html>' },
+        'tvtime-summary-2026-07-05.zip',
+      );
+
+      await expect(TvTimeCsvParser.parse([file])).rejects.toThrow(
+        m.import_error_tvtime_summary_only(),
+      );
+    });
+
     it('should raise a helpful error for unreadable zips', async () => {
       const file = new File(
         [new Uint8Array([1, 2, 3, 4]) as BlobPart],
@@ -265,9 +336,6 @@ describe('TvTimeCsvParser', () => {
   });
 
   describe('mixed uploads', () => {
-    // A GDPR noise file (where-to-watch-prod-table.csv) carries episode_id +
-    // episode_number, which used to trip the native heuristic and reject the
-    // whole batch as "different exports". It must be ignored, not misdetected.
     it('should not misdetect gdpr noise carrying episode_id as native', async () => {
       const whereToWatch = [
         'vote_type,hash_key,episode_id,type,id,created_at,range_key,user_id,network_platform,series_name,episode_number,season_number',

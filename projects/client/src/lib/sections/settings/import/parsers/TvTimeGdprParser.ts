@@ -50,9 +50,11 @@ type RatingVoteRow = {
 };
 
 type ListRow = {
+  s_key?: string;
   name?: string;
   is_public?: string;
   objects?: string;
+  lists?: string;
 };
 
 const TRACKING_V1_MARKER = 'type-uuid-n';
@@ -152,12 +154,24 @@ function parseV1Episode(row: TrackingV1Row): UniversalImportItem | null {
   };
 }
 
+function toV2Position(row: TrackingV2Row) {
+  const [season, episode] = toInt(row.ep_no)
+    ? [row.s_no, row.ep_no]
+    : [firstOf(row.season_number, row.s_no), row.episode_number];
+  return { season: toInt(season), episode: toInt(episode) };
+}
+
+const EPISODE_PLAY_PREFIXES = ['watch-episode-', 'rewatch-episode-'];
+
+function isEpisodePlay(row: TrackingV2Row): boolean {
+  return EPISODE_PLAY_PREFIXES.some((prefix) => row.key?.startsWith(prefix));
+}
+
 function parseV2Episode(row: TrackingV2Row): UniversalImportItem | null {
-  if (!row.key?.startsWith('watch-episode-')) return null;
+  if (!isEpisodePlay(row)) return null;
 
   const showTvdb = toInt(row.s_id);
-  const season = toInt(firstOf(row.s_no, row.season_number));
-  const episode = toInt(firstOf(row.ep_no, row.episode_number));
+  const { season, episode } = toV2Position(row);
   const ids = toEpisodeIds({
     tvdbId: toInt(firstOf(row.ep_id, row.episode_id)),
     showTvdb,
@@ -263,9 +277,35 @@ function parseRatingVotes(
 
 const LIST_OBJECT_RE = /id:(\d+)\s+type:(\w+)/g;
 
+const COLLECTION_S_KEY = 'collection';
+const FAVORITES_S_KEY_PREFIX = 'favorite-';
+const COLLECTION_ENTRY_NAME_RE =
+  /(?:^|\s)name:(.*?) (?:order|posters|related|s_key):/;
+const COLLECTION_ENTRY_KEY_RE = /(?:^|\s)s_key:([^\s\]]+)/;
+
+function toCollectionListNames(
+  listRows: ListRow[],
+): ReadonlyMap<string, string> {
+  const collection = listRows.find((row) => row.s_key === COLLECTION_S_KEY);
+
+  return new Map(
+    (collection?.lists ?? '').split('map[').flatMap((entry) => {
+      const name = entry.match(COLLECTION_ENTRY_NAME_RE)?.at(1)?.trim();
+      const sKey = entry.match(COLLECTION_ENTRY_KEY_RE)?.at(1);
+      if (!name || name === '<nil>' || !sKey) return [];
+      return [[sKey, name] as const];
+    }),
+  );
+}
+
 function parseListRows(listRows: ListRow[]): UniversalImportItem[] {
+  const collectionNames = toCollectionListNames(listRows);
+
   return listRows.flatMap((row) => {
-    const listName = row.name?.trim();
+    if (row.s_key?.startsWith(FAVORITES_S_KEY_PREFIX)) return [];
+
+    const listName = row.name?.trim() ||
+      collectionNames.get(row.s_key ?? '');
     if (!listName || !row.objects) return [];
 
     const listIsPublic = row.is_public === 'true';
@@ -285,6 +325,35 @@ function parseListRows(listRows: ListRow[]): UniversalImportItem[] {
   });
 }
 
+function toPlayKey(item: UniversalImportItem): string | null {
+  if (item.action !== 'history' || !item.watched_at) return null;
+
+  return JSON.stringify([
+    item.type,
+    item.ids,
+    item.showTvdb,
+    item.season,
+    item.episode,
+    item.title,
+    item.year,
+    item.watched_at.slice(0, 16),
+  ]);
+}
+
+function dedupeSameMinutePlays(
+  items: UniversalImportItem[],
+): UniversalImportItem[] {
+  const seen = new Set<string>();
+
+  return items.filter((item) => {
+    const key = toPlayKey(item);
+    if (key == null) return true;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function parseGdprRows(
   { v1Rows, v2Rows, followedRows, ratingRows, listRows }: {
     v1Rows: TrackingV1Row[];
@@ -294,23 +363,27 @@ function parseGdprRows(
     listRows: ListRow[];
   },
 ): UniversalImportItem[] {
-  const episodes = v2Rows.length > 0
-    ? v2Rows
-      .map(parseV2Episode)
-      .filter((item): item is UniversalImportItem => item !== null)
-    : v1Rows
-      .filter((row) => row.entity_type === 'episode')
-      .map(parseV1Episode)
-      .filter((item): item is UniversalImportItem => item !== null);
+  const episodes = dedupeSameMinutePlays(
+    v2Rows.length > 0
+      ? v2Rows
+        .map(parseV2Episode)
+        .filter((item): item is UniversalImportItem => item !== null)
+      : v1Rows
+        .filter((row) => row.entity_type === 'episode')
+        .map(parseV1Episode)
+        .filter((item): item is UniversalImportItem => item !== null),
+  );
 
-  const movies = v1Rows
-    .filter((row) => row.entity_type === 'movie')
-    .map(parseV1Movie)
-    .filter((item): item is UniversalImportItem => item !== null);
+  const movies = dedupeSameMinutePlays(
+    v1Rows
+      .filter((row) => row.entity_type === 'movie')
+      .map(parseV1Movie)
+      .filter((item): item is UniversalImportItem => item !== null),
+  );
 
   const watchedShowIds = new Set(
     v2Rows
-      .filter((row) => row.key?.startsWith('watch-episode-'))
+      .filter(isEpisodePlay)
       .map((row) => toInt(row.s_id))
       .filter((id): id is number => id != null),
   );
@@ -399,9 +472,6 @@ export const TvTimeGdprParser: FileParser = {
       })),
     );
 
-    // flatMap concatenates the row arrays internally (no argument spread), so
-    // it stays safe on large accounts where `push(...rows)` would overflow the
-    // stack (100k+ watch rows).
     const rowsOf = (bucket: GdprBucket) =>
       parsed
         .filter((file) => classifyGdprFile(file) === bucket)
