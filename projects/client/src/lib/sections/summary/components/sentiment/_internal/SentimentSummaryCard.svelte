@@ -5,6 +5,7 @@
   import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { SentimentAnalysis } from '$lib/requests/models/SentimentAnalysis.ts';
+  import { stripMarkdownLinks } from '$lib/utils/markdown/stripMarkdownLinks.ts';
   import { mapToSentimentSummary } from './mapToSentimentSummary.ts';
 
   const MAX_CHIPS_PER_SIDE = 3;
@@ -48,7 +49,7 @@
   </span>
 
   <RenderFor audience="vip">
-    <span class="sentiment-quote">“{sentiment.highlight || sentiment.analysis}”</span>
+    <span class="sentiment-quote">“{stripMarkdownLinks(sentiment.highlight || sentiment.analysis)}”</span>
 
     {#snippet fallback()}
       <span class="sentiment-quote sentiment-quote--locked">

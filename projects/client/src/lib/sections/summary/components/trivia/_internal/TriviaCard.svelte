@@ -1,13 +1,11 @@
 <script lang="ts">
   import type { MediaTrivia } from '$lib/requests/models/MediaTrivia.ts';
   import * as m from '$lib/paraglide/messages.js';
-  import { Marked } from 'marked';
+  import InlineMarkdown from '$lib/components/markdown/InlineMarkdown.svelte';
 
   const {
     trivia,
   }: { trivia: Pick<MediaTrivia, 'text' | 'isSpoiler'> } = $props();
-
-  const marked = new Marked();
 
   let spoilerRevealed = $state(false);
 </script>
@@ -19,7 +17,7 @@
     </button>
   {:else}
     <div class="trivia-card-text">
-      {@html marked.parse(trivia.text)}
+      <InlineMarkdown text={trivia.text} />
     </div>
   {/if}
 </div>
