@@ -305,6 +305,36 @@ describe('TvTimeGdprParser', () => {
       });
     });
 
+    it('should fall back to legacy numbers when s_no and ep_no are zeroed', async () => {
+      const csv = toCsv(V2_HEADER, [
+        v2EpisodeWatch({
+          s_no: '0',
+          ep_no: '0',
+          season_number: '2',
+          episode_number: '10',
+        }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result[0]).toMatchObject({ season: 2, episode: 10 });
+    });
+
+    it('should keep specials numbered in s_no and ep_no', async () => {
+      const csv = toCsv(V2_HEADER, [
+        v2EpisodeWatch({
+          s_no: '0',
+          ep_no: '3',
+          season_number: '0',
+          episode_number: '3',
+        }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result[0]).toMatchObject({ season: 0, episode: 3 });
+    });
+
     it('should prefer ep_id over a blank ep_id shadowing episode_id', async () => {
       const bothHeader = [
         ...V2_HEADER,
@@ -386,6 +416,85 @@ describe('TvTimeGdprParser', () => {
       expect(result).toHaveLength(0);
     });
 
+    it('should add rewatched episodes to history as extra plays', async () => {
+      const csv = toCsv(V2_HEADER, [
+        v2EpisodeWatch(),
+        v2EpisodeWatch({
+          key: 'rewatch-episode-02531a20-2745-4f3c-b0b0-25475135b863-1',
+          created_at: '2023-01-05 20:15:00',
+        }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(2);
+      expect(new Set(result.map((item) => item.watched_at)).size).toBe(2);
+      expect(result[1]).toMatchObject({
+        action: 'history',
+        type: 'episode',
+        ids: { tvdb: 1331151 },
+      });
+    });
+
+    it('should collapse plays of the same episode within the same minute', async () => {
+      const csv = toCsv(V2_HEADER, [
+        v2EpisodeWatch({ created_at: '2023-10-24 20:20:39' }),
+        v2EpisodeWatch({
+          key: 'rewatch-episode-02531a20-2745-4f3c-b0b0-25475135b863-1',
+          created_at: '2023-10-24 20:20:39',
+        }),
+        v2EpisodeWatch({
+          key: 'rewatch-episode-02531a20-2745-4f3c-b0b0-25475135b863-2',
+          created_at: '2023-10-24 20:20:58',
+        }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(1);
+    });
+
+    it('should keep plays of the same episode in different minutes', async () => {
+      const csv = toCsv(V2_HEADER, [
+        v2EpisodeWatch({ created_at: '2023-10-24 20:20:39' }),
+        v2EpisodeWatch({
+          key: 'rewatch-episode-02531a20-2745-4f3c-b0b0-25475135b863-1',
+          created_at: '2023-10-24 20:21:02',
+        }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(2);
+    });
+
+    it('should keep different episodes watched within the same minute', async () => {
+      const csv = toCsv(V2_HEADER, [
+        v2EpisodeWatch({ created_at: '2023-10-24 20:20:39' }),
+        v2EpisodeWatch({
+          ep_id: '1331152',
+          ep_no: '11',
+          created_at: '2023-10-24 20:20:39',
+        }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(2);
+    });
+
+    it('should not watchlist followed shows with only rewatched episodes', async () => {
+      const csv = toCsv(V2_HEADER, [
+        v2UserSeries({ is_followed: 'true', s_id: '82066' }),
+        v2EpisodeWatch({ key: 'rewatch-episode-02531a20-1' }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result.filter((item) => item.action === 'watchlist'))
+        .toHaveLength(0);
+    });
+
     it('should ignore unfollowed shows and stats rows', async () => {
       const csv = toCsv(V2_HEADER, [
         v2UserSeries(),
@@ -445,6 +554,20 @@ describe('TvTimeGdprParser', () => {
         year: 2017,
         watched_at: new Date(1649590015 * 1000).toISOString(),
       });
+    });
+
+    it('should collapse plays of the same movie within the same minute', async () => {
+      const csv = toCsv(V1_HEADER, [
+        v1MovieWatch(),
+        v1MovieWatch({
+          'type-uuid-n': 'watch-002e2d8f-aee0-40ce-aa39-1be952e2952a-1',
+          watch_date_range_key: 'watch-date-1649590018',
+        }),
+      ]);
+
+      const result = await TvTimeGdprParser.parse([csvFile(csv)]);
+
+      expect(result).toHaveLength(1);
     });
 
     it('should derive english titles from the alpha slug', async () => {
@@ -774,6 +897,110 @@ describe('TvTimeGdprParser', () => {
       expect(result[0]).toMatchObject({
         listName: 'Private',
         listIsPublic: false,
+      });
+    });
+
+    describe('with names only in the collection row', () => {
+      const COLLECTION_HEADER = [
+        's_key',
+        'name',
+        'is_public',
+        'objects',
+        'lists',
+      ];
+      const objects = '[map[created_at:1.7e+09 id:253463 type:series]]';
+      const collection =
+        '[map[created_at:1.7e+09 description:<nil> fanart:[https://artworks.thetvdb.com/a.jpg https://artworks.thetvdb.com/b.jpg] ' +
+        'is_public:false name:Watch later (maybe) order:<nil> posters:[https://artworks.thetvdb.com/c.jpg] ' +
+        's_key:0597455b-6940-4cb4 type:list updated_at:1.7e+09 user_id:1] ' +
+        'map[created_at:1.7e+09 description:<nil> fanart:<nil> is_public:false name:Kdrama ' +
+        'posters:<nil> s_key:109882a2-631d-4507 type:list updated_at:1.7e+09 user_id:1] ' +
+        'map[created_at:1.7e+09 description:<nil> fanart:<nil> is_public:false name:<nil> ' +
+        'posters:<nil> s_key:1befc5c3-8f9e-4a34 type:list updated_at:1.7e+09 user_id:1] ' +
+        'map[created_at:1.7e+09 description:<nil> fanart:<nil> is_public:false name:Favorite Shows ' +
+        'posters:<nil> s_key:favorite-series type:list updated_at:1.7e+09 user_id:1]]';
+
+      it('should name unnamed lists from the collection row', async () => {
+        const csv = toCsv(COLLECTION_HEADER, [
+          {
+            s_key: '0597455b-6940-4cb4',
+            name: '',
+            is_public: 'false',
+            objects,
+          },
+          {
+            s_key: '109882a2-631d-4507',
+            name: '',
+            is_public: 'false',
+            objects,
+          },
+          { s_key: 'collection', lists: collection },
+        ]);
+
+        const result = await TvTimeGdprParser.parse([
+          csvFile(csv, 'lists-prod-lists.csv'),
+        ]);
+
+        expect(result.map((item) => item.listName)).toEqual([
+          'Watch later (maybe)',
+          'Kdrama',
+        ]);
+      });
+
+      it('should prefer the row name over the collection name', async () => {
+        const csv = toCsv(COLLECTION_HEADER, [
+          {
+            s_key: '109882a2-631d-4507',
+            name: 'Mine',
+            is_public: 'true',
+            objects,
+          },
+          { s_key: 'collection', lists: collection },
+        ]);
+
+        const result = await TvTimeGdprParser.parse([
+          csvFile(csv, 'lists-prod-lists.csv'),
+        ]);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toMatchObject({ listName: 'Mine' });
+      });
+
+      it('should skip lists whose collection name is nil', async () => {
+        const csv = toCsv(COLLECTION_HEADER, [
+          {
+            s_key: '1befc5c3-8f9e-4a34',
+            name: '',
+            is_public: 'false',
+            objects,
+          },
+          { s_key: 'collection', lists: collection },
+        ]);
+
+        const result = await TvTimeGdprParser.parse([
+          csvFile(csv, 'lists-prod-lists.csv'),
+        ]);
+
+        expect(result).toHaveLength(0);
+      });
+
+      it('should not import favorites as a list', async () => {
+        const csv = toCsv(COLLECTION_HEADER, [
+          { s_key: 'favorite-series', name: '', is_public: 'false', objects },
+          {
+            s_key: 'favorite-movies',
+            name: 'Favorite Movies',
+            is_public: 'false',
+            objects,
+          },
+          { s_key: 'collection', lists: collection },
+        ]);
+
+        const result = await TvTimeGdprParser.parse([
+          csvFile(csv, 'lists-prod-lists.csv'),
+        ]);
+
+        expect(result).toHaveLength(0);
       });
     });
   });
