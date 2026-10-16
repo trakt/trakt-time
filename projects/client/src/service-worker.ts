@@ -1,5 +1,6 @@
 import { AssetPattern } from '$worker/AssetPattern.ts';
 import { Domain } from '$worker/Domain.ts';
+import { isOpaqueImageRequest } from '$worker/isOpaqueImageRequest.ts';
 import { WorkerMessage } from '$worker/WorkerMessage.ts';
 import { ExpirationPlugin } from 'workbox-expiration';
 import {
@@ -213,7 +214,7 @@ registerRoute(
 
 // Images
 registerRoute(
-  ({ url }) => Domain.images.includes(url.hostname),
+  ({ request }) => isOpaqueImageRequest(request),
   new CacheFirst({
     cacheName: CacheKey.images,
     plugins: [
@@ -222,8 +223,5 @@ registerRoute(
         maxAgeSeconds: time.days(30) / time.seconds(1),
       }),
     ],
-    fetchOptions: {
-      mode: 'no-cors',
-    },
   }),
 );
