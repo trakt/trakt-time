@@ -11,7 +11,7 @@ const movieSentimentRequest = async (
   { fetch, slug }: MovieSentimentParams,
 ) => {
   const response = await rawApiFetch(
-    { fetch, path: `/v3/media/movie/${slug}/info/0/version/1` },
+    { fetch, path: `/v3/media/movie/${slug}/info/0/version/2` },
   );
 
   return response.ok
@@ -23,7 +23,7 @@ const movieSentimentRequest = async (
 };
 
 export const movieSentimentQuery = defineQuery({
-  key: 'movieSentiment',
+  key: 'movieSentiment:v2',
   invalidations: [],
   dependencies: (params) => [params.slug],
   request: movieSentimentRequest,
