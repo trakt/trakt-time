@@ -53,8 +53,9 @@
   const seoShow = $derived(show ?? data.crawlerShow);
   const isLoading = $derived($query.isLoading);
 
-  const peopleQuery = $derived(useQuery(showPeopleQuery({ slug })));
+  const peopleQuery = $derived(useQuery(showPeopleQuery({ slug, guestStars: true })));
   const cast = $derived($peopleQuery.data?.cast ?? []);
+  const guestStars = $derived($peopleQuery.data?.guestStars ?? []);
   const castLoading = $derived($peopleQuery.isLoading);
 
   const seasonsQuery = $derived(useQuery(showSeasonsQuery({ slug })));
@@ -247,7 +248,7 @@
           </section>
         {/if}
 
-        <CastSection {cast} isLoading={castLoading} />
+        <CastSection {cast} {guestStars} isLoading={castLoading} />
 
         <section class="summary-section">
           <h2 class="summary-section-title">{m.header_more_like_this()}</h2>

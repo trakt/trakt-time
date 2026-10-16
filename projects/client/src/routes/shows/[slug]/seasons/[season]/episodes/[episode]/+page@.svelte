@@ -53,9 +53,17 @@
   );
 
   const peopleQuery = $derived(
-    useQuery(episodePeopleQuery({ slug, season, episode: episodeNum })),
+    useQuery(
+      episodePeopleQuery({
+        slug,
+        season,
+        episode: episodeNum,
+        guestStars: true,
+      }),
+    ),
   );
   const cast = $derived($peopleQuery.data?.cast ?? []);
+  const guestStars = $derived($peopleQuery.data?.guestStars ?? []);
   const castLoading = $derived($peopleQuery.isLoading);
 
   const episode = $derived($episodeQuery.data ?? null);
@@ -270,6 +278,7 @@
 
       <CastSection
         {cast}
+        {guestStars}
         isLoading={castLoading}
         emptyMessage={m.text_no_cast()}
       />
