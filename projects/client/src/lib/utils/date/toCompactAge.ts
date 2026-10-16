@@ -1,4 +1,6 @@
+import * as m from '$lib/paraglide/messages.js';
 import { toUnitFormatter } from '$lib/utils/formatting/number/toUnitFormatter.ts';
+import { isUnknownDate } from './isUnknownDate.ts';
 
 type CompactAgeParams = {
   date: Date;
@@ -19,6 +21,8 @@ const DAY = 24 * HOUR;
 const WEEK = 7 * DAY;
 
 export function toCompactAge({ date, now, locale }: CompactAgeParams): string {
+  if (isUnknownDate(date)) return m.button_text_mark_as_watched_unknown_date();
+
   const elapsed = Math.max(0, now.getTime() - date.getTime());
   const format = (value: number, unit: keyof typeof FALLBACK_UNIT_SUFFIX) =>
     toUnitFormatter({
