@@ -10,6 +10,7 @@ import {
   type StreamingSource,
   StreamingSourceSchema,
 } from '../../models/StreamingSource.ts';
+import type { StreamingSourceType } from '../../models/StreamingSourceType.ts';
 
 type StreamingSourcesParams = ApiParams;
 const StreamingSourceListSchema = z.map(
@@ -28,12 +29,18 @@ function mapToColor(color: string) {
   return color;
 }
 
+// @trakt/api 0.6.0 does not type the optional source `type` field.
+type TypedWatchNowSourceResponse = WatchNowSourceResponse & {
+  type?: StreamingSourceType | null;
+};
+
 function mapStreamingSourceResponse(
-  sourceResponse: WatchNowSourceResponse,
+  sourceResponse: TypedWatchNowSourceResponse,
 ): StreamingSource {
   return {
     source: sourceResponse.source,
     name: sourceResponse.name,
+    type: sourceResponse.type,
     isFree: sourceResponse.free,
     logoUrl: prependHttps(sourceResponse.images.logo),
     channelLogoUrl: prependHttps(sourceResponse.images.channel),

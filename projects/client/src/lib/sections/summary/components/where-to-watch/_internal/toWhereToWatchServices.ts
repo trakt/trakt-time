@@ -15,6 +15,9 @@ type ToWhereToWatchServicesParams = {
   sources: ReadonlyArray<StreamingSource>;
 };
 
+const isPurchaseService = (source?: StreamingSource) =>
+  source?.type === 'purchase';
+
 export function toWhereToWatchServices(
   { options, sources }: ToWhereToWatchServicesParams,
 ): WhereToWatchService[] {
@@ -27,6 +30,7 @@ export function toWhereToWatchServices(
     .filter((offer, index) =>
       offers.findIndex((other) => other.source === offer.source) === index
     )
+    .filter((offer) => !isPurchaseService(sourcesByKey.get(offer.source)))
     .map((offer) => {
       const source = sourcesByKey.get(offer.source);
 
