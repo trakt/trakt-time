@@ -61,4 +61,35 @@ describe('toWhereToWatchServices', () => {
     });
     expect(services[1]).toMatchObject({ name: 'tubi', logoUrl: null });
   });
+
+  it('hides rent and buy services but keeps untyped ones', () => {
+    const services = toWhereToWatchServices({
+      options: {
+        streaming: [],
+        free: [],
+        onDemand: ['apple_tv', 'hulu', 'vudu'].map((source) => ({
+          type: 'on-demand' as const,
+          source,
+          link,
+          is4k: false,
+          prices: { rent: 3.99 },
+          key: `on-demand-${source}`,
+        })),
+      },
+      sources: [
+        {
+          source: 'apple_tv',
+          name: 'Apple TV',
+          type: 'purchase',
+          isFree: false,
+        },
+        { source: 'hulu', name: 'Hulu', type: 'subscription', isFree: false },
+      ],
+    });
+
+    expect(services.map((service) => service.source)).toEqual([
+      'hulu',
+      'vudu',
+    ]);
+  });
 });
