@@ -8,6 +8,7 @@
   import type { Season } from '$lib/requests/models/Season.ts';
   import { useWatchedUntilHere } from '$lib/sections/media-actions/mark-as-watched/watched-until-here/useWatchedUntilHere.ts';
   import SeasonEpisodeRow from './SeasonEpisodeRow.svelte';
+  import { findUpNextEpisode } from './findUpNextEpisode.ts';
 
   type Props = {
     slug: string;
@@ -35,6 +36,15 @@
   const query = $derived(useQuery(showSeasonEpisodesQuery({ slug, season })));
   const episodes = $derived($query.data ?? []);
   const isLoading = $derived($query.isLoading);
+
+  const upNextId = $derived(
+    findUpNextEpisode({
+      episodes,
+      watchedIds: new Set(
+        $history?.shows.get(showId)?.episodes.map(({ episodeId }) => episodeId),
+      ),
+    })?.id,
+  );
 
   const { offerWatchedUntilHere } = $derived(useWatchedUntilHere({ slug, showId }));
 
@@ -80,7 +90,14 @@
   {:else}
     <ol class="episode-list">
       {#each episodes as episode (episode.id)}
-        <SeasonEpisodeRow {slug} {episode} {showId} {showTitle} {onWatched} />
+        <SeasonEpisodeRow
+          {slug}
+          {episode}
+          {showId}
+          {showTitle}
+          {onWatched}
+          isUpNext={episode.id === upNextId}
+        />
       {/each}
     </ol>
   {/if}

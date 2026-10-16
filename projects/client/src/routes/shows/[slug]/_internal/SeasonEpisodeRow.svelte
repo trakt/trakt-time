@@ -16,8 +16,10 @@
     showId: number;
     showTitle: string;
     onWatched: (episode: EpisodeEntry) => void;
+    isUpNext?: boolean;
   };
-  const { slug, episode, showId, showTitle, onWatched }: Props = $props();
+  const { slug, episode, showId, showTitle, onWatched, isUpNext = false }: Props =
+    $props();
 
   const { markAsWatched, removeWatched, isWatched, isMarkingAsWatched, isWatchable } =
     $derived(
@@ -57,10 +59,11 @@
   }
 </script>
 
-<li class="episode-row">
+<li class="episode-row" class:is-up-next={isUpNext}>
   <a
     class="episode-link"
     href={UrlBuilder.episode(slug, episode.season, episode.number)}
+    aria-current={isUpNext ? 'step' : undefined}
   >
     <div class="episode-thumb">
       {#if episode.cover.url}
@@ -140,6 +143,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    outline: var(--border-thickness-xs) solid transparent;
+    transition: outline-color var(--transition-increment) ease-in-out;
 
     :global(img) {
       width: 100%;
@@ -153,6 +158,16 @@
     font-size: 0.875rem;
     font-weight: 700;
     color: var(--color-text-secondary);
+  }
+
+  .episode-row.is-up-next {
+    .episode-thumb {
+      outline-color: var(--color-text-emphasis);
+    }
+
+    .episode-title {
+      color: var(--color-text-emphasis);
+    }
   }
 
   .episode-text {
