@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as m from '$lib/paraglide/messages.js';
   import type { SentimentAnalysis } from '$lib/requests/models/SentimentAnalysis.ts';
+  import InlineMarkdown from '$lib/components/markdown/InlineMarkdown.svelte';
   import SentimentAspects from './SentimentAspects.svelte';
 
   const { sentiment }: { sentiment: SentimentAnalysis } = $props();
@@ -8,13 +9,15 @@
 
 <div class="sentiment-content">
   {#if sentiment.analysis}
-    <p class="sentiment-analysis">{sentiment.analysis}</p>
+    <p class="sentiment-analysis">
+      <InlineMarkdown text={sentiment.analysis} />
+    </p>
   {/if}
 
   {#if sentiment.highlight}
     <div class="sentiment-info-card" data-variant="highlight">
       <p class="sentiment-info-title">{m.header_sentiment_highlight()}</p>
-      <p>{sentiment.highlight}</p>
+      <p><InlineMarkdown text={sentiment.highlight} /></p>
     </div>
   {/if}
 

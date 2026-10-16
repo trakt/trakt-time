@@ -5,7 +5,8 @@
   import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { MediaType } from '$lib/requests/models/MediaType.ts';
-  import { Marked } from 'marked';
+  import InlineMarkdown from '$lib/components/markdown/InlineMarkdown.svelte';
+  import { stripMarkdownLinks } from '$lib/utils/markdown/stripMarkdownLinks.ts';
   import TriviaDrawer from './_internal/TriviaDrawer.svelte';
   import TriviaSummaryCardSkeleton from './_internal/TriviaSummaryCardSkeleton.svelte';
   import { toTriviaCategoryLabel } from './_internal/toTriviaCategoryLabel.ts';
@@ -21,8 +22,6 @@
     slug;
     drawerOpen = false;
   });
-
-  const marked = new Marked();
 
   const { items, summary, isLoading } = $derived(useTrivia({ slug, type }));
   const facts = $derived(toTriviaFacts({ items: $items, summary: $summary }));
@@ -55,7 +54,7 @@
                 : m.trivia_category_quick_fact()}
             </span>
             <div class="trivia-text">
-              {@html marked.parse(fact.text)}
+              <InlineMarkdown text={stripMarkdownLinks(fact.text)} />
             </div>
             {#if fact.isSpoiler}
               <span class="trivia-spoiler">{m.text_reveal_spoiler()}</span>
