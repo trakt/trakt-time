@@ -38,4 +38,9 @@ describe('toCompactAge', () => {
   it('should never go below one minute', () => {
     expect(toCompactAge({ date: now, now, locale: 'en' })).toBe('1m');
   });
+
+  it('should show an unknown date for watches stored at the unix epoch', () => {
+    expect(toCompactAge({ date: new Date(0), now, locale: 'en' }))
+      .toBe('Unknown date');
+  });
 });
