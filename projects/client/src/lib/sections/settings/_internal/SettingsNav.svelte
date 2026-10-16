@@ -9,6 +9,7 @@
   const sections = $derived([
     { id: 'appearance', label: m.header_appearance() },
     { id: 'your-data', label: m.header_your_data() },
+    { id: 'emails', label: m.header_emails() },
     { id: 'about', label: m.header_about() },
     { id: 'account', label: m.header_account() },
   ]);

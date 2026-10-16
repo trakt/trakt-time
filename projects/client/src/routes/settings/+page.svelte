@@ -3,6 +3,7 @@
   import * as m from '$lib/paraglide/messages.js';
   import AccountCard from '$lib/sections/settings/_internal/AccountCard.svelte';
   import Appearance from '$lib/sections/settings/_internal/Appearance.svelte';
+  import EmailSettings from '$lib/sections/settings/_internal/EmailSettings.svelte';
   import SettingsBlock from '$lib/sections/settings/_internal/SettingsBlock.svelte';
   import SettingsNav from '$lib/sections/settings/_internal/SettingsNav.svelte';
   import SettingsRow from '$lib/sections/settings/_internal/SettingsRow.svelte';
@@ -36,6 +37,7 @@
     <div class="settings-main">
       <Appearance />
       <DataImport />
+      <EmailSettings />
       <SettingsBlock id="about" title={m.header_about()}>
         <SettingsRow
           href="/compare"
