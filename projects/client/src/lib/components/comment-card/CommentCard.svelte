@@ -13,6 +13,7 @@
   import { toCompactAge } from '$lib/utils/date/toCompactAge.ts';
   import { formatStars, toStarsFromUserRating } from '$lib/utils/rating/toStars.ts';
   import CommentGif from './_internal/CommentGif.svelte';
+  import { revealSpoilers } from './_internal/revealSpoilers.ts';
 
   type Props = {
     comment: MediaComment;
@@ -32,7 +33,9 @@
   let commentEl: HTMLElement | undefined = $state(undefined);
   let isOverflowing = $state(false);
 
-  const marked = new Marked({ extensions: [spoilerExtension()] });
+  const marked = $derived(
+    new Marked({ extensions: [spoilerExtension(comment.isSpoiler)] }),
+  );
 
   const displayName = $derived(comment.user.name.full || comment.user.username);
 
@@ -90,6 +93,7 @@
         class="comment-text"
         class:clamped={!expanded}
         bind:this={commentEl}
+        use:revealSpoilers
       >
         {@html html}
       </div>
@@ -143,6 +147,8 @@
 </article>
 
 <style lang="scss">
+  @use "$style/scss/mixins/index" as *;
+
   .comment-card {
     display: flex;
     flex-direction: column;
@@ -267,6 +273,20 @@
 
     :global(em) {
       font-style: italic;
+    }
+
+    :global(span) {
+      transition: filter var(--transition-increment) ease-in-out;
+    }
+
+    :global(span.trakt-spoiler) {
+      @include spoiler-blur();
+
+      cursor: pointer;
+    }
+
+    :global(span.trakt-spoiler *) {
+      pointer-events: none;
     }
   }
 
