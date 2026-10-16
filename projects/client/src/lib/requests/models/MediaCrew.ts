@@ -27,5 +27,6 @@ export const MediaCrewSchema = z.object({
   writers: z.array(CrewMemberSchema),
   creators: z.array(CrewMemberSchema),
   cast: z.array(CastMemberSchema),
+  guestStars: z.array(CastMemberSchema),
 });
 export type MediaCrew = z.infer<typeof MediaCrewSchema>;
