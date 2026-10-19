@@ -9,6 +9,7 @@ type GetMediaProps = {
   types: MediaType[];
   config: TypesenseConfig;
   exact: boolean;
+  signal?: AbortSignal;
 };
 
 export async function getMedia({
@@ -17,6 +18,7 @@ export async function getMedia({
   types,
   config,
   exact,
+  signal,
 }: GetMediaProps): Promise<SearchResultResponse[]> {
   const { hits } = await lookup({
     key: exact ? config.keys.media.exact : config.keys.media.default,
@@ -25,6 +27,7 @@ export async function getMedia({
     limit,
     types,
     exact,
+    signal,
   });
 
   return hits.map((hit) => {

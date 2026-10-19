@@ -39,6 +39,28 @@ describe('lookup', () => {
         union: true,
       },
       { q: 'dune', limit: 5 },
+      { abortSignal: undefined },
+    );
+  });
+
+  it('should hand the abort signal to the search client', async () => {
+    perform.mockResolvedValue({ hits: [], found: 0 });
+    const { signal } = new AbortController();
+
+    await lookup({
+      key: 'key',
+      server: 'server',
+      query: 'dune',
+      limit: 5,
+      types: ['movie'],
+      exact: false,
+      signal,
+    });
+
+    expect(perform).toHaveBeenCalledWith(
+      expect.anything(),
+      { q: 'dune', limit: 5 },
+      { abortSignal: signal },
     );
   });
 

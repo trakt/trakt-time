@@ -16,6 +16,7 @@ type SearchParams = {
   query: string;
   limit: number;
   config: TypesenseConfig;
+  signal?: AbortSignal;
 } & ApiParams;
 
 const PeopleSearchResultSchema = z.object({
@@ -49,7 +50,13 @@ function mapToSearchResultEntry(item: SearchResultResponse) {
   }
 }
 
-const searchRequest = async ({ query, config, limit }: SearchParams) => {
+const searchRequest = async ({
+  query,
+  config,
+  limit,
+  fetch,
+  signal,
+}: SearchParams) => {
   const queryParams = {
     query,
     limit,
@@ -58,13 +65,16 @@ const searchRequest = async ({ query, config, limit }: SearchParams) => {
   const response = await getPeople({
     ...queryParams,
     config,
+    signal,
   })
     .then((body) => ({
       body,
       status: 200,
     }))
-    .catch(() =>
-      api({
+    .catch((error) => {
+      if (signal?.aborted) throw error;
+
+      return api({
         fetch,
         cancellable: true,
       }).search.query({
@@ -75,8 +85,8 @@ const searchRequest = async ({ query, config, limit }: SearchParams) => {
         params: {
           type: 'person',
         },
-      }),
-    );
+      });
+    });
 
   return response;
 };

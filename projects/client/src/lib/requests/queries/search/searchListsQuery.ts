@@ -32,7 +32,7 @@ function mapToSearchResultEntry(item: SearchResultResponse) {
   }
 }
 
-const searchRequest = ({ query, limit }: SearchParams) => {
+const searchRequest = ({ query, limit, fetch }: SearchParams) => {
   return api({
     fetch,
     cancellable: true,
