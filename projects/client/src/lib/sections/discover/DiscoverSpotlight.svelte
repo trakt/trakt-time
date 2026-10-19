@@ -10,6 +10,8 @@
 
   let activeIndex = $state(0);
   let isPaused = $state(false);
+  let isTabHidden = $state(false);
+  let isInView = $state(false);
 
   const active = $derived(items[activeIndex % Math.max(items.length, 1)]);
 
@@ -20,7 +22,27 @@
     globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? true;
 
   $effect(() => {
-    if (items.length < 2 || isPaused || prefersReducedMotion()) return;
+    const sync = () => (isTabHidden = document.hidden);
+
+    sync();
+    document.addEventListener('visibilitychange', sync);
+
+    return () => document.removeEventListener('visibilitychange', sync);
+  });
+
+  const trackInView = (element: HTMLElement) => {
+    const observer = new IntersectionObserver((entries) => {
+      isInView = entries.at(-1)?.isIntersecting ?? false;
+    });
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  };
+
+  $effect(() => {
+    if (items.length < 2 || isPaused || isTabHidden || !isInView) return;
+    if (prefersReducedMotion()) return;
 
     const timer = setInterval(() => {
       activeIndex = (activeIndex + 1) % items.length;
@@ -39,6 +61,7 @@
     class="discover-spotlight"
     aria-roledescription="carousel"
     aria-label={m.header_trending_shows()}
+    {@attach trackInView}
     onmouseenter={() => (isPaused = true)}
     onmouseleave={() => (isPaused = false)}
     onfocusin={() => (isPaused = true)}
