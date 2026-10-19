@@ -8,12 +8,9 @@ export function createConnection(
 ) {
   if (!browser) return;
 
-  if (!token) {
-    destroySocket(previous);
-    return;
-  }
+  destroySocket(previous);
 
-  const connection = createSocket(token);
+  if (!token) return;
 
-  return connection;
+  return createSocket(token);
 }

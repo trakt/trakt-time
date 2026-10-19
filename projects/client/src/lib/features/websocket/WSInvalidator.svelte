@@ -66,11 +66,14 @@
     }
   }
 
-  token.subscribe(($token) => {
+  const subscription = token.subscribe(($token) => {
     socket?.removeEventListener("message", wsInvalidate);
     socket = createConnection(socket, $token?.value);
     socket?.addEventListener("message", wsInvalidate);
   });
 
-  onDestroy(() => destroySocket(socket));
+  onDestroy(() => {
+    subscription.unsubscribe();
+    destroySocket(socket);
+  });
 </script>
