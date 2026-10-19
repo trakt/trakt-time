@@ -43,11 +43,17 @@
   const slug = $derived(page.params.slug ?? '');
 
   let actionsOpen = $state(false);
+  let hasOpenedActions = $state(false);
   let isFadedOut = $state(false);
   $effect(() => {
     slug;
     actionsOpen = false;
   });
+
+  function openActions() {
+    hasOpenedActions = true;
+    actionsOpen = true;
+  }
 
   const query = $derived(useQuery(showSummaryQuery({ slug })));
   const show = $derived($query.data ?? null);
@@ -149,7 +155,7 @@
   <BackBar href="/shows/watchlist" label={m.page_title_shows()} variant="overlay">
     {#snippet action()}
       {#if show}
-        <MoreActionsButton title={intl?.title ?? show.title} onclick={() => (actionsOpen = true)} />
+        <MoreActionsButton title={intl?.title ?? show.title} onclick={openActions} />
       {/if}
     {/snippet}
   </BackBar>
@@ -284,24 +290,26 @@
       </div>
     </div>
 
-    <MediaActionsSheet
-      type="show"
-      id={show.id}
-      slug={show.slug}
-      title={intl?.title ?? show.title}
-      isRateable={showHasAired}
-      watchedProps={{
-        type: 'show',
-        media: {
-          id: show.id,
-          effectiveReleaseDate: show.effectiveReleaseDate,
-          episode: { count: show.episode.count },
-        },
-      }}
-      isOpen={actionsOpen}
-      onClose={() => (actionsOpen = false)}
-      onDropDelight={(isDropped) => (isFadedOut = isDropped)}
-    />
+    {#if hasOpenedActions}
+      <MediaActionsSheet
+        type="show"
+        id={show.id}
+        slug={show.slug}
+        title={intl?.title ?? show.title}
+        isRateable={showHasAired}
+        watchedProps={{
+          type: 'show',
+          media: {
+            id: show.id,
+            effectiveReleaseDate: show.effectiveReleaseDate,
+            episode: { count: show.episode.count },
+          },
+        }}
+        isOpen={actionsOpen}
+        onClose={() => (actionsOpen = false)}
+        onDropDelight={(isDropped) => (isFadedOut = isDropped)}
+      />
+    {/if}
   {/if}
 </div>
 
