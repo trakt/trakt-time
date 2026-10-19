@@ -228,12 +228,13 @@
         grid-area: cover;
         align-self: end;
         justify-self: end;
+        position: relative;
+        z-index: var(--layer-raised);
         margin: 0 var(--gap-s) var(--gap-m);
-        backdrop-filter: blur(12px);
 
         &:not(.is-watched, :hover, :focus-visible) {
           border-color: var(--trakttime-overlay-control-border);
-          background: var(--trakttime-overlay-control-background);
+          background: var(--trakttime-overlay-chip-background);
           color: var(--trakttime-overlay-text-primary);
         }
       }
