@@ -1,4 +1,5 @@
 import type { OidcAuthToken } from '$lib/features/auth/models/OidcAuthToken.ts';
+import { isCrawlerRequest } from '$lib/features/seo/isCrawlerRequest.ts';
 import { getDeviceType } from '$lib/utils/devices/getDeviceType.ts';
 import type { LayoutServerLoad } from '$types/$types.d.ts';
 
@@ -12,10 +13,18 @@ const getAuth = (auth: Nil | OidcAuthToken) => {
   };
 };
 
-export const load: LayoutServerLoad = ({ request, locals }) => ({
-  theme: locals.theme,
-  oidcAuth: getAuth(locals.oidcAuth),
-  isLegitimateBot: locals.isLegitimateBot,
-  device: getDeviceType(request.headers.get('user-agent')),
-  typesense: locals.typesense,
-});
+export const load: LayoutServerLoad = ({ request, locals }) => {
+  const userAgent = request.headers.get('user-agent');
+
+  return {
+    theme: locals.theme,
+    oidcAuth: getAuth(locals.oidcAuth),
+    isLegitimateBot: locals.isLegitimateBot,
+    isCrawler: isCrawlerRequest({
+      userAgent,
+      isLegitimateBot: locals.isLegitimateBot,
+    }),
+    device: getDeviceType(userAgent),
+    typesense: locals.typesense,
+  };
+};

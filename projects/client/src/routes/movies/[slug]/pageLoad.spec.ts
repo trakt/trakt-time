@@ -3,29 +3,36 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { load } from './+page.ts';
 
 const environment = vi.hoisted(() => ({ browser: true }));
+const crawler = vi.hoisted(() => ({ fetchForCrawler: vi.fn() }));
 
 vi.mock('$app/environment', () => environment);
+vi.mock('$lib/features/seo/requests/fetchMovieForCrawler.ts', () => ({
+  fetchMovieForCrawler: crawler.fetchForCrawler,
+}));
 
 const SLUG = 'some-slug';
 
-function runLoad(data: Record<string, unknown>) {
+function runLoad({ isCrawler = false }: { isCrawler?: boolean } = {}) {
   const prefetchQuery = vi.fn(() => new Promise<void>(() => {}));
+  const fetch = vi.fn();
   const result = load({
-    data,
+    fetch,
     params: { slug: SLUG },
-    parent: () => Promise.resolve({ queryClient: { prefetchQuery } }),
+    parent: () =>
+      Promise.resolve({ queryClient: { prefetchQuery }, isCrawler }),
   } as unknown as Parameters<typeof load>[0]);
 
-  return { prefetchQuery, result };
+  return { fetch, prefetchQuery, result };
 }
 
 describe('movie page load', () => {
   beforeEach(() => {
     environment.browser = true;
+    crawler.fetchForCrawler.mockReset();
   });
 
   it('prefetches the summary with the key the page uses', async () => {
-    const { prefetchQuery, result } = runLoad({});
+    const { prefetchQuery, result } = runLoad();
 
     await result;
 
@@ -39,24 +46,45 @@ describe('movie page load', () => {
   });
 
   it('does not wait for the prefetch to finish', async () => {
-    const { result } = runLoad({});
+    const { result } = runLoad();
 
     await expect(result).resolves.toBeDefined();
   });
 
-  it('returns the server data untouched', async () => {
-    const data = { crawlerMovie: { id: 1 } };
-    const { result } = runLoad(data);
+  it('returns no crawler data in the browser without fetching it', async () => {
+    const { result } = runLoad({ isCrawler: true });
 
-    expect(await result).toBe(data);
+    expect(await result).toEqual({ crawlerMovie: null });
+    expect(crawler.fetchForCrawler).not.toHaveBeenCalled();
   });
 
   it('does not prefetch outside the browser', async () => {
     environment.browser = false;
-    const { prefetchQuery, result } = runLoad({});
+    const { prefetchQuery, result } = runLoad();
 
     await result;
 
     expect(prefetchQuery).not.toHaveBeenCalled();
+  });
+
+  it('fetches the crawler data on the server for a crawler', async () => {
+    environment.browser = false;
+    const entry = { id: 1 };
+    crawler.fetchForCrawler.mockResolvedValue(entry);
+    const { fetch, result } = runLoad({ isCrawler: true });
+
+    expect(await result).toEqual({ crawlerMovie: entry });
+    expect(crawler.fetchForCrawler).toHaveBeenCalledWith({
+      fetch,
+      slug: SLUG,
+    });
+  });
+
+  it('returns no crawler data on the server for a human', async () => {
+    environment.browser = false;
+    const { result } = runLoad({ isCrawler: false });
+
+    expect(await result).toEqual({ crawlerMovie: null });
+    expect(crawler.fetchForCrawler).not.toHaveBeenCalled();
   });
 });
