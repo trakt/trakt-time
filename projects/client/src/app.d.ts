@@ -48,6 +48,7 @@ declare global {
 
   type HTMLImageElementProps = {
     loading?: 'lazy' | 'eager';
+    fetchpriority?: 'auto' | 'high' | 'low';
     src: string;
     alt: string;
     'aria-labelledby'?: string;
