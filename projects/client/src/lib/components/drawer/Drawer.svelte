@@ -6,8 +6,8 @@
   import { useMedia, WellKnownMediaQuery } from "$lib/stores/css/useMedia";
   import { appendClassList } from "$lib/utils/actions/appendClassList";
   import { writable } from "$lib/utils/store/WritableSubject";
+  import { slideEdge } from "$lib/utils/transitions/slideEdge";
   import { onMount, type Snippet } from "svelte";
-  import { slide } from "svelte/transition";
   import ActionButton from "../buttons/ActionButton.svelte";
   import CloseIcon from "../icons/CloseIcon.svelte";
   import { useDrawerPortal } from "./_internal/useDrawerPortal";
@@ -66,7 +66,7 @@
 <div
   class={drawerClass}
   data-size={size}
-  transition:slide={{ duration: 150, axis: slideAxis }}
+  transition:slideEdge={{ duration: 150, axis: slideAxis }}
   use:portal
   use:trap
   use:appendClassList={classList}
