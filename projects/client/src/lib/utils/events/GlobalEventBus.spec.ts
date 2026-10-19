@@ -70,6 +70,20 @@ describe('GlobalEventBus', () => {
     unregister2();
   });
 
+  it('should run a handler once after all handlers were unregistered and one was registered again', () => {
+    const eventType = 'click';
+
+    const unregisterFirst = eventBus.register(eventType, vi.fn());
+    unregisterFirst();
+
+    const handler = vi.fn();
+    const unregister = eventBus.register(eventType, handler);
+    globalThis.dispatchEvent(new Event(eventType));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    unregister();
+  });
+
   it('should remove event listener when no handlers are registered', () => {
     const handler = vi.fn();
     const eventType = 'click';
