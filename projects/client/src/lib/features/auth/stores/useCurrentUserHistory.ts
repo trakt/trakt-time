@@ -29,10 +29,12 @@ function toWatchedMap<T extends { id: number }>(
   return new Map(entries.map((entry) => [entry.id, entry]));
 }
 
+type HistoryPages<T> = { pages: Array<{ entries: T[] }> };
+
 function toQueryMap<T extends { id: number }>(
-  query: { data?: { pages: Array<{ entries: T[] }> } },
+  data: HistoryPages<T> | undefined,
 ): Map<number, T> {
-  return toWatchedMap(query.data?.pages.flatMap((p) => p.entries) ?? []);
+  return toWatchedMap(data?.pages.flatMap((p) => p.entries) ?? []);
 }
 
 function isSettled(
@@ -65,15 +67,23 @@ export function useCurrentUserHistory(): UseCurrentUserHistoryResult {
         return null;
       }
 
-      const moviesMap = toQueryMap(movies);
-      const showsMap = toQueryMap(shows);
+      return { movies: movies.data, shows: shows.data };
+    }),
+    distinctUntilChanged((prev, curr) =>
+      prev === curr ||
+      (prev !== null && curr !== null &&
+        prev.movies === curr.movies && prev.shows === curr.shows)
+    ),
+    map((settled) => {
+      if (settled === null) {
+        return null;
+      }
 
       return {
-        movies: moviesMap,
-        shows: showsMap,
+        movies: toQueryMap(settled.movies),
+        shows: toQueryMap(settled.shows),
       };
     }),
-    distinctUntilChanged((prev, curr) => prev === null && curr === null),
   );
 
   const isLoading = combineLatest([moviesQuery, showsQuery]).pipe(
