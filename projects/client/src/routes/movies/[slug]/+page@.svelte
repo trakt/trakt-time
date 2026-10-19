@@ -40,10 +40,16 @@
   const slug = $derived(page.params.slug ?? '');
 
   let actionsOpen = $state(false);
+  let hasOpenedActions = $state(false);
   $effect(() => {
     slug;
     actionsOpen = false;
   });
+
+  function openActions() {
+    hasOpenedActions = true;
+    actionsOpen = true;
+  }
 
   const query = $derived(useQuery(movieSummaryQuery({ slug })));
   const movie = $derived($query.data ?? null);
@@ -129,7 +135,7 @@
   <BackBar href="/movies/watchlist" label={m.page_title_movies()} variant="overlay">
     {#snippet action()}
       {#if movie}
-        <MoreActionsButton title={intl?.title ?? movie.title} onclick={() => (actionsOpen = true)} />
+        <MoreActionsButton title={intl?.title ?? movie.title} onclick={openActions} />
       {/if}
     {/snippet}
   </BackBar>
@@ -249,23 +255,25 @@
       </div>
     </div>
 
-    <MediaActionsSheet
-      type="movie"
-      id={movie.id}
-      slug={movie.slug}
-      title={intl?.title ?? movie.title}
-      isRateable={movieHasAired}
-      watchedProps={{
-        type: 'movie',
-        media: {
-          id: movie.id,
-          effectiveReleaseDate: movie.effectiveReleaseDate,
-          status: movie.status,
-        },
-      }}
-      isOpen={actionsOpen}
-      onClose={() => (actionsOpen = false)}
-    />
+    {#if hasOpenedActions}
+      <MediaActionsSheet
+        type="movie"
+        id={movie.id}
+        slug={movie.slug}
+        title={intl?.title ?? movie.title}
+        isRateable={movieHasAired}
+        watchedProps={{
+          type: 'movie',
+          media: {
+            id: movie.id,
+            effectiveReleaseDate: movie.effectiveReleaseDate,
+            status: movie.status,
+          },
+        }}
+        isOpen={actionsOpen}
+        onClose={() => (actionsOpen = false)}
+      />
+    {/if}
   {/if}
 </div>
 
