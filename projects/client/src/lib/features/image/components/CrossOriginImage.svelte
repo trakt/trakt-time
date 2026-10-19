@@ -55,7 +55,6 @@
 
   img {
     contain: content;
-    content-visibility: auto;
 
     text-indent: -8008135px;
   }
