@@ -57,8 +57,6 @@
     padding: var(--nav-padding);
     box-sizing: border-box;
     background-color: var(--trakttime-navbar-solid-bg);
-    backdrop-filter: blur(24px) saturate(1.6);
-    -webkit-backdrop-filter: blur(24px) saturate(1.6);
     border: var(--ni-1) solid var(--color-border);
     border-radius: var(--trakttime-radius-pill);
     box-shadow: 0 var(--ni-8) var(--ni-32)
