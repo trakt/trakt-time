@@ -48,7 +48,11 @@ export function appendGlobalParameters(
       ...$search.entries(),
     ]);
 
-    anchor.href = `${url.pathname}${buildParamString(params)}`;
+    const nextHref = `${url.pathname}${buildParamString(params)}`;
+
+    if (anchor.getAttribute('href') === nextHref) return;
+
+    anchor.href = nextHref;
   };
 
   const subscription = combineLatest(
