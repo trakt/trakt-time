@@ -1,10 +1,12 @@
 import { assertDefined } from '$lib/utils/assert/assertDefined.ts';
+import { time } from '$lib/utils/timing/time.ts';
 import { DragGesture } from '@use-gesture/vanilla';
 import { handleDrag } from './handleDrag.ts';
 import type { DragState } from './models/DragState.ts';
 import type { GestureState } from './models/GestureState.ts';
 
 const STATE_CHANGE_THRESHOLD = 0.05;
+const CLOSE_SETTLE_DELAY = time.seconds(0.3);
 
 type VerticalDragProps = {
   onClose: () => void;
@@ -29,11 +31,35 @@ export function verticalDrag(
     'Drag handle must have a parent element',
   );
 
+  const currentThreshold = () =>
+    globalThis.window.innerHeight * STATE_CHANGE_THRESHOLD;
+
   let dragState: DragState = {
     isFullScreen: false,
     dragOffset: 0,
-    threshold: globalThis.window.innerHeight * STATE_CHANGE_THRESHOLD,
+    threshold: currentThreshold(),
     shouldClose: false,
+  };
+
+  const startGesture = () => {
+    dragState = { ...dragState, threshold: currentThreshold() };
+    parent.style.setProperty(offsetVariable, '0px');
+
+    if (dragState.isFullScreen) {
+      return;
+    }
+
+    parent.style.setProperty('--initial-height', `${parent.clientHeight}px`);
+  };
+
+  const settleIfStillOpen = () => {
+    if (!parent.isConnected) {
+      return;
+    }
+
+    dragState = { ...dragState, dragOffset: 0, shouldClose: false };
+    parent.style.setProperty(offsetVariable, '0px');
+    parent.classList.remove(dragClass);
   };
 
   const gesture = new DragGesture(
@@ -46,11 +72,8 @@ export function verticalDrag(
         movement: [_, movementY],
       } = state;
 
-      if (first && !dragState.isFullScreen) {
-        parent.style.setProperty(
-          '--initial-height',
-          `${parent.clientHeight}px`,
-        );
+      if (first) {
+        startGesture();
       }
 
       const gestureState: GestureState = { isStoppingDrag: last, movementY };
@@ -58,10 +81,13 @@ export function verticalDrag(
       dragState = handleDrag({ state: dragState, gesture: gestureState });
 
       parent.classList.toggle(fullscreenClass, dragState.isFullScreen);
-      parent.classList.toggle(dragClass, active);
+      parent.classList.toggle(dragClass, active || dragState.shouldClose);
       parent.style.setProperty(offsetVariable, `${dragState.dragOffset}px`);
 
-      dragState.shouldClose && onClose();
+      if (dragState.shouldClose) {
+        onClose();
+        setTimeout(settleIfStillOpen, CLOSE_SETTLE_DELAY);
+      }
     },
     {
       axis: 'y',
