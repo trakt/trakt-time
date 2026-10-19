@@ -16,12 +16,58 @@ import {
 } from '../../requests/queries/search/searchTrendingQuery.ts';
 import { dedupe } from '../../utils/array/dedupe.ts';
 import { DEFAULT_SEARCH_LIMIT } from '../../utils/constants.ts';
+import { time } from '../../utils/timing/time.ts';
 import { AnalyticsEvent } from '../analytics/events/AnalyticsEvent.ts';
 import { useTrack } from '../analytics/useTrack.ts';
 import { getSearchContext } from './_internal/getSearchContext.ts';
 import { mapToSearchCover } from './_internal/mapToSearchCover.ts';
 import { postRecentSearch } from './_internal/postRecentSearch.ts';
 import type { SearchResponse } from './models/SearchResponse.ts';
+
+export const NAVIGATION_DEBOUNCE = time.seconds(0.12);
+const QUERY_DEBOUNCE = time.seconds(0.03);
+
+type SearchNavigationProps = {
+  readValue: () => string;
+  readUrlTerm: () => string;
+  navigate: (term: string) => void;
+};
+
+export function createSearchNavigation({
+  readValue,
+  readUrlTerm,
+  navigate,
+}: SearchNavigationProps) {
+  let pending: ReturnType<typeof setTimeout> | undefined;
+
+  const cancel = () => clearTimeout(pending);
+
+  function input() {
+    cancel();
+
+    const value = readValue();
+    const opensResults = readUrlTerm().trim().length === 0;
+
+    if (opensResults || value.trim().length === 0) {
+      navigate(value);
+      return;
+    }
+
+    pending = setTimeout(() => {
+      const latest = readValue();
+      if (latest === readUrlTerm()) return;
+
+      navigate(latest);
+    }, NAVIGATION_DEBOUNCE);
+  }
+
+  function clear() {
+    cancel();
+    navigate('');
+  }
+
+  return { input, clear, cancel };
+}
 
 function modeToQuery(
   query: string,
@@ -85,7 +131,7 @@ export function useSearch() {
     client == null
       ? of(null)
       : combineLatest([searchTerm$, mode]).pipe(
-          debounceTime(150),
+          debounceTime(QUERY_DEBOUNCE),
           switchMap(([rawTerm, currentMode]) => {
             const term = rawTerm.toLowerCase().trim();
 

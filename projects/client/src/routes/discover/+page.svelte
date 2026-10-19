@@ -10,13 +10,17 @@
   import ChevronRightIcon from '$lib/components/icons/ChevronRightIcon.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
   import PosterSkeleton from '$lib/components/poster-card/PosterSkeleton.svelte';
-  import { useSearch } from '$lib/features/search/useSearch.ts';
+  import {
+    createSearchNavigation,
+    useSearch,
+  } from '$lib/features/search/useSearch.ts';
   import { useRecommendedList } from '$lib/sections/lists/recommended/useRecommendedList.ts';
   import { useTrendingList } from '$lib/sections/lists/trending/useTrendingList.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import PosterCard from '$lib/components/poster-card/PosterCard.svelte';
   import ScrollRow from '$lib/components/scroll-row/ScrollRow.svelte';
   import DiscoverSpotlight from '$lib/sections/discover/DiscoverSpotlight.svelte';
+  import { onDestroy } from 'svelte';
 
   const SECTION_LIMIT = 10;
   const SPOTLIGHT_LIMIT = 5;
@@ -59,13 +63,15 @@
     });
   }
 
-  function onSearchInput(e: Event) {
-    updateSearchQuery((e.target as HTMLInputElement).value);
-  }
+  let inputElement: HTMLInputElement | undefined;
 
-  function clearSearch() {
-    updateSearchQuery('');
-  }
+  const searchNavigation = createSearchNavigation({
+    readValue: () => inputElement?.value ?? '',
+    readUrlTerm: () => searchQuery,
+    navigate: updateSearchQuery,
+  });
+
+  onDestroy(searchNavigation.cancel);
 </script>
 
 <SeoHead title={m.page_title_discover()} />
@@ -83,14 +89,15 @@
         class="search-input"
         placeholder={m.placeholder_search_media()}
         value={searchQuery}
-        oninput={onSearchInput}
+        bind:this={inputElement}
+        oninput={searchNavigation.input}
         aria-label={m.button_label_search_media()}
       />
       {#if searchQuery}
         <button
           class="search-clear"
           type="button"
-          onclick={clearSearch}
+          onclick={searchNavigation.clear}
           aria-label={m.button_label_clear_search()}
         >
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
