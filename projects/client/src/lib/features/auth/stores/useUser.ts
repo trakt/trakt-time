@@ -3,7 +3,7 @@ import { Theme } from '$lib/features/theme/models/Theme.ts';
 import { type UserLimits } from '$lib/requests/models/UserLimits.ts';
 import { blockedUsersQuery } from '$lib/requests/queries/users/blockedUsersQuery.ts';
 import { userLimitsQuery } from '$lib/requests/queries/vip/userLimitsQuery.ts';
-import { map, of, shareReplay, switchMap } from 'rxjs';
+import { distinctUntilChanged, map, of, shareReplay, switchMap } from 'rxjs';
 import {
   currentUserCommentReactionsQuery,
   type UserReactions,
@@ -174,42 +174,55 @@ export function useUser() {
       return of({
         user: userQuerySignal.pipe(
           map((query) => definedData(query.data)),
+          distinctUntilChanged(),
         ),
         history: historySignal,
         watchlist: watchlistQuerySignal.pipe(
           map((watchlist) => watchlist.data),
+          distinctUntilChanged(),
         ),
         ratings: ratingsQuerySignal.pipe(
           map((ratings) => ratings.data),
+          distinctUntilChanged(),
         ),
         reactions: commentReactionsQuerySignal.pipe(
           map((reactions) => reactions.data),
+          distinctUntilChanged(),
         ),
         favorites: favoritesQuerySignal.pipe(
           map((favorites) => favorites.data),
+          distinctUntilChanged(),
         ),
         network: followingQuerySignal.pipe(
           map((network) => network.data),
+          distinctUntilChanged(),
         ),
         plexLibrary: plexLibraryQuerySignal.pipe(
           map((collection) => collection.data),
+          distinctUntilChanged(),
         ),
         likes: likesQuerySignal.pipe(
           map((likes) => likes.data),
+          distinctUntilChanged(),
         ),
         limits: limitsQuerySignal.pipe(
           map((limits) => limits.data),
+          distinctUntilChanged(),
         ),
         notes: notesQuerySignal.pipe(
           map((notes) => notes.data),
+          distinctUntilChanged(),
         ),
         dropped: droppedQuerySignal.pipe(
           map((dropped) => dropped.data),
+          distinctUntilChanged(),
         ),
         blocked: blockedQuerySignal.pipe(
-          map((blocked) =>
+          map((blocked) => blocked.data),
+          distinctUntilChanged(),
+          map((profiles) =>
             new Set(
-              (blocked.data ?? [])
+              (profiles ?? [])
                 .map((profile) => profile.slug)
                 .filter((slug): slug is string => Boolean(slug)),
             )
