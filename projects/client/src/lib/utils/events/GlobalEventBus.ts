@@ -6,6 +6,8 @@ class GlobalEventBus {
   private static instance: GlobalEventBus;
   private handlers: Map<string, Set<EventHandler<Event>>> = new Map();
 
+  private readonly dispatchHandler = (event: Event) => this._dispatch(event);
+
   private constructor() {
     // Private constructor to prevent direct instantiation
   }
@@ -23,7 +25,7 @@ class GlobalEventBus {
   ): () => void {
     if (!this.handlers.has(eventType)) {
       this.handlers.set(eventType, new Set());
-      globalThis.addEventListener(eventType, this._dispatch.bind(this));
+      globalThis.addEventListener(eventType, this.dispatchHandler);
     }
 
     const ref = assertDefined(
@@ -56,7 +58,7 @@ class GlobalEventBus {
 
       if (handlers.size === 0) {
         this.handlers.delete(eventType);
-        globalThis.removeEventListener(eventType, this._dispatch.bind(this));
+        globalThis.removeEventListener(eventType, this.dispatchHandler);
       }
     }
   }
