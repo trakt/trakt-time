@@ -36,7 +36,9 @@
   const isFinale = $derived(
     isSeriesFinale({ episodeType, hasEnded: hasEnded(showStatus) }),
   );
-  const { isWatched } = $derived(useMarkAsWatched(watchedProps));
+  const { isWatchedOnServer: isWatched } = $derived(
+    useMarkAsWatched(watchedProps),
+  );
   const { claim } = useDelight("finale");
 
   const totals = $derived(

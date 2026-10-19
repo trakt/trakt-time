@@ -8,10 +8,12 @@ import { markAsWatchedRequest } from '$lib/requests/sync/markAsWatchedRequest.ts
 import { removeRatingRequest } from '$lib/requests/sync/removeRatingRequest.ts';
 import { removeWatchedRequest } from '$lib/requests/sync/removeWatchedRequest.ts';
 import { toRemoveRatingsPayload } from '$lib/requests/sync/toRemoveRatingsPayload.ts';
+import { usePendingIntents } from '$lib/sections/media-actions/_internal/pendingIntents.ts';
+import { withPendingIntent } from '$lib/sections/media-actions/_internal/withPendingIntent.ts';
 import { useInvalidator } from '$lib/stores/useInvalidator.ts';
 import { hasAired } from '$lib/utils/media/hasAired.ts';
 import { resolve } from '$lib/utils/store/resolve.ts';
-import { BehaviorSubject, filter } from 'rxjs';
+import { filter, of } from 'rxjs';
 import type { MarkAsWatchedAt } from '../../../models/MarkAsWatchedAt.ts';
 import { findOrphanedRatingIds } from './findOrphanedRatingIds.ts';
 import { toMarkAsWatchedPayload } from './toMarkAsWatchedPayload.ts';
@@ -26,32 +28,43 @@ export type MarkAsWatchedStoreProps = MediaStoreProps<{
 export function useMarkAsWatched(props: MarkAsWatchedStoreProps) {
   const { type } = props;
   const media = Array.isArray(props.media) ? props.media : [props.media];
-  const isMarkingAsWatched = new BehaviorSubject(false);
   const { user, history, ratings } = useUser();
   const { invalidate } = useInvalidator();
   const { track } = useTrack(AnalyticsEvent.MarkAsWatched);
 
-  const { isWatched } = useIsWatched(props);
+  const { isWatched: isWatchedOnServer } = useIsWatched(props);
+
+  const pending = usePendingIntents(
+    `watched:${type}:${media.map(({ id }) => id).join(',')}`,
+  );
+  const isMarkingAsWatched = pending.isPending;
+  const isAddPredictable = type !== 'show';
+  const isWatched = withPendingIntent({
+    current: isWatchedOnServer,
+    isAdding: isAddPredictable ? pending.isAdding : of(false),
+    isRemoving: pending.isRemoving,
+  });
 
   const markAsWatched = async (watchedAt?: MarkAsWatchedAt) => {
     const current = await resolve(user);
 
     if (!current) {
-      return;
+      return false;
     }
 
     const watchedAtDate = watchedAt ?? 'now';
 
-    isMarkingAsWatched.next(true);
-    track({ action: 'add' });
+    return await pending.run('add', async () => {
+      track({ action: 'add' });
 
-    await markAsWatchedRequest({
-      body: toMarkAsWatchedPayload(props, watchedAtDate),
+      const isSuccess = await markAsWatchedRequest({
+        body: toMarkAsWatchedPayload(props, watchedAtDate),
+      });
+
+      await invalidate(InvalidateAction.MarkAsWatched(type));
+
+      return isSuccess;
     });
-
-    await invalidate(InvalidateAction.MarkAsWatched(type));
-
-    isMarkingAsWatched.next(false);
   };
 
   const resolveOrphanedRatingIds = async () => {
@@ -75,19 +88,20 @@ export function useMarkAsWatched(props: MarkAsWatchedStoreProps) {
   };
 
   const removeWatched = async () => {
-    isMarkingAsWatched.next(true);
-    track({ action: 'remove' });
+    await pending.run('remove', async () => {
+      track({ action: 'remove' });
 
-    const orphanedRatingIds = await resolveOrphanedRatingIds().catch(() => []);
+      const orphanedRatingIds = await resolveOrphanedRatingIds().catch(
+        () => [],
+      );
 
-    await removeWatchedRequest({
-      body: toMarkAsWatchedPayload(props),
+      await removeWatchedRequest({
+        body: toMarkAsWatchedPayload(props),
+      });
+      await removeOrphanedRatings(orphanedRatingIds);
+
+      await invalidate(InvalidateAction.MarkAsWatched(type));
     });
-    await removeOrphanedRatings(orphanedRatingIds);
-
-    await invalidate(InvalidateAction.MarkAsWatched(type));
-
-    isMarkingAsWatched.next(false);
   };
 
   const isWatchable = media.every((item) => {
@@ -101,6 +115,7 @@ export function useMarkAsWatched(props: MarkAsWatchedStoreProps) {
     markAsWatched,
     removeWatched,
     isWatched,
+    isWatchedOnServer,
     isMarkingAsWatched,
     isWatchable,
   };
