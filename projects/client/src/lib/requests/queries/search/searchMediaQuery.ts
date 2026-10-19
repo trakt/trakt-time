@@ -17,6 +17,7 @@ type SearchParams = {
   limit: number;
   type?: MediaType;
   exact: boolean;
+  signal?: AbortSignal;
 } & ApiParams;
 
 const MediaResultSchema = z
@@ -65,6 +66,8 @@ const searchRequest = async ({
   config,
   limit,
   exact,
+  fetch,
+  signal,
 }: SearchParams) => {
   const queryParams = {
     query,
@@ -78,12 +81,15 @@ const searchRequest = async ({
     config,
     types: types.split(',') as MediaType[],
     exact,
+    signal,
   })
     .then((body) => ({
       body,
       status: 200,
     }))
-    .catch(() => {
+    .catch((error) => {
+      if (signal?.aborted) throw error;
+
       const searchApi = api({
         fetch,
       }).search;

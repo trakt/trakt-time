@@ -1,5 +1,56 @@
+import { QueryClient } from '@tanstack/query-core';
+import { BehaviorSubject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createSearchNavigation, NAVIGATION_DEBOUNCE } from './useSearch.ts';
+import {
+  createSearchNavigation,
+  NAVIGATION_DEBOUNCE,
+  useSearch,
+} from './useSearch.ts';
+
+const { client, context, lookupSignals, fetchCalls } = vi.hoisted(() => ({
+  client: { current: undefined as unknown },
+  context: {
+    mode: undefined as unknown,
+    isSearching: undefined as unknown,
+  },
+  lookupSignals: [] as AbortSignal[],
+  fetchCalls: [] as { url: string; signal: AbortSignal | undefined }[],
+}));
+
+vi.mock('$app/environment', () => ({ browser: true }));
+
+vi.mock('$lib/features/query/_internal/queryClientContext.ts', () => ({
+  useQueryClient: () => client.current,
+}));
+
+vi.mock('./_internal/getSearchContext.ts', () => ({
+  getSearchContext: () => ({
+    mode: context.mode,
+    isSearching: context.isSearching,
+    config: {
+      server: 'search.test',
+      keys: { media: { default: 'key', exact: 'key' }, people: 'key' },
+    },
+    pathName: '/discover',
+    query: new BehaviorSubject(''),
+  }),
+}));
+
+vi.mock('../analytics/useTrack.ts', () => ({
+  useTrack: () => ({ track: vi.fn() }),
+}));
+
+vi.mock('../../requests/search/lookup.ts', () => ({
+  lookup: ({ signal }: { signal?: AbortSignal }) => {
+    if (signal) lookupSignals.push(signal);
+
+    return new Promise((_, reject) =>
+      signal?.addEventListener('abort', () =>
+        reject(new Error('Request aborted by caller.')),
+      ),
+    );
+  },
+}));
 
 const KEY_GAP = 50;
 
@@ -118,5 +169,119 @@ describe('createSearchNavigation', () => {
     vi.advanceTimersByTime(NAVIGATION_DEBOUNCE);
 
     expect(navigate).not.toHaveBeenCalled();
+  });
+});
+
+const TERM_GAP = 200;
+const REQUESTS_PER_TERM = 4;
+
+function stubFetch() {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((input: string | URL, init?: RequestInit) => {
+      const signal = init?.signal ?? undefined;
+      fetchCalls.push({ url: String(input), signal });
+
+      return new Promise((_, reject) =>
+        signal?.addEventListener('abort', () =>
+          reject(new DOMException('aborted', 'AbortError')),
+        ),
+      );
+    }),
+  );
+}
+
+const requestSignals = () => [
+  ...lookupSignals,
+  ...fetchCalls.flatMap(({ signal }) => (signal ? [signal] : [])),
+];
+
+describe('useSearch: replaced terms', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    client.current = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    context.mode = new BehaviorSubject('media');
+    context.isSearching = new BehaviorSubject(false);
+    lookupSignals.length = 0;
+    fetchCalls.length = 0;
+    stubFetch();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  async function typeWord(word: string) {
+    const { search, results } = useSearch();
+    const error = vi.fn();
+    const subscription = results.subscribe({ error });
+
+    for (let length = 1; length <= word.length; length++) {
+      search(word.slice(0, length), 'media');
+      await vi.advanceTimersByTimeAsync(TERM_GAP);
+    }
+
+    return { error, subscription, search };
+  }
+
+  it('should leave only the requests of the latest term running', async () => {
+    const { subscription } = await typeWord('matrix');
+
+    const running = requestSignals().filter((signal) => !signal.aborted);
+
+    expect(requestSignals()).toHaveLength(6 * REQUESTS_PER_TERM);
+    expect(running).toHaveLength(REQUESTS_PER_TERM);
+
+    subscription.unsubscribe();
+  });
+
+  it('should not fall back to the API for a lookup that was aborted', async () => {
+    const { subscription } = await typeWord('matrix');
+
+    const fallbacks = fetchCalls.filter(
+      ({ url }) => !url.includes('recent_by_id'),
+    );
+
+    expect(fallbacks).toHaveLength(0);
+
+    subscription.unsubscribe();
+  });
+
+  it('should not surface an error for a cancelled term', async () => {
+    const { error, subscription } = await typeWord('matrix');
+
+    expect(error).not.toHaveBeenCalled();
+
+    subscription.unsubscribe();
+  });
+
+  it('should abort the running requests when the search is cleared', async () => {
+    const { subscription, search } = await typeWord('matrix');
+
+    search('', 'media');
+    await vi.advanceTimersByTimeAsync(TERM_GAP);
+
+    expect(requestSignals().filter((signal) => !signal.aborted)).toHaveLength(
+      0,
+    );
+
+    subscription.unsubscribe();
+  });
+
+  it('should not start a second search for the same term', async () => {
+    const { search, results } = useSearch();
+    const subscription = results.subscribe();
+
+    search('matrix', 'media');
+    await vi.advanceTimersByTimeAsync(TERM_GAP);
+    search(' Matrix ', 'media');
+    await vi.advanceTimersByTimeAsync(TERM_GAP);
+
+    expect(requestSignals()).toHaveLength(REQUESTS_PER_TERM);
+
+    subscription.unsubscribe();
   });
 });

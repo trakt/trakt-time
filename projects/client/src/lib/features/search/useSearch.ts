@@ -1,8 +1,17 @@
 import { browser } from '$app/environment';
 import { useQueryClient } from '$lib/features/query/_internal/queryClientContext.ts';
 import type { CreateQueryOptions } from '$lib/features/query/types.ts';
-import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { debounceTime, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import type { QueryClient, QueryKey } from '@tanstack/query-core';
+import { BehaviorSubject, combineLatest, from, of } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  finalize,
+  map,
+  shareReplay,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import type { SearchMode } from '../../requests/queries/search/models/SearchMode.ts';
 import { searchListsQuery } from '../../requests/queries/search/searchListsQuery.ts';
 import {
@@ -14,6 +23,7 @@ import {
   searchTrendingQuery,
   type TrendingSearchesResult,
 } from '../../requests/queries/search/searchTrendingQuery.ts';
+import { withSignal } from '../../requests/search/withSignal.ts';
 import { dedupe } from '../../utils/array/dedupe.ts';
 import { DEFAULT_SEARCH_LIMIT } from '../../utils/constants.ts';
 import { time } from '../../utils/timing/time.ts';
@@ -69,13 +79,17 @@ export function createSearchNavigation({
   return { input, clear, cancel };
 }
 
-function modeToQuery(
-  query: string,
-  mode: SearchMode,
-  config: TypesenseConfig,
-  exact: boolean,
-) {
+type ModeQueryProps = {
+  query: string;
+  mode: SearchMode;
+  config: TypesenseConfig;
+  exact: boolean;
+  signal: AbortSignal;
+};
+
+function modeToQuery({ query, mode, config, exact, signal }: ModeQueryProps) {
   const limit = DEFAULT_SEARCH_LIMIT;
+  const fetch = withSignal(signal);
 
   switch (mode) {
     case 'media':
@@ -88,6 +102,8 @@ function modeToQuery(
         config,
         limit,
         exact,
+        signal,
+        fetch,
       }) as CreateQueryOptions<SearchResponse>;
     }
     case 'people':
@@ -95,29 +111,56 @@ function modeToQuery(
         query,
         config,
         limit,
+        signal,
+        fetch,
       }) as CreateQueryOptions<SearchResponse>;
     case 'lists':
       return searchListsQuery({
         query,
         limit,
+        fetch,
       }) as CreateQueryOptions<SearchResponse>;
     default:
       throw new Error(`Unsupported search mode: ${mode}`);
   }
 }
 
-function modeToTrendingQuery(query: string, mode: SearchMode) {
+type TrendingQueryProps = {
+  query: string;
+  mode: SearchMode;
+  signal: AbortSignal;
+};
+
+function modeToTrendingQuery({ query, mode, signal }: TrendingQueryProps) {
   switch (mode) {
     case 'media':
     case 'movie':
     case 'show': {
       return searchTrendingQuery({
         query,
+        fetch: withSignal(signal),
       }) as CreateQueryOptions<TrendingSearchesResult>;
     }
     default:
       throw new Error(`Unsupported trending search mode: ${mode}`);
   }
+}
+
+type CancelSearchQueriesProps = {
+  client: QueryClient;
+  controller: AbortController;
+  queryKeys: ReadonlyArray<QueryKey>;
+};
+
+function cancelSearchQueries({
+  client,
+  controller,
+  queryKeys,
+}: CancelSearchQueriesProps) {
+  queryKeys.forEach((queryKey) => {
+    client.cancelQueries({ queryKey, exact: true });
+  });
+  controller.abort();
 }
 
 export function useSearch() {
@@ -132,32 +175,64 @@ export function useSearch() {
       ? of(null)
       : combineLatest([searchTerm$, mode]).pipe(
           debounceTime(QUERY_DEBOUNCE),
-          switchMap(([rawTerm, currentMode]) => {
-            const term = rawTerm.toLowerCase().trim();
-
-            if (term.trim().length === 0) {
+          map(([rawTerm, currentMode]) => ({
+            term: rawTerm.toLowerCase().trim(),
+            mode: currentMode,
+          })),
+          distinctUntilChanged(
+            (previous, next) =>
+              previous.term === next.term && previous.mode === next.mode,
+          ),
+          switchMap(({ term, mode: currentMode }) => {
+            if (term.length === 0) {
               return of(null);
             }
 
             isSearching.next(true);
             track({ mode: currentMode });
 
-            const searchQuery = client.fetchQuery(
-              modeToQuery(term, currentMode, config, false),
-            );
+            const controller = new AbortController();
+            const { signal } = controller;
+
+            const searchOptions = modeToQuery({
+              query: term,
+              mode: currentMode,
+              config,
+              exact: false,
+              signal,
+            });
 
             if (currentMode === 'people' || currentMode === 'lists') {
-              return searchQuery;
+              return from(client.fetchQuery(searchOptions)).pipe(
+                finalize(() =>
+                  cancelSearchQueries({
+                    client,
+                    controller,
+                    queryKeys: [searchOptions.queryKey],
+                  }),
+                ),
+              );
             }
 
-            const trendingQuery = client.fetchQuery(
-              modeToTrendingQuery(term, currentMode),
-            );
+            const trendingOptions = modeToTrendingQuery({
+              query: term,
+              mode: currentMode,
+              signal,
+            });
 
-            const exactQuery = client.fetchQuery(
-              modeToQuery(term, currentMode, config, true),
-            );
-            return combineLatest([exactQuery, searchQuery, trendingQuery]).pipe(
+            const exactOptions = modeToQuery({
+              query: term,
+              mode: currentMode,
+              config,
+              exact: true,
+              signal,
+            });
+
+            return combineLatest([
+              client.fetchQuery(exactOptions),
+              client.fetchQuery(searchOptions),
+              client.fetchQuery(trendingOptions),
+            ]).pipe(
               map(([exactResults, searchResults, trendingResults]) => ({
                 type: 'media' as const,
                 items: dedupe(
@@ -167,6 +242,17 @@ export function useSearch() {
                   (searchResults as MediaSearchResult).items,
                 ),
               })),
+              finalize(() =>
+                cancelSearchQueries({
+                  client,
+                  controller,
+                  queryKeys: [
+                    exactOptions.queryKey,
+                    searchOptions.queryKey,
+                    trendingOptions.queryKey,
+                  ],
+                }),
+              ),
             );
           }),
           tap(() => isSearching.next(false)),

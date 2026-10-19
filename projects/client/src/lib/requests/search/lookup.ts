@@ -20,6 +20,7 @@ type SearchParams<T extends SearchCategory> = {
   limit: number;
   types: T[];
   exact: boolean;
+  signal?: AbortSignal;
 };
 
 const COLLECTION_MAP: Record<SearchCategory, string> = {
@@ -47,6 +48,7 @@ export async function lookup<T extends SearchCategory>({
   limit,
   types,
   exact,
+  signal,
 }: SearchParams<T>) {
   const targetPresetMap = exact ? EXACT_PRESET_MAP : PRESET_MAP;
 
@@ -66,6 +68,9 @@ export async function lookup<T extends SearchCategory>({
     {
       q,
       limit,
+    },
+    {
+      abortSignal: signal,
     },
   );
 
