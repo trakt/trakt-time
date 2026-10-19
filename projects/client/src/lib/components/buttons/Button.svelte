@@ -39,11 +39,19 @@
   const { guardedHref, originalHref } = $derived(
     useGuardedHref((rest as TraktButtonAnchorProps).href),
   );
+  const hasClickOutside = $derived(
+    (rest as TraktButtonAnchorProps).onclickoutside != null,
+  );
   const noscroll = $derived((rest as TraktButtonAnchorProps).noscroll);
   const replacestate = $derived((rest as TraktButtonAnchorProps).replacestate);
 
   const href = $derived($guardedHref);
   const { isActive } = $derived(useActiveLink($originalHref));
+
+  const attachClickOutside = (element: HTMLElement) => {
+    if (!hasClickOutside) return;
+    return clickOutside(element).destroy;
+  };
 
   const appendTestId = $derived((element: HTMLElement) => {
     onMount(() => {
@@ -77,7 +85,7 @@
 {#if href != null}
   <a
     use:disableTransitionOn={"touch"}
-    use:clickOutside
+    {@attach attachClickOutside}
     use:triggerWithKeyboard
     use:appendGlobalParameters={href}
     use:disableNavigation={rest.disabled}
@@ -102,7 +110,7 @@
 {:else}
   <button
     use:disableTransitionOn={"touch"}
-    use:clickOutside
+    {@attach attachClickOutside}
     use:appendTestId
     class="trakt-button"
     aria-label={label}
