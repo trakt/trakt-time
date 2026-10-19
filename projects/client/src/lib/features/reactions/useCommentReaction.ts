@@ -10,7 +10,7 @@ import {
 import { reactCommentRequest } from '$lib/requests/queries/comments/reactCommentRequest.ts';
 import { removeReactionCommentRequest } from '$lib/requests/queries/comments/removeReactionCommentRequest.ts';
 import { useInvalidator } from '$lib/stores/useInvalidator.ts';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map } from 'rxjs';
 import { toReactionSummary } from './toReactionSummary.ts';
 
 export function useCommentReaction({ id }: { id: number }) {
@@ -28,6 +28,11 @@ export function useCommentReaction({ id }: { id: number }) {
     map((query) => toReactionSummary(query.data)),
   );
 
+  const mayHaveReaction = async () => {
+    const $reactions = await firstValueFrom(reactions);
+    return !$reactions || $reactions.has(id);
+  };
+
   const withReacting = async (action: () => Promise<unknown>) => {
     isReacting.next(true);
     await action()
@@ -44,7 +49,9 @@ export function useCommentReaction({ id }: { id: number }) {
   const react = (reaction: Reaction) =>
     withReacting(async () => {
       track({ action: 'add', type: 'comment' });
-      await removeReactionCommentRequest({ id });
+      if (await mayHaveReaction()) {
+        await removeReactionCommentRequest({ id });
+      }
       return reactCommentRequest({ id, reaction_type: reaction });
     });
 
