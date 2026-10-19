@@ -121,9 +121,7 @@
     height: var(--trakttime-watchlist-btn-size);
     border-radius: 50%;
     border: none;
-    background: color-mix(in srgb, var(--shade-1000) 55%, transparent);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: var(--trakttime-overlay-chip-background);
     color: var(--trakttime-overlay-text-primary);
     display: flex;
     align-items: center;
