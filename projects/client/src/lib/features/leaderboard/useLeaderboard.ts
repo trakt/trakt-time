@@ -4,7 +4,7 @@ import type { LeaderboardEntry } from '$lib/requests/models/LeaderboardEntry.ts'
 import { userLeaderboardQuery } from '$lib/requests/queries/users/userLeaderboardQuery.ts';
 import { userStatsQuery } from '$lib/requests/queries/users/userStatsQuery.ts';
 import { usePaginatedListQuery } from '$lib/sections/lists/stores/usePaginatedListQuery.ts';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map } from 'rxjs';
 import { toViewerProfile } from './toViewerProfile.ts';
 import { weaveViewer } from './weaveViewer.ts';
 
@@ -15,11 +15,13 @@ export function useLeaderboard() {
     userLeaderboardQuery({ slug: 'me', limit: LEADERBOARD_LIMIT }),
   );
   const { user } = useUser();
-  const ownStats = useQuery(userStatsQuery({ slug: 'me' }));
+  const ownStats = useQuery(userStatsQuery({ slug: 'me' })).pipe(
+    map(($query) => $query.data),
+    distinctUntilChanged(),
+  );
 
   const entries = combineLatest([list, user, ownStats]).pipe(
-    map(([$list, $user, $stats]) => {
-      const stats = $stats.data;
+    map(([$list, $user, stats]) => {
       const viewer: LeaderboardEntry | null = $user.isVip && stats
         ? {
           key: 'leaderboard-viewer',
