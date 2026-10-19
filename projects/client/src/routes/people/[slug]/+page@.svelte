@@ -75,7 +75,12 @@
     <div class="person-hero">
       <div class="headshot-wrap">
         {#if person.headshot.url.medium}
-          <CrossOriginImage src={person.headshot.url.medium} alt={person.name} />
+          <CrossOriginImage
+            src={person.headshot.url.medium}
+            alt={person.name}
+            loading="eager"
+            fetchpriority="high"
+          />
         {:else}
           <div class="headshot-placeholder">{person.name.charAt(0)}</div>
         {/if}
