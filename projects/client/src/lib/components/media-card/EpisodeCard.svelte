@@ -1,6 +1,7 @@
 <script lang="ts">
   import TrackIcon from '$lib/components/icons/TrackIcon.svelte';
   import { onMount } from 'svelte';
+  import { firstValueFrom } from 'rxjs';
   import { useMarkAsWatched } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
   import type { UpNextEntry } from '$lib/requests/models/UpNextEntry.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
@@ -71,12 +72,10 @@
   let isCaughtUp = $state(false);
 
   async function celebrateCaughtUp(button: HTMLElement) {
-    if (!(await caughtUpDelight.claim())) return false;
+    if (!(await caughtUpDelight.claim())) return;
 
     isCaughtUp = true;
-    tickAndRing(button);
     celebrate({ effect: Sparkles, at: button });
-    return true;
   }
 
   async function toggleWatched() {
@@ -86,12 +85,15 @@
     }
 
     const isLastAired = entry.remaining === 1 && !hasEnded(entry.show.status);
-    await markAsWatched();
-
     const button = watchedButton;
-    if (!button) return;
-    if (isLastAired && (await celebrateCaughtUp(button))) return;
-    if (await checkDelight.claim()) tickAndRing(button);
+    if (button && (await firstValueFrom(checkDelight.isEnabled))) {
+      tickAndRing(button);
+    }
+
+    const isSuccess = await markAsWatched();
+
+    if (!isSuccess || !button || !isLastAired) return;
+    await celebrateCaughtUp(button);
   }
 </script>
 
