@@ -4,38 +4,45 @@ import type { MediaStoreProps } from '$lib/models/MediaStoreProps.ts';
 import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
 import { addToWatchlistRequest } from '$lib/requests/sync/addToWatchlistRequest.ts';
 import { removeFromWatchlistRequest } from '$lib/requests/sync/removeFromWatchlistRequest.ts';
+import { usePendingIntents } from '$lib/sections/media-actions/_internal/pendingIntents.ts';
 import { toBulkPayload } from '$lib/sections/media-actions/_internal/toBulkPayload.ts';
+import { withPendingIntent } from '$lib/sections/media-actions/_internal/withPendingIntent.ts';
 import { useInvalidator } from '$lib/stores/useInvalidator.ts';
 import { useIsWatchlisted } from '$lib/stores/useIsWatchlisted.ts';
-import { BehaviorSubject } from 'rxjs';
 
 export function useWatchlist(props: MediaStoreProps) {
   const { type } = props;
   const media = Array.isArray(props.media) ? props.media : [props.media];
-  const isWatchlistUpdating = new BehaviorSubject(false);
   const { invalidate } = useInvalidator();
   const { track } = useTrack(AnalyticsEvent.Watchlist);
 
   const ids = media.map(({ id }) => id);
 
-  const { isWatchlisted } = useIsWatchlisted(props);
+  const { isWatchlisted: isWatchlistedOnServer } = useIsWatchlisted(props);
   const body = toBulkPayload(type, ids);
+
+  const pending = usePendingIntents(`watchlist:${type}:${ids.join(',')}`);
+  const isWatchlistUpdating = pending.isPending;
+  const isWatchlisted = withPendingIntent({
+    current: isWatchlistedOnServer,
+    isAdding: pending.isAdding,
+    isRemoving: pending.isRemoving,
+  });
 
   const addToWatchlist = async () => {
     if (type === 'episode') {
       return;
     }
 
-    isWatchlistUpdating.next(true);
     track({ action: 'add' });
 
-    await addToWatchlistRequest({
-      body,
+    await pending.run('add', async () => {
+      await addToWatchlistRequest({
+        body,
+      });
+
+      await invalidate(InvalidateAction.Watchlisted(type));
     });
-
-    await invalidate(InvalidateAction.Watchlisted(type));
-
-    isWatchlistUpdating.next(false);
   };
 
   const removeFromWatchlist = async () => {
@@ -43,16 +50,15 @@ export function useWatchlist(props: MediaStoreProps) {
       return;
     }
 
-    isWatchlistUpdating.next(true);
     track({ action: 'remove' });
 
-    await removeFromWatchlistRequest({
-      body,
+    await pending.run('remove', async () => {
+      await removeFromWatchlistRequest({
+        body,
+      });
+
+      await invalidate(InvalidateAction.Watchlisted(type));
     });
-
-    await invalidate(InvalidateAction.Watchlisted(type));
-
-    isWatchlistUpdating.next(false);
   };
 
   return {
