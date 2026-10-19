@@ -3,7 +3,7 @@ import type { Paginatable } from '$lib/requests/models/Paginatable.ts';
 import { toLoadingState } from '$lib/utils/requests/toLoadingState.ts';
 import type { CreateInfiniteQueryOptions } from '$lib/features/query/types.ts';
 import type { InfiniteData, QueryKey } from '@tanstack/query-core';
-import { firstValueFrom, map } from 'rxjs';
+import { distinctUntilChanged, firstValueFrom, map } from 'rxjs';
 
 export function usePaginatedListQuery<
   TOutput extends { key: string },
@@ -24,13 +24,15 @@ export function usePaginatedListQuery<
   );
 
   const list = query.pipe(
-    map(($query) => {
-      if (!$query.data?.pages) {
+    map(($query) => $query.data),
+    distinctUntilChanged(),
+    map((data) => {
+      if (!data?.pages) {
         return [];
       }
 
       // Dedupe across pages to counter offset pagination drift
-      return $query.data.pages
+      return data.pages
         .flatMap((page) => page.entries)
         .filter(
           ((seen) => (entry) => {
