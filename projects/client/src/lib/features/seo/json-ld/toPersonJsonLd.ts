@@ -9,9 +9,11 @@ type PersonJsonLdParams = {
   url: string;
 };
 
-export function toPersonJsonLd(
-  { person, description, url }: PersonJsonLdParams,
-): JsonLd {
+export function toPersonJsonLd({
+  person,
+  description,
+  url,
+}: PersonJsonLdParams): JsonLd {
   return compact({
     '@context': 'https://schema.org',
     '@type': 'Person',

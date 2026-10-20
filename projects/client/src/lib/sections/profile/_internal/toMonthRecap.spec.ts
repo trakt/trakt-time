@@ -16,15 +16,17 @@ describe('toMonthRecap', () => {
   });
 
   it('sums last month and finds its top show and genre', () => {
-    expect(toMonthRecap({
-      watches: [
-        watch(3, 'Slow Horses', ['thriller', 'drama']),
-        watch(4, 'Slow Horses', ['thriller']),
-        watch(9, 'Severance', ['science-fiction']),
-        watch(12, null, ['thriller']),
-      ],
-      now,
-    })).toEqual({
+    expect(
+      toMonthRecap({
+        watches: [
+          watch(3, 'Slow Horses', ['thriller', 'drama']),
+          watch(4, 'Slow Horses', ['thriller']),
+          watch(9, 'Severance', ['science-fiction']),
+          watch(12, null, ['thriller']),
+        ],
+        now,
+      }),
+    ).toEqual({
       month: new Date(2026, 8, 1),
       minutes: 200,
       topShow: 'Slow Horses',

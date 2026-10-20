@@ -17,9 +17,12 @@ type CelebrateParams<P extends OriginProps> = {
   haptic?: number | number[];
 };
 
-export function celebrate<P extends OriginProps>(
-  { effect, at, props, haptic = 8 }: CelebrateParams<P>,
-) {
+export function celebrate<P extends OriginProps>({
+  effect,
+  at,
+  props,
+  haptic = 8,
+}: CelebrateParams<P>) {
   vibrate(haptic);
 
   if (prefersReducedMotion()) {

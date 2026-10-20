@@ -28,10 +28,9 @@ type DiscoverUrlParams = SearchParams & {
   mode?: DiscoverMode;
 };
 
-type UrlBuilderParams =
-  & TypeParams
-  & Omit<WellKnownQueryParams, 'search'>
-  & SearchParams;
+type UrlBuilderParams = TypeParams &
+  Omit<WellKnownQueryParams, 'search'> &
+  SearchParams;
 
 function encodeRecord(
   params?: Record<string, string | number | boolean>,
@@ -84,7 +83,8 @@ const discoverDrilldownFactory =
   };
 
 const categoryDrilldownFactory =
-  (category: string) => ({ type, ...params }: UrlBuilderParams) => {
+  (category: string) =>
+  ({ type, ...params }: UrlBuilderParams) => {
     const baseUrl = `/${category}/${type}s`;
     return baseUrl + buildParamString(sanitizeParams(params));
   };
@@ -108,9 +108,9 @@ const ogIframeSlurmFactory = (url: HttpsUrl, token: string | Nil): HttpsUrl => {
 };
 
 const ogIframeAccessTokenFactory = (url: HttpsUrl, token: string): HttpsUrl => {
-  return `${
-    ogIframeFactory(url)
-  }&access_token=${token}&client_id=${TRAKT_CLIENT_ID}`;
+  return `${ogIframeFactory(
+    url,
+  )}&access_token=${token}&client_id=${TRAKT_CLIENT_ID}`;
 };
 
 const ogSupportFactory = (username?: string): HttpsUrl | MailToUrl => {
@@ -206,9 +206,9 @@ export const UrlBuilder = {
     user: (username: string) => `/profile/${username}`,
     me: () => UrlBuilder.profile.user('me'),
     favorites: (username: string, params: Record<string, string> = {}) =>
-      `/profile/${username}/favorites${
-        buildParamString(sanitizeParams(params))
-      }`,
+      `/profile/${username}/favorites${buildParamString(
+        sanitizeParams(params),
+      )}`,
     history: (username: string) => `/profile/${username}/history`,
     social: (username: string) => `/profile/${username}/social`,
     progress: (username: string) => `/profile/${username}/progress`,
@@ -216,9 +216,9 @@ export const UrlBuilder = {
   },
   users: (id: string) => ({
     lists: (slug: string, params: Record<string, string> = {}) =>
-      `/users/${id}/lists/${slug}${
-        buildParamString({ ...sanitizeParams(params) })
-      }`,
+      `/users/${id}/lists/${slug}${buildParamString({
+        ...sanitizeParams(params),
+      })}`,
     yearToDate: (year: number) => `/users/${id}/year/${year}`,
     monthInReview: (year: number, month: number) =>
       `/users/${id}/mir/${year}/${month}`,
@@ -228,18 +228,25 @@ export const UrlBuilder = {
     me: (library: string) => `/users/me/library?library=${library}`,
   },
   lists: {
-    personal: (
-      { id, name, ownerId }: { id: number; name: string; ownerId: number },
-    ) => `/lists/${id}${buildParamString({ name, owner: ownerId })}`,
+    personal: ({
+      id,
+      name,
+      ownerId,
+    }: {
+      id: number;
+      name: string;
+      ownerId: number;
+    }) => `/lists/${id}${buildParamString({ name, owner: ownerId })}`,
     smart: {
       create: () => '/lists/smart/create',
       all: () => '/lists/smart/view',
       view: (id: number) => `/lists/smart/view/${id}`,
     },
     official: (slug: string, params: Record<string, string | number> = {}) =>
-      `/lists/official/${slug}${
-        buildParamString({ ...sanitizeParams(params), type: params.type })
-      }`,
+      `/lists/official/${slug}${buildParamString({
+        ...sanitizeParams(params),
+        type: params.type,
+      })}`,
     user: (user: string, params?: UrlBuilderParams) => {
       if (!params) {
         return `/users/${user}/lists`;
@@ -248,9 +255,9 @@ export const UrlBuilder = {
       return categoryDrilldownFactory(`users/${user}/lists`)(params);
     },
     watchlist: (user: string, params: Record<string, string | number> = {}) => {
-      return `/users/${user}/watchlist${
-        buildParamString(sanitizeParams(params))
-      }`;
+      return `/users/${user}/watchlist${buildParamString(
+        sanitizeParams(params),
+      )}`;
     },
     all: (user: string, type: PersonalListType) =>
       listsDrilldownFactory(user)(type),

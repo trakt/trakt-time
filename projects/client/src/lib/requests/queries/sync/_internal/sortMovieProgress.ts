@@ -22,9 +22,11 @@ function getSortValue(
   }
 }
 
-export function sortMovieProgress(
-  { entries, sortBy, sortHow = 'desc' }: SortMovieProgressProps,
-): MovieProgressEntry[] {
+export function sortMovieProgress({
+  entries,
+  sortBy,
+  sortHow = 'desc',
+}: SortMovieProgressProps): MovieProgressEntry[] {
   const direction = sortHow === 'asc' ? 1 : -1;
 
   return entries.toSorted(

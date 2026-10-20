@@ -15,24 +15,28 @@ import { getGlobalFilterDependencies } from '../../_internal/getGlobalFilterDepe
 import type { FilterParams } from '../../models/FilterParams.ts';
 import type { PaginationParams } from '../../models/PaginationParams.ts';
 
-type ShowActivityHistoryParams =
-  & {
-    slug: string;
-    startDate?: Date;
-    endDate?: Date;
-    id?: number;
-  }
-  & ApiParams
-  & PaginationParams
-  & FilterParams;
+type ShowActivityHistoryParams = {
+  slug: string;
+  startDate?: Date;
+  endDate?: Date;
+  id?: number;
+} & ApiParams &
+  PaginationParams &
+  FilterParams;
 
 // Show history responses are per episode
 export type ShowActivityHistory = EpisodeActivityHistory;
 
-const showHistoryRequest = (
-  { fetch, slug, startDate, endDate, limit, id, page, filter }:
-    ShowActivityHistoryParams,
-) => {
+const showHistoryRequest = ({
+  fetch,
+  slug,
+  startDate,
+  endDate,
+  limit,
+  id,
+  page,
+  filter,
+}: ShowActivityHistoryParams) => {
   const queryParams = {
     extended: 'full,images' as const,
     start_at: startDate?.toISOString(),
@@ -44,13 +48,13 @@ const showHistoryRequest = (
 
   return id
     ? api({ fetch }).users.history.show({
-      params: { id: slug, item_id: `${id}` },
-      query: queryParams,
-    })
+        params: { id: slug, item_id: `${id}` },
+        query: queryParams,
+      })
     : api({ fetch }).users.history.shows({
-      params: { id: slug },
-      query: queryParams,
-    });
+        params: { id: slug },
+        query: queryParams,
+      });
 };
 
 const mapToShowActivityHistory = (

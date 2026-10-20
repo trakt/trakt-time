@@ -26,11 +26,14 @@ describe('toUnitLabelParts', () => {
 describe('toShortWatchTime', () => {
   it('keeps the two largest units', () => {
     expect(
-      toShortWatchTime([
-        { unit: 'year', value: 3 },
-        { unit: 'month', value: 8 },
-        { unit: 'day', value: 29 },
-      ], 'en'),
+      toShortWatchTime(
+        [
+          { unit: 'year', value: 3 },
+          { unit: 'month', value: 8 },
+          { unit: 'day', value: 29 },
+        ],
+        'en',
+      ),
     ).toBe('3y 8m');
   });
 });

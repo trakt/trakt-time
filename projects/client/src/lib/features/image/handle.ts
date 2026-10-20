@@ -42,7 +42,7 @@ export const resolver = IS_PROD ? prodResolver : devResolver;
 
 export const handle: Handle = async ({ event, resolve }) => {
   if (event.url.pathname.startsWith(ImageEndpoint.Gimme)) {
-    const { url } = await event.request.json() as { url: string };
+    const { url } = (await event.request.json()) as { url: string };
 
     return new Response(JSON.stringify(await resolver(url)));
   }

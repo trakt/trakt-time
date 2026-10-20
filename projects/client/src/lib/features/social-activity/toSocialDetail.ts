@@ -3,16 +3,20 @@ import type { MediaSocial } from '$lib/requests/models/MediaSocial.ts';
 import type { AvailableLanguage } from '$lib/features/i18n/index.ts';
 import { toHumanDuration } from '$lib/utils/formatting/date/toHumanDuration.ts';
 
-export function toSocialDetail(
-  { entry, locale }: { entry: MediaSocial; locale: AvailableLanguage },
-): string {
+export function toSocialDetail({
+  entry,
+  locale,
+}: {
+  entry: MediaSocial;
+  locale: AvailableLanguage;
+}): string {
   const { watched, watchlisted } = entry;
 
-  const watchedPart = watched && (
-    watched.minutesWatched
+  const watchedPart =
+    watched &&
+    (watched.minutesWatched
       ? toHumanDuration({ minutes: watched.minutesWatched }, locale)
-      : m.tag_text_plays({ number: watched.plays })
-  );
+      : m.tag_text_plays({ number: watched.plays }));
 
   return [
     watchedPart,

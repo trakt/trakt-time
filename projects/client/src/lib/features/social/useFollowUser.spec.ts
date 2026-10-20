@@ -2,7 +2,7 @@ import type { UserProfile } from '$lib/requests/models/UserProfile.ts';
 import { describe, expect, it } from 'vitest';
 import { toFollowStatus } from './useFollowUser.ts';
 
-const profile = (slug: string) => ({ slug } as UserProfile);
+const profile = (slug: string) => ({ slug }) as UserProfile;
 
 describe('toFollowStatus', () => {
   it('is following when the slug is in the following list', () => {

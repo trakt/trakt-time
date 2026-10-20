@@ -19,11 +19,10 @@ export const TrendingMovieSchema = MovieEntrySchema.extend({
 });
 export type TrendingMovie = z.infer<typeof TrendingMovieSchema>;
 
-type MovieTrendingParams =
-  & PaginationParams
-  & ApiParams
-  & FilterParams
-  & SearchParams;
+type MovieTrendingParams = PaginationParams &
+  ApiParams &
+  FilterParams &
+  SearchParams;
 
 export function mapToTrendingMovie({
   watchers,
@@ -35,22 +34,25 @@ export function mapToTrendingMovie({
   };
 }
 
-const movieTrendingRequest = (
-  { fetch, limit, page, filter, filterOverride, search }: MovieTrendingParams,
-) => {
+const movieTrendingRequest = ({
+  fetch,
+  limit,
+  page,
+  filter,
+  filterOverride,
+  search,
+}: MovieTrendingParams) => {
   const filterParams = filterOverride?.movie ?? filter;
 
-  return api({ fetch })
-    .movies
-    .trending({
-      query: {
-        extended: 'full,images,colors',
-        page,
-        limit,
-        ...filterParams,
-        ...search,
-      },
-    });
+  return api({ fetch }).movies.trending({
+    query: {
+      extended: 'full,images,colors',
+      page,
+      limit,
+      ...filterParams,
+      ...search,
+    },
+  });
 };
 
 export const movieTrendingQuery = defineInfiniteQuery({
@@ -59,9 +61,7 @@ export const movieTrendingQuery = defineInfiniteQuery({
     InvalidateAction.Watchlisted('movie'),
     InvalidateAction.MarkAsWatched('movie'),
   ],
-  dependencies: (
-    params,
-  ) => [
+  dependencies: (params) => [
     params.limit,
     params.page,
     ...getGlobalFilterDependencies(

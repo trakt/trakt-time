@@ -33,9 +33,7 @@ type MovieProps<T> = {
 
 type ShowProps<T> = {
   type: 'show';
-  media: ArrayOrSingle<
-    T & Partial<SeasonInfo> & Partial<EpisodeCount>
-  >;
+  media: ArrayOrSingle<T & Partial<SeasonInfo> & Partial<EpisodeCount>>;
 };
 
 export type MediaStoreProps<T extends { id: number } = { id: number }> =

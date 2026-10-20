@@ -32,7 +32,7 @@ export function useBlockUser({ slug, username }: UseBlockUserProps) {
         Promise.all([
           invalidate(InvalidateAction.User.Block),
           invalidate(InvalidateAction.User.Follow),
-        ])
+        ]),
       )
       .finally(() => isUpdatingBlock.next(false));
   };

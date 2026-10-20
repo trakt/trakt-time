@@ -44,8 +44,11 @@ function hasEpisodeId(item: UniversalImportItem): boolean {
 function isPositional(
   item: UniversalImportItem,
 ): item is UniversalImportItem & { season: number; episode: number } {
-  return (item.showTvdb != null || item.showImdb != null) &&
-    item.season != null && item.episode != null;
+  return (
+    (item.showTvdb != null || item.showImdb != null) &&
+    item.season != null &&
+    item.episode != null
+  );
 }
 
 type PositionalEpisode = { number: number; watched_at?: string };
@@ -69,11 +72,12 @@ function toPositionalShows(
   >,
 ): PositionalShow[] {
   const byShow = items.reduce((shows, item) => {
-    const key = item.showTvdb != null
-      ? `tvdb:${item.showTvdb}`
-      : `imdb:${item.showImdb}`;
-    const group = shows.get(key) ??
-      { ids: {} as ShowIds, seasons: new Map<number, PositionalEpisode[]>() };
+    const key =
+      item.showTvdb != null ? `tvdb:${item.showTvdb}` : `imdb:${item.showImdb}`;
+    const group = shows.get(key) ?? {
+      ids: {} as ShowIds,
+      seasons: new Map<number, PositionalEpisode[]>(),
+    };
     const episodes = group.seasons.get(item.season) ?? [];
     group.seasons.set(item.season, [
       ...episodes,
@@ -102,8 +106,8 @@ export function buildHistoryPayload(
     .filter(isPositional)
     .filter((item) => preferPositional || !hasEpisodeId(item));
   const positionalSet = new Set<UniversalImportItem>(positionalEpisodes);
-  const idEpisodes = episodeItems.filter((item) =>
-    !positionalSet.has(item) && hasEpisodeId(item)
+  const idEpisodes = episodeItems.filter(
+    (item) => !positionalSet.has(item) && hasEpisodeId(item),
   );
 
   const collect = (
@@ -121,8 +125,8 @@ export function buildHistoryPayload(
       ...toPositionalShows(positionalEpisodes),
     ],
     seasons: collect('season', (item) => toHistoryEntry(item, SEASON_IDS)),
-    episodes: idEpisodes.flatMap((item) =>
-      toHistoryEntry(item, toEpisodeIdPriority(item)) ?? []
+    episodes: idEpisodes.flatMap(
+      (item) => toHistoryEntry(item, toEpisodeIdPriority(item)) ?? [],
     ),
   } as HistoryAddRequest;
 }

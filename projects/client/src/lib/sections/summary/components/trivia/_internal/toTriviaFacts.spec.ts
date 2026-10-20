@@ -11,16 +11,18 @@ const item: MediaTrivia = {
 
 describe('toTriviaFacts', () => {
   it('returns the full items when there are any', () => {
-    expect(toTriviaFacts({ items: [item], summary: ['Quick fact.'] }))
-      .toEqual([item]);
+    expect(toTriviaFacts({ items: [item], summary: ['Quick fact.'] })).toEqual([
+      item,
+    ]);
   });
 
   it('falls back to uncategorized summary facts when items are empty', () => {
-    expect(toTriviaFacts({ items: [], summary: ['First.', 'Second.'] }))
-      .toEqual([
-        { key: 'summary_0', text: 'First.', isSpoiler: false, category: null },
-        { key: 'summary_1', text: 'Second.', isSpoiler: false, category: null },
-      ]);
+    expect(
+      toTriviaFacts({ items: [], summary: ['First.', 'Second.'] }),
+    ).toEqual([
+      { key: 'summary_0', text: 'First.', isSpoiler: false, category: null },
+      { key: 'summary_1', text: 'Second.', isSpoiler: false, category: null },
+    ]);
   });
 
   it('returns nothing when both are empty', () => {

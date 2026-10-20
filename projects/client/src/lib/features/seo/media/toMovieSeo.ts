@@ -10,9 +10,12 @@ type MovieSeoParams = {
   url: string;
 };
 
-export function toMovieSeo(
-  { movie, title, overview, url }: MovieSeoParams,
-): SeoMeta {
+export function toMovieSeo({
+  movie,
+  title,
+  overview,
+  url,
+}: MovieSeoParams): SeoMeta {
   if (!movie) return { type: 'video.movie' };
 
   const name = title || movie.title;

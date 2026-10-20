@@ -48,7 +48,7 @@ async function main() {
 
   try {
     for (const [orientation, viewport] of Object.entries(VIEWPORTS) as Array<
-      [Orientation, typeof VIEWPORTS[Orientation]]
+      [Orientation, (typeof VIEWPORTS)[Orientation]]
     >) {
       const context = await browser.newContext({
         viewport,

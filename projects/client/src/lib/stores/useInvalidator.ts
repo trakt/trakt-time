@@ -20,8 +20,9 @@ export function useInvalidator() {
 
     await client?.invalidateQueries({
       predicate: (query) => {
-        return hasAuth ||
-          actions.some((action) => query.queryKey.includes(action));
+        return (
+          hasAuth || actions.some((action) => query.queryKey.includes(action))
+        );
       },
     });
   };

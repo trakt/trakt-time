@@ -11,9 +11,12 @@ type ShowJsonLdParams = {
   url: string;
 };
 
-export function toShowJsonLd(
-  { show, title, description, url }: ShowJsonLdParams,
-): JsonLd {
+export function toShowJsonLd({
+  show,
+  title,
+  description,
+  url,
+}: ShowJsonLdParams): JsonLd {
   return compact({
     '@context': 'https://schema.org',
     '@type': 'TVSeries',

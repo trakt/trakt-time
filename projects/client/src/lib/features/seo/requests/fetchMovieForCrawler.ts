@@ -7,12 +7,12 @@ type FetchMovieParams = {
   slug: string;
 };
 
-export async function fetchMovieForCrawler(
-  { fetch, slug }: FetchMovieParams,
-): Promise<MovieEntry | null> {
+export async function fetchMovieForCrawler({
+  fetch,
+  slug,
+}: FetchMovieParams): Promise<MovieEntry | null> {
   const response = await unauthorizedApi({ fetch })
-    .movies
-    .summary({
+    .movies.summary({
       params: { id: slug },
       query: { extended: 'full,images' },
     })

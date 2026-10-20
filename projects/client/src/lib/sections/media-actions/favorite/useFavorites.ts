@@ -12,9 +12,10 @@ export type FavoritesStoreProps = {
   title: string;
 };
 
-function getFavoritesPayload(
-  { type, id }: Pick<FavoritesStoreProps, 'type' | 'id'>,
-) {
+function getFavoritesPayload({
+  type,
+  id,
+}: Pick<FavoritesStoreProps, 'type' | 'id'>) {
   switch (type) {
     case 'movie':
       return { movies: [{ ids: { trakt: id } }] };

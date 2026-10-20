@@ -121,8 +121,9 @@ describe('mapToShowEntry', () => {
 
   it('derives the total runtime from runtime and episode count', () => {
     expect(mapToShowEntry(fullShow).totalRuntime).toBe(3600);
-    expect(mapToShowEntry({ ...fullShow, total_runtime: 3400 }).totalRuntime)
-      .toBe(3400);
+    expect(
+      mapToShowEntry({ ...fullShow, total_runtime: 3400 }).totalRuntime,
+    ).toBe(3400);
   });
 
   it('fills defaults for a minimal response', () => {

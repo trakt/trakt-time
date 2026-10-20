@@ -23,9 +23,7 @@ export type UserHistory = {
   shows: Map<number, WatchedShow>;
 };
 
-function toWatchedMap<T extends { id: number }>(
-  entries: T[],
-): Map<number, T> {
+function toWatchedMap<T extends { id: number }>(entries: T[]): Map<number, T> {
   return new Map(entries.map((entry) => [entry.id, entry]));
 }
 
@@ -37,9 +35,10 @@ function toQueryMap<T extends { id: number }>(
   return toWatchedMap(data?.pages.flatMap((p) => p.entries) ?? []);
 }
 
-function isSettled(
-  query: { isPending: boolean; isFetchingNextPage: boolean },
-): boolean {
+function isSettled(query: {
+  isPending: boolean;
+  isFetchingNextPage: boolean;
+}): boolean {
   return !query.isPending && !query.isFetchingNextPage;
 }
 
@@ -69,10 +68,13 @@ export function useCurrentUserHistory(): UseCurrentUserHistoryResult {
 
       return { movies: movies.data, shows: shows.data };
     }),
-    distinctUntilChanged((prev, curr) =>
-      prev === curr ||
-      (prev !== null && curr !== null &&
-        prev.movies === curr.movies && prev.shows === curr.shows)
+    distinctUntilChanged(
+      (prev, curr) =>
+        prev === curr ||
+        (prev !== null &&
+          curr !== null &&
+          prev.movies === curr.movies &&
+          prev.shows === curr.shows),
     ),
     map((settled) => {
       if (settled === null) {

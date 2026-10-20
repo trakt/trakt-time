@@ -18,17 +18,19 @@ type ToWhereToWatchServicesParams = {
 const isPurchaseService = (source?: StreamingSource) =>
   source?.type === 'purchase';
 
-export function toWhereToWatchServices(
-  { options, sources }: ToWhereToWatchServicesParams,
-): WhereToWatchService[] {
+export function toWhereToWatchServices({
+  options,
+  sources,
+}: ToWhereToWatchServicesParams): WhereToWatchService[] {
   const sourcesByKey = new Map(
     sources.map((source) => [source.source, source]),
   );
   const offers = [...options.streaming, ...options.free, ...options.onDemand];
 
   return offers
-    .filter((offer, index) =>
-      offers.findIndex((other) => other.source === offer.source) === index
+    .filter(
+      (offer, index) =>
+        offers.findIndex((other) => other.source === offer.source) === index,
     )
     .filter((offer) => !isPurchaseService(sourcesByKey.get(offer.source)))
     .map((offer) => {

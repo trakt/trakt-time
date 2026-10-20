@@ -5,9 +5,7 @@ import type { PaginationParams } from '$lib/requests/models/PaginationParams.ts'
 import type { SearchParams } from '$lib/requests/models/SearchParams.ts';
 import type { ShowEntry } from '$lib/requests/models/ShowEntry.ts';
 import { moviePopularQuery } from '$lib/requests/queries/movies/moviePopularQuery.ts';
-import {
-  showPopularQuery,
-} from '$lib/requests/queries/shows/showPopularQuery.ts';
+import { showPopularQuery } from '$lib/requests/queries/shows/showPopularQuery.ts';
 import { addYear } from '$lib/utils/date/addYear.ts';
 import type { InfiniteQuery } from '../../../features/query/models/InfiniteQuery.ts';
 import { mediaPopularQuery } from '../../../requests/queries/media/mediaPopularQuery.ts';
@@ -16,23 +14,21 @@ import { usePaginatedListQuery } from '../stores/usePaginatedListQuery.ts';
 export type PopularEntry = ShowEntry | MovieEntry;
 export type PopularMediaList = Array<PopularEntry>;
 
-type PopularListStoreProps =
-  & {
-    type: DiscoverMode;
-  }
-  & PaginationParams
-  & FilterParams
-  & SearchParams;
+type PopularListStoreProps = {
+  type: DiscoverMode;
+} & PaginationParams &
+  FilterParams &
+  SearchParams;
 
-function typeToQuery(
-  { type, ...params }: PopularListStoreProps,
-) {
+function typeToQuery({ type, ...params }: PopularListStoreProps) {
   if (!params.filter?.years) {
     // FIXME: remove this when behavior is uplifted to the server
     params.filter = params.filter ?? {};
+    // biome-ignore format: @ts-expect-error only covers the next line
     // @ts-expect-error we are extending the object to dedupe
     params.filter.start_date = params.filter?.start_date ??
       addYear(new Date(), -1).toISOString();
+    // biome-ignore format: @ts-expect-error only covers the next line
     // @ts-expect-error we are extending the object to dedupe
     params.filter.end_date = params.filter?.end_date ??
       addYear(new Date(), 0).toISOString();
@@ -40,20 +36,14 @@ function typeToQuery(
 
   switch (type) {
     case 'movie':
-      return moviePopularQuery(params) as InfiniteQuery<
-        PopularEntry
-      >;
+      return moviePopularQuery(params) as InfiniteQuery<PopularEntry>;
     case 'show':
       return showPopularQuery(params) as InfiniteQuery<PopularEntry>;
     case 'media':
-      return mediaPopularQuery(params) as InfiniteQuery<
-        PopularEntry
-      >;
+      return mediaPopularQuery(params) as InfiniteQuery<PopularEntry>;
   }
 }
 
-export function usePopularList(
-  props: PopularListStoreProps,
-) {
+export function usePopularList(props: PopularListStoreProps) {
   return usePaginatedListQuery(typeToQuery(props));
 }

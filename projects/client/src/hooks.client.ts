@@ -35,7 +35,7 @@ const DYNAMIC_IMPORT_ERROR_PATTERNS = [
 function isDynamicImportError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
   return DYNAMIC_IMPORT_ERROR_PATTERNS.some((pattern) =>
-    message.includes(pattern)
+    message.includes(pattern),
   );
 }
 

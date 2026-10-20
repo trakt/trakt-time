@@ -17,9 +17,7 @@ type RelatedListStoreProps = PaginationParams & {
   slug: string;
 };
 
-function typeToQuery(
-  props: RelatedListStoreProps,
-) {
+function typeToQuery(props: RelatedListStoreProps) {
   const params = {
     ...props,
     limit: DEFAULT_RELATED_LIMIT,
@@ -27,16 +25,12 @@ function typeToQuery(
 
   switch (params.type) {
     case 'movie':
-      return movieRelatedQuery(params) as InfiniteQuery<
-        RelatedEntry
-      >;
+      return movieRelatedQuery(params) as InfiniteQuery<RelatedEntry>;
     case 'show':
       return showRelatedQuery(params) as InfiniteQuery<RelatedEntry>;
   }
 }
 
-export function useRelatedList(
-  props: RelatedListStoreProps,
-) {
+export function useRelatedList(props: RelatedListStoreProps) {
   return usePaginatedListQuery(typeToQuery(props));
 }

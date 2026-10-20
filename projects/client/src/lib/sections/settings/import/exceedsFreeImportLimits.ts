@@ -6,10 +6,13 @@ type ExceedsFreeImportLimitsParams = {
   limits: UserLimits;
 };
 
-export function exceedsFreeImportLimits(
-  { counts, limits }: ExceedsFreeImportLimitsParams,
-): boolean {
-  return counts.history > limits.history.free ||
+export function exceedsFreeImportLimits({
+  counts,
+  limits,
+}: ExceedsFreeImportLimitsParams): boolean {
+  return (
+    counts.history > limits.history.free ||
     counts.watchlist > limits.watchlistItems.free ||
-    counts.list > limits.totalListItems.free;
+    counts.list > limits.totalListItems.free
+  );
 }

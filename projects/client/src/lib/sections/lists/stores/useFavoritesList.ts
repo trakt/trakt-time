@@ -16,11 +16,16 @@ type UseFavoritesProps = {
   sortHow?: SortDirection;
 } & FilterParams;
 
-function typeToQuery(
-  { type, slug, filter, limit, sortBy, sortHow }: UseFavoritesProps & {
-    limit: number;
-  },
-) {
+function typeToQuery({
+  type,
+  slug,
+  filter,
+  limit,
+  sortBy,
+  sortHow,
+}: UseFavoritesProps & {
+  limit: number;
+}) {
   const params = { slug, filter, limit, sortBy, sortHow };
 
   switch (type) {
@@ -33,10 +38,14 @@ function typeToQuery(
   }
 }
 
-export function useFavoritesList(
-  { type, slug, filter, limit = DEFAULT_PAGE_SIZE, sortBy, sortHow }:
-    UseFavoritesProps,
-) {
+export function useFavoritesList({
+  type,
+  slug,
+  filter,
+  limit = DEFAULT_PAGE_SIZE,
+  sortBy,
+  sortHow,
+}: UseFavoritesProps) {
   return usePaginatedListQuery(
     typeToQuery({ type, slug, filter, limit, sortBy, sortHow }),
   );

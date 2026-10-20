@@ -9,26 +9,20 @@ import { UserProfileSchema } from '../../models/UserProfile.ts';
 
 type FollowersParams = { slug: string } & ApiParams;
 
-const followersRequest = (
-  { fetch, slug }: FollowersParams,
-) =>
-  api({ fetch })
-    .users
-    .followers({
-      params: {
-        id: slug,
-      },
-      query: {
-        extended: 'full,vip,images' as 'full,vip',
-      },
-    });
+const followersRequest = ({ fetch, slug }: FollowersParams) =>
+  api({ fetch }).users.followers({
+    params: {
+      id: slug,
+    },
+    query: {
+      extended: 'full,vip,images' as 'full,vip',
+    },
+  });
 
 export const followersQuery = defineQuery({
   key: 'followers',
   invalidations: [InvalidateAction.User.Follow],
-  dependencies: (
-    params: FollowersParams,
-  ) => [params.slug],
+  dependencies: (params: FollowersParams) => [params.slug],
   request: followersRequest,
   mapper: (response) =>
     toUniqueProfiles(response.body.map(({ user }) => mapToUserProfile(user))),

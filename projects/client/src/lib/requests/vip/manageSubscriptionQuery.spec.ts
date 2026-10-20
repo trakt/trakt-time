@@ -21,9 +21,12 @@ describe('manageSubscriptionQuery', () => {
 
   it('should report a missing subscription', async () => {
     vi.mocked(rawApiFetch).mockResolvedValue(
-      Response.json({ message: 'No active Stripe subscriptions found' }, {
-        status: 404,
-      }),
+      Response.json(
+        { message: 'No active Stripe subscriptions found' },
+        {
+          status: 404,
+        },
+      ),
     );
 
     const result = await manageSubscriptionQuery({ returnUrl: RETURN_URL });
@@ -46,8 +49,9 @@ describe('manageSubscriptionQuery', () => {
       Response.json({ message: 'User is not a Stripe VIP' }, { status: 400 }),
     );
 
-    await expect(manageSubscriptionQuery({ returnUrl: RETURN_URL })).rejects
-      .toThrow('Failed to fetch data');
+    await expect(
+      manageSubscriptionQuery({ returnUrl: RETURN_URL }),
+    ).rejects.toThrow('Failed to fetch data');
   });
 
   it('should not replace the page on a server error', async () => {
@@ -57,8 +61,9 @@ describe('manageSubscriptionQuery', () => {
     const onFetchError = vi.fn();
     globalThis.window.addEventListener(FETCH_ERROR_EVENT, onFetchError);
 
-    await expect(manageSubscriptionQuery({ returnUrl: RETURN_URL })).rejects
-      .toThrow('(500)');
+    await expect(
+      manageSubscriptionQuery({ returnUrl: RETURN_URL }),
+    ).rejects.toThrow('(500)');
 
     globalThis.window.removeEventListener(FETCH_ERROR_EVENT, onFetchError);
     expect(onFetchError).not.toHaveBeenCalled();

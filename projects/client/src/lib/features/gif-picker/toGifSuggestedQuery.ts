@@ -5,8 +5,9 @@ type ToGifSuggestedQueryParams = {
   type: ExtendedMediaType;
 };
 
-export function toGifSuggestedQuery(
-  { title, type }: ToGifSuggestedQueryParams,
-) {
+export function toGifSuggestedQuery({
+  title,
+  type,
+}: ToGifSuggestedQueryParams) {
   return `${title} ${type}`;
 }

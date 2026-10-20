@@ -17,13 +17,13 @@ import { findOrphanedRatingIds } from './findOrphanedRatingIds.ts';
 import { toMarkAsWatchedPayload } from './toMarkAsWatchedPayload.ts';
 import { useIsWatched } from './useIsWatched.ts';
 
-export type MarkAsWatchedStoreProps = MediaStoreProps<
-  { id: number; effectiveReleaseDate: Date; status?: MediaStatus }
->;
+export type MarkAsWatchedStoreProps = MediaStoreProps<{
+  id: number;
+  effectiveReleaseDate: Date;
+  status?: MediaStatus;
+}>;
 
-export function useMarkAsWatched(
-  props: MarkAsWatchedStoreProps,
-) {
+export function useMarkAsWatched(props: MarkAsWatchedStoreProps) {
   const { type } = props;
   const media = Array.isArray(props.media) ? props.media : [props.media];
   const isMarkingAsWatched = new BehaviorSubject(false);

@@ -7,8 +7,9 @@ const HOUR = 60 * 60 * 1000;
 
 describe('toCompactAge', () => {
   it('should show minutes for the last hour', () => {
-    expect(toCompactAge({ date: ago(5 * 60 * 1000), now, locale: 'en' }))
-      .toBe('5m');
+    expect(toCompactAge({ date: ago(5 * 60 * 1000), now, locale: 'en' })).toBe(
+      '5m',
+    );
   });
 
   it('should show hours for the last day', () => {
@@ -16,13 +17,15 @@ describe('toCompactAge', () => {
   });
 
   it('should show days for the last week', () => {
-    expect(toCompactAge({ date: ago(4 * 24 * HOUR), now, locale: 'en' }))
-      .toBe('4d');
+    expect(toCompactAge({ date: ago(4 * 24 * HOUR), now, locale: 'en' })).toBe(
+      '4d',
+    );
   });
 
   it('should show weeks for the last month', () => {
-    expect(toCompactAge({ date: ago(15 * 24 * HOUR), now, locale: 'en' }))
-      .toBe('2w');
+    expect(toCompactAge({ date: ago(15 * 24 * HOUR), now, locale: 'en' })).toBe(
+      '2w',
+    );
   });
 
   it('should show a short date for anything older', () => {
@@ -40,7 +43,8 @@ describe('toCompactAge', () => {
   });
 
   it('should show an unknown date for watches stored at the unix epoch', () => {
-    expect(toCompactAge({ date: new Date(0), now, locale: 'en' }))
-      .toBe('Unknown date');
+    expect(toCompactAge({ date: new Date(0), now, locale: 'en' })).toBe(
+      'Unknown date',
+    );
   });
 });

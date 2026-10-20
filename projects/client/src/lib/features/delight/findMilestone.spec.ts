@@ -5,10 +5,12 @@ describe('findMilestone', () => {
   const before = { episodes: 999, movies: 42, hours: 700 };
 
   it('reports the milestone the new counts crossed', () => {
-    expect(findMilestone({
-      before,
-      after: { episodes: 1000, movies: 42, hours: 701 },
-    })).toEqual({ kind: 'episodes', threshold: 1000, from: 999, to: 1000 });
+    expect(
+      findMilestone({
+        before,
+        after: { episodes: 1000, movies: 42, hours: 701 },
+      }),
+    ).toEqual({ kind: 'episodes', threshold: 1000, from: 999, to: 1000 });
   });
 
   it('covers movies and hours too', () => {

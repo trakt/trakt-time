@@ -65,8 +65,7 @@ describe('toScreenTime', () => {
       toScreenTime({
         now: NOW,
         watches: [watch('2026-09-26T08:00:00'), ...watches],
-      })
-        .streak,
+      }).streak,
     ).toBe(4);
     expect(toScreenTime({ now: NOW, watches: [] }).streak).toBe(0);
   });

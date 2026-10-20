@@ -37,7 +37,7 @@ export function useEpisodeSpoilerImage(props: SpoilerImageProps) {
         default:
           return $isSpoilerHidden
             ? show.cover.url.thumb
-            : episode.cover.url ?? show.cover.url.thumb;
+            : (episode.cover.url ?? show.cover.url.thumb);
       }
     }),
   );

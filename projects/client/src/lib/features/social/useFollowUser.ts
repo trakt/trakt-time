@@ -20,13 +20,15 @@ type UseFollowUserProps = {
   username: string;
 };
 
-export function toFollowStatus(
-  { slug, following, pending }: {
-    slug: string;
-    following: ReadonlyArray<UserProfile>;
-    pending: ReadonlyArray<UserProfile>;
-  },
-): FollowStatus {
+export function toFollowStatus({
+  slug,
+  following,
+  pending,
+}: {
+  slug: string;
+  following: ReadonlyArray<UserProfile>;
+  pending: ReadonlyArray<UserProfile>;
+}): FollowStatus {
   const isSameUser = (user: UserProfile) => isSameSlug(user.slug, slug);
 
   if (following.some(isSameUser)) return 'following';
@@ -48,7 +50,7 @@ export function useFollowUser({ slug, username }: UseFollowUserProps) {
     switchMap((authorized) =>
       authorized
         ? pendingQuery.pipe(map((query) => query.data))
-        : of<UserProfile[]>([])
+        : of<UserProfile[]>([]),
     ),
   );
 
@@ -60,7 +62,7 @@ export function useFollowUser({ slug, username }: UseFollowUserProps) {
         slug,
         following: $network?.following ?? [],
         pending: $pending ?? [],
-      })
+      }),
     ),
   );
 

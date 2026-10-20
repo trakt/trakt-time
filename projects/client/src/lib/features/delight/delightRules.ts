@@ -29,10 +29,13 @@ type SeasonMilestoneParams = {
   now: Date;
 };
 
-export function seasonMilestone(
-  { episodes, watchedIds, isLatestAiredSeason, hasEnded, now }:
-    SeasonMilestoneParams,
-): 'caught-up' | 'season-complete' | null {
+export function seasonMilestone({
+  episodes,
+  watchedIds,
+  isLatestAiredSeason,
+  hasEnded,
+  now,
+}: SeasonMilestoneParams): 'caught-up' | 'season-complete' | null {
   const aired = episodes.filter((episode) => episode.releaseDate <= now);
   if (aired.length === 0) return null;
   if (!aired.every((episode) => watchedIds.has(episode.id))) return null;
@@ -47,9 +50,10 @@ type LatestAiredSeasonParams = {
   now: Date;
 };
 
-export function latestAiredSeason(
-  { seasons, now }: LatestAiredSeasonParams,
-): number | null {
+export function latestAiredSeason({
+  seasons,
+  now,
+}: LatestAiredSeasonParams): number | null {
   const aired = seasons
     .filter((season) => season.number > 0 && season.airDate <= now)
     .map((season) => season.number);
@@ -71,8 +75,9 @@ export function bingeCount({ watchedDates, now }: BingeCountParams): number {
 
   if (latest === undefined || now.getTime() - latest > SITTING_GAP) return 0;
 
-  const inSitting = earlier.findIndex((time, index) =>
-    (index === 0 ? latest : earlier[index - 1]!) - time > SITTING_GAP
+  const inSitting = earlier.findIndex(
+    (time, index) =>
+      (index === 0 ? latest : earlier[index - 1]!) - time > SITTING_GAP,
   );
 
   return 1 + (inSitting === -1 ? earlier.length : inSitting);
@@ -83,16 +88,17 @@ type ActiveBingeParams = {
   now: Date;
 };
 
-export function activeBinge(
-  { shows, now }: ActiveBingeParams,
-): { showId: number; count: number } | null {
+export function activeBinge({
+  shows,
+  now,
+}: ActiveBingeParams): { showId: number; count: number } | null {
   return [...shows]
     .map((show) => ({
       showId: show.id,
       count: bingeCount({ watchedDates: show.watchedDates, now }),
     }))
     .reduce<{ showId: number; count: number } | null>(
-      (best, current) => current.count > (best?.count ?? 0) ? current : best,
+      (best, current) => (current.count > (best?.count ?? 0) ? current : best),
       null,
     );
 }
@@ -106,12 +112,19 @@ type NewSeasonParams = {
   now: Date;
 };
 
-export function isNewSeason(
-  { type, number, releaseDate, now }: NewSeasonParams,
-): boolean {
+export function isNewSeason({
+  type,
+  number,
+  releaseDate,
+  now,
+}: NewSeasonParams): boolean {
   const elapsed = now.getTime() - releaseDate.getTime();
-  return type === 'season_premiere' && number === 1 && elapsed >= 0 &&
-    elapsed <= NEW_SEASON_WINDOW;
+  return (
+    type === 'season_premiere' &&
+    number === 1 &&
+    elapsed >= 0 &&
+    elapsed <= NEW_SEASON_WINDOW
+  );
 }
 
 type CreditsScene = 'during' | 'after' | 'both';
@@ -122,9 +135,11 @@ type CheckInSummaryParams = {
   postCredits: ReadonlyArray<'during' | 'after'>;
 };
 
-export function checkInSummary(
-  { startedAt, runtimeMinutes, postCredits }: CheckInSummaryParams,
-): { endsAt: Date; creditsScene: CreditsScene | null } {
+export function checkInSummary({
+  startedAt,
+  runtimeMinutes,
+  postCredits,
+}: CheckInSummaryParams): { endsAt: Date; creditsScene: CreditsScene | null } {
   const endsAt = new Date(startedAt.getTime() + runtimeMinutes * 60 * 1000);
   const hasDuring = postCredits.includes('during');
   const hasAfter = postCredits.includes('after');
@@ -151,17 +166,23 @@ type CrossedMilestoneParams = {
   thresholds: ReadonlyArray<number>;
 };
 
-export function crossedMilestone(
-  { before, after, thresholds }: CrossedMilestoneParams,
-): number | null {
-  const crossed = thresholds.filter((threshold) =>
-    before < threshold && threshold <= after
+export function crossedMilestone({
+  before,
+  after,
+  thresholds,
+}: CrossedMilestoneParams): number | null {
+  const crossed = thresholds.filter(
+    (threshold) => before < threshold && threshold <= after,
   );
   return crossed.length ? Math.max(...crossed) : null;
 }
 
-export function isSeriesFinale(
-  { episodeType, hasEnded }: { episodeType: string; hasEnded: boolean },
-): boolean {
+export function isSeriesFinale({
+  episodeType,
+  hasEnded,
+}: {
+  episodeType: string;
+  hasEnded: boolean;
+}): boolean {
   return episodeType === 'series_finale' && hasEnded;
 }

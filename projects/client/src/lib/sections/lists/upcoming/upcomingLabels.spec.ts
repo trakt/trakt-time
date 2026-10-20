@@ -39,7 +39,11 @@ describe('toUpcomingDateLabel', () => {
 describe('toUpcomingRangeLabel', () => {
   it('formats a range across months', () => {
     expect(
-      toUpcomingRangeLabel({ start: '2026-09-26', end: '2026-10-02', locale: 'en' }),
+      toUpcomingRangeLabel({
+        start: '2026-09-26',
+        end: '2026-10-02',
+        locale: 'en',
+      }),
     ).toMatch(/^Sep 26\s.\sOct 2$/);
   });
 });

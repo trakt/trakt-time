@@ -20,9 +20,12 @@ export type RecommendedMovie = z.infer<typeof RecommendedMovieSchema>;
 
 type RecommendedMoviesParams = LimitParams & ApiParams & FilterParams;
 
-export const recommendedMoviesRequest = async (
-  { fetch, limit, filter, filterOverride }: RecommendedMoviesParams,
-) => {
+export const recommendedMoviesRequest = async ({
+  fetch,
+  limit,
+  filter,
+  filterOverride,
+}: RecommendedMoviesParams) => {
   const filterParams = filterOverride?.movie ?? filter;
   const searchParams = getRecommendedSearchParams({ limit, filterParams });
 
@@ -33,9 +36,9 @@ export const recommendedMoviesRequest = async (
 
   return response.ok
     ? {
-      body: RecommendationsMovieResponseSchema.parse(await response.json()),
-      status: 200,
-    }
+        body: RecommendationsMovieResponseSchema.parse(await response.json()),
+        status: 200,
+      }
     : { body: undefined, status: 200 };
 };
 
@@ -46,9 +49,7 @@ export const recommendedMoviesQuery = defineQuery({
     InvalidateAction.MarkAsWatched('movie'),
     InvalidateAction.HideRecommended('movie'),
   ],
-  dependencies: (
-    params,
-  ) => [
+  dependencies: (params) => [
     params.limit,
     params.filter?.watch_window,
     ...getGlobalFilterDependencies(

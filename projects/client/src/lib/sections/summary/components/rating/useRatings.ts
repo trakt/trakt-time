@@ -44,10 +44,7 @@ function toAddPayload(
   return { [key]: [payload] };
 }
 
-function toRemovePayload(
-  type: RateableType,
-  id: number,
-): RemoveRatingsParams {
+function toRemovePayload(type: RateableType, id: number): RemoveRatingsParams {
   const payload = { ids: { trakt: id } };
   const key = `${type}s` as const;
   return { [key]: [payload] };
@@ -85,7 +82,7 @@ export function useRatings({ type, id }: WatchlistStoreProps) {
         server: $serverRating,
         override: $overrides[overrideKey],
         now: Date.now(),
-      })
+      }),
     ),
   );
 
@@ -106,9 +103,7 @@ export function useRatings({ type, id }: WatchlistStoreProps) {
     }),
   );
 
-  const current = combineLatest(
-    [rating, isFavorited],
-  ).pipe(
+  const current = combineLatest([rating, isFavorited]).pipe(
     map(([$rating, $isFavorited]) => {
       if (!$rating) {
         return;
@@ -124,43 +119,45 @@ export function useRatings({ type, id }: WatchlistStoreProps) {
   const isSubmitting = new BehaviorSubject<boolean>(false);
   const ratingSubject = new Subject<number | null>();
 
-  ratingSubject.pipe(
-    debounceTime(postDelay),
-    filter((v): v is number => v !== null),
-  ).subscribe(async (newRating) => {
-    isSubmitting.next(true);
+  ratingSubject
+    .pipe(
+      debounceTime(postDelay),
+      filter((v): v is number => v !== null),
+    )
+    .subscribe(async (newRating) => {
+      isSubmitting.next(true);
 
-    let hasRating = false;
-    const currentRatings = await firstValueFrom(ratings);
-    if (currentRatings) {
-      switch (type) {
-        case 'movie':
-          hasRating = currentRatings.movies.has(id);
-          break;
-        case 'show':
-          hasRating = currentRatings.shows.has(id);
-          break;
-        case 'episode':
-          hasRating = currentRatings.episodes.has(id);
-          break;
+      let hasRating = false;
+      const currentRatings = await firstValueFrom(ratings);
+      if (currentRatings) {
+        switch (type) {
+          case 'movie':
+            hasRating = currentRatings.movies.has(id);
+            break;
+          case 'show':
+            hasRating = currentRatings.shows.has(id);
+            break;
+          case 'episode':
+            hasRating = currentRatings.episodes.has(id);
+            break;
+        }
       }
-    }
 
-    track({ action: hasRating ? 'changed' : 'added', rating: newRating });
+      track({ action: hasRating ? 'changed' : 'added', rating: newRating });
 
-    const savedAt = Date.now();
-    const isSaved = await addRatingRequest({
-      body: toAddPayload(type, id, newRating),
+      const savedAt = Date.now();
+      const isSaved = await addRatingRequest({
+        body: toAddPayload(type, id, newRating),
+      });
+      if (isSaved) {
+        setRatingOverride(overrideKey, { rating: newRating, savedAt });
+      }
+      await invalidate(InvalidateAction.Rated(type));
+
+      pendingRating.next(null);
+      isSubmitting.next(false);
+      dismiss(id, type, 'rating');
     });
-    if (isSaved) {
-      setRatingOverride(overrideKey, { rating: newRating, savedAt });
-    }
-    await invalidate(InvalidateAction.Rated(type));
-
-    pendingRating.next(null);
-    isSubmitting.next(false);
-    dismiss(id, type, 'rating');
-  });
 
   const addRating = (newRating: number) => {
     pendingRating.next(newRating);

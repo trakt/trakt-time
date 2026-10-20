@@ -27,14 +27,13 @@ export async function getMedia({
     exact,
   });
 
-  return hits
-    .map((hit) => {
-      const type = 'episode_count' in hit.document ? 'show' : 'movie';
+  return hits.map((hit) => {
+    const type = 'episode_count' in hit.document ? 'show' : 'movie';
 
-      return {
-        score: Number(hit.text_match_info?.score ?? -1),
-        type,
-        [type]: toMedia(type, hit.document),
-      };
-    });
+    return {
+      score: Number(hit.text_match_info?.score ?? -1),
+      type,
+      [type]: toMedia(type, hit.document),
+    };
+  });
 }

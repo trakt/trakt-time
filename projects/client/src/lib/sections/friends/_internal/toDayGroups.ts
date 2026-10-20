@@ -9,9 +9,8 @@ export type ActivityDayGroup = {
 export function toDayGroups(
   activities: ReadonlyArray<SocialActivity>,
 ): ReadonlyArray<ActivityDayGroup> {
-  const groups = Map.groupBy(
-    activities,
-    (activity) => toLocalDayKey(activity.activityAt),
+  const groups = Map.groupBy(activities, (activity) =>
+    toLocalDayKey(activity.activityAt),
   );
 
   return Array.from(groups, ([dayKey, dayActivities]) => ({

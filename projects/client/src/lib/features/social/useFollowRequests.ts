@@ -15,15 +15,13 @@ export function useFollowRequests() {
   const { invalidate } = useInvalidator();
   const requestsQuery = useQuery(currentUserFollowRequestsQuery());
 
-  const pendingRequestIds = new BehaviorSubject<ReadonlySet<number>>(
-    new Set(),
-  );
+  const pendingRequestIds = new BehaviorSubject<ReadonlySet<number>>(new Set());
 
   const requests = isAuthorized.pipe(
     switchMap((authorized) =>
       authorized
         ? requestsQuery.pipe(map((query) => query.data ?? []))
-        : of<UserFollowRequest[]>([])
+        : of<UserFollowRequest[]>([]),
     ),
   );
 
@@ -41,7 +39,7 @@ export function useFollowRequests() {
           new Set(
             [...pendingRequestIds.value].filter((id) => id !== requestId),
           ),
-        )
+        ),
       );
   };
 
@@ -49,7 +47,7 @@ export function useFollowRequests() {
     switchMap((authorized) =>
       authorized
         ? requestsQuery.pipe(map((query) => query.isLoading))
-        : of(false)
+        : of(false),
     ),
   );
 

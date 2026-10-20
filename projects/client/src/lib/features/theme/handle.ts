@@ -18,39 +18,29 @@ export const handle: Handle = async ({ event, resolve }) => {
   setTheme(coerceTheme(event.cookies.get(THEME_COOKIE_NAME)));
 
   if (event.url.pathname.startsWith(ThemeEndpoint.Set)) {
-    const { theme } = await event.request.json() as { theme: Theme };
+    const { theme } = (await event.request.json()) as { theme: Theme };
     setTheme(theme);
 
-    return new Response(
-      JSON.stringify({ theme }),
-      {
-        headers: {
-          'Set-Cookie': event.cookies.serialize(
-            THEME_COOKIE_NAME,
-            theme,
-            {
-              path: '/',
-              maxAge: time.years(5) / time.seconds(1),
-            },
-          ),
-        },
+    return new Response(JSON.stringify({ theme }), {
+      headers: {
+        'Set-Cookie': event.cookies.serialize(THEME_COOKIE_NAME, theme, {
+          path: '/',
+          maxAge: time.years(5) / time.seconds(1),
+        }),
       },
-    );
+    });
   }
 
-  const response = await resolve(
-    event,
-    {
-      transformPageChunk: ({ html }) => {
-        const theme = event.locals.theme;
-        const scope = 'none';
+  const response = await resolve(event, {
+    transformPageChunk: ({ html }) => {
+      const theme = event.locals.theme;
+      const scope = 'none';
 
-        return html
-          .replace(THEME_PLACEHOLDER, `${theme}`)
-          .replace(THEME_SCOPE_PLACEHOLDER, `${scope}`);
-      },
+      return html
+        .replace(THEME_PLACEHOLDER, `${theme}`)
+        .replace(THEME_SCOPE_PLACEHOLDER, `${scope}`);
     },
-  );
+  });
 
   return response;
 };

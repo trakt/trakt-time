@@ -1,8 +1,9 @@
 import type { DelightOrigin } from '../models/DelightOrigin.ts';
 
 export function prefersReducedMotion(): boolean {
-  return globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ??
-    false;
+  return (
+    globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+  );
 }
 
 export function animate(

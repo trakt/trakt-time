@@ -7,9 +7,10 @@ type ToGifPageParams = {
   page: number;
 };
 
-export function toGifPage(
-  { body, page }: ToGifPageParams,
-): Paginatable<GifEntry> {
+export function toGifPage({
+  body,
+  page,
+}: ToGifPageParams): Paginatable<GifEntry> {
   return {
     entries: body?.entries ?? [],
     page: {

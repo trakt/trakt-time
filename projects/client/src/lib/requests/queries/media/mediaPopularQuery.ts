@@ -16,30 +16,32 @@ import { mapToShowEntry } from '../../_internal/mapToShowEntry.ts';
 import { MovieEntrySchema } from '../../models/MovieEntry.ts';
 import { ShowEntrySchema } from '../../models/ShowEntry.ts';
 
-type MediaPopularParams =
-  & PaginationParams
-  & ApiParams
-  & FilterParams
-  & SearchParams;
+type MediaPopularParams = PaginationParams &
+  ApiParams &
+  FilterParams &
+  SearchParams;
 
 const PopularMediaSchema = z.union([ShowEntrySchema, MovieEntrySchema]);
 
-const mediaPopularRequest = (
-  { fetch, limit, page, filter, filterOverride, search }: MediaPopularParams,
-) => {
+const mediaPopularRequest = ({
+  fetch,
+  limit,
+  page,
+  filter,
+  filterOverride,
+  search,
+}: MediaPopularParams) => {
   const filterParams = filterOverride?.show ?? filter;
 
-  return api({ fetch })
-    .media
-    .popular({
-      query: {
-        extended: 'full,images,colors',
-        page,
-        limit,
-        ...filterParams,
-        ...search,
-      },
-    });
+  return api({ fetch }).media.popular({
+    query: {
+      extended: 'full,images,colors',
+      page,
+      limit,
+      ...filterParams,
+      ...search,
+    },
+  });
 };
 
 export const mediaPopularQuery = defineInfiniteQuery({
@@ -51,9 +53,7 @@ export const mediaPopularQuery = defineInfiniteQuery({
     InvalidateAction.Watchlisted('movie'),
     InvalidateAction.MarkAsWatched('movie'),
   ],
-  dependencies: (
-    params: MediaPopularParams,
-  ) => [
+  dependencies: (params: MediaPopularParams) => [
     params.limit,
     params.page,
     ...getGlobalFilterDependencies(
@@ -64,7 +64,9 @@ export const mediaPopularQuery = defineInfiniteQuery({
   request: mediaPopularRequest,
   mapper: (response) => ({
     entries: response.body.map((entry) =>
-      'aired_episodes' in entry ? mapToShowEntry(entry) : mapToMovieEntry(entry)
+      'aired_episodes' in entry
+        ? mapToShowEntry(entry)
+        : mapToMovieEntry(entry),
     ),
     page: extractPageMeta(response.headers),
   }),

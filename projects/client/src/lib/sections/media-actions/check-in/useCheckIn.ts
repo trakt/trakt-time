@@ -21,9 +21,10 @@ type MovieProps = {
   id: number;
 };
 
-function mapToEpisodePayload(
-  { show, episode }: EpisodeProps,
-): ShowCheckinRequest {
+function mapToEpisodePayload({
+  show,
+  episode,
+}: EpisodeProps): ShowCheckinRequest {
   return {
     show: {
       ids: {

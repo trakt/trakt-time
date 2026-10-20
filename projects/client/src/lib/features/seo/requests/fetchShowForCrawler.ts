@@ -7,12 +7,12 @@ type FetchShowParams = {
   slug: string;
 };
 
-export async function fetchShowForCrawler(
-  { fetch, slug }: FetchShowParams,
-): Promise<ShowEntry | null> {
+export async function fetchShowForCrawler({
+  fetch,
+  slug,
+}: FetchShowParams): Promise<ShowEntry | null> {
   const response = await unauthorizedApi({ fetch })
-    .shows
-    .summary({
+    .shows.summary({
       params: { id: slug },
       query: { extended: 'full,images' },
     })

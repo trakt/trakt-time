@@ -21,9 +21,10 @@ type MarkEpisodesParams = {
   watchedAt: Exclude<MarkAsWatchedAt, Date>;
 };
 
-export function useShowEpisodeHistory(
-  { slug, showId }: UseShowEpisodeHistoryProps,
-) {
+export function useShowEpisodeHistory({
+  slug,
+  showId,
+}: UseShowEpisodeHistoryProps) {
   const client = browser ? useQueryClient() : undefined;
   const { history } = useUser();
   const { invalidate } = useInvalidator();
@@ -31,26 +32,28 @@ export function useShowEpisodeHistory(
   const settledHistory = history.pipe(filter((value) => value !== null));
 
   const resolveWatched = async () => {
-    const watchedShow = (await resolve(settledHistory, time.seconds(10)))
-      .shows.get(showId);
+    const watchedShow = (
+      await resolve(settledHistory, time.seconds(10))
+    ).shows.get(showId);
 
     return {
       watchedEpisodeIds: new Set(
         watchedShow?.episodes.map((episode) => episode.episodeId) ?? [],
       ),
-      watchedCountBySeason: watchedShow?.playsPerSeason ??
-        new Map<number, number>(),
+      watchedCountBySeason:
+        watchedShow?.playsPerSeason ?? new Map<number, number>(),
     };
   };
 
   const fetchSeasonEpisodes = async (
     season: number,
   ): Promise<ReadonlyArray<EpisodeEntry>> =>
-    await client?.fetchQuery(showSeasonEpisodesQuery({ slug, season })) ?? [];
+    (await client?.fetchQuery(showSeasonEpisodesQuery({ slug, season }))) ?? [];
 
-  const markEpisodesAsWatched = async (
-    { ids, watchedAt }: MarkEpisodesParams,
-  ) => {
+  const markEpisodesAsWatched = async ({
+    ids,
+    watchedAt,
+  }: MarkEpisodesParams) => {
     if (ids.length === 0) return;
 
     await markAsWatchedRequest({

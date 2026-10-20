@@ -4,9 +4,11 @@ import { actionToastStore } from './actionToastStore.ts';
 
 function current() {
   let value = null as ActionToast | null;
-  actionToastStore.subscribe((next) => {
-    value = next;
-  }).unsubscribe();
+  actionToastStore
+    .subscribe((next) => {
+      value = next;
+    })
+    .unsubscribe();
 
   return value;
 }

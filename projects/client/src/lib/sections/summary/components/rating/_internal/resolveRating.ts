@@ -15,13 +15,16 @@ type ResolveRatingParams = {
 };
 
 function hasServerCaughtUp(server: ServerRating | Nil, savedAt: number) {
-  return server != null &&
-    server.ratedAt.getTime() >= savedAt - RATED_AT_TOLERANCE;
+  return (
+    server != null && server.ratedAt.getTime() >= savedAt - RATED_AT_TOLERANCE
+  );
 }
 
-export function resolveRating(
-  { server, override, now }: ResolveRatingParams,
-): ServerRating | undefined {
+export function resolveRating({
+  server,
+  override,
+  now,
+}: ResolveRatingParams): ServerRating | undefined {
   if (!override) return server ?? undefined;
   if (!isOverrideFresh(override, now)) return server ?? undefined;
   if (hasServerCaughtUp(server, override.savedAt)) return server ?? undefined;

@@ -41,10 +41,7 @@ const activeTitle = () =>
 describe('DiscoverSpotlight', () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    vi.stubGlobal(
-      'matchMedia',
-      () => ({ matches: false }) as MediaQueryList,
-    );
+    vi.stubGlobal('matchMedia', () => ({ matches: false }) as MediaQueryList);
     vi.stubGlobal(
       'IntersectionObserver',
       class {

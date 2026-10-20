@@ -35,11 +35,9 @@ export const UserStatsSchema = z.object({
 export type UserStats = z.infer<typeof UserStatsSchema>;
 
 const userStatsRequest = ({ fetch, slug }: UserStatsParams) =>
-  api({ fetch })
-    .users
-    .stats({
-      params: { id: slug },
-    });
+  api({ fetch }).users.stats({
+    params: { id: slug },
+  });
 
 export const userStatsQuery = defineQuery({
   key: 'userStats',

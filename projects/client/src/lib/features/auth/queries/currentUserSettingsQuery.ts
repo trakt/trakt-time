@@ -124,21 +124,17 @@ function mapUserSettingsResponse(response: SettingsResponse): UserSettings {
       url: prependHttps(user.images.avatar.full, DEFAULT_AVATAR),
     },
     cover: {
-      url: prependHttps(
-        findDefined(
-          user.vip_cover_image,
-          account.cover_image,
-        ),
-      ),
+      url: prependHttps(findDefined(user.vip_cover_image, account.cover_image)),
     },
     isVip: user.vip || user.vip_ep,
     isDirector: user.director,
     isPrivate: user.private,
     preferences: {
       watch: {
-        action: browsing?.watch_popup_action === 'ask'
-          ? 'now'
-          : browsing?.watch_popup_action ?? 'now',
+        action:
+          browsing?.watch_popup_action === 'ask'
+            ? 'now'
+            : (browsing?.watch_popup_action ?? 'now'),
       },
       hasWatchAgain: !(browsing?.watch_only_once ?? true),
       progress: {
@@ -151,8 +147,7 @@ function mapUserSettingsResponse(response: SettingsResponse): UserSettings {
         browsing?.spoilers.episodes,
         browsing?.spoilers.movies,
         browsing?.spoilers.shows,
-      ]
-        .some((topic) => topic?.includes('hide')),
+      ].some((topic) => topic?.includes('hide')),
     },
     genres: browsing?.genres.favorites ?? [],
     services: {
@@ -175,13 +170,11 @@ function mapUserSettingsResponse(response: SettingsResponse): UserSettings {
 }
 
 const currentUserRequest = ({ fetch }: ApiParams) =>
-  api({ fetch })
-    .users
-    .settings({
-      query: {
-        extended: 'browsing',
-      },
-    });
+  api({ fetch }).users.settings({
+    query: {
+      extended: 'browsing',
+    },
+  });
 
 export const currentUserQueryKey = ['userSettings'] as const;
 export const currentUserSettingsQuery = defineQuery({

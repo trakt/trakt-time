@@ -26,7 +26,8 @@ describe('toProgressBucket', () => {
     expect(
       toProgressBucket({ tab: 'in-progress', watching, dropped, completed }),
     ).toBe(watching);
-    expect(toProgressBucket({ tab: 'dropped', watching, dropped, completed }))
-      .toBe(dropped);
+    expect(
+      toProgressBucket({ tab: 'dropped', watching, dropped, completed }),
+    ).toBe(dropped);
   });
 });

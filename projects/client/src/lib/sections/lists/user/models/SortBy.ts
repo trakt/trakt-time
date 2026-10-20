@@ -1,6 +1,1 @@
-export type SortBy =
-  | 'added'
-  | 'runtime'
-  | 'percentage'
-  | 'released'
-  | 'title';
+export type SortBy = 'added' | 'runtime' | 'percentage' | 'released' | 'title';

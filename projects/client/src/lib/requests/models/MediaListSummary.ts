@@ -13,9 +13,11 @@ export const MediaListSummarySchema = z.object({
   user: UserProfileSchema,
   count: z.number(),
   likeCount: z.number(),
-  posters: z.array(z.object({
-    url: ImageUrlsSchema,
-  })),
+  posters: z.array(
+    z.object({
+      url: ImageUrlsSchema,
+    }),
+  ),
   updatedAt: z.date(),
   sortHow: z.enum(['asc', 'desc']),
   sortBy: z.string(),

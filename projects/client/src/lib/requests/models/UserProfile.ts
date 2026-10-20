@@ -17,9 +17,11 @@ export const UserProfileSchema = z.object({
   location: z.string().nullish(),
   about: z.string().nullish(),
   joinedAt: z.date().nullish(),
-  cover: z.object({
-    url: z.string().nullish(),
-  }).optional(),
+  cover: z
+    .object({
+      url: z.string().nullish(),
+    })
+    .optional(),
 });
 
 export type UserProfile = z.infer<typeof UserProfileSchema>;

@@ -12,16 +12,14 @@ import type { FilterParams } from '../../models/FilterParams.ts';
 import { MovieEntrySchema } from '../../models/MovieEntry.ts';
 import type { PaginationParams } from '../../models/PaginationParams.ts';
 
-type MovieActivityHistoryParams =
-  & {
-    slug: string;
-    startDate?: Date;
-    endDate?: Date;
-    id?: number;
-  }
-  & ApiParams
-  & PaginationParams
-  & FilterParams;
+type MovieActivityHistoryParams = {
+  slug: string;
+  startDate?: Date;
+  endDate?: Date;
+  id?: number;
+} & ApiParams &
+  PaginationParams &
+  FilterParams;
 
 export const MovieActivityHistorySchema = z.object({
   id: z.number(),
@@ -32,10 +30,16 @@ export const MovieActivityHistorySchema = z.object({
 });
 export type MovieActivityHistory = z.infer<typeof MovieActivityHistorySchema>;
 
-export const movieActivityHistoryRequest = (
-  { fetch, slug, startDate, endDate, limit, id, page, filter }:
-    MovieActivityHistoryParams,
-) => {
+export const movieActivityHistoryRequest = ({
+  fetch,
+  slug,
+  startDate,
+  endDate,
+  limit,
+  id,
+  page,
+  filter,
+}: MovieActivityHistoryParams) => {
   const queryParams = {
     extended: 'full,images' as const,
     start_at: startDate?.toISOString(),
@@ -47,13 +51,13 @@ export const movieActivityHistoryRequest = (
 
   return id
     ? api({ fetch }).users.history.movie({
-      params: { id: slug, item_id: `${id}` },
-      query: queryParams,
-    })
+        params: { id: slug, item_id: `${id}` },
+        query: queryParams,
+      })
     : api({ fetch }).users.history.movies({
-      params: { id: slug },
-      query: queryParams,
-    });
+        params: { id: slug },
+        query: queryParams,
+      });
 };
 
 export const mapToMovieActivityHistory = (

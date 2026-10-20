@@ -42,11 +42,11 @@ const config = {
       relative: false,
     },
     alias: {
-      '$mocks': './src/mocks',
-      '$worker': './src/worker',
-      '$test': './test',
-      '$style': 'src/style',
-      '$types': './.svelte-kit/types/src/routes',
+      $mocks: './src/mocks',
+      $worker: './src/worker',
+      $test: './test',
+      $style: 'src/style',
+      $types: './.svelte-kit/types/src/routes',
     },
   },
 };

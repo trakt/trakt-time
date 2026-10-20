@@ -22,17 +22,18 @@ export function useLeaderboard() {
 
   const entries = combineLatest([list, user, ownStats]).pipe(
     map(([$list, $user, stats]) => {
-      const viewer: LeaderboardEntry | null = $user.isVip && stats
-        ? {
-          key: 'leaderboard-viewer',
-          rank: null,
-          user: toViewerProfile($user),
-          totalMinutes: stats.movies.minutes + stats.episodes.minutes,
-          totalPlays: stats.movies.plays + stats.episodes.plays,
-          locked: false,
-          isViewer: true,
-        }
-        : null;
+      const viewer: LeaderboardEntry | null =
+        $user.isVip && stats
+          ? {
+              key: 'leaderboard-viewer',
+              rank: null,
+              user: toViewerProfile($user),
+              totalMinutes: stats.movies.minutes + stats.episodes.minutes,
+              totalPlays: stats.movies.plays + stats.episodes.plays,
+              locked: false,
+              isViewer: true,
+            }
+          : null;
 
       return weaveViewer($list, viewer);
     }),

@@ -14,9 +14,14 @@ type EpisodeJsonLdParams = {
   showUrl: string;
 };
 
-export function toEpisodeJsonLd(
-  { episode, show, title, description, url, showUrl }: EpisodeJsonLdParams,
-): JsonLd {
+export function toEpisodeJsonLd({
+  episode,
+  show,
+  title,
+  description,
+  url,
+  showUrl,
+}: EpisodeJsonLdParams): JsonLd {
   return compact({
     '@context': 'https://schema.org',
     '@type': 'TVEpisode',

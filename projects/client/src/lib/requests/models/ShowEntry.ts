@@ -9,10 +9,11 @@ export const ShowAirsSchema = z.object({
 });
 export type ShowAirs = z.infer<typeof ShowAirsSchema>;
 
-export const ShowEntrySchema = MediaEntrySchema.merge(EpisodeCountSchema)
-  .extend({
-    network: z.string().nullish(),
-    totalRuntime: z.number(),
-    airs: ShowAirsSchema.nullish(),
-  });
+export const ShowEntrySchema = MediaEntrySchema.merge(
+  EpisodeCountSchema,
+).extend({
+  network: z.string().nullish(),
+  totalRuntime: z.number(),
+  airs: ShowAirsSchema.nullish(),
+});
 export type ShowEntry = z.infer<typeof ShowEntrySchema>;

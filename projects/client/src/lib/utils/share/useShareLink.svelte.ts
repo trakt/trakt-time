@@ -11,8 +11,10 @@ export function useShareLink() {
   async function copy(url: string) {
     if (!navigator.clipboard) return;
 
-    const isWritten = await navigator.clipboard.writeText(url)
-      .then(() => true, () => false);
+    const isWritten = await navigator.clipboard.writeText(url).then(
+      () => true,
+      () => false,
+    );
     if (!isWritten) return;
 
     isCopied = true;

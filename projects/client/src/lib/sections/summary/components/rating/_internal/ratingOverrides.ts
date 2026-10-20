@@ -20,7 +20,7 @@ export function ratingOverrideKey(type: ExtendedMediaType, id: number) {
 function pruneExpired(overrides: RatingOverrides, now: number) {
   return Object.fromEntries(
     Object.entries(overrides).filter(([, override]) =>
-      isOverrideFresh(override, now)
+      isOverrideFresh(override, now),
     ),
   );
 }

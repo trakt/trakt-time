@@ -13,9 +13,7 @@ export const handle: Handle = ({ event, resolve }) => {
     server: typesenseServer,
   });
 
-  const expires_at = Math.floor(
-    (Date.now() + time.hours(6)) / time.seconds(1),
-  );
+  const expires_at = Math.floor((Date.now() + time.hours(6)) / time.seconds(1));
 
   const mediaSearchKey = typesense
     .keys()

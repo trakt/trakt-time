@@ -12,29 +12,33 @@ type EpisodePeopleParams = {
   guestStars?: boolean;
 } & ApiParams;
 
-const episodePeopleRequest = (
-  { fetch, slug, season, episode, guestStars = false }: EpisodePeopleParams,
-) =>
-  api({ fetch })
-    .shows
-    .episode
-    .people({
-      params: {
-        id: slug,
-        season,
-        episode,
-      },
-      query: {
-        extended: getPeopleExtended(guestStars),
-      },
-    });
+const episodePeopleRequest = ({
+  fetch,
+  slug,
+  season,
+  episode,
+  guestStars = false,
+}: EpisodePeopleParams) =>
+  api({ fetch }).shows.episode.people({
+    params: {
+      id: slug,
+      season,
+      episode,
+    },
+    query: {
+      extended: getPeopleExtended(guestStars),
+    },
+  });
 
 export const episodePeopleQuery = defineQuery({
   key: 'episodePeople',
   invalidations: [],
-  dependencies: (
-    params,
-  ) => [params.slug, params.season, params.episode, params.guestStars ?? false],
+  dependencies: (params) => [
+    params.slug,
+    params.season,
+    params.episode,
+    params.guestStars ?? false,
+  ],
   request: episodePeopleRequest,
   mapper: (response) => mapToMediaCrew(response.body),
   schema: MediaCrewSchema,

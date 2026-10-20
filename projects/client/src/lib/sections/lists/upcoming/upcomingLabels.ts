@@ -20,9 +20,10 @@ export function toUpcomingDayLabel(
 
   if (diffDays <= 0) return formatToday(locale);
 
-  const format: Intl.DateTimeFormatOptions = diffDays <= WEEK_IN_DAYS
-    ? { weekday: 'long' }
-    : { month: 'short', day: 'numeric' };
+  const format: Intl.DateTimeFormatOptions =
+    diffDays <= WEEK_IN_DAYS
+      ? { weekday: 'long' }
+      : { month: 'short', day: 'numeric' };
 
   return capitalizeFirst(
     new Intl.DateTimeFormat(locale, format).format(toNoonDate(dayKey)),
@@ -46,13 +47,23 @@ export function toUpcomingWeekdayLabel(
 }
 
 export function toUpcomingDateLabel(dayKey: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' })
-    .format(toNoonDate(dayKey));
+  return new Intl.DateTimeFormat(locale, {
+    month: 'short',
+    day: 'numeric',
+  }).format(toNoonDate(dayKey));
 }
 
-export function toUpcomingRangeLabel(
-  { start, end, locale }: { start: string; end: string; locale: string },
-): string {
-  return new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' })
-    .formatRange(toNoonDate(start), toNoonDate(end));
+export function toUpcomingRangeLabel({
+  start,
+  end,
+  locale,
+}: {
+  start: string;
+  end: string;
+  locale: string;
+}): string {
+  return new Intl.DateTimeFormat(locale, {
+    month: 'short',
+    day: 'numeric',
+  }).formatRange(toNoonDate(start), toNoonDate(end));
 }

@@ -14,16 +14,14 @@ import { getGlobalFilterDependencies } from '../../_internal/getGlobalFilterDepe
 import type { FilterParams } from '../../models/FilterParams.ts';
 import type { PaginationParams } from '../../models/PaginationParams.ts';
 
-type EpisodeActivityHistoryParams =
-  & {
-    slug: string;
-    startDate?: Date;
-    endDate?: Date;
-    id?: number;
-  }
-  & ApiParams
-  & PaginationParams
-  & FilterParams;
+type EpisodeActivityHistoryParams = {
+  slug: string;
+  startDate?: Date;
+  endDate?: Date;
+  id?: number;
+} & ApiParams &
+  PaginationParams &
+  FilterParams;
 
 export const EpisodeActivityHistorySchema = z.object({
   id: z.number(),
@@ -37,10 +35,16 @@ export type EpisodeActivityHistory = z.infer<
   typeof EpisodeActivityHistorySchema
 >;
 
-export function episodeActivityHistoryRequest(
-  { fetch, slug, startDate, endDate, limit, id, page, filter }:
-    EpisodeActivityHistoryParams,
-) {
+export function episodeActivityHistoryRequest({
+  fetch,
+  slug,
+  startDate,
+  endDate,
+  limit,
+  id,
+  page,
+  filter,
+}: EpisodeActivityHistoryParams) {
   const queryParams = {
     extended: 'full,images' as const,
     start_at: startDate?.toISOString(),
@@ -52,13 +56,13 @@ export function episodeActivityHistoryRequest(
 
   return id
     ? api({ fetch }).users.history.episode({
-      params: { id: slug, item_id: `${id}` },
-      query: queryParams,
-    })
+        params: { id: slug, item_id: `${id}` },
+        query: queryParams,
+      })
     : api({ fetch }).users.history.episodes({
-      params: { id: slug },
-      query: queryParams,
-    });
+        params: { id: slug },
+        query: queryParams,
+      });
 }
 
 export function mapToEpisodeActivityHistory(

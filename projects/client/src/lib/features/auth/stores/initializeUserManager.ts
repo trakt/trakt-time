@@ -28,9 +28,10 @@ type InitializeUserManagerParams = {
   tokenFromServer?: string | null;
 };
 
-export function initializeUserManager(
-  { ctx, tokenFromServer }: InitializeUserManagerParams,
-) {
+export function initializeUserManager({
+  ctx,
+  tokenFromServer,
+}: InitializeUserManagerParams) {
   if (!browser) {
     return {
       isInitializing: of(false),
@@ -49,9 +50,7 @@ export function initializeUserManager(
       toAuthority: resolveOidcAuthority(),
     });
 
-    const manager = new UserManager(
-      getOidcConfig(),
-    );
+    const manager = new UserManager(getOidcConfig());
 
     const syncToken = (user: User | null) => {
       if (!user) return;
@@ -60,9 +59,13 @@ export function initializeUserManager(
       postToken(mapToToken(user));
     };
 
-    const setAuthState = (
-      { token, isExpired }: { token: Token; isExpired: boolean },
-    ) => {
+    const setAuthState = ({
+      token,
+      isExpired,
+    }: {
+      token: Token;
+      isExpired: boolean;
+    }) => {
       setToken(token);
       ctx.token.next(token);
 

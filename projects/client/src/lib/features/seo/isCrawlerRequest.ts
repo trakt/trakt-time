@@ -5,8 +5,9 @@ type CrawlerRequestParams = {
   isLegitimateBot: boolean;
 };
 
-export function isCrawlerRequest(
-  { userAgent, isLegitimateBot }: CrawlerRequestParams,
-): boolean {
+export function isCrawlerRequest({
+  userAgent,
+  isLegitimateBot,
+}: CrawlerRequestParams): boolean {
   return isLegitimateBot || isBotAgent(userAgent);
 }

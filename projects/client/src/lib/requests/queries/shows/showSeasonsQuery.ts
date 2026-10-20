@@ -13,19 +13,15 @@ type ShowSeasonsParams = {
   slug: string;
 } & ApiParams;
 
-const showSeasonsRequest = (
-  { fetch, slug }: ShowSeasonsParams,
-) =>
-  api({ fetch })
-    .shows
-    .seasons({
-      params: {
-        id: slug,
-      },
-      query: {
-        extended: 'full,images',
-      },
-    });
+const showSeasonsRequest = ({ fetch, slug }: ShowSeasonsParams) =>
+  api({ fetch }).shows.seasons({
+    params: {
+      id: slug,
+    },
+    query: {
+      extended: 'full,images',
+    },
+  });
 
 const toDistinctSeasonTitle = (item: SeasonsResponse[0]): string | null => {
   const title = item.title?.trim();
@@ -39,9 +35,7 @@ const toDistinctSeasonTitle = (item: SeasonsResponse[0]): string | null => {
 };
 
 export const mapToSeason = (item: SeasonsResponse[0]): Season => {
-  const poster = findDefined(
-    ...(item.images?.poster ?? []),
-  );
+  const poster = findDefined(...(item.images?.poster ?? []));
 
   return {
     id: item.ids.trakt,

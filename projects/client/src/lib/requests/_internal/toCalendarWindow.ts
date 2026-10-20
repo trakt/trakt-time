@@ -9,9 +9,10 @@ type CalendarWindowParams = {
   page?: number;
 };
 
-export function toCalendarWindowStart(
-  { startDate, page = 1 }: CalendarWindowParams,
-): string {
+export function toCalendarWindowStart({
+  startDate,
+  page = 1,
+}: CalendarWindowParams): string {
   const [year, month, day] = startDate.split('-').map(Number);
   const start = new Date(
     year ?? 0,

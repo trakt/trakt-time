@@ -17,14 +17,13 @@ const ManageSubscriptionResponseSchema = z.object({
   }),
 });
 
-export async function manageSubscriptionQuery(
-  { returnUrl }: ManageSubscriptionParams,
-): Promise<ManageSubscriptionResult> {
+export async function manageSubscriptionQuery({
+  returnUrl,
+}: ManageSubscriptionParams): Promise<ManageSubscriptionResult> {
   const encodedUrl = encodeURIComponent(returnUrl);
 
   const response = await rawApiFetch({
-    path:
-      `/vip/stripe/update?success_url=${encodedUrl}&cancel_url=${encodedUrl}`,
+    path: `/vip/stripe/update?success_url=${encodedUrl}&cancel_url=${encodedUrl}`,
     init: {
       method: 'POST',
     },

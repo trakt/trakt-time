@@ -10,12 +10,14 @@ import {
 
 type UserShowListIdsParams = { slug: string } & ApiParams;
 
-const userShowListIdsRequest = async (
-  { fetch, slug }: UserShowListIdsParams,
-) => {
-  const response = await rawApiFetch(
-    { fetch, path: `/v3/shows/${slug}/me/lists` },
-  );
+const userShowListIdsRequest = async ({
+  fetch,
+  slug,
+}: UserShowListIdsParams) => {
+  const response = await rawApiFetch({
+    fetch,
+    path: `/v3/shows/${slug}/me/lists`,
+  });
 
   const body = response.ok ? await response.json() : [];
 
@@ -27,9 +29,7 @@ const userShowListIdsRequest = async (
 
 export const userShowListIdsQuery = defineQuery({
   key: 'userShowListIds',
-  invalidations: [
-    InvalidateAction.Listed('show'),
-  ],
+  invalidations: [InvalidateAction.Listed('show')],
   dependencies: (params) => [params.slug],
   request: userShowListIdsRequest,
   mapper: (response) => response.body.map(mapToListId),

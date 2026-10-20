@@ -6,11 +6,13 @@ type FindUpNextEpisodeParams = {
   now?: Date;
 };
 
-export function findUpNextEpisode(
-  { episodes, watchedIds, now = new Date() }: FindUpNextEpisodeParams,
-): EpisodeEntry | undefined {
+export function findUpNextEpisode({
+  episodes,
+  watchedIds,
+  now = new Date(),
+}: FindUpNextEpisodeParams): EpisodeEntry | undefined {
   const lastWatchedIndex = episodes.findLastIndex(({ id }) =>
-    watchedIds.has(id)
+    watchedIds.has(id),
   );
   if (lastWatchedIndex === -1) return undefined;
 

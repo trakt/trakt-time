@@ -8,20 +8,24 @@ type FindOrphanedRatingIdsParams = {
   ratings: UserRatings;
 };
 
-const isWatchedEpisode = (
-  { history, showId, episodeId }: {
-    history: UserHistory;
-    showId: number;
-    episodeId: number;
-  },
-) =>
-  history.shows.get(showId)?.episodes.some((entry) =>
-    entry.episodeId === episodeId
-  ) ?? false;
+const isWatchedEpisode = ({
+  history,
+  showId,
+  episodeId,
+}: {
+  history: UserHistory;
+  showId: number;
+  episodeId: number;
+}) =>
+  history.shows
+    .get(showId)
+    ?.episodes.some((entry) => entry.episodeId === episodeId) ?? false;
 
-export function findOrphanedRatingIds(
-  { target, history, ratings }: FindOrphanedRatingIdsParams,
-): number[] {
+export function findOrphanedRatingIds({
+  target,
+  history,
+  ratings,
+}: FindOrphanedRatingIdsParams): number[] {
   const media = Array.isArray(target.media) ? target.media : [target.media];
 
   const isOrphaned = ({ id }: { id: number }): boolean => {
@@ -31,12 +35,14 @@ export function findOrphanedRatingIds(
       case 'show':
         return ratings.shows.has(id) && history.shows.has(id);
       case 'episode':
-        return ratings.episodes.has(id) &&
+        return (
+          ratings.episodes.has(id) &&
           isWatchedEpisode({
             history,
             showId: target.show.id,
             episodeId: id,
-          });
+          })
+        );
     }
   };
 

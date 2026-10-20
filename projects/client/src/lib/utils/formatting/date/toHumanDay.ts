@@ -15,9 +15,11 @@ type ToHumanDayProps = {
   format?: keyof typeof FORMAT_STRINGS;
 };
 
-export function toHumanDay(
-  { date, locale: localeKey, format: formatOption = 'long' }: ToHumanDayProps,
-): string {
+export function toHumanDay({
+  date,
+  locale: localeKey,
+  format: formatOption = 'long',
+}: ToHumanDayProps): string {
   const locale = LOCALE_MAP[localeKey] ?? LOCALE_MAP['en'];
   const formatString = FORMAT_STRINGS[formatOption];
 

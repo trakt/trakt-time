@@ -16,10 +16,12 @@ describe('removeUnclaimedHeadNodes', () => {
 
     removeUnclaimedHeadNodes(document.head);
 
-    expect(document.head.querySelectorAll('meta[name="theme-color"]'))
-      .toHaveLength(1);
     expect(
-      document.head.querySelector('meta[name="theme-color"]')
+      document.head.querySelectorAll('meta[name="theme-color"]'),
+    ).toHaveLength(1);
+    expect(
+      document.head
+        .querySelector('meta[name="theme-color"]')
         ?.getAttribute('content'),
     ).toBe('#0c0b0b');
     expect(document.head.querySelector('meta[name="viewport"]')).not.toBeNull();

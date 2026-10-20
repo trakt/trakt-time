@@ -77,9 +77,7 @@ describe('UrlBuilder', () => {
       expect(UrlBuilder.media('show', 'breaking-bad')).toBe(
         '/shows/breaking-bad',
       );
-      expect(UrlBuilder.media('movie', 'heat-1995')).toBe(
-        '/movies/heat-1995',
-      );
+      expect(UrlBuilder.media('movie', 'heat-1995')).toBe('/movies/heat-1995');
     });
 
     it('builds a show url with params', () => {
@@ -120,9 +118,7 @@ describe('UrlBuilder', () => {
     it('builds profile urls', () => {
       expect(UrlBuilder.profile.me()).toBe('/profile/me');
       expect(UrlBuilder.profile.user('vlad')).toBe('/profile/vlad');
-      expect(UrlBuilder.profile.history('vlad')).toBe(
-        '/profile/vlad/history',
-      );
+      expect(UrlBuilder.profile.history('vlad')).toBe('/profile/vlad/history');
     });
 
     it('builds a favorites url with sanitized params', () => {
@@ -159,8 +155,9 @@ describe('UrlBuilder', () => {
     });
 
     it('builds an official list url preserving the type param', () => {
-      expect(UrlBuilder.lists.official('top-250', { page: 2, type: 'movie' }))
-        .toBe('/lists/official/top-250?page=2&type=movie');
+      expect(
+        UrlBuilder.lists.official('top-250', { page: 2, type: 'movie' }),
+      ).toBe('/lists/official/top-250?page=2&type=movie');
     });
 
     it('builds user list urls with and without params', () => {
@@ -219,34 +216,39 @@ describe('UrlBuilder', () => {
     it('builds the settings frame with embedded mode and access token', () => {
       const url = UrlBuilder.og.frame.settings('token-123');
 
-      expect(url.startsWith('https://trakt.tv/settings/?embedded_mode=true'))
-        .toBe(true);
+      expect(
+        url.startsWith('https://trakt.tv/settings/?embedded_mode=true'),
+      ).toBe(true);
       expect(url).toContain('&access_token=token-123');
       expect(url).toContain('&client_id=');
     });
 
     it('only allows the advanced settings section', () => {
-      expect(UrlBuilder.og.frame.settings('token-123', 'advanced'))
-        .toContain('https://trakt.tv/settings/advanced/?embedded_mode=true');
-      expect(UrlBuilder.og.frame.settings('token-123', 'evil-section'))
-        .toContain('https://trakt.tv/settings/?embedded_mode=true');
+      expect(UrlBuilder.og.frame.settings('token-123', 'advanced')).toContain(
+        'https://trakt.tv/settings/advanced/?embedded_mode=true',
+      );
+      expect(
+        UrlBuilder.og.frame.settings('token-123', 'evil-section'),
+      ).toContain('https://trakt.tv/settings/?embedded_mode=true');
     });
 
     it('appends the slurm token to year to date frames when present', () => {
-      expect(UrlBuilder.og.frame.yearToDate('vlad', '2025', 'slurm-token'))
-        .toBe(
-          'https://trakt.tv/users/vlad/year/2025/?embedded_mode=true&slurm=slurm-token',
-        );
+      expect(
+        UrlBuilder.og.frame.yearToDate('vlad', '2025', 'slurm-token'),
+      ).toBe(
+        'https://trakt.tv/users/vlad/year/2025/?embedded_mode=true&slurm=slurm-token',
+      );
       expect(UrlBuilder.og.frame.yearToDate('vlad', '2025', null)).toBe(
         'https://trakt.tv/users/vlad/year/2025/?embedded_mode=true',
       );
     });
 
     it('builds the month in review frame url', () => {
-      expect(UrlBuilder.og.frame.monthInReview('vlad', '2025', '6', 'token'))
-        .toBe(
-          'https://trakt.tv/users/vlad/mir/2025/6/?embedded_mode=true&slurm=token',
-        );
+      expect(
+        UrlBuilder.og.frame.monthInReview('vlad', '2025', '6', 'token'),
+      ).toBe(
+        'https://trakt.tv/users/vlad/mir/2025/6/?embedded_mode=true&slurm=token',
+      );
     });
   });
 

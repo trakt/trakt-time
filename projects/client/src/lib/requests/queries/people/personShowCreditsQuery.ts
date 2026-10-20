@@ -6,19 +6,15 @@ import { mapToMediaCredits } from '../../_internal/mapToMediaCredits.ts';
 
 type PersonShowCreditsParams = { slug: string } & ApiParams;
 
-const personShowCreditsRequest = (
-  { fetch, slug }: PersonShowCreditsParams,
-) =>
-  api({ fetch })
-    .people
-    .shows({
-      params: {
-        id: slug,
-      },
-      query: {
-        extended: 'full,images',
-      },
-    });
+const personShowCreditsRequest = ({ fetch, slug }: PersonShowCreditsParams) =>
+  api({ fetch }).people.shows({
+    params: {
+      id: slug,
+    },
+    query: {
+      extended: 'full,images',
+    },
+  });
 
 export const personShowCreditsQuery = defineQuery({
   key: 'personShowCredits:v2',

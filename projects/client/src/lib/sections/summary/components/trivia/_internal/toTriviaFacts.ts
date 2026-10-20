@@ -12,9 +12,10 @@ type ToTriviaFactsParams = {
   summary: ReadonlyArray<string>;
 };
 
-export function toTriviaFacts(
-  { items, summary }: ToTriviaFactsParams,
-): ReadonlyArray<TriviaFact> {
+export function toTriviaFacts({
+  items,
+  summary,
+}: ToTriviaFactsParams): ReadonlyArray<TriviaFact> {
   if (items.length > 0) return items;
 
   return summary.map((text, index) => ({
