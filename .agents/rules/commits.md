@@ -111,7 +111,7 @@ line.
 - [ ] `<type>` is one of the legal types.
 - [ ] `<scope>` (if any) comes from `commitlint.config.js` — never
       `trakttime`.
-- [ ] Each commit compiles independently (`deno task check` passes).
+- [ ] Each commit compiles independently (`bun run check` passes).
 - [ ] Follow-ups land via `git commit --fixup=<sha>` + autosquash, not
       as fresh "address feedback" commits.
 - [ ] No `fixup!` left in the branch by the time the PR opens.

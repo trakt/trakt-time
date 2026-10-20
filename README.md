@@ -17,7 +17,7 @@ fixes, polish, new features, translations — dive in. See
 
 ## What's in here
 
-The repo is a [Deno workspace](https://docs.deno.com/runtime/fundamentals/workspaces/)
+The repo is a [Bun workspace](https://bun.com/docs/install/workspaces)
 with one project today:
 
 - **`projects/client`** — the SvelteKit frontend that talks to the Trakt API
@@ -25,12 +25,11 @@ with one project today:
 
 ## Getting started
 
-You need [Deno](https://docs.deno.com/runtime/getting_started/installation/)
-installed. Once you have it:
+You need [Bun](https://bun.com/docs/installation) and Node 24 installed. Once you have it:
 
 1. Clone the repository.
-2. Install dependencies: `deno task install`
-3. Start the dev server: `deno task client:dev`
+2. Install dependencies: `bun run install:frozen`
+3. Start the dev server: `bun run client:dev`
 
 ### Trakt API credentials
 
@@ -54,7 +53,7 @@ You need a personal Trakt application to develop against:
    export TRAKT_CLIENT_SECRET=...
    ```
 
-External contributors should use `deno task client:dev:contrib` so the dev
+External contributors should use `bun run client:dev:contrib` so the dev
 server points at the public Trakt environment instead of the private one.
 
 > Port `5173` is for `vite dev`, `4173` is for `vite preview`.
@@ -63,41 +62,38 @@ server points at the public Trakt environment instead of the private one.
 
 From the repo root:
 
-| Task                       | What it does                          |
-| -------------------------- | ------------------------------------- |
-| `deno task install`        | Install dependencies                  |
-| `deno task format`         | `deno fmt` + `deno lint --fix`        |
-| `deno task client:dev`     | Run the client dev server             |
-| `deno task client:dev:contrib` | Same, but against the public Trakt API |
+| Task                          | What it does                           |
+| ----------------------------- | -------------------------------------- |
+| `bun run install:frozen`      | Install dependencies                   |
+| `bun run format`              | Format with Biome                      |
+| `bun run client:dev`          | Run the client dev server              |
+| `bun run client:dev:contrib`  | Same, but against the public Trakt API |
 
 From `projects/client/`:
 
-| Task                  | What it does                                    |
-| --------------------- | ----------------------------------------------- |
-| `deno task check`     | `svelte-kit sync` + `svelte-check`              |
-| `deno task test:unit` | Run Vitest                                      |
-| `deno task build`     | Build for Cloudflare Workers (`adapter-cloudflare`) |
-| `deno task preview`   | Serve the production build locally              |
+| Task                | What it does                                        |
+| ------------------- | --------------------------------------------------- |
+| `bun run check`     | `svelte-kit sync` + `svelte-check`                  |
+| `bun run test:unit` | Run Vitest                                          |
+| `bun run lint`      | Run ESLint                                          |
+| `bun run build`     | Build for Cloudflare Workers (`adapter-cloudflare`) |
+| `bun run preview`   | Serve the production build locally                  |
 
 ## Build & local preview
 
 ```sh
 cd projects/client
-deno task build
-deno task preview
+bun run build
+bun run preview
 ```
 
 If you want a real Cloudflare Worker preview locally (instead of `vite preview`):
 
 ```sh
 cd projects/client
-deno task build
-npx wrangler dev   # or `bunx wrangler dev`
+bun run build
+bun x wrangler dev
 ```
-
-> Wrangler currently can't run under Deno because Deno doesn't yet support Node
-> VM modules ([deno#26349](https://github.com/denoland/deno/issues/26349)). Use
-> `npm` or `bun` for the wrangler step.
 
 ## Deploy
 
@@ -106,8 +102,8 @@ The Cloudflare Worker is deployed from CI on every push to `main` (see
 
 ```sh
 cd projects/client
-deno task build
-npx wrangler deploy
+bun run build
+bun x wrangler deploy
 ```
 
 You'll need `wrangler login` once and the right secrets configured (see
@@ -116,10 +112,10 @@ You'll need `wrangler login` once and the right secrets configured (see
 ## Updating dependencies
 
 We use [`npm-check-updates`](https://www.npmjs.com/package/npm-check-updates)
-because the client is a `package.json` project living inside a Deno workspace.
+to bump the client's `package.json` pins.
 
 ```sh
-deno install -g --allow-all -n ncu npm:npm-check-updates
+bun add -g npm-check-updates
 ```
 
 For minor bumps:

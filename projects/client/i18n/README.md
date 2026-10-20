@@ -9,7 +9,7 @@ Define messages once, generate for multiple platforms (web, Android, iOS).
 npm run i18n:generate
 
 # Generate specific platforms
-deno run --allow-read --allow-write i18n/generator/cli.ts meta/ --platforms web,android,ios
+bun i18n/generator/cli.ts -i i18n/meta/ --platforms web,android,ios
 ```
 
 ## Message Format

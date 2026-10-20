@@ -38,13 +38,13 @@ That's everything CI needs. Subsequent pushes to `main` build the client and dep
 
 ## Local development
 
-You almost never need wrangler for day-to-day work — `deno task client:dev` runs Vite directly with hot reload. Wrangler is only needed when you want to test the worker pipeline (secrets resolution, edge runtime semantics, etc.).
+You almost never need wrangler for day-to-day work — `bun run client:dev` runs Vite directly with hot reload. Wrangler is only needed when you want to test the worker pipeline (secrets resolution, edge runtime semantics, etc.).
 
 ### Vite dev (recommended)
 
 ```sh
-deno task client:dev          # private Trakt env (default)
-deno task client:dev:contrib  # public Trakt env
+bun run client:dev          # private Trakt env (default)
+bun run client:dev:contrib  # public Trakt env
 ```
 
 ### Worker preview
@@ -53,18 +53,16 @@ If you do want to preview the actual Worker locally:
 
 ```sh
 cd projects/client
-deno task build
-npx wrangler dev   # or `bunx wrangler dev`
+bun run build
+bun x wrangler dev
 ```
-
-> Wrangler can't run under Deno yet ([deno#26349](https://github.com/denoland/deno/issues/26349)), so use `npm` or `bun` for the wrangler commands.
 
 ### Ad-hoc deploy from your machine
 
 ```sh
 cd projects/client
-deno task build
-npx wrangler deploy
+bun run build
+bun x wrangler deploy
 ```
 
 Prefer letting CI do this. Local deploys are useful for staging branches under
@@ -76,15 +74,15 @@ The `static/pwa/screenshots/` set is what the Android install prompt shows on su
 
 ```sh
 # terminal 1
-deno task client:dev
+bun run client:dev
 
 # terminal 2 (once vite reports ready)
-deno task client:pwa:screenshots
+bun run client:pwa:screenshots
 ```
 
 The script (`projects/client/.scripts/pwa-screenshots.ts`) uses Playwright's bundled Chromium. It captures three unauth-friendly surfaces — `/discover`, `/movies/the-matrix-1999`, `/shows/breaking-bad` — at portrait (1556×3476) and wide (2596×1804) resolutions, and writes webp into `static/pwa/screenshots/`. ImageMagick (`magick`) is required for the PNG → webp step.
 
-Override the dev server URL with `PWA_SCREENSHOT_URL=https://<...> deno task client:pwa:screenshots` if you want to capture against preview / a deployed worker. Don't run from CI — it would double pipeline time and the screenshots only churn when the UI does.
+Override the dev server URL with `PWA_SCREENSHOT_URL=https://<...> bun run client:pwa:screenshots` if you want to capture against preview / a deployed worker. Don't run from CI — it would double pipeline time and the screenshots only churn when the UI does.
 
 ## Required environment variables
 
