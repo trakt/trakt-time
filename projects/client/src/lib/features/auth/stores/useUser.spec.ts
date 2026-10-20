@@ -49,7 +49,7 @@ describe('useUser', () => {
       const user = useUser();
       const emissions: unknown[] = [];
       (user[slice] as Observable<unknown>).subscribe((value) =>
-        emissions.push(value)
+        emissions.push(value),
       );
 
       const { data } = queries.value[index].value as { data: unknown };

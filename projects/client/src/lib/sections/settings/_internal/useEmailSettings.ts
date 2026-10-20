@@ -49,7 +49,7 @@ export function useEmailSettings() {
   return {
     settings: combineLatest([query, overrides]).pipe(
       map(([$query, $overrides]) =>
-        applyEmailOverrides($query.data, $overrides)
+        applyEmailOverrides($query.data, $overrides),
       ),
     ),
     set,

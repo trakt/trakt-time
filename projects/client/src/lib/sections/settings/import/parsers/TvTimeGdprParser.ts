@@ -85,9 +85,13 @@ function firstOf(...values: (string | undefined)[]): string | undefined {
 
 type GdprBucket = 'v1' | 'v2' | 'followed' | 'rating' | 'list' | null;
 
-function classifyGdprFile(
-  { basename, rows }: { basename: string; rows: Record<string, unknown>[] },
-): GdprBucket {
+function classifyGdprFile({
+  basename,
+  rows,
+}: {
+  basename: string;
+  rows: Record<string, unknown>[];
+}): GdprBucket {
   const [first] = rows;
   if (!first) return null;
   if (basename === RATINGS_CSV) return 'rating';
@@ -199,21 +203,24 @@ function parseV2ShowWatchlist(
   return rows
     .filter((row) => row.key?.startsWith('user-series-'))
     .filter((row) => row.is_archived !== 'true')
-    .filter((row) =>
-      row.is_for_later === 'true' ||
-      (row.is_followed === 'true' &&
-        !watchedShowIds.has(toInt(row.s_id) ?? -1))
+    .filter(
+      (row) =>
+        row.is_for_later === 'true' ||
+        (row.is_followed === 'true' &&
+          !watchedShowIds.has(toInt(row.s_id) ?? -1)),
     )
     .flatMap((row) => {
       const tvdbId = toInt(row.s_id);
       if (tvdbId == null) return [];
 
-      return [{
-        action: 'watchlist' as const,
-        type: 'show' as const,
-        ids: { tvdb: tvdbId },
-        title: row.series_name || undefined,
-      }];
+      return [
+        {
+          action: 'watchlist' as const,
+          type: 'show' as const,
+          ids: { tvdb: tvdbId },
+          title: row.series_name || undefined,
+        },
+      ];
     });
 }
 
@@ -229,12 +236,14 @@ function parseFollowedShowWatchlist(
       if (tvdbId == null) return [];
       if (watchedShowIds.has(tvdbId) || seenShowIds.has(tvdbId)) return [];
 
-      return [{
-        action: 'watchlist' as const,
-        type: 'show' as const,
-        ids: { tvdb: tvdbId },
-        title: row.tv_show_name || undefined,
-      }];
+      return [
+        {
+          action: 'watchlist' as const,
+          type: 'show' as const,
+          ids: { tvdb: tvdbId },
+          title: row.tv_show_name || undefined,
+        },
+      ];
     });
 }
 
@@ -304,8 +313,7 @@ function parseListRows(listRows: ListRow[]): UniversalImportItem[] {
   return listRows.flatMap((row) => {
     if (row.s_key?.startsWith(FAVORITES_S_KEY_PREFIX)) return [];
 
-    const listName = row.name?.trim() ||
-      collectionNames.get(row.s_key ?? '');
+    const listName = row.name?.trim() || collectionNames.get(row.s_key ?? '');
     if (!listName || !row.objects) return [];
 
     const listIsPublic = row.is_public === 'true';
@@ -313,13 +321,15 @@ function parseListRows(listRows: ListRow[]): UniversalImportItem[] {
       ([, id, type]): UniversalImportItem[] => {
         const tvdbId = toInt(id);
         if (tvdbId == null) return [];
-        return [{
-          action: 'list',
-          type: type === 'movie' ? 'movie' : 'show',
-          ids: { tvdb: tvdbId },
-          listName,
-          listIsPublic,
-        }];
+        return [
+          {
+            action: 'list',
+            type: type === 'movie' ? 'movie' : 'show',
+            ids: { tvdb: tvdbId },
+            listName,
+            listIsPublic,
+          },
+        ];
       },
     );
   });
@@ -354,24 +364,28 @@ function dedupeSameMinutePlays(
   });
 }
 
-function parseGdprRows(
-  { v1Rows, v2Rows, followedRows, ratingRows, listRows }: {
-    v1Rows: TrackingV1Row[];
-    v2Rows: TrackingV2Row[];
-    followedRows: FollowedShowRow[];
-    ratingRows: RatingVoteRow[];
-    listRows: ListRow[];
-  },
-): UniversalImportItem[] {
+function parseGdprRows({
+  v1Rows,
+  v2Rows,
+  followedRows,
+  ratingRows,
+  listRows,
+}: {
+  v1Rows: TrackingV1Row[];
+  v2Rows: TrackingV2Row[];
+  followedRows: FollowedShowRow[];
+  ratingRows: RatingVoteRow[];
+  listRows: ListRow[];
+}): UniversalImportItem[] {
   const episodes = dedupeSameMinutePlays(
     v2Rows.length > 0
       ? v2Rows
-        .map(parseV2Episode)
-        .filter((item): item is UniversalImportItem => item !== null)
+          .map(parseV2Episode)
+          .filter((item): item is UniversalImportItem => item !== null)
       : v1Rows
-        .filter((row) => row.entity_type === 'episode')
-        .map(parseV1Episode)
-        .filter((item): item is UniversalImportItem => item !== null),
+          .filter((row) => row.entity_type === 'episode')
+          .map(parseV1Episode)
+          .filter((item): item is UniversalImportItem => item !== null),
   );
 
   const movies = dedupeSameMinutePlays(
@@ -443,12 +457,14 @@ function unzipGdprCsvTexts(buffer: ArrayBuffer) {
 }
 
 async function collectCsvTexts(files: ReadonlyArray<File>) {
-  const entries = await Promise.all(files.map(async (file) => {
-    if (file.name.endsWith('.zip')) {
-      return unzipGdprCsvTexts(await file.arrayBuffer());
-    }
-    return [{ basename: file.name, text: await file.text() }];
-  }));
+  const entries = await Promise.all(
+    files.map(async (file) => {
+      if (file.name.endsWith('.zip')) {
+        return unzipGdprCsvTexts(await file.arrayBuffer());
+      }
+      return [{ basename: file.name, text: await file.text() }];
+    }),
+  );
 
   return entries.flat();
 }
@@ -457,10 +473,12 @@ export const TvTimeGdprParser: FileParser = {
   name: 'TV Time GDPR',
 
   canParse(files) {
-    return files.length > 0 &&
+    return (
+      files.length > 0 &&
       files.every(
         (file) => file.name.endsWith('.csv') || file.name.endsWith('.zip'),
-      );
+      )
+    );
   },
 
   async parse(files) {
@@ -468,7 +486,7 @@ export const TvTimeGdprParser: FileParser = {
     const parsed = await Promise.all(
       entries.map(async (entry) => ({
         basename: entry.basename,
-        rows: await parseCsvText(entry.text) as Record<string, unknown>[],
+        rows: (await parseCsvText(entry.text)) as Record<string, unknown>[],
       })),
     );
 

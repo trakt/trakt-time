@@ -22,9 +22,10 @@ export function toPastDayLabel(
     );
   }
 
-  const format: Intl.DateTimeFormatOptions = daysAgo < WEEK_IN_DAYS
-    ? { weekday: 'long' }
-    : { month: 'short', day: 'numeric' };
+  const format: Intl.DateTimeFormatOptions =
+    daysAgo < WEEK_IN_DAYS
+      ? { weekday: 'long' }
+      : { month: 'short', day: 'numeric' };
 
   return capitalizeFirst(
     new Intl.DateTimeFormat(locale, format).format(toNoonDate(dayKey)),

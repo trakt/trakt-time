@@ -20,11 +20,10 @@ describe('util: applyEmailOverrides', () => {
   it('should apply an override on top of the loaded value', () => {
     expect(
       applyEmailOverrides(SETTINGS, { recaps: true, notifications: false }),
-    )
-      .toEqual({
-        hasNotifications: false,
-        hasRecaps: true,
-        hasMarketing: false,
-      });
+    ).toEqual({
+      hasNotifications: false,
+      hasRecaps: true,
+      hasMarketing: false,
+    });
   });
 });

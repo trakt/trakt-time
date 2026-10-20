@@ -27,9 +27,11 @@ function isRecentlyReleased(releaseDate: Date, now: Date): boolean {
   return elapsed >= 0 && elapsed <= NEW_EPISODE_WINDOW;
 }
 
-export function getEpisodeStatus(
-  { type, releaseDate, now = new Date() }: GetEpisodeStatusParams,
-): EpisodeStatus | undefined {
+export function getEpisodeStatus({
+  type,
+  releaseDate,
+  now = new Date(),
+}: GetEpisodeStatusParams): EpisodeStatus | undefined {
   if (PREMIERE_TYPES.has(type)) return 'premiere';
   if (FINALE_TYPES.has(type)) return 'finale';
   if (!releaseDate) return;

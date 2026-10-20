@@ -33,9 +33,10 @@ export function useSettings() {
   const { track } = useTrack(AnalyticsEvent.Settings);
   const isSavingSettings = new BehaviorSubject(false);
 
-  const handleSettingsChange = async (
-    { request, action }: HandleSettingsProps,
-  ): Promise<boolean> => {
+  const handleSettingsChange = async ({
+    request,
+    action,
+  }: HandleSettingsProps): Promise<boolean> => {
     isSavingSettings.next(true);
 
     const success = await request();
@@ -65,88 +66,100 @@ export function useSettings() {
 
   return {
     isSavingSettings: isSavingSettings.asObservable(),
-    spoilers: user.pipe(map(($user) => ({
-      isHidden: Boolean($user.preferences.isSpoilerHidden),
-      set: async (isEnabled: boolean) => {
-        const spoilerStatus = isEnabled ? 'hide' as const : 'show' as const;
+    spoilers: user.pipe(
+      map(($user) => ({
+        isHidden: Boolean($user.preferences.isSpoilerHidden),
+        set: async (isEnabled: boolean) => {
+          const spoilerStatus = isEnabled
+            ? ('hide' as const)
+            : ('show' as const);
 
-        const payload = {
-          browsing: {
-            spoilers: {
-              episodes: spoilerStatus,
-              shows: spoilerStatus,
-              movies: spoilerStatus,
+          const payload = {
+            browsing: {
+              spoilers: {
+                episodes: spoilerStatus,
+                shows: spoilerStatus,
+                movies: spoilerStatus,
+              },
             },
-          },
-        };
+          };
 
-        await handleSettingsChange({
-          request: () => saveSettingsRequest({ body: payload }),
-          action: 'spoilers',
-        });
-      },
-    }))),
-    email: user.pipe(map(($user) => ({
-      value: $user.email,
-      set: (email: string) => {
-        if (!$user.email) return Promise.resolve(false);
+          await handleSettingsChange({
+            request: () => saveSettingsRequest({ body: payload }),
+            action: 'spoilers',
+          });
+        },
+      })),
+    ),
+    email: user.pipe(
+      map(($user) => ({
+        value: $user.email,
+        set: (email: string) => {
+          if (!$user.email) return Promise.resolve(false);
 
-        return handleSettingsChange({
-          request: () => changeEmailRequest({ email }),
-          action: 'email',
-        });
-      },
-    }))),
-    profile: user.pipe(map(($user) => ({
-      isPrivate: Boolean($user.isPrivate),
-      displayName: $user.name.full,
-      location: $user.location ?? '',
-      about: $user.about ?? '',
-      birthday: $user.birthday,
-      set: async (settings: UserSettingsRequest) => {
-        const payload: SettingsRequest = {
-          user: { ...settings },
-        };
+          return handleSettingsChange({
+            request: () => changeEmailRequest({ email }),
+            action: 'email',
+          });
+        },
+      })),
+    ),
+    profile: user.pipe(
+      map(($user) => ({
+        isPrivate: Boolean($user.isPrivate),
+        displayName: $user.name.full,
+        location: $user.location ?? '',
+        about: $user.about ?? '',
+        birthday: $user.birthday,
+        set: async (settings: UserSettingsRequest) => {
+          const payload: SettingsRequest = {
+            user: { ...settings },
+          };
 
-        await handleSettingsChange({
-          request: () => saveSettingsRequest({ body: payload }),
-          action: 'profile',
-        });
-      },
-    }))),
-    genres: user.pipe(map(($user) => ({
-      favorites: $user.genres ?? [],
-      set: async (genres: string[]) => {
-        const payload = {
-          browsing: {
-            genres: {
-              favorites: genres,
+          await handleSettingsChange({
+            request: () => saveSettingsRequest({ body: payload }),
+            action: 'profile',
+          });
+        },
+      })),
+    ),
+    genres: user.pipe(
+      map(($user) => ({
+        favorites: $user.genres ?? [],
+        set: async (genres: string[]) => {
+          const payload = {
+            browsing: {
+              genres: {
+                favorites: genres,
+              },
             },
-          },
-        };
+          };
 
-        await handleSettingsChange({
-          request: () => saveSettingsRequest({ body: payload }),
-          action: 'genres',
-        });
-      },
-    }))),
+          await handleSettingsChange({
+            request: () => saveSettingsRequest({ body: payload }),
+            action: 'genres',
+          });
+        },
+      })),
+    ),
     theme: { set: setTheme },
-    watchAgain: user.pipe(map(($user) => ({
-      hasWatchAgain: $user.preferences.hasWatchAgain,
+    watchAgain: user.pipe(
+      map(($user) => ({
+        hasWatchAgain: $user.preferences.hasWatchAgain,
 
-      set: async (hasWatchAgain: boolean) => {
-        const payload = {
-          browsing: {
-            watch_only_once: !hasWatchAgain,
-          },
-        };
+        set: async (hasWatchAgain: boolean) => {
+          const payload = {
+            browsing: {
+              watch_only_once: !hasWatchAgain,
+            },
+          };
 
-        await handleSettingsChange({
-          request: () => saveSettingsRequest({ body: payload }),
-          action: 'watch_only_once',
-        });
-      },
-    }))),
+          await handleSettingsChange({
+            request: () => saveSettingsRequest({ body: payload }),
+            action: 'watch_only_once',
+          });
+        },
+      })),
+    ),
   };
 }

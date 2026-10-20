@@ -8,10 +8,7 @@ export function useActiveLink(href: string | Nil) {
   const isActive = new BehaviorSubject(isMatch(href, page.url.pathname));
 
   afterNavigate((nav) => {
-    isActive.next(isMatch(
-      href,
-      nav.to?.url.pathname,
-    ));
+    isActive.next(isMatch(href, nav.to?.url.pathname));
   });
 
   return {

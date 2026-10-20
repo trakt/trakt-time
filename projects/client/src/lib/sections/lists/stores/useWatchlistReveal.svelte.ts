@@ -20,9 +20,12 @@ type UseWatchlistRevealParams = {
  *
  * Must be called during component init (uses $effect / afterNavigate).
  */
-export function useWatchlistReveal(
-  { loading, hasHistory, hasContent, anchor }: UseWatchlistRevealParams,
-) {
+export function useWatchlistReveal({
+  loading,
+  hasHistory,
+  hasContent,
+  anchor,
+}: UseWatchlistRevealParams) {
   let isReady = $state(false);
   let pendingScroll = $state(true);
 

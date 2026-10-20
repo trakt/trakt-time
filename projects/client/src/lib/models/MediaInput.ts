@@ -11,8 +11,10 @@ export type BaseMediaInput<T = MediaInputDefault> = {
   type: MediaType;
 };
 
-export type MediaInput<T = MediaInputDefault> = BaseMediaInput<T> | {
-  media: ShowEntry;
-  episode: EpisodeEntry;
-  type: 'episode';
-};
+export type MediaInput<T = MediaInputDefault> =
+  | BaseMediaInput<T>
+  | {
+      media: ShowEntry;
+      episode: EpisodeEntry;
+      type: 'episode';
+    };

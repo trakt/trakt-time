@@ -8,9 +8,12 @@ type CountUpParams = {
   onUpdate: (value: number) => void;
 };
 
-export function countUp(
-  { from = 0, to, duration, onUpdate }: CountUpParams,
-): Promise<void> {
+export function countUp({
+  from = 0,
+  to,
+  duration,
+  onUpdate,
+}: CountUpParams): Promise<void> {
   if (prefersReducedMotion()) {
     onUpdate(to);
     return Promise.resolve();

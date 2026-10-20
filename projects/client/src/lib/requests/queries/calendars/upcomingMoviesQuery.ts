@@ -13,30 +13,29 @@ import { mapToMovieEntry } from '../../_internal/mapToMovieEntry.ts';
 import type { FilterParams } from '../../models/FilterParams.ts';
 import { MovieEntrySchema } from '../../models/MovieEntry.ts';
 
-export type CalendarMoviesParams =
-  & {
-    startDate: string;
-    page?: number;
-  }
-  & ApiParams
-  & FilterParams;
+export type CalendarMoviesParams = {
+  startDate: string;
+  page?: number;
+} & ApiParams &
+  FilterParams;
 
-export const upcomingMoviesRequest = (
-  { fetch, startDate, page, filter }: CalendarMoviesParams,
-) =>
-  api({ fetch })
-    .calendars
-    .movies({
-      query: {
-        extended: 'full,images',
-        ...filter,
-      },
-      params: {
-        target: 'my',
-        start_date: toCalendarWindowStart({ startDate, page }),
-        days: CALENDAR_WINDOW_DAYS,
-      },
-    });
+export const upcomingMoviesRequest = ({
+  fetch,
+  startDate,
+  page,
+  filter,
+}: CalendarMoviesParams) =>
+  api({ fetch }).calendars.movies({
+    query: {
+      extended: 'full,images',
+      ...filter,
+    },
+    params: {
+      target: 'my',
+      start_date: toCalendarWindowStart({ startDate, page }),
+      days: CALENDAR_WINDOW_DAYS,
+    },
+  });
 
 export const upcomingMoviesQuery = defineInfiniteQuery({
   key: 'upcomingMovies',
@@ -44,9 +43,7 @@ export const upcomingMoviesQuery = defineInfiniteQuery({
     InvalidateAction.Watchlisted('movie'),
     InvalidateAction.MarkAsWatched('movie'),
   ],
-  dependencies: (
-    params,
-  ) => [
+  dependencies: (params) => [
     params.startDate,
     ...getGlobalFilterDependencies(params.filter),
   ],

@@ -19,15 +19,13 @@ import {
   MovieActivityHistorySchema,
 } from './movieActivityHistoryQuery.ts';
 
-type ActivityHistoryParams =
-  & {
-    slug: string;
-    startDate?: Date;
-    endDate?: Date;
-  }
-  & ApiParams
-  & PaginationParams
-  & FilterParams;
+type ActivityHistoryParams = {
+  slug: string;
+  startDate?: Date;
+  endDate?: Date;
+} & ApiParams &
+  PaginationParams &
+  FilterParams;
 
 const HistorySchema = z.discriminatedUnion('type', [
   EpisodeActivityHistorySchema,
@@ -59,8 +57,8 @@ export const activityHistoryQuery = defineInfiniteQuery({
     const movies = movieResponse.body.map(mapToMovieActivityHistory);
     const episodes = episodeResponse.body.map(mapToEpisodeActivityHistory);
 
-    const watched = [...movies, ...episodes].toSorted((a, b) =>
-      b.watchedAt.getTime() - a.watchedAt.getTime()
+    const watched = [...movies, ...episodes].toSorted(
+      (a, b) => b.watchedAt.getTime() - a.watchedAt.getTime(),
     );
 
     return {

@@ -10,14 +10,15 @@ import { useUpNextList } from '../progress/useUpNextList.ts';
 import type { SortBy } from '../user/models/SortBy.ts';
 import type { SortDirection } from '../user/models/SortDirection.ts';
 
-export type WatchListStoreProps = PaginationParams & FilterParams & {
-  slug?: string;
-  type?: DiscoverMode;
-  sortBy?: SortBy;
-  sortHow?: SortDirection;
-  limit?: number;
-  intent?: WatchListIntent;
-};
+export type WatchListStoreProps = PaginationParams &
+  FilterParams & {
+    slug?: string;
+    type?: DiscoverMode;
+    sortBy?: SortBy;
+    sortHow?: SortDirection;
+    limit?: number;
+    intent?: WatchListIntent;
+  };
 
 export function useWatchList(params: WatchListStoreProps) {
   const defaultSort = params.intent === 'default' ? 'added' : 'released';
@@ -37,8 +38,7 @@ export function useWatchList(params: WatchListStoreProps) {
   const result = {
     list: items.pipe(
       map(($items) =>
-        $items
-          .filter((item) => item.type === 'movie' || item.type === 'show')
+        $items.filter((item) => item.type === 'movie' || item.type === 'show'),
       ),
     ),
     ...rest,
@@ -62,7 +62,7 @@ export function useWatchList(params: WatchListStoreProps) {
     map(([$startList, $continueList]) => {
       const continueIds = new Set(
         $continueList.map((entry) =>
-          'show' in entry ? entry.show.key : entry.key
+          'show' in entry ? entry.show.key : entry.key,
         ),
       );
       return $startList.filter((item) => !continueIds.has(item.entry.key));
@@ -73,8 +73,9 @@ export function useWatchList(params: WatchListStoreProps) {
     ...result,
     list: filteredList,
     isLoading: combineLatest([result.isLoading, continueQuery.isLoading]).pipe(
-      map(([$startLoading, $continueLoading]) =>
-        $startLoading || $continueLoading
+      map(
+        ([$startLoading, $continueLoading]) =>
+          $startLoading || $continueLoading,
       ),
     ),
   };

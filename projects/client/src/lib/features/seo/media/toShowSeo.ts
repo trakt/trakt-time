@@ -10,9 +10,12 @@ type ShowSeoParams = {
   url: string;
 };
 
-export function toShowSeo(
-  { show, title, overview, url }: ShowSeoParams,
-): SeoMeta {
+export function toShowSeo({
+  show,
+  title,
+  overview,
+  url,
+}: ShowSeoParams): SeoMeta {
   if (!show) return { type: 'video.tv_show' };
 
   const name = title || show.title;

@@ -46,7 +46,7 @@ function createIdbStorage(): AsyncStorage<PersistedQuery> {
     entries: () =>
       entries<string, PersistedQuery>(store)
         .then((rows) =>
-          rows.map(([k, v]) => [String(k), v] as [string, PersistedQuery])
+          rows.map(([k, v]) => [String(k), v] as [string, PersistedQuery]),
         )
         .catch((e) => {
           handleError(e);

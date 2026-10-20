@@ -30,9 +30,8 @@ export function useMediaReaction() {
 
     track({ action: 'remove', type: params.type });
 
-    return withInvalidation(
-      params.type,
-      () => removeMediaReactionsRequest(params),
+    return withInvalidation(params.type, () =>
+      removeMediaReactionsRequest(params),
     );
   };
 

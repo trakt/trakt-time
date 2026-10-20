@@ -15,8 +15,9 @@ describe('Button', () => {
   it('should render a button with its label', () => {
     render(Button, { props: defaultProps });
 
-    expect(screen.getByRole('button', { name: 'Test Button' }))
-      .toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Test Button' }),
+    ).toBeInTheDocument();
   });
 
   it('should call onclick when clicked', async () => {

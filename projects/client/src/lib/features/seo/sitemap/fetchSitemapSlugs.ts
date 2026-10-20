@@ -10,17 +10,17 @@ type SitemapSlugs = {
 type Slugged = { ids: { slug?: Nil | string } };
 
 const toSlugs = (items: ReadonlyArray<Slugged>) =>
-  items.map((item) => item.ids.slug).filter((slug): slug is string =>
-    Boolean(slug)
-  );
+  items
+    .map((item) => item.ids.slug)
+    .filter((slug): slug is string => Boolean(slug));
 
 type FetchSitemapSlugsParams = {
   fetch: typeof globalThis.fetch;
 };
 
-export async function fetchSitemapSlugs(
-  { fetch }: FetchSitemapSlugsParams,
-): Promise<SitemapSlugs> {
+export async function fetchSitemapSlugs({
+  fetch,
+}: FetchSitemapSlugsParams): Promise<SitemapSlugs> {
   const client = unauthorizedApi({ fetch });
   const query = { limit: SITEMAP_MEDIA_LIMIT };
 

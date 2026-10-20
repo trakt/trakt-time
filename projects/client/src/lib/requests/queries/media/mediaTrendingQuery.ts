@@ -19,30 +19,32 @@ import {
   TrendingShowSchema,
 } from '../shows/showTrendingQuery.ts';
 
-type MediaTrendingParams =
-  & PaginationParams
-  & ApiParams
-  & FilterParams
-  & SearchParams;
+type MediaTrendingParams = PaginationParams &
+  ApiParams &
+  FilterParams &
+  SearchParams;
 
 const TrendingMediaSchema = z.union([TrendingShowSchema, TrendingMovieSchema]);
 
-const mediaTrendingRequest = (
-  { fetch, limit, page, filter, filterOverride, search }: MediaTrendingParams,
-) => {
+const mediaTrendingRequest = ({
+  fetch,
+  limit,
+  page,
+  filter,
+  filterOverride,
+  search,
+}: MediaTrendingParams) => {
   const filterParams = filterOverride?.show ?? filter;
 
-  return api({ fetch })
-    .media
-    .trending({
-      query: {
-        extended: 'full,images,colors',
-        page,
-        limit,
-        ...filterParams,
-        ...search,
-      },
-    });
+  return api({ fetch }).media.trending({
+    query: {
+      extended: 'full,images,colors',
+      page,
+      limit,
+      ...filterParams,
+      ...search,
+    },
+  });
 };
 
 export const mediaTrendingQuery = defineInfiniteQuery({
@@ -54,9 +56,7 @@ export const mediaTrendingQuery = defineInfiniteQuery({
     InvalidateAction.Watchlisted('movie'),
     InvalidateAction.MarkAsWatched('movie'),
   ],
-  dependencies: (
-    params: MediaTrendingParams,
-  ) => [
+  dependencies: (params: MediaTrendingParams) => [
     params.limit,
     params.page,
     ...getGlobalFilterDependencies(
@@ -67,7 +67,7 @@ export const mediaTrendingQuery = defineInfiniteQuery({
   request: mediaTrendingRequest,
   mapper: (response) => ({
     entries: response.body.map((entry) =>
-      'show' in entry ? mapToTrendingShow(entry) : mapToTrendingMovie(entry)
+      'show' in entry ? mapToTrendingShow(entry) : mapToTrendingMovie(entry),
     ),
     page: extractPageMeta(response.headers),
   }),

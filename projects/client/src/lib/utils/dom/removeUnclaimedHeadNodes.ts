@@ -24,8 +24,9 @@ function removeBlock(start: Comment) {
 // Svelte drops the marker of each `<svelte:head>` block it hydrates; blocks that
 // mount later append new nodes, so markers left after mount are stale copies.
 export function removeUnclaimedHeadNodes(head: HTMLHeadElement) {
-  const markers = [...head.childNodes].filter((node): node is Comment =>
-    isComment(node) && SVELTE_HEAD_MARKER.test(node.data)
+  const markers = [...head.childNodes].filter(
+    (node): node is Comment =>
+      isComment(node) && SVELTE_HEAD_MARKER.test(node.data),
   );
 
   markers.forEach(removeBlock);

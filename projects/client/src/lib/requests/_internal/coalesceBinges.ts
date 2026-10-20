@@ -7,19 +7,22 @@ import type {
 import { coalesceEpisodes } from './coalesceEpisodes.ts';
 
 function groupEpisodeActivities(activities: EpisodeActivity[]) {
-  return activities.reduce((acc, activity) => {
-    const userKey = activity.users.map((u) => u.slug).join(',');
-    const dayKey = getDayKey(activity.activityAt);
-    const key = `${activity.show.id}_${userKey}_${dayKey}`;
+  return activities.reduce(
+    (acc, activity) => {
+      const userKey = activity.users.map((u) => u.slug).join(',');
+      const dayKey = getDayKey(activity.activityAt);
+      const key = `${activity.show.id}_${userKey}_${dayKey}`;
 
-    acc[key] = acc[key] ? [...acc[key], activity] : [activity];
-    return acc;
-  }, {} as Record<string, EpisodeActivity[]>);
+      acc[key] = acc[key] ? [...acc[key], activity] : [activity];
+      return acc;
+    },
+    {} as Record<string, EpisodeActivity[]>,
+  );
 }
 
 export function coalesceBinges(activities: SocialActivity[]): SocialActivity[] {
-  const episodeActivities = activities.filter((activity) =>
-    activity.type === 'episode'
+  const episodeActivities = activities.filter(
+    (activity) => activity.type === 'episode',
   );
 
   const groupedActivities = groupEpisodeActivities(episodeActivities);
@@ -38,9 +41,8 @@ export function coalesceBinges(activities: SocialActivity[]): SocialActivity[] {
           show: activity.show,
         }));
 
-      const coalesced = coalesceEpisodes(
-        episodesInGroup,
-        () => getDayKey(groupActivity.activityAt),
+      const coalesced = coalesceEpisodes(episodesInGroup, () =>
+        getDayKey(groupActivity.activityAt),
       );
 
       const coalescedActivities = coalesced.map((ep) => {

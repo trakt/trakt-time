@@ -1,4 +1,7 @@
-import type { AvailableLanguage, AvailableLocale } from '$lib/features/i18n/index.ts';
+import type {
+  AvailableLanguage,
+  AvailableLocale,
+} from '$lib/features/i18n/index.ts';
 import * as m from '$lib/paraglide/messages.js';
 import type { MediaEntry } from '$lib/requests/models/MediaEntry.ts';
 import { toHumanDay } from '$lib/utils/formatting/date/toHumanDay.ts';
@@ -19,30 +22,40 @@ type ToMediaDetailsParams = {
   language: AvailableLanguage;
 };
 
-export function toMediaDetails(
-  { media, releaseDate, network, locale, language }: ToMediaDetailsParams,
-): MediaDetail[] {
+export function toMediaDetails({
+  media,
+  releaseDate,
+  network,
+  locale,
+  language,
+}: ToMediaDetailsParams): MediaDetail[] {
   const firstLanguage = media.languages?.at(0);
 
   const details: Array<MediaDetail | null> = [
     network ? { label: m.header_network(), value: network } : null,
     releaseDate
       ? {
-        label: m.header_release_date(),
-        value: toHumanDay({ date: releaseDate, locale, format: 'short' }),
-      }
+          label: m.header_release_date(),
+          value: toHumanDay({ date: releaseDate, locale, format: 'short' }),
+        }
       : null,
     media.runtime > 0
       ? {
-        label: m.header_runtime(),
-        value: toHumanDuration({ minutes: media.runtime }, language),
-      }
+          label: m.header_runtime(),
+          value: toHumanDuration({ minutes: media.runtime }, language),
+        }
       : null,
     media.country
-      ? { label: m.header_country(), value: toCountryName(media.country, language) }
+      ? {
+          label: m.header_country(),
+          value: toCountryName(media.country, language),
+        }
       : null,
     firstLanguage
-      ? { label: m.text_language(), value: toLanguageName(firstLanguage, language) }
+      ? {
+          label: m.text_language(),
+          value: toLanguageName(firstLanguage, language),
+        }
       : null,
   ];
 

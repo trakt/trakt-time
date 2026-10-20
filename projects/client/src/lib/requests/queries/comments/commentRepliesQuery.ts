@@ -10,19 +10,20 @@ import type { PaginationParams } from '../../models/PaginationParams.ts';
 
 type CommentRepliesParams = { id: number } & ApiParams & PaginationParams;
 
-const commentRepliesRequest = (
-  { fetch, id, limit, page }: CommentRepliesParams,
-) =>
-  api({ fetch })
-    .comments
-    .replies({
-      params: { id: `${id}` },
-      query: {
-        extended: 'images',
-        limit,
-        page,
-      },
-    });
+const commentRepliesRequest = ({
+  fetch,
+  id,
+  limit,
+  page,
+}: CommentRepliesParams) =>
+  api({ fetch }).comments.replies({
+    params: { id: `${id}` },
+    query: {
+      extended: 'images',
+      limit,
+      page,
+    },
+  });
 
 export const commentRepliesQuery = defineInfiniteQuery({
   key: 'commentReplies',

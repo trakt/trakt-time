@@ -38,8 +38,9 @@ export function useWatchedUntilHere(props: UseWatchedUntilHereProps) {
     );
     const episodesBySeason = new Map(
       await Promise.all(
-        seasonNumbers.map(async (season) =>
-          [season, await fetchSeasonEpisodes(season)] as const
+        seasonNumbers.map(
+          async (season) =>
+            [season, await fetchSeasonEpisodes(season)] as const,
         ),
       ),
     );
@@ -55,9 +56,11 @@ export function useWatchedUntilHere(props: UseWatchedUntilHereProps) {
     });
   };
 
-  const offerWatchedUntilHere = async (
-    { episode, currentSeasonEpisodes, seasons }: OfferParams,
-  ) => {
+  const offerWatchedUntilHere = async ({
+    episode,
+    currentSeasonEpisodes,
+    seasons,
+  }: OfferParams) => {
     if (!isAuthorized.value) return;
 
     const target = { season: episode.season, number: episode.number };

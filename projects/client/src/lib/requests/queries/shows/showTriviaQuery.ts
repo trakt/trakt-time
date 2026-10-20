@@ -9,12 +9,11 @@ import { type TriviaResponse } from '../../models/TriviaResponse.ts';
 
 type ShowTriviaParams = { slug: string } & ApiParams;
 
-const showTriviaRequest = async (
-  { fetch, slug }: ShowTriviaParams,
-) => {
-  const response = await rawApiFetch(
-    { fetch, path: `/v3/media/show/${slug}/info/5/version/2` },
-  );
+const showTriviaRequest = async ({ fetch, slug }: ShowTriviaParams) => {
+  const response = await rawApiFetch({
+    fetch,
+    path: `/v3/media/show/${slug}/info/5/version/2`,
+  });
 
   const body = response.ok ? await response.json() : { summary: [], items: [] };
 
@@ -31,7 +30,7 @@ export const showTriviaQuery = defineQuery({
   request: showTriviaRequest,
   mapper: (response) => ({
     items: response.body.items.map((entry) =>
-      mapToTrivia('show_trivia', entry)
+      mapToTrivia('show_trivia', entry),
     ),
     summary: response.body.summary.map(toLocalMarkdownLinks),
   }),

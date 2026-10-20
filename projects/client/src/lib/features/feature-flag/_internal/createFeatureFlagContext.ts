@@ -11,19 +11,21 @@ function initializeFlags() {
   const storedFlags = safeLocalStorage.getItem(FEATURE_FLAG_LOCAL_STORAGE_KEY);
   const parsedFlags = storedFlags ? JSON.parse(storedFlags) : {};
 
-  return Object.values(FeatureFlag).reduce((acc, flag) => {
-    acc[flag] = parsedFlags[flag] ?? false;
-    return acc;
-  }, {} as Record<string, boolean>);
+  return Object.values(FeatureFlag).reduce(
+    (acc, flag) => {
+      acc[flag] = parsedFlags[flag] ?? false;
+      return acc;
+    },
+    {} as Record<string, boolean>,
+  );
 }
 
 export function createFeatureFlagContext() {
   const ctx = setContext(
     FEATURE_FLAG_CONTEXT_KEY,
-    getContext<FeatureFlagContext>(FEATURE_FLAG_CONTEXT_KEY) ??
-      {
-        flags: new BehaviorSubject(initializeFlags()),
-      },
+    getContext<FeatureFlagContext>(FEATURE_FLAG_CONTEXT_KEY) ?? {
+      flags: new BehaviorSubject(initializeFlags()),
+    },
   );
 
   return ctx;

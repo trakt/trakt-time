@@ -3,12 +3,12 @@ import { error } from '@sveltejs/kit';
 
 type DeleteCommentParams = { id: number } & ApiParams;
 
-export function deleteCommentRequest(
-  { fetch, id }: DeleteCommentParams,
-): Promise<true> {
+export function deleteCommentRequest({
+  fetch,
+  id,
+}: DeleteCommentParams): Promise<true> {
   return api({ fetch })
-    .comments
-    .delete({
+    .comments.delete({
       params: { id: `${id}` },
     })
     .then((response) => {

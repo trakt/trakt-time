@@ -10,11 +10,12 @@ const seasons = [
 
 describe('toAdjacentEpisodes', () => {
   it('steps within a season', () => {
-    expect(toAdjacentEpisodes({ current: { season: 1, episode: 4 }, seasons }))
-      .toEqual({
-        previous: { season: 1, episode: 3 },
-        next: { season: 1, episode: 5 },
-      });
+    expect(
+      toAdjacentEpisodes({ current: { season: 1, episode: 4 }, seasons }),
+    ).toEqual({
+      previous: { season: 1, episode: 3 },
+      next: { season: 1, episode: 5 },
+    });
   });
 
   it('crosses into the next season after the last episode', () => {
@@ -41,12 +42,14 @@ describe('toAdjacentEpisodes', () => {
   });
 
   it('keeps specials apart from the regular seasons', () => {
-    expect(toAdjacentEpisodes({ current: { season: 0, episode: 2 }, seasons }))
-      .toEqual({ previous: { season: 0, episode: 1 }, next: null });
+    expect(
+      toAdjacentEpisodes({ current: { season: 0, episode: 2 }, seasons }),
+    ).toEqual({ previous: { season: 0, episode: 1 }, next: null });
   });
 
   it('gives nothing for an unknown season', () => {
-    expect(toAdjacentEpisodes({ current: { season: 7, episode: 1 }, seasons }))
-      .toEqual({ previous: null, next: null });
+    expect(
+      toAdjacentEpisodes({ current: { season: 7, episode: 1 }, seasons }),
+    ).toEqual({ previous: null, next: null });
   });
 });

@@ -19,9 +19,11 @@ type SearchParams = {
   exact: boolean;
 } & ApiParams;
 
-const MediaResultSchema = z.object({
-  score: z.number(),
-}).merge(MediaEntrySchema);
+const MediaResultSchema = z
+  .object({
+    score: z.number(),
+  })
+  .merge(MediaEntrySchema);
 
 const MediaSearchResultSchema = z.object({
   type: z.literal('media'),
@@ -36,13 +38,10 @@ function isGarbage(value: MediaEntry): boolean {
   const isInvalidRelease = isReleased && value?.year == null;
   const hasNoGenres = !value?.genres.length;
 
-  return isInvalidRelease ||
-    hasNoGenres;
+  return isInvalidRelease || hasNoGenres;
 }
 
-function mapToSearchResultEntry(
-  item: SearchResultResponse,
-): MediaResult {
+function mapToSearchResultEntry(item: SearchResultResponse): MediaResult {
   const { type } = item;
   switch (type) {
     case 'show':
@@ -60,9 +59,13 @@ function mapToSearchResultEntry(
   }
 }
 
-const searchRequest = async (
-  { query, type, config, limit, exact }: SearchParams,
-) => {
+const searchRequest = async ({
+  query,
+  type,
+  config,
+  limit,
+  exact,
+}: SearchParams) => {
   const queryParams = {
     query,
     limit,
@@ -83,8 +86,7 @@ const searchRequest = async (
     .catch(() => {
       const searchApi = api({
         fetch,
-      })
-        .search;
+      }).search;
 
       const searchQuery = exact ? searchApi.exact : searchApi.query;
 
@@ -105,15 +107,17 @@ const searchRequest = async (
 export const searchMediaQuery = defineQuery({
   key: 'searchMedia',
   invalidations: [],
-  dependencies: (
-    params,
-  ) => [params.query, params.type, params.limit, params.exact],
+  dependencies: (params) => [
+    params.query,
+    params.type,
+    params.limit,
+    params.exact,
+  ],
   request: searchRequest,
   mapper: (response) => {
     return {
       type: 'media' as const,
-      items: response
-        .body
+      items: response.body
         .map(mapToSearchResultEntry)
         .filter((value) => !isGarbage(value)),
     };

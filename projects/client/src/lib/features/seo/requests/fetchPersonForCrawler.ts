@@ -7,12 +7,12 @@ type FetchPersonParams = {
   slug: string;
 };
 
-export async function fetchPersonForCrawler(
-  { fetch, slug }: FetchPersonParams,
-): Promise<PersonSummary | null> {
+export async function fetchPersonForCrawler({
+  fetch,
+  slug,
+}: FetchPersonParams): Promise<PersonSummary | null> {
   const response = await unauthorizedApi({ fetch })
-    .people
-    .summary({
+    .people.summary({
       params: { id: slug },
       query: { extended: 'full,images' },
     })

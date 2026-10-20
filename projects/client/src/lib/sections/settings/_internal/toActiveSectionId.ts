@@ -9,9 +9,11 @@ type ToActiveSectionIdParams = {
   isAtBottom: boolean;
 };
 
-export function toActiveSectionId(
-  { sections, activationLine, isAtBottom }: ToActiveSectionIdParams,
-): string | Nil {
+export function toActiveSectionId({
+  sections,
+  activationLine,
+  isAtBottom,
+}: ToActiveSectionIdParams): string | Nil {
   if (isAtBottom) return sections.at(-1)?.id;
 
   const passed = sections.filter((section) => section.top <= activationLine);

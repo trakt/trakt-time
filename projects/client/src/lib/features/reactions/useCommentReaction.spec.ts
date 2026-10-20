@@ -22,10 +22,9 @@ vi.mock('$lib/stores/useInvalidator.ts', () => ({
 vi.mock('$lib/features/analytics/useTrack.ts', () => ({
   useTrack: () => ({ track }),
 }));
-vi.mock(
-  '$lib/requests/queries/comments/reactCommentRequest.ts',
-  () => ({ reactCommentRequest: vi.fn() }),
-);
+vi.mock('$lib/requests/queries/comments/reactCommentRequest.ts', () => ({
+  reactCommentRequest: vi.fn(),
+}));
 vi.mock(
   '$lib/requests/queries/comments/removeReactionCommentRequest.ts',
   () => ({ removeReactionCommentRequest: vi.fn() }),
@@ -66,9 +65,7 @@ describe('useCommentReaction', () => {
     expect(removeReactionCommentRequest).toHaveBeenCalledOnce();
     expect(
       vi.mocked(removeReactionCommentRequest).mock.invocationCallOrder[0],
-    ).toBeLessThan(
-      vi.mocked(reactCommentRequest).mock.invocationCallOrder[0],
-    );
+    ).toBeLessThan(vi.mocked(reactCommentRequest).mock.invocationCallOrder[0]);
   });
 
   it('should still remove first while the reactions have not loaded', async () => {

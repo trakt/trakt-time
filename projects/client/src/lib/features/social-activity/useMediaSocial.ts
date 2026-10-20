@@ -17,7 +17,7 @@ export function useMediaSocial(target: MediaSocialQueryTarget) {
     map(($query) =>
       sortMediaSocialEntries(
         $query.data?.pages.flatMap((page) => page.entries) ?? [],
-      )
+      ),
     ),
   );
 

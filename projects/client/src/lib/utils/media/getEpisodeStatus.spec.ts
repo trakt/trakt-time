@@ -7,9 +7,7 @@ const daysAgo = (days: number) => new Date(now.getTime() - time.days(days));
 
 describe('getEpisodeStatus', () => {
   it('returns premiere for premiere types', () => {
-    expect(getEpisodeStatus({ type: 'season_premiere', now })).toBe(
-      'premiere',
-    );
+    expect(getEpisodeStatus({ type: 'season_premiere', now })).toBe('premiere');
   });
 
   it('returns finale for finale types', () => {

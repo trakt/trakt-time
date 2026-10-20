@@ -29,14 +29,17 @@ const toUrl = (
     <priority>${priority}</priority>
   </url>`;
 
-export function buildSitemap(
-  { origin, lastmod, entries }: BuildSitemapParams,
-): string {
-  const unique = [...new Map(entries.map((entry) => [entry.path, entry]))
-    .values()];
-  const urls = unique.map((entry) => toUrl({ origin, lastmod }, entry)).join(
-    '\n',
-  );
+export function buildSitemap({
+  origin,
+  lastmod,
+  entries,
+}: BuildSitemapParams): string {
+  const unique = [
+    ...new Map(entries.map((entry) => [entry.path, entry])).values(),
+  ];
+  const urls = unique
+    .map((entry) => toUrl({ origin, lastmod }, entry))
+    .join('\n');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

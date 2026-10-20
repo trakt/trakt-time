@@ -23,16 +23,22 @@ function land(href: string, tab: HTMLElement | null) {
 
   animate(
     tab,
-    [{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }, {
-      transform: 'scale(1)',
-    }],
+    [
+      { transform: 'scale(1)' },
+      { transform: 'scale(1.2)' },
+      {
+        transform: 'scale(1)',
+      },
+    ],
     { duration: 320, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
   );
 }
 
-export function flyToWatchlist(
-  { poster, imageUrl, type }: FlyToWatchlistParams,
-) {
+export function flyToWatchlist({
+  poster,
+  imageUrl,
+  type,
+}: FlyToWatchlistParams) {
   const href = TAB_BY_TYPE[type];
   const tab = visibleNavTab(href);
   vibrate(8);

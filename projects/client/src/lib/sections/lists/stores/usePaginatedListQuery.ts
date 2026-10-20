@@ -53,9 +53,7 @@ export function usePaginatedListQuery<
     }),
   );
 
-  const pageCount = query.pipe(
-    map(($query) => $query.data?.pages.length ?? 0),
-  );
+  const pageCount = query.pipe(map(($query) => $query.data?.pages.length ?? 0));
 
   const fetchNextPage = async () => {
     const { fetchNextPage } = await firstValueFrom(query);

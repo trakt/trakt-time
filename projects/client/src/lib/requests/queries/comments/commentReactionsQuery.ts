@@ -5,11 +5,9 @@ import { reactionsSchema, type ReactionsSummaryResponse } from '@trakt/api';
 import z from 'zod';
 import { InvalidateAction } from '../../models/InvalidateAction.ts';
 
-type CommentRepliesParams =
-  & {
-    id: number;
-  }
-  & ApiParams;
+type CommentRepliesParams = {
+  id: number;
+} & ApiParams;
 
 const ReactionsSummarySchema = z.object({
   count: z.number(),
@@ -28,16 +26,9 @@ function mapToReactionsSummary(
   };
 }
 
-const commentReactionsRequest = (
-  {
-    fetch,
-    id,
-  }: CommentRepliesParams,
-) =>
+const commentReactionsRequest = ({ fetch, id }: CommentRepliesParams) =>
   api({ fetch })
-    .comments
-    .reactions
-    .summary({
+    .comments.reactions.summary({
       params: {
         id: `${id}`,
       },

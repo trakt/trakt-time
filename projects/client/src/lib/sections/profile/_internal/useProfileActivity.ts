@@ -18,9 +18,10 @@ export type RecentWatch = MovieActivityHistory | EpisodeActivityHistory;
 
 const toWatch = (entry: RecentWatch): Watch => ({
   watchedAt: entry.watchedAt,
-  runtime: entry.type === 'movie'
-    ? entry.movie.runtime
-    : entry.episode.runtime || entry.show.runtime,
+  runtime:
+    entry.type === 'movie'
+      ? entry.movie.runtime
+      : entry.episode.runtime || entry.show.runtime,
 });
 
 const toRecapWatch = (entry: RecentWatch): RecapWatch => ({
@@ -52,13 +53,16 @@ function countRatingsSince(
 ): number {
   return ratings
     .flatMap((entries) => [...entries.values()])
-    .filter((entry) => entry.ratedAt >= since)
-    .length;
+    .filter((entry) => entry.ratedAt >= since).length;
 }
 
-export function useProfileActivity(
-  { slug, isOwner }: { slug: string; isOwner: boolean },
-) {
+export function useProfileActivity({
+  slug,
+  isOwner,
+}: {
+  slug: string;
+  isOwner: boolean;
+}) {
   const now = new Date();
   const params = { slug, limit: HISTORY_LIMIT, ...toHistoryWindow(now) };
 
@@ -70,7 +74,7 @@ export function useProfileActivity(
     map(([$movies, $episodes]) =>
       [...$movies, ...$episodes].toSorted(
         (a, b) => b.watchedAt.getTime() - a.watchedAt.getTime(),
-      )
+      ),
     ),
   );
   const watches = history.pipe(map((entries) => entries.map(toWatch)));
@@ -85,12 +89,13 @@ export function useProfileActivity(
     month: combineLatest([watches, ratings]).pipe(
       map(([$watches, $ratings]) => ({
         ...toMonthStats({ watches: $watches, now }),
-        ratings: isOwner && $ratings
-          ? countRatingsSince(
-            [$ratings.movies, $ratings.shows, $ratings.episodes],
-            monthStart,
-          )
-          : null,
+        ratings:
+          isOwner && $ratings
+            ? countRatingsSince(
+                [$ratings.movies, $ratings.shows, $ratings.episodes],
+                monthStart,
+              )
+            : null,
       })),
     ),
     screenTime: watches.pipe(
@@ -98,7 +103,7 @@ export function useProfileActivity(
     ),
     lastMonth: history.pipe(
       map((entries) =>
-        toMonthRecap({ watches: entries.map(toRecapWatch), now })
+        toMonthRecap({ watches: entries.map(toRecapWatch), now }),
       ),
     ),
   };

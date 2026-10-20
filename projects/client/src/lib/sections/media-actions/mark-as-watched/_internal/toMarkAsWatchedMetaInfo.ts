@@ -15,9 +15,9 @@ export function toMarkAsWatchedMetaInfo(props: MarkAsWatchedStoreProps) {
 
   switch (props.type) {
     case 'episode':
-      return `${props.show.title} • ${
-        m.text_season_episode_number(props.media)
-      }`;
+      return `${props.show.title} • ${m.text_season_episode_number(
+        props.media,
+      )}`;
     case 'show': {
       if (!props.media.seasons) {
         return;

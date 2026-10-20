@@ -17,6 +17,4 @@ export const UserLimitsSchema = z.object({
   totalNotes: LimitsSchema,
 });
 
-export type UserLimits = z.infer<
-  typeof UserLimitsSchema
->;
+export type UserLimits = z.infer<typeof UserLimitsSchema>;

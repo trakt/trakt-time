@@ -37,10 +37,8 @@ export type ToggleFilter = BaseFilter & {
   type: 'toggle';
 };
 
-export type RatingsFilter =
-  & Omit<BaseFilter, 'label'>
-  & SliderOption
-  & {
+export type RatingsFilter = Omit<BaseFilter, 'label'> &
+  SliderOption & {
     advanced: AdvancedSliderOption;
   };
 

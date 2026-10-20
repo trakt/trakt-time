@@ -19,14 +19,11 @@ const currentUserPlexLibraryRequest = (
   { fetch }: ApiParams,
   type: 'movies' | 'shows' | 'episodes',
 ) =>
-  api({ fetch })
-    .sync
-    .collection
-    .minimal[type]({
-      query: {
-        available_on: 'plex',
-      },
-    });
+  api({ fetch }).sync.collection.minimal[type]({
+    query: {
+      available_on: 'plex',
+    },
+  });
 
 function toTraktIds(
   libraryResponse: CollectionMinimalResponse | CollectionMinimalShowResponse,

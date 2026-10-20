@@ -10,13 +10,11 @@ const SLUG = 'some-slug';
 
 function runLoad(data: Record<string, unknown>) {
   const prefetchQuery = vi.fn(() => new Promise<void>(() => {}));
-  const result = load(
-    {
-      data,
-      params: { slug: SLUG },
-      parent: () => Promise.resolve({ queryClient: { prefetchQuery } }),
-    } as unknown as Parameters<typeof load>[0],
-  );
+  const result = load({
+    data,
+    params: { slug: SLUG },
+    parent: () => Promise.resolve({ queryClient: { prefetchQuery } }),
+  } as unknown as Parameters<typeof load>[0]);
 
   return { prefetchQuery, result };
 }

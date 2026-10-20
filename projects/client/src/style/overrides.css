@@ -11,8 +11,8 @@
     var(--rose-500) 0%,
     var(--purple-500) 100%
   );
-  --trakttime-font-heading: 'Outfit', 'Inter', Arial, sans-serif;
-  --trakttime-font-body: 'Inter', Arial, sans-serif;
+  --trakttime-font-heading: "Outfit", "Inter", Arial, sans-serif;
+  --trakttime-font-body: "Inter", Arial, sans-serif;
   --trakttime-radius-card: var(--border-radius-l);
   --trakttime-radius-pill: 999px;
   --trakttime-tag-background: var(--shade-800);
@@ -82,7 +82,7 @@
 }
 
 /* Dark theme — near-black base like TVTime */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --color-background: var(--shade-1000);
   --color-floating-background: var(--shade-920);
   --color-card-background: var(--shade-930);
@@ -111,7 +111,7 @@
 }
 
 /* Light theme */
-[data-theme='light'] {
+[data-theme="light"] {
   --color-background: var(--shade-50);
   --color-floating-background: var(--shade-10);
   --color-card-background: var(--shade-10);
@@ -140,7 +140,7 @@
 }
 
 /* System theme */
-[data-theme='system'] {
+[data-theme="system"] {
   @media (prefers-color-scheme: dark) {
     --color-background: var(--shade-1000);
     --color-floating-background: var(--shade-920);

@@ -27,7 +27,7 @@ export function useTheme() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ theme: value }),
-      })
+      }),
     );
 
     if (!response.ok) {
@@ -44,33 +44,23 @@ export function useTheme() {
   }
 
   if (browser) {
-    globalThis.matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener(
-        'change',
-        (e) => {
-          const system = e.matches ? Theme.Dark : Theme.Light;
-          systemTheme.next(system);
-        },
-      );
+    globalThis
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', (e) => {
+        const system = e.matches ? Theme.Dark : Theme.Light;
+        systemTheme.next(system);
+      });
   }
 
   return {
     set,
     theme: theme.asObservable(),
-    color: combineLatest(
-      [theme, systemTheme],
-    ).pipe(
+    color: combineLatest([theme, systemTheme]).pipe(
       map(() => {
         return {
-          navbar: computeVariable(
-            '--color-background-navbar-base',
-          ),
-          background: computeVariable(
-            '--color-background',
-          ),
-          text: computeVariable(
-            '--color-foreground',
-          ),
+          navbar: computeVariable('--color-background-navbar-base'),
+          background: computeVariable('--color-background'),
+          text: computeVariable('--color-foreground'),
         };
       }),
     ),

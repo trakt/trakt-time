@@ -9,9 +9,11 @@ type ToCalendarFeedUrlParams = {
   mode: MediaType;
 };
 
-export function toCalendarFeedUrl(
-  { origin, token, mode }: ToCalendarFeedUrlParams,
-): { https: string; webcal: string } {
+export function toCalendarFeedUrl({
+  origin,
+  token,
+  mode,
+}: ToCalendarFeedUrlParams): { https: string; webcal: string } {
   const path = mode === 'movie' ? 'my/movies' : 'my/shows';
   const query = buildParamString({ [FEED_TOKEN_PARAM]: token });
   const https = `${origin}/calendars/${path}.ics${query}`;

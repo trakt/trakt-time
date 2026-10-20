@@ -24,10 +24,9 @@ export async function getPeople({
     exact: false,
   });
 
-  return hits
-    .map((hit) => ({
-      score: Number(hit.text_match_info?.score ?? -1),
-      type,
-      [type]: toPerson(hit.document),
-    }));
+  return hits.map((hit) => ({
+    score: Number(hit.text_match_info?.score ?? -1),
+    type,
+    [type]: toPerson(hit.document),
+  }));
 }

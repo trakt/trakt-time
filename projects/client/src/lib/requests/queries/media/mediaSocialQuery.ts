@@ -36,33 +36,36 @@ export type MediaSocialQueryTarget =
   | MediaSocialShowTarget
   | MediaSocialEpisodeTarget;
 
-type MediaSocialParams =
-  & MediaSocialQueryTarget
-  & PaginationParams
-  & ApiParams;
+type MediaSocialParams = MediaSocialQueryTarget & PaginationParams & ApiParams;
 
-const MediaSocialUserResponseSchema = z.object({
-  username: z.string(),
-  private: z.boolean().default(false),
-  deleted: z.boolean().default(false),
-  name: z.string().nullish().default(null),
-  vip: z.boolean().nullish(),
-  vip_ep: z.boolean().nullish(),
-  director: z.boolean().nullish(),
-  ids: z.object({
-    slug: z.string().nullish(),
-    trakt: z.number(),
-  }),
-  images: z.object({
-    avatar: z.object({
-      full: z.string().nullish(),
-    }).default({ full: null }),
-  }).default({ avatar: { full: null } }),
-  location: z.string().nullish().default(null),
-  about: z.string().nullish().default(null),
-  vip_cover_image: z.string().nullish().default(null),
-  joined_at: z.string().nullish().default(null),
-}).passthrough();
+const MediaSocialUserResponseSchema = z
+  .object({
+    username: z.string(),
+    private: z.boolean().default(false),
+    deleted: z.boolean().default(false),
+    name: z.string().nullish().default(null),
+    vip: z.boolean().nullish(),
+    vip_ep: z.boolean().nullish(),
+    director: z.boolean().nullish(),
+    ids: z.object({
+      slug: z.string().nullish(),
+      trakt: z.number(),
+    }),
+    images: z
+      .object({
+        avatar: z
+          .object({
+            full: z.string().nullish(),
+          })
+          .default({ full: null }),
+      })
+      .default({ avatar: { full: null } }),
+    location: z.string().nullish().default(null),
+    about: z.string().nullish().default(null),
+    vip_cover_image: z.string().nullish().default(null),
+    joined_at: z.string().nullish().default(null),
+  })
+  .passthrough();
 
 const MediaSocialRatingResponseSchema = z.object({
   rating: z.number(),
@@ -210,9 +213,10 @@ function mapToSocialWatched(
 function mapToMediaSocial(entry: MediaSocialEntryResponse): MediaSocial {
   const user = mapToUserProfile(entry.user as ProfileResponse);
   const watched = mapToSocialWatched(entry.watched);
-  const watchlisted = entry.watchlisted == null
-    ? undefined
-    : { listedAt: new Date(entry.watchlisted.listed_at) };
+  const watchlisted =
+    entry.watchlisted == null
+      ? undefined
+      : { listedAt: new Date(entry.watchlisted.listed_at) };
 
   return {
     key: `media-social-${user.id}`,
@@ -223,9 +227,7 @@ function mapToMediaSocial(entry: MediaSocialEntryResponse): MediaSocial {
   };
 }
 
-const mediaSocialRequest = async (
-  { fetch, ...params }: MediaSocialParams,
-) => {
+const mediaSocialRequest = async ({ fetch, ...params }: MediaSocialParams) => {
   const response = await rawApiFetch({
     fetch,
     path: `${toSocialPath(params)}${toSocialSearchParams(params)}`,
@@ -262,9 +264,7 @@ export const mediaSocialQuery = defineInfiniteQuery({
     InvalidateAction.Watchlisted('show'),
     ...getInvalidations(),
   ],
-  dependencies: (
-    params: MediaSocialParams,
-  ) => [
+  dependencies: (params: MediaSocialParams) => [
     ...getTargetDependencies(params),
     params.page,
     params.limit,

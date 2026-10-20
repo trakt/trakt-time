@@ -109,9 +109,9 @@ addEventListener('message', (event) => {
 // and the activate-time purge.
 const localeAwareCacheKey = {
   cacheKeyWillBeUsed: async ({ request }: { request: Request }) => {
-    const cookie = await self.cookieStore?.get(LOCALE_COOKIE_NAME).catch(
-      () => null,
-    );
+    const cookie = await self.cookieStore
+      ?.get(LOCALE_COOKIE_NAME)
+      .catch(() => null);
 
     if (!cookie?.value) {
       return request;
@@ -127,9 +127,7 @@ const localeAwareCacheKey = {
 // to avoid cross-locale poisoning.
 const navigationHandler = new StaleWhileRevalidate({
   cacheName: CacheKey.navigation,
-  plugins: [
-    localeAwareCacheKey,
-  ],
+  plugins: [localeAwareCacheKey],
 });
 
 registerRoute(
@@ -175,9 +173,11 @@ registerRoute(
     if (url.origin !== self.location.origin) {
       return false;
     }
-    return AssetPattern.static.test(url.pathname) ||
+    return (
+      AssetPattern.static.test(url.pathname) ||
       AssetPattern.media.test(url.pathname) ||
-      AssetPattern.documents.test(url.pathname);
+      AssetPattern.documents.test(url.pathname)
+    );
   },
   new CacheFirst({
     cacheName: CacheKey.static,

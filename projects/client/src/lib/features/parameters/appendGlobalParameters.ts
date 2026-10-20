@@ -34,17 +34,18 @@ export function appendGlobalParameters(
     const currentUrl = new URL(globalThis.window.location.href);
     const isSamePath = url.pathname === currentUrl.pathname;
 
-    const localParams = isSamePath && Boolean($override)
-      ? Array.from(currentUrl.searchParams.entries())
-        .filter(([key]) => LOCAL_PARAMS.includes(key))
-      : [];
+    const localParams =
+      isSamePath && Boolean($override)
+        ? Array.from(currentUrl.searchParams.entries()).filter(([key]) =>
+            LOCAL_PARAMS.includes(key),
+          )
+        : [];
 
     const params = Object.fromEntries([
       ...localParams,
-      ...Array.from(url.searchParams.entries())
-        .filter(([key]) =>
-          key === $override || !WHITE_LISTED_PARAMS.includes(key)
-        ),
+      ...Array.from(url.searchParams.entries()).filter(
+        ([key]) => key === $override || !WHITE_LISTED_PARAMS.includes(key),
+      ),
       ...$search.entries(),
     ]);
 
@@ -55,9 +56,7 @@ export function appendGlobalParameters(
     anchor.href = nextHref;
   };
 
-  const subscription = combineLatest(
-    [search, override, isEscaped],
-  ).subscribe({
+  const subscription = combineLatest([search, override, isEscaped]).subscribe({
     next: (values: [URLSearchParams, string, boolean]) => {
       latestValues = values;
       applyParams();

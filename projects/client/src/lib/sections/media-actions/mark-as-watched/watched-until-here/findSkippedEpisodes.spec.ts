@@ -91,12 +91,15 @@ describe('findSkippedEpisodeIds', () => {
         episodesBySeason: new Map([
           [0, [episode(100, 1)]],
           [1, [episode(11, 1), episode(12, 2)]],
-          [2, [
-            episode(21, 1),
-            episode(22, 2, UNAIRED),
-            episode(23, 3),
-            episode(24, 4),
-          ]],
+          [
+            2,
+            [
+              episode(21, 1),
+              episode(22, 2, UNAIRED),
+              episode(23, 3),
+              episode(24, 4),
+            ],
+          ],
           [3, [episode(31, 1)]],
         ]),
         watchedEpisodeIds: new Set([12]),

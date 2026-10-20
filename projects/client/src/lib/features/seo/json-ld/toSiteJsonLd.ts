@@ -6,9 +6,10 @@ type SiteJsonLdParams = {
   description: string;
 };
 
-export function toSiteJsonLd(
-  { origin, description }: SiteJsonLdParams,
-): ReadonlyArray<JsonLd> {
+export function toSiteJsonLd({
+  origin,
+  description,
+}: SiteJsonLdParams): ReadonlyArray<JsonLd> {
   return [
     {
       '@context': 'https://schema.org',

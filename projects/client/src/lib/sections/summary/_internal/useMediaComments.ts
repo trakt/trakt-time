@@ -3,17 +3,15 @@ import { useComments } from '$lib/sections/summary/components/comments/_internal
 
 const COMMENTS_PAGE_SIZE = 10;
 
-export type MediaCommentsProps =
-  & {
-    slug: string;
-    mediaId: number;
-    mediaTitle: string;
-    sort?: CommentSortType;
-  }
-  & (
-    | { type: 'movie' | 'show' }
-    | { type: 'episode'; season: number; episode: number }
-  );
+export type MediaCommentsProps = {
+  slug: string;
+  mediaId: number;
+  mediaTitle: string;
+  sort?: CommentSortType;
+} & (
+  | { type: 'movie' | 'show' }
+  | { type: 'episode'; season: number; episode: number }
+);
 
 export function useMediaComments(props: MediaCommentsProps) {
   const sort = props.sort ?? 'likes';

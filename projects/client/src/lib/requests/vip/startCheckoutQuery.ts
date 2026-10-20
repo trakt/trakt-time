@@ -15,14 +15,14 @@ const StartCheckoutResponseSchema = z.object({
   }),
 });
 
-export async function startCheckoutQuery(
-  { duration, returnUrl }: StartCheckoutParams,
-): Promise<string | Nil> {
+export async function startCheckoutQuery({
+  duration,
+  returnUrl,
+}: StartCheckoutParams): Promise<string | Nil> {
   const url = encodeURIComponent(returnUrl);
 
   const response = await rawApiFetch({
-    path:
-      `/vip/stripe/create?duration=${duration}&success_url=${url}&cancel_url=${url}`,
+    path: `/vip/stripe/create?duration=${duration}&success_url=${url}&cancel_url=${url}`,
     init: {
       method: 'POST',
     },

@@ -7,9 +7,9 @@ type MarkAsWatchedProps = {
 };
 
 export type MarkAsWatchedDrawerState =
-  | {
-    isOpen: boolean;
-  } & MarkAsWatchedProps
+  | ({
+      isOpen: boolean;
+    } & MarkAsWatchedProps)
   | null;
 
 function createMarkAsWatchedDrawerStore() {

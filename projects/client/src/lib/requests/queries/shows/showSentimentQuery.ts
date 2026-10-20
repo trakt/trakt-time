@@ -7,18 +7,17 @@ import type { SentimentResponse } from '../../models/SentimentResponse.ts';
 
 type ShowSentimentParams = { slug: string; enabled: boolean } & ApiParams;
 
-const showSentimentRequest = async (
-  { fetch, slug }: ShowSentimentParams,
-) => {
-  const response = await rawApiFetch(
-    { fetch, path: `/v3/media/show/${slug}/info/0/version/2` },
-  );
+const showSentimentRequest = async ({ fetch, slug }: ShowSentimentParams) => {
+  const response = await rawApiFetch({
+    fetch,
+    path: `/v3/media/show/${slug}/info/0/version/2`,
+  });
 
   return response.ok
     ? {
-      body: await response.json() as SentimentResponse,
-      status: 200,
-    }
+        body: (await response.json()) as SentimentResponse,
+        status: 200,
+      }
     : { body: undefined, status: 200 };
 };
 

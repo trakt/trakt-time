@@ -115,9 +115,7 @@ export function useUser() {
   );
   const favoritesQuerySignal = useQuery(currentUserFavoritesQuery());
   const followingQuerySignal = useQuery(currentUserNetworkQuery());
-  const plexLibraryQuerySignal = useQuery(
-    currentUserPlexLibraryQuery(),
-  );
+  const plexLibraryQuerySignal = useQuery(currentUserPlexLibraryQuery());
   const likesQuerySignal = useQuery(currentUserLikesQuery());
   const limitsQuerySignal = useQuery(userLimitsQuery());
   const notesQuerySignal = useQuery(currentUserNotesQuery());
@@ -220,12 +218,13 @@ export function useUser() {
         blocked: blockedQuerySignal.pipe(
           map((blocked) => blocked.data),
           distinctUntilChanged(),
-          map((profiles) =>
-            new Set(
-              (profiles ?? [])
-                .map((profile) => profile.slug)
-                .filter((slug): slug is string => Boolean(slug)),
-            )
+          map(
+            (profiles) =>
+              new Set(
+                (profiles ?? [])
+                  .map((profile) => profile.slug)
+                  .filter((slug): slug is string => Boolean(slug)),
+              ),
           ),
         ),
       });

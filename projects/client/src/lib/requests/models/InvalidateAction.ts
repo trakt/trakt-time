@@ -35,26 +35,26 @@ export type InvalidateActionOptions =
   | `${typeof INVALIDATION_ID}:hide_recommended:${MediaType}`;
 
 type TypeDataMap = {
-  'auth': null;
-  'rated': ExtendedMediaType;
-  'mark_as_watched': ExtendedMediaType;
-  'watchlisted': MediaType;
-  'dropped': MediaType;
-  'restored': 'show';
-  'react': 'comment' | MediaType;
-  'comment_reply': ExtendedMediaType;
-  'listed': MediaType;
-  'user': UserType;
-  'check_in': null;
-  'favorited': MediaType;
-  'commented': ExtendedMediaType;
-  'list': ListType;
-  'smart_list': ListType;
-  'notes': MediaType;
-  'notes_edit': MediaType;
-  'notes_delete': MediaType;
-  'vip': VipType;
-  'hide_recommended': MediaType;
+  auth: null;
+  rated: ExtendedMediaType;
+  mark_as_watched: ExtendedMediaType;
+  watchlisted: MediaType;
+  dropped: MediaType;
+  restored: 'show';
+  react: 'comment' | MediaType;
+  comment_reply: ExtendedMediaType;
+  listed: MediaType;
+  user: UserType;
+  check_in: null;
+  favorited: MediaType;
+  commented: ExtendedMediaType;
+  list: ListType;
+  smart_list: ListType;
+  notes: MediaType;
+  notes_edit: MediaType;
+  notes_delete: MediaType;
+  vip: VipType;
+  hide_recommended: MediaType;
 };
 
 export function invalidationId(key?: string) {

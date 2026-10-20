@@ -19,9 +19,14 @@ function toEpisodeCode(episode: EpisodeEntry) {
   return `S${season}E${number}`;
 }
 
-export function toEpisodeSeo(
-  { episode, show, title, overview, url, showUrl }: EpisodeSeoParams,
-): SeoMeta {
+export function toEpisodeSeo({
+  episode,
+  show,
+  title,
+  overview,
+  url,
+  showUrl,
+}: EpisodeSeoParams): SeoMeta {
   if (!episode) return { type: 'video.episode' };
 
   const name = title || episode.title;

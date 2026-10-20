@@ -4,16 +4,12 @@ import type { CreateQueryOptions } from '$lib/features/query/types.ts';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { debounceTime, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import type { SearchMode } from '../../requests/queries/search/models/SearchMode.ts';
-import {
-  searchListsQuery,
-} from '../../requests/queries/search/searchListsQuery.ts';
+import { searchListsQuery } from '../../requests/queries/search/searchListsQuery.ts';
 import {
   type MediaSearchResult,
   searchMediaQuery,
 } from '../../requests/queries/search/searchMediaQuery.ts';
-import {
-  searchPeopleQuery,
-} from '../../requests/queries/search/searchPeopleQuery.ts';
+import { searchPeopleQuery } from '../../requests/queries/search/searchPeopleQuery.ts';
 import {
   searchTrendingQuery,
   type TrendingSearchesResult,
@@ -49,13 +45,16 @@ function modeToQuery(
       }) as CreateQueryOptions<SearchResponse>;
     }
     case 'people':
-      return searchPeopleQuery({ query, config, limit }) as CreateQueryOptions<
-        SearchResponse
-      >;
+      return searchPeopleQuery({
+        query,
+        config,
+        limit,
+      }) as CreateQueryOptions<SearchResponse>;
     case 'lists':
-      return searchListsQuery({ query, limit }) as CreateQueryOptions<
-        SearchResponse
-      >;
+      return searchListsQuery({
+        query,
+        limit,
+      }) as CreateQueryOptions<SearchResponse>;
     default:
       throw new Error(`Unsupported search mode: ${mode}`);
   }
@@ -66,9 +65,9 @@ function modeToTrendingQuery(query: string, mode: SearchMode) {
     case 'media':
     case 'movie':
     case 'show': {
-      return searchTrendingQuery({ query }) as CreateQueryOptions<
-        TrendingSearchesResult
-      >;
+      return searchTrendingQuery({
+        query,
+      }) as CreateQueryOptions<TrendingSearchesResult>;
     }
     default:
       throw new Error(`Unsupported trending search mode: ${mode}`);
@@ -82,55 +81,53 @@ export function useSearch() {
 
   const searchTerm$ = new BehaviorSubject<string>('');
 
-  const results = client == null ? of(null) : combineLatest([
-    searchTerm$,
-    mode,
-  ]).pipe(
-    debounceTime(150),
-    switchMap(([rawTerm, currentMode]) => {
-      const term = rawTerm.toLowerCase().trim();
+  const results =
+    client == null
+      ? of(null)
+      : combineLatest([searchTerm$, mode]).pipe(
+          debounceTime(150),
+          switchMap(([rawTerm, currentMode]) => {
+            const term = rawTerm.toLowerCase().trim();
 
-      if (term.trim().length === 0) {
-        return of(null);
-      }
+            if (term.trim().length === 0) {
+              return of(null);
+            }
 
-      isSearching.next(true);
-      track({ mode: currentMode });
+            isSearching.next(true);
+            track({ mode: currentMode });
 
-      const searchQuery = client.fetchQuery(
-        modeToQuery(term, currentMode, config, false),
-      );
+            const searchQuery = client.fetchQuery(
+              modeToQuery(term, currentMode, config, false),
+            );
 
-      if (currentMode === 'people' || currentMode === 'lists') {
-        return searchQuery;
-      }
+            if (currentMode === 'people' || currentMode === 'lists') {
+              return searchQuery;
+            }
 
-      const trendingQuery = client.fetchQuery(
-        modeToTrendingQuery(term, currentMode),
-      );
+            const trendingQuery = client.fetchQuery(
+              modeToTrendingQuery(term, currentMode),
+            );
 
-      const exactQuery = client.fetchQuery(
-        modeToQuery(term, currentMode, config, true),
-      );
-      return combineLatest([exactQuery, searchQuery, trendingQuery]).pipe(
-        map(([exactResults, searchResults, trendingResults]) => ({
-          type: 'media' as const,
-          items: dedupe(
-            (item) => item.key,
-            (exactResults as MediaSearchResult).items,
-            trendingResults?.items ?? [],
-            (searchResults as MediaSearchResult).items,
-          ),
-        })),
-      );
-    }),
-    tap(() => isSearching.next(false)),
-    shareReplay(1),
-  );
+            const exactQuery = client.fetchQuery(
+              modeToQuery(term, currentMode, config, true),
+            );
+            return combineLatest([exactQuery, searchQuery, trendingQuery]).pipe(
+              map(([exactResults, searchResults, trendingResults]) => ({
+                type: 'media' as const,
+                items: dedupe(
+                  (item) => item.key,
+                  (exactResults as MediaSearchResult).items,
+                  trendingResults?.items ?? [],
+                  (searchResults as MediaSearchResult).items,
+                ),
+              })),
+            );
+          }),
+          tap(() => isSearching.next(false)),
+          shareReplay(1),
+        );
 
-  const coverSrc = results.pipe(
-    map(mapToSearchCover),
-  );
+  const coverSrc = results.pipe(map(mapToSearchCover));
 
   function search(term: string, searchMode: SearchMode) {
     mode.next(searchMode);

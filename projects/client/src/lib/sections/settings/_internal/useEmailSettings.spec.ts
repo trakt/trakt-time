@@ -18,10 +18,9 @@ vi.mock('$lib/stores/useInvalidator.ts', () => ({
 vi.mock('$lib/features/analytics/useTrack.ts', () => ({
   useTrack: () => ({ track }),
 }));
-vi.mock(
-  '$lib/requests/queries/users/saveEmailSettingsRequest.ts',
-  () => ({ saveEmailSettingsRequest: vi.fn() }),
-);
+vi.mock('$lib/requests/queries/users/saveEmailSettingsRequest.ts', () => ({
+  saveEmailSettingsRequest: vi.fn(),
+}));
 
 const LOADED = {
   hasNotifications: true,

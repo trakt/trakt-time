@@ -100,15 +100,13 @@ function resolveInfiniteQueryOptions<
       TQueryFnData,
       TQueryKey
     >,
-  ) as unknown as
-    & InfiniteQueryObserverOptions<
-      TQueryFnData,
-      TError,
-      TData,
-      TQueryKey,
-      TPageParam
-    >
-    & { _optimisticResults?: 'optimistic' | 'isRestoring' };
+  ) as unknown as InfiniteQueryObserverOptions<
+    TQueryFnData,
+    TError,
+    TData,
+    TQueryKey,
+    TPageParam
+  > & { _optimisticResults?: 'optimistic' | 'isRestoring' };
   resolved._optimisticResults = 'optimistic';
   return resolved;
 }
@@ -163,7 +161,7 @@ export function queryBridge<TOutput, TError extends Error>(
           client,
           resolveQueryOptions(client, optionsAccessor()),
         ),
-    )
+    ),
   );
 }
 

@@ -7,9 +7,10 @@ type CastGroupsProps = {
   guestStars: ReadonlyArray<CastMember>;
 };
 
-export function toCastGroups(
-  { cast, guestStars }: CastGroupsProps,
-): CastGroup[] {
+export function toCastGroups({
+  cast,
+  guestStars,
+}: CastGroupsProps): CastGroup[] {
   const isSplit = cast.length > 0 && guestStars.length > 0;
   if (isSplit) {
     return [
@@ -27,9 +28,10 @@ type ActiveCastGroupTypeProps = {
   selected: CastGroupType;
 };
 
-export function toActiveCastGroupType(
-  { groups, selected }: ActiveCastGroupTypeProps,
-): CastGroupType {
+export function toActiveCastGroupType({
+  groups,
+  selected,
+}: ActiveCastGroupTypeProps): CastGroupType {
   if (groups.some((group) => group.type === selected)) return selected;
 
   return groups.at(0)?.type ?? 'main';

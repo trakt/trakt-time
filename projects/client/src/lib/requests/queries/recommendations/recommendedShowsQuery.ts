@@ -20,9 +20,12 @@ export type RecommendedShow = z.infer<typeof RecommendedShowSchema>;
 
 type RecommendedShowsParams = LimitParams & ApiParams & FilterParams;
 
-export const recommendedShowsRequest = async (
-  { fetch, limit, filter, filterOverride }: RecommendedShowsParams,
-) => {
+export const recommendedShowsRequest = async ({
+  fetch,
+  limit,
+  filter,
+  filterOverride,
+}: RecommendedShowsParams) => {
   const filterParams = filterOverride?.show ?? filter;
   const searchParams = getRecommendedSearchParams({ limit, filterParams });
 
@@ -33,9 +36,9 @@ export const recommendedShowsRequest = async (
 
   return response.ok
     ? {
-      body: RecommendationsShowResponseSchema.parse(await response.json()),
-      status: 200,
-    }
+        body: RecommendationsShowResponseSchema.parse(await response.json()),
+        status: 200,
+      }
     : { body: undefined, status: 200 };
 };
 
@@ -47,9 +50,7 @@ export const recommendedShowsQuery = defineQuery({
     InvalidateAction.MarkAsWatched('episode'),
     InvalidateAction.HideRecommended('show'),
   ],
-  dependencies: (
-    params,
-  ) => [
+  dependencies: (params) => [
     params.limit,
     params.filter?.watch_window,
     ...getGlobalFilterDependencies(

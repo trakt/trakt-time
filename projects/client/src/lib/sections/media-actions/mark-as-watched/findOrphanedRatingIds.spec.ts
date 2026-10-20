@@ -15,18 +15,25 @@ const ratings: UserRatings = {
 
 const history = {
   movies: new Map([[1, { id: 1, watchedAt: DATE, plays: 2 }]]),
-  shows: new Map([[10, {
-    id: 10,
-    watchedAt: DATE,
-    watchedDates: [DATE],
-    playsPerSeason: new Map([[1, 1]]),
-    episodes: [{
-      season: 1,
-      episodeId: 100,
-      watchedAt: DATE,
-      plays: 1,
-    }],
-  }]]),
+  shows: new Map([
+    [
+      10,
+      {
+        id: 10,
+        watchedAt: DATE,
+        watchedDates: [DATE],
+        playsPerSeason: new Map([[1, 1]]),
+        episodes: [
+          {
+            season: 1,
+            episodeId: 100,
+            watchedAt: DATE,
+            plays: 1,
+          },
+        ],
+      },
+    ],
+  ]),
 } as unknown as UserHistory;
 
 describe('findOrphanedRatingIds', () => {

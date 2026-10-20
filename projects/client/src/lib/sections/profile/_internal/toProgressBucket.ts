@@ -8,7 +8,7 @@ export const PROGRESS_TABS = [
   'dropped',
 ] as const;
 
-export type ProgressTab = typeof PROGRESS_TABS[number];
+export type ProgressTab = (typeof PROGRESS_TABS)[number];
 
 type ToProgressBucketParams = {
   tab: ProgressTab;
@@ -17,9 +17,12 @@ type ToProgressBucketParams = {
   dropped: ReadonlyArray<ProgressEntry>;
 };
 
-export function toProgressBucket(
-  { tab, watching, completed, dropped }: ToProgressBucketParams,
-): ReadonlyArray<ProgressEntry> {
+export function toProgressBucket({
+  tab,
+  watching,
+  completed,
+  dropped,
+}: ToProgressBucketParams): ReadonlyArray<ProgressEntry> {
   switch (tab) {
     case 'in-progress':
       return watching;

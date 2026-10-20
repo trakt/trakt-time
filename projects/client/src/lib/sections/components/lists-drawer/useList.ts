@@ -5,9 +5,7 @@ import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
 import { addToListRequest } from '$lib/requests/queries/users/addToListRequest.ts';
 import { removeFromListRequest } from '$lib/requests/queries/users/removeFromListRequest.ts';
 import type { UserList } from '$lib/requests/queries/users/userListsQuery.ts';
-import {
-  toBulkPayload,
-} from '$lib/sections/media-actions/_internal/toBulkPayload.ts';
+import { toBulkPayload } from '$lib/sections/media-actions/_internal/toBulkPayload.ts';
 import { useInvalidator } from '$lib/stores/useInvalidator.ts';
 import { BehaviorSubject } from 'rxjs';
 

@@ -85,12 +85,9 @@ const V2_SLIM_HEADER = [
   'is_followed',
 ];
 
-function toCsv(
-  header: string[],
-  rows: Record<string, string>[],
-): string {
-  const lines = rows.map(
-    (row) => header.map((column) => row[column] ?? '').join(','),
+function toCsv(header: string[], rows: Record<string, string>[]): string {
+  const lines = rows.map((row) =>
+    header.map((column) => row[column] ?? '').join(','),
   );
   return [header.join(','), ...lines].join('\n');
 }
@@ -200,15 +197,18 @@ function csvFile(content: string, name = 'tracking.csv'): File {
 describe('TvTimeGdprParser', () => {
   describe('canParse', () => {
     it('should accept csv and zip files', () => {
-      expect(TvTimeGdprParser.canParse([
-        csvFile('', 'tracking-prod-records.csv'),
-        new File([''], 'gdpr-data.zip'),
-      ])).toBe(true);
+      expect(
+        TvTimeGdprParser.canParse([
+          csvFile('', 'tracking-prod-records.csv'),
+          new File([''], 'gdpr-data.zip'),
+        ]),
+      ).toBe(true);
     });
 
     it('should reject unsupported file types', () => {
-      expect(TvTimeGdprParser.canParse([new File([''], 'data.json')]))
-        .toBe(false);
+      expect(TvTimeGdprParser.canParse([new File([''], 'data.json')])).toBe(
+        false,
+      );
     });
 
     it('should reject an empty file list', () => {
@@ -235,9 +235,8 @@ describe('TvTimeGdprParser', () => {
     });
 
     it('should handle very large exports without overflowing the stack', async () => {
-      const rows = Array.from(
-        { length: 200_000 },
-        (_, i) => v2EpisodeWatch({ ep_id: String(1_000_000 + i) }),
+      const rows = Array.from({ length: 200_000 }, (_, i) =>
+        v2EpisodeWatch({ ep_id: String(1_000_000 + i) }),
       );
       const csv = toCsv(V2_HEADER, rows);
 
@@ -283,15 +282,17 @@ describe('TvTimeGdprParser', () => {
         'season_number',
         'episode_number',
       ];
-      const csv = toCsv(legacyHeader, [{
-        key: 'watch-episode-02531a20-021e25cc',
-        created_at: '2021-10-10 11:49:11',
-        s_id: '82066',
-        series_name: 'Fringe',
-        episode_id: '1331151',
-        season_number: '2',
-        episode_number: '10',
-      }]);
+      const csv = toCsv(legacyHeader, [
+        {
+          key: 'watch-episode-02531a20-021e25cc',
+          created_at: '2021-10-10 11:49:11',
+          s_id: '82066',
+          series_name: 'Fringe',
+          episode_id: '1331151',
+          season_number: '2',
+          episode_number: '10',
+        },
+      ]);
 
       const result = await TvTimeGdprParser.parse([csvFile(csv)]);
 
@@ -364,9 +365,7 @@ describe('TvTimeGdprParser', () => {
     });
 
     it('should watchlist shows marked for later', async () => {
-      const csv = toCsv(V2_HEADER, [
-        v2UserSeries({ is_for_later: 'true' }),
-      ]);
+      const csv = toCsv(V2_HEADER, [v2UserSeries({ is_for_later: 'true' })]);
 
       const result = await TvTimeGdprParser.parse([csvFile(csv)]);
 
@@ -380,9 +379,7 @@ describe('TvTimeGdprParser', () => {
     });
 
     it('should watchlist followed shows without watched episodes', async () => {
-      const csv = toCsv(V2_HEADER, [
-        v2UserSeries({ is_followed: 'true' }),
-      ]);
+      const csv = toCsv(V2_HEADER, [v2UserSeries({ is_followed: 'true' })]);
 
       const result = await TvTimeGdprParser.parse([csvFile(csv)]);
 
@@ -402,8 +399,9 @@ describe('TvTimeGdprParser', () => {
 
       const result = await TvTimeGdprParser.parse([csvFile(csv)]);
 
-      expect(result.filter((item) => item.action === 'watchlist'))
-        .toHaveLength(0);
+      expect(result.filter((item) => item.action === 'watchlist')).toHaveLength(
+        0,
+      );
     });
 
     it('should not watchlist archived shows', async () => {
@@ -491,8 +489,9 @@ describe('TvTimeGdprParser', () => {
 
       const result = await TvTimeGdprParser.parse([csvFile(csv)]);
 
-      expect(result.filter((item) => item.action === 'watchlist'))
-        .toHaveLength(0);
+      expect(result.filter((item) => item.action === 'watchlist')).toHaveLength(
+        0,
+      );
     });
 
     it('should ignore unfollowed shows and stats rows', async () => {
@@ -571,10 +570,12 @@ describe('TvTimeGdprParser', () => {
     });
 
     it('should derive english titles from the alpha slug', async () => {
-      const csv = toCsv(V1_HEADER, [v1MovieWatch({
-        movie_name: '승리호',
-        alpha_range_key: 'watch-alpha-space-sweepers',
-      })]);
+      const csv = toCsv(V1_HEADER, [
+        v1MovieWatch({
+          movie_name: '승리호',
+          alpha_range_key: 'watch-alpha-space-sweepers',
+        }),
+      ]);
 
       const result = await TvTimeGdprParser.parse([csvFile(csv)]);
 
@@ -590,13 +591,15 @@ describe('TvTimeGdprParser', () => {
     });
 
     it('should watchlist movies marked to watch', async () => {
-      const csv = toCsv(V1_HEADER, [v1MovieWatch({
-        type: 'towatch',
-        alpha_range_key: 'towatch-alpha-heretic',
-        movie_name: 'Heretic',
-        release_date: '2024-11-15',
-        watch_date_range_key: '',
-      })]);
+      const csv = toCsv(V1_HEADER, [
+        v1MovieWatch({
+          type: 'towatch',
+          alpha_range_key: 'towatch-alpha-heretic',
+          movie_name: 'Heretic',
+          release_date: '2024-11-15',
+          watch_date_range_key: '',
+        }),
+      ]);
 
       const result = await TvTimeGdprParser.parse([csvFile(csv)]);
 
@@ -646,16 +649,18 @@ describe('TvTimeGdprParser', () => {
     });
 
     it('should add watched episodes to history when the v2 file is absent', async () => {
-      const csv = toCsv(V1_HEADER, [{
-        type: 'watch',
-        'type-uuid-n': 'watch-00017ebf-719a-4773-b686-857d9d7042da-0',
-        series_name: 'Sex Education',
-        entity_type: 'episode',
-        season_number: '3',
-        episode_number: '6',
-        episode_id: '8507465',
-        watch_date_range_key: 'watch-date-1633560470',
-      }]);
+      const csv = toCsv(V1_HEADER, [
+        {
+          type: 'watch',
+          'type-uuid-n': 'watch-00017ebf-719a-4773-b686-857d9d7042da-0',
+          series_name: 'Sex Education',
+          entity_type: 'episode',
+          season_number: '3',
+          episode_number: '6',
+          episode_id: '8507465',
+          watch_date_range_key: 'watch-date-1633560470',
+        },
+      ]);
 
       const result = await TvTimeGdprParser.parse([csvFile(csv)]);
 
@@ -672,12 +677,14 @@ describe('TvTimeGdprParser', () => {
     });
 
     it('should prefer v2 episodes over v1 episodes when both are present', async () => {
-      const v1Csv = toCsv(V1_HEADER, [{
-        type: 'watch',
-        'type-uuid-n': 'watch-00017ebf-0',
-        entity_type: 'episode',
-        episode_id: '8507465',
-      }]);
+      const v1Csv = toCsv(V1_HEADER, [
+        {
+          type: 'watch',
+          'type-uuid-n': 'watch-00017ebf-0',
+          entity_type: 'episode',
+          episode_id: '8507465',
+        },
+      ]);
       const v2Csv = toCsv(V2_HEADER, [v2EpisodeWatch()]);
 
       const result = await TvTimeGdprParser.parse([
@@ -732,8 +739,9 @@ describe('TvTimeGdprParser', () => {
         csvFile(v2Csv, 'tracking-prod-records-v2.csv'),
       ]);
 
-      expect(result.filter((item) => item.action === 'watchlist'))
-        .toHaveLength(0);
+      expect(result.filter((item) => item.action === 'watchlist')).toHaveLength(
+        0,
+      );
     });
 
     it('should not watchlist archived follows', async () => {
@@ -784,11 +792,13 @@ describe('TvTimeGdprParser', () => {
       const ratingsCsv = toCsv(RATINGS_HEADER, [
         ratingVote({ movie_name: '승리호' }),
       ]);
-      const v1Csv = toCsv(V1_HEADER, [v1MovieWatch({
-        movie_name: '승리호',
-        alpha_range_key: 'watch-alpha-space-sweepers',
-        release_date: '2021-02-05',
-      })]);
+      const v1Csv = toCsv(V1_HEADER, [
+        v1MovieWatch({
+          movie_name: '승리호',
+          alpha_range_key: 'watch-alpha-space-sweepers',
+          release_date: '2021-02-05',
+        }),
+      ]);
 
       const result = await TvTimeGdprParser.parse([
         csvFile(ratingsCsv, 'ratings-live-votes.csv'),
@@ -804,9 +814,11 @@ describe('TvTimeGdprParser', () => {
     });
 
     it('should skip votes with unknown rating ids', async () => {
-      const csv = toCsv(RATINGS_HEADER, [ratingVote({
-        vote_key: '002e2d8f-aee0-40ce-aa39-1be952e2952a-36089951-39',
-      })]);
+      const csv = toCsv(RATINGS_HEADER, [
+        ratingVote({
+          vote_key: '002e2d8f-aee0-40ce-aa39-1be952e2952a-36089951-39',
+        }),
+      ]);
 
       const result = await TvTimeGdprParser.parse([
         csvFile(csv, 'ratings-live-votes.csv'),
@@ -816,10 +828,12 @@ describe('TvTimeGdprParser', () => {
     });
 
     it('should skip episode rating votes', async () => {
-      const csv = toCsv(RATINGS_HEADER, [ratingVote({
-        episode_id: '1331151',
-        movie_name: '',
-      })]);
+      const csv = toCsv(RATINGS_HEADER, [
+        ratingVote({
+          episode_id: '1331151',
+          movie_name: '',
+        }),
+      ]);
 
       const result = await TvTimeGdprParser.parse([
         csvFile(csv, 'ratings-live-votes.csv'),
@@ -844,9 +858,11 @@ describe('TvTimeGdprParser', () => {
     });
 
     it('should ignore emotion votes despite the shared header', async () => {
-      const csv = toCsv(RATINGS_HEADER, [ratingVote({
-        vote_key: '002e2d8f-aee0-40ce-aa39-1be952e2952a-36089951-33',
-      })]);
+      const csv = toCsv(RATINGS_HEADER, [
+        ratingVote({
+          vote_key: '002e2d8f-aee0-40ce-aa39-1be952e2952a-36089951-33',
+        }),
+      ]);
 
       const result = await TvTimeGdprParser.parse([
         csvFile(csv, 'emotions-live-votes.csv'),
@@ -1030,8 +1046,9 @@ describe('TvTimeGdprParser', () => {
       expect(result.filter((item) => item.action === 'history')).toHaveLength(
         2,
       );
-      expect(result.filter((item) => item.action === 'watchlist'))
-        .toHaveLength(1);
+      expect(result.filter((item) => item.action === 'watchlist')).toHaveLength(
+        1,
+      );
       expect(result.filter((item) => item.action === 'ratings')).toHaveLength(
         1,
       );

@@ -58,11 +58,11 @@ const IS_DOCTOR = process.env.IS_DOCTOR === 'true';
 
 export default defineConfig(({ mode }) => ({
   define: {
-    'TRAKT_CLIENT_ID': `"${process.env.TRAKT_CLIENT_ID}"`,
-    'KLIPY_API_KEY': JSON.stringify(process.env.KLIPY_API_KEY ?? ''),
-    'TRAKT_MODE': `"${mode}${process.env.IS_PREVIEW ? '-preview' : ''}"`,
-    'TRAKT_TARGET_ENVIRONMENT': `"${TRAKT_TARGET_ENVIRONMENT}"`,
-    'TRAKT_GIT_SHA': `"${GIT_COMMIT_HASH}"`,
+    TRAKT_CLIENT_ID: `"${process.env.TRAKT_CLIENT_ID}"`,
+    KLIPY_API_KEY: JSON.stringify(process.env.KLIPY_API_KEY ?? ''),
+    TRAKT_MODE: `"${mode}${process.env.IS_PREVIEW ? '-preview' : ''}"`,
+    TRAKT_TARGET_ENVIRONMENT: `"${TRAKT_TARGET_ENVIRONMENT}"`,
+    TRAKT_GIT_SHA: `"${GIT_COMMIT_HASH}"`,
   },
 
   server: {
@@ -135,7 +135,7 @@ export default defineConfig(({ mode }) => ({
 
   resolve: process.env.VITEST
     ? {
-      conditions: ['browser'],
-    }
+        conditions: ['browser'],
+      }
     : undefined,
 }));

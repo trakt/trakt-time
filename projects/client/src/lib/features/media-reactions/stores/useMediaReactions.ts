@@ -20,9 +20,11 @@ const EMPTY_SUMMARY: MediaReactionSummary = {
   top: [],
 };
 
-export function useMediaReactions(
-  { type, slug, id }: MediaReactionsTarget,
-): MediaReactions {
+export function useMediaReactions({
+  type,
+  slug,
+  id,
+}: MediaReactionsTarget): MediaReactions {
   const { isAuthorized } = useAuth();
 
   const summary = useQuery(mediaReactionsSummaryQuery({ type, slug }));

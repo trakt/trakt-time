@@ -7,20 +7,24 @@ describe('toWhereToWatchServices', () => {
   it('lists streaming, free, then on-demand offers once per service', () => {
     const services = toWhereToWatchServices({
       options: {
-        streaming: [{
-          type: 'streaming',
-          source: 'netflix',
-          link,
-          is4k: true,
-          key: 'streaming-netflix',
-        }],
-        free: [{
-          type: 'free',
-          source: 'tubi',
-          link,
-          is4k: false,
-          key: 'free-tubi',
-        }],
+        streaming: [
+          {
+            type: 'streaming',
+            source: 'netflix',
+            link,
+            is4k: true,
+            key: 'streaming-netflix',
+          },
+        ],
+        free: [
+          {
+            type: 'free',
+            source: 'tubi',
+            link,
+            is4k: false,
+            key: 'free-tubi',
+          },
+        ],
         onDemand: [
           {
             type: 'on-demand',
@@ -40,13 +44,15 @@ describe('toWhereToWatchServices', () => {
           },
         ],
       },
-      sources: [{
-        source: 'netflix',
-        name: 'Netflix',
-        isFree: false,
-        logoUrl: 'https://example.com/netflix.png' as HttpsUrl,
-        color: '#e50914',
-      }],
+      sources: [
+        {
+          source: 'netflix',
+          name: 'Netflix',
+          isFree: false,
+          logoUrl: 'https://example.com/netflix.png' as HttpsUrl,
+          color: '#e50914',
+        },
+      ],
     });
 
     expect(services.map((service) => service.key)).toEqual([
@@ -87,9 +93,6 @@ describe('toWhereToWatchServices', () => {
       ],
     });
 
-    expect(services.map((service) => service.source)).toEqual([
-      'hulu',
-      'vudu',
-    ]);
+    expect(services.map((service) => service.source)).toEqual(['hulu', 'vudu']);
   });
 });

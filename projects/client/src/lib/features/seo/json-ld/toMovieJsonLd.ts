@@ -12,9 +12,12 @@ type MovieJsonLdParams = {
   url: string;
 };
 
-export function toMovieJsonLd(
-  { movie, title, description, url }: MovieJsonLdParams,
-): JsonLd {
+export function toMovieJsonLd({
+  movie,
+  title,
+  description,
+  url,
+}: MovieJsonLdParams): JsonLd {
   return compact({
     '@context': 'https://schema.org',
     '@type': 'Movie',

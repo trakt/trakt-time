@@ -18,9 +18,11 @@ type UseSeasonWatchedProps = {
   season: Season;
 };
 
-export function useSeasonWatched(
-  { slug, showId, season }: UseSeasonWatchedProps,
-) {
+export function useSeasonWatched({
+  slug,
+  showId,
+  season,
+}: UseSeasonWatchedProps) {
   const { history, ratings } = useUser();
   const { invalidate } = useInvalidator();
   const { confirm } = useConfirm();
@@ -30,8 +32,9 @@ export function useSeasonWatched(
   const isUpdating = new BehaviorSubject(false);
 
   const watchedCount = history.pipe(
-    map(($history) =>
-      $history?.shows.get(showId)?.playsPerSeason.get(season.number) ?? 0
+    map(
+      ($history) =>
+        $history?.shows.get(showId)?.playsPerSeason.get(season.number) ?? 0,
     ),
   );
   const isWatched = watchedCount.pipe(
@@ -65,16 +68,17 @@ export function useSeasonWatched(
     title: seasonLabel(season.number),
     onConfirm: () =>
       withUpdating(async () => {
-        const [episodes, { watchedEpisodeIds }, currentRatings] = await Promise
-          .all([
+        const [episodes, { watchedEpisodeIds }, currentRatings] =
+          await Promise.all([
             fetchSeasonEpisodes(season.number),
             resolveWatched(),
             resolve(ratings),
           ]);
         const orphanedRatingIds = episodes
           .map((episode) => episode.id)
-          .filter((id) =>
-            watchedEpisodeIds.has(id) && currentRatings.episodes.has(id)
+          .filter(
+            (id) =>
+              watchedEpisodeIds.has(id) && currentRatings.episodes.has(id),
           );
 
         await removeWatchedRequest({

@@ -19,9 +19,11 @@ type UseAnchoredHistoryLoadParams = {
  *
  * Must be called during component init (uses $effect).
  */
-export function useAnchoredHistoryLoad(
-  { loading, entryCount, fetchOlder }: UseAnchoredHistoryLoadParams,
-) {
+export function useAnchoredHistoryLoad({
+  loading,
+  entryCount,
+  fetchOlder,
+}: UseAnchoredHistoryLoadParams) {
   let pendingHeight: number | null = null;
   let lastCount = 0;
 

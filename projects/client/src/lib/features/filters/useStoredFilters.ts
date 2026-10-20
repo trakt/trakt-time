@@ -63,12 +63,9 @@ export function useStoredFilters() {
   ) => {
     const url = new URL(baseUrl);
 
-    processFilterParams(
-      Object.entries(filters),
-      (key, value) => {
-        url.searchParams.set(key, String(value));
-      },
-    );
+    processFilterParams(Object.entries(filters), (key, value) => {
+      url.searchParams.set(key, String(value));
+    });
 
     // No-op navigations (e.g. empty stored filters) would otherwise loop
     // forever under afterNavigate, since the URL never changes.
@@ -92,12 +89,9 @@ export function useStoredFilters() {
 
     const filtersObject: StoredFilter = {};
 
-    processFilterParams(
-      currentSearchParams.entries(),
-      (key, value) => {
-        filtersObject[key] = value;
-      },
-    );
+    processFilterParams(currentSearchParams.entries(), (key, value) => {
+      filtersObject[key] = value;
+    });
 
     storedFiltersStore.update(filtersObject);
   };

@@ -42,9 +42,11 @@ export function mapToMediaReactionSummary(
   };
 }
 
-const mediaReactionsSummaryRequest = async (
-  { fetch, type, slug }: MediaReactionsSummaryParams,
-) => {
+const mediaReactionsSummaryRequest = async ({
+  fetch,
+  type,
+  slug,
+}: MediaReactionsSummaryParams) => {
   const response = await rawApiFetch({
     fetch,
     path: `${toMediaReactionsPath(type, slug)}/summary`,

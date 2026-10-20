@@ -24,9 +24,11 @@ const toDayKeyAtOffset = (today: Date, offset: number) =>
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + offset),
   );
 
-export function toUpcomingWeeks<T>(
-  { items, toDayKey, today }: ToUpcomingWeeksParams<T>,
-): UpcomingWeek<T>[] {
+export function toUpcomingWeeks<T>({
+  items,
+  toDayKey,
+  today,
+}: ToUpcomingWeeksParams<T>): UpcomingWeek<T>[] {
   if (items.length === 0) return [];
 
   const byOffset = items.reduce((acc, item) => {

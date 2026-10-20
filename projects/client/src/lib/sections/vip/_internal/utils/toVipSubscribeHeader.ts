@@ -28,9 +28,7 @@ function toWelcomeBackHeader(dealPlan: VipDealPlan | Nil): VipSubscribeHeader {
   };
 }
 
-function toPaypalSwitchHeader(
-  dealPlan: VipDealPlan | Nil,
-): VipSubscribeHeader {
+function toPaypalSwitchHeader(dealPlan: VipDealPlan | Nil): VipSubscribeHeader {
   if (!dealPlan) {
     return {
       title: m.header_vip_paypal_switch(),
@@ -45,9 +43,10 @@ function toPaypalSwitchHeader(
   };
 }
 
-export function toVipSubscribeHeader(
-  { mode, dealPlan }: ToVipSubscribeHeaderParams,
-): VipSubscribeHeader {
+export function toVipSubscribeHeader({
+  mode,
+  dealPlan,
+}: ToVipSubscribeHeaderParams): VipSubscribeHeader {
   switch (mode) {
     case 'welcome-back':
       return toWelcomeBackHeader(dealPlan);

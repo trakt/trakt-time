@@ -16,9 +16,7 @@ type AdjacentEpisodes = {
 
 const SPECIALS = 0;
 
-function toSiblingSeasons(
-  { current, seasons }: ToAdjacentEpisodesParams,
-) {
+function toSiblingSeasons({ current, seasons }: ToAdjacentEpisodesParams) {
   const isSpecial = current.season === SPECIALS;
 
   return seasons
@@ -56,8 +54,8 @@ export function toAdjacentEpisodes(
 ): AdjacentEpisodes {
   const { current } = params;
   const siblings = toSiblingSeasons(params);
-  const index = siblings.findIndex((season) =>
-    season.number === current.season
+  const index = siblings.findIndex(
+    (season) => season.number === current.season,
   );
   const season = siblings[index];
 

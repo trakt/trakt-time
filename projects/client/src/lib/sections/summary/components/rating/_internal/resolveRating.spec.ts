@@ -13,8 +13,9 @@ const staleServer = {
 
 describe('resolveRating', () => {
   it('returns the server entry when there is no override', () => {
-    expect(resolveRating({ server: staleServer, override: undefined, now }))
-      .toBe(staleServer);
+    expect(
+      resolveRating({ server: staleServer, override: undefined, now }),
+    ).toBe(staleServer);
   });
 
   it('prefers a fresh override over a stale server entry', () => {

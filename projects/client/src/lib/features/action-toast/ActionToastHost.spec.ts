@@ -59,8 +59,9 @@ describe('component: ActionToastHost', () => {
     (await screen.findByLabelText('Undo adding')).click();
 
     await waitFor(() =>
-      expect(container.ownerDocument.querySelector('[data-variant="error"]'))
-        .not.toBeNull()
+      expect(
+        container.ownerDocument.querySelector('[data-variant="error"]'),
+      ).not.toBeNull(),
     );
   });
 });

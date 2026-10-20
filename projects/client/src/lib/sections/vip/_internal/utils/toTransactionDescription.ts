@@ -28,9 +28,9 @@ export function toTransactionDescription(transaction: VipTransaction): string {
       return amount && term
         ? m.text_vip_transaction_charged({ amount, method, term })
         : m.text_vip_transaction_charged_short({
-          amount: amount ?? '',
-          method,
-        });
+            amount: amount ?? '',
+            method,
+          });
     case 'refund':
       return m.text_vip_transaction_refunded({ amount: amount ?? '', method });
     case 'create':

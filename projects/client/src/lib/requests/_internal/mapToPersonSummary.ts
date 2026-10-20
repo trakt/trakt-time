@@ -6,9 +6,7 @@ import type { PersonSummary } from '../models/PersonSummary.ts';
 import { mapToHeadshot } from './mapToHeadshot.ts';
 import { mapToSocialMedia } from './mapToSocialMedia.ts';
 
-export const mapToPersonSummary = (
-  response: PersonResponse,
-): PersonSummary => {
+export const mapToPersonSummary = (response: PersonResponse): PersonSummary => {
   return {
     id: response.ids.trakt,
     key: `person-${response.ids.trakt}`,

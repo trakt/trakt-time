@@ -17,35 +17,36 @@ import { getGlobalFilterDependencies } from '../../_internal/getGlobalFilterDepe
 import { EpisodeEntrySchema } from '../../models/EpisodeEntry.ts';
 import type { FilterParams } from '../../models/FilterParams.ts';
 
-export type CalendarShowsParams =
-  & {
-    startDate: string;
-    page?: number;
-  }
-  & ApiParams
-  & FilterParams;
+export type CalendarShowsParams = {
+  startDate: string;
+  page?: number;
+} & ApiParams &
+  FilterParams;
 
-export const UpcomingEpisodeEntrySchema = EpisodeEntrySchema.merge(z.object({
-  show: ShowEntrySchema,
-}));
+export const UpcomingEpisodeEntrySchema = EpisodeEntrySchema.merge(
+  z.object({
+    show: ShowEntrySchema,
+  }),
+);
 export type UpcomingEpisodeEntry = z.infer<typeof UpcomingEpisodeEntrySchema>;
 
-export const upcomingEpisodesRequest = (
-  { fetch, startDate, page, filter }: CalendarShowsParams,
-) =>
-  api({ fetch })
-    .calendars
-    .shows({
-      query: {
-        extended: 'full,images',
-        ...filter,
-      },
-      params: {
-        target: 'my',
-        start_date: toCalendarWindowStart({ startDate, page }),
-        days: CALENDAR_WINDOW_DAYS,
-      },
-    });
+export const upcomingEpisodesRequest = ({
+  fetch,
+  startDate,
+  page,
+  filter,
+}: CalendarShowsParams) =>
+  api({ fetch }).calendars.shows({
+    query: {
+      extended: 'full,images',
+      ...filter,
+    },
+    params: {
+      target: 'my',
+      start_date: toCalendarWindowStart({ startDate, page }),
+      days: CALENDAR_WINDOW_DAYS,
+    },
+  });
 
 export const upcomingEpisodesQuery = defineInfiniteQuery({
   key: 'upcomingEpisodes',
@@ -55,9 +56,7 @@ export const upcomingEpisodesQuery = defineInfiniteQuery({
     InvalidateAction.MarkAsWatched('show'),
     InvalidateAction.Drop('show'),
   ],
-  dependencies: (
-    params,
-  ) => [
+  dependencies: (params) => [
     params.startDate,
     ...getGlobalFilterDependencies(params.filter),
   ],

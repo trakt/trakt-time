@@ -22,10 +22,9 @@ export function createParameterContext() {
 
   const ctx = setContext(
     PARAMETER_CONTEXT_KEY,
-    getContext<ParameterContextData>(PARAMETER_CONTEXT_KEY) ??
-      {
-        parameters: new BehaviorSubject(new Map<string, ParameterType>()),
-      },
+    getContext<ParameterContextData>(PARAMETER_CONTEXT_KEY) ?? {
+      parameters: new BehaviorSubject(new Map<string, ParameterType>()),
+    },
   );
 
   const override = setContext(

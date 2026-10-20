@@ -15,13 +15,7 @@ export type CreateQueryOptions<
   TError = DefaultError,
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
-> = QueryObserverOptions<
-  TQueryFnData,
-  TError,
-  TData,
-  TQueryFnData,
-  TQueryKey
->;
+> = QueryObserverOptions<TQueryFnData, TError, TData, TQueryFnData, TQueryKey>;
 
 export type CreateInfiniteQueryOptions<
   TQueryFnData = unknown,

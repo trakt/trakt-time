@@ -7,15 +7,12 @@ import { type UserList, UserListSchema } from './userListsQuery.ts';
 type PersonalListsParams = { slug: string } & ApiParams;
 
 const personalListsRequest = ({ fetch, slug }: PersonalListsParams) =>
-  api({ fetch })
-    .users
-    .lists
-    .personal({
-      params: { id: slug },
-      query: {
-        extended: 'images',
-      },
-    });
+  api({ fetch }).users.lists.personal({
+    params: { id: slug },
+    query: {
+      extended: 'images',
+    },
+  });
 
 export const personalListsQuery = defineQuery({
   key: 'personalLists',

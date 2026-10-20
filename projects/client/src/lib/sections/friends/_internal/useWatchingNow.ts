@@ -16,8 +16,9 @@ export function useWatchingNow(profiles: ReadonlyArray<UserProfile>) {
 
   const queries = combineLatest(
     profiles.map((profile) =>
-      useQuery(userWatchingQuery({ slug: profile.slug ?? profile.username }))
-        .pipe(map((query) => ({ profile, query })))
+      useQuery(
+        userWatchingQuery({ slug: profile.slug ?? profile.username }),
+      ).pipe(map((query) => ({ profile, query }))),
     ),
   );
 
@@ -25,8 +26,8 @@ export function useWatchingNow(profiles: ReadonlyArray<UserProfile>) {
     watching: queries.pipe(
       map((results) =>
         results.flatMap(({ profile, query }) =>
-          query.data ? [{ profile, item: query.data }] : []
-        )
+          query.data ? [{ profile, item: query.data }] : [],
+        ),
       ),
     ),
     isLoading: queries.pipe(

@@ -18,23 +18,29 @@ export type Milestone = {
   to: number;
 };
 
-export function findMilestone(
-  { before, after }: { before: MilestoneCounts; after: MilestoneCounts },
-): Milestone | null {
+export function findMilestone({
+  before,
+  after,
+}: {
+  before: MilestoneCounts;
+  after: MilestoneCounts;
+}): Milestone | null {
   const kinds = Object.keys(MILESTONES) as MilestoneKind[];
 
-  return kinds
-    .map((kind) => {
-      const threshold = crossedMilestone({
-        before: before[kind],
-        after: after[kind],
-        thresholds: MILESTONES[kind],
-      });
-      return threshold === null
-        ? null
-        : { kind, threshold, from: before[kind], to: after[kind] };
-    })
-    .find((milestone) => milestone !== null) ?? null;
+  return (
+    kinds
+      .map((kind) => {
+        const threshold = crossedMilestone({
+          before: before[kind],
+          after: after[kind],
+          thresholds: MILESTONES[kind],
+        });
+        return threshold === null
+          ? null
+          : { kind, threshold, from: before[kind], to: after[kind] };
+      })
+      .find((milestone) => milestone !== null) ?? null
+  );
 }
 
 export function milestoneBadge(threshold: number): string {

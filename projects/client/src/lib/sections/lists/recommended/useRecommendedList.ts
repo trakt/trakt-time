@@ -21,16 +21,16 @@ import { useInMemoryPagination } from '../../../stores/useInMemoryPagination.ts'
 export type RecommendedEntry = RecommendedMovie | RecommendedShow;
 export type RecommendedMediaList = Array<RecommendedEntry>;
 
-type RecommendationListStoreProps =
-  & {
-    type: DiscoverMode;
-  }
-  & PaginationParams
-  & FilterParams;
+type RecommendationListStoreProps = {
+  type: DiscoverMode;
+} & PaginationParams &
+  FilterParams;
 
-function typeToQuery(
-  { type, filter, filterOverride }: Omit<RecommendationListStoreProps, 'page'>,
-) {
+function typeToQuery({
+  type,
+  filter,
+  filterOverride,
+}: Omit<RecommendationListStoreProps, 'page'>) {
   /** Recommendations are calculated daily, so we load all of them. */
   const params = {
     limit: RECOMMENDED_UPPER_LIMIT,
@@ -40,17 +40,17 @@ function typeToQuery(
 
   switch (type) {
     case 'movie':
-      return recommendedMoviesQuery(params) as CreateQueryOptions<
-        RecommendedMediaList
-      >;
+      return recommendedMoviesQuery(
+        params,
+      ) as CreateQueryOptions<RecommendedMediaList>;
     case 'show':
-      return recommendedShowsQuery(params) as CreateQueryOptions<
-        RecommendedMediaList
-      >;
+      return recommendedShowsQuery(
+        params,
+      ) as CreateQueryOptions<RecommendedMediaList>;
     case 'media':
-      return recommendedMediaQuery(params) as CreateQueryOptions<
-        RecommendedMediaList
-      >;
+      return recommendedMediaQuery(
+        params,
+      ) as CreateQueryOptions<RecommendedMediaList>;
   }
 }
 
@@ -63,11 +63,9 @@ function getListKey(props: RecommendationListStoreProps) {
   const hasFilters = Object.keys(filters).length > 0;
 
   return hasFilters
-    ? `${props.type}-${
-      Object.entries(filters)
+    ? `${props.type}-${Object.entries(filters)
         .map(([key, value]) => `${key}-${value}`)
-        .join('-')
-    }`
+        .join('-')}`
     : props.type;
 }
 
@@ -90,9 +88,7 @@ export const useRecommendedList = (props: RecommendationListStoreProps) => {
     limit: props.limit,
   });
 
-  const isLoading = queryObservable.pipe(
-    map(toLoadingState),
-  );
+  const isLoading = queryObservable.pipe(map(toLoadingState));
 
   return {
     list,

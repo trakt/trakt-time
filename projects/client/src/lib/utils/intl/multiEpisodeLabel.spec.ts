@@ -14,9 +14,9 @@ describe('multiEpisodeLabel', () => {
   });
 
   it('appends the show title to a sequential run', () => {
-    expect(
-      multiEpisodeLabel([episode(1), episode(2)], 3, 'The Wire'),
-    ).toBe('S3 • E1-2 of The Wire');
+    expect(multiEpisodeLabel([episode(1), episode(2)], 3, 'The Wire')).toBe(
+      'S3 • E1-2 of The Wire',
+    );
   });
 
   it('labels a single episode without a degenerate range', () => {
@@ -25,11 +25,7 @@ describe('multiEpisodeLabel', () => {
 
   it('falls back to an episode count for non sequential runs', () => {
     expect(
-      multiEpisodeLabel(
-        [episode(1), episode(3), episode(7)],
-        1,
-        'The Wire',
-      ),
+      multiEpisodeLabel([episode(1), episode(3), episode(7)], 1, 'The Wire'),
     ).toBe('3 eps. of The Wire');
   });
 

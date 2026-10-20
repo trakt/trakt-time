@@ -7,9 +7,7 @@ const dismissalStore = createDismissalStore();
 
 export function useDismissals() {
   return {
-    dismissals: dismissalStore.dismissals.pipe(
-      map((store) => store.items),
-    ),
+    dismissals: dismissalStore.dismissals.pipe(map((store) => store.items)),
     dismiss: dismissalStore.dismiss,
     suppress: dismissalStore.suppress,
     isSuppressed: dismissalStore.dismissals.pipe(

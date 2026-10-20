@@ -10,13 +10,14 @@ type FetchEpisodeParams = {
   episode: number;
 };
 
-export async function fetchEpisodeForCrawler(
-  { fetch, slug, season, episode }: FetchEpisodeParams,
-): Promise<EpisodeEntry | null> {
+export async function fetchEpisodeForCrawler({
+  fetch,
+  slug,
+  season,
+  episode,
+}: FetchEpisodeParams): Promise<EpisodeEntry | null> {
   const response = await unauthorizedApi({ fetch })
-    .shows
-    .episode
-    .summary({
+    .shows.episode.summary({
       params: { id: slug, season: castNumberAsString(season), episode },
       query: { extended: 'full,images' },
     })

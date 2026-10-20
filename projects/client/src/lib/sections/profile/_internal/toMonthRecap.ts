@@ -18,27 +18,32 @@ function mostCommon(values: ReadonlyArray<string>): string | null {
     new Map<string, number>(),
   );
 
-  return [...counts.entries()]
-    .reduce<[string, number] | null>(
-      (best, entry) => entry[1] > (best?.[1] ?? 0) ? entry : best,
+  return (
+    [...counts.entries()].reduce<[string, number] | null>(
+      (best, entry) => (entry[1] > (best?.[1] ?? 0) ? entry : best),
       null,
-    )?.[0] ?? null;
+    )?.[0] ?? null
+  );
 }
 
-export function toMonthRecap(
-  { watches, now }: { watches: ReadonlyArray<RecapWatch>; now: Date },
-): MonthRecap {
+export function toMonthRecap({
+  watches,
+  now,
+}: {
+  watches: ReadonlyArray<RecapWatch>;
+  now: Date;
+}): MonthRecap {
   const month = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const monthEnd = new Date(now.getFullYear(), now.getMonth(), 1);
-  const inMonth = watches.filter((watch) =>
-    watch.watchedAt >= month && watch.watchedAt < monthEnd
+  const inMonth = watches.filter(
+    (watch) => watch.watchedAt >= month && watch.watchedAt < monthEnd,
   );
 
   return {
     month,
     minutes: inMonth.reduce((total, watch) => total + watch.minutes, 0),
     topShow: mostCommon(
-      inMonth.flatMap((watch) => watch.showTitle ? [watch.showTitle] : []),
+      inMonth.flatMap((watch) => (watch.showTitle ? [watch.showTitle] : [])),
     ),
     topGenre: mostCommon(inMonth.flatMap((watch) => watch.genres)),
   };

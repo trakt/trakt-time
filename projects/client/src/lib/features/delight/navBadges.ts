@@ -16,6 +16,9 @@ export function navBadge(href: string) {
 }
 
 export function visibleNavTab(href: string): HTMLElement | null {
-  return [...document.querySelectorAll<HTMLElement>(`[data-nav-tab="${href}"]`)]
-    .find((tab) => tab.offsetParent !== null) ?? null;
+  return (
+    [
+      ...document.querySelectorAll<HTMLElement>(`[data-nav-tab="${href}"]`),
+    ].find((tab) => tab.offsetParent !== null) ?? null
+  );
 }

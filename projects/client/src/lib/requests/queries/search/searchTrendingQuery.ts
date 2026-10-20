@@ -49,19 +49,17 @@ const searchTrendingRequest = (
 ) => {
   const queryString = query ? { query } : {};
 
-  return api({ fetch })
-    .search
-    .trending({
-      params: {
-        type,
-      },
-      query: {
-        extended: 'full,images',
-        page: 1,
-        limit,
-        ...queryString,
-      },
-    });
+  return api({ fetch }).search.trending({
+    params: {
+      type,
+    },
+    query: {
+      extended: 'full,images',
+      page: 1,
+      limit,
+      ...queryString,
+    },
+  });
 };
 
 export const searchTrendingQuery = defineQuery({

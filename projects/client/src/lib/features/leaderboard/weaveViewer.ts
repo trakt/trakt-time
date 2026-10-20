@@ -7,10 +7,12 @@ function renumber(
 ): ReadonlyArray<LeaderboardEntry> {
   return entries.reduce<{ ranked: number; rows: LeaderboardEntry[] }>(
     ({ ranked, rows }, entry) =>
-      entry.locked ? { ranked, rows: [...rows, entry] } : {
-        ranked: ranked + 1,
-        rows: [...rows, { ...entry, rank: ranked + 1 }],
-      },
+      entry.locked
+        ? { ranked, rows: [...rows, entry] }
+        : {
+            ranked: ranked + 1,
+            rows: [...rows, { ...entry, rank: ranked + 1 }],
+          },
     { ranked: 0, rows: [] },
   ).rows;
 }
@@ -21,17 +23,17 @@ export function weaveViewer(
 ): ReadonlyArray<LeaderboardEntry> {
   if (!viewer) return entries;
 
-  const ownIndex = entries.findIndex((entry) =>
-    entry.user.id === viewer.user.id
+  const ownIndex = entries.findIndex(
+    (entry) => entry.user.id === viewer.user.id,
   );
   if (ownIndex !== -1) {
     return entries.map((entry, index) =>
-      index === ownIndex ? { ...entry, isViewer: true } : entry
+      index === ownIndex ? { ...entry, isViewer: true } : entry,
     );
   }
 
-  const firstBelow = entries.findIndex((entry) =>
-    entry.locked || minutesOf(entry) < minutesOf(viewer)
+  const firstBelow = entries.findIndex(
+    (entry) => entry.locked || minutesOf(entry) < minutesOf(viewer),
   );
   const insertAt = firstBelow === -1 ? entries.length : firstBelow;
 

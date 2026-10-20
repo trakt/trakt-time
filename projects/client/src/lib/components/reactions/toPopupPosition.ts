@@ -17,10 +17,14 @@ export type PopupPosition = {
   edge: number;
 };
 
-export function toPopupPosition(
-  { trigger, viewport, panelWidth, reserve, margin, gap }:
-    ToPopupPositionParams,
-): PopupPosition {
+export function toPopupPosition({
+  trigger,
+  viewport,
+  panelWidth,
+  reserve,
+  margin,
+  gap,
+}: ToPopupPositionParams): PopupPosition {
   const width = Math.min(panelWidth, viewport.width - margin * 2);
   const left = Math.max(
     margin,
@@ -29,16 +33,16 @@ export function toPopupPosition(
 
   const spaceBelow = viewport.height - trigger.bottom;
   const spaceAbove = trigger.top;
-  const placement = spaceBelow >= reserve + gap || spaceBelow >= spaceAbove
-    ? 'bottom'
-    : 'top';
+  const placement =
+    spaceBelow >= reserve + gap || spaceBelow >= spaceAbove ? 'bottom' : 'top';
 
   return {
     placement,
     left,
     width,
-    edge: placement === 'bottom'
-      ? trigger.bottom + gap
-      : viewport.height - trigger.top + gap,
+    edge:
+      placement === 'bottom'
+        ? trigger.bottom + gap
+        : viewport.height - trigger.top + gap,
   };
 }

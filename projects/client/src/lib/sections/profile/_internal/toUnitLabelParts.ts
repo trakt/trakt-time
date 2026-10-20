@@ -47,7 +47,7 @@ export function toShortWatchTime(
         unit,
         suffix: FALLBACK_UNIT_SUFFIX[unit],
         options: { unitDisplay: 'narrow' },
-      })(value)
+      })(value),
     )
     .join(' ');
 }

@@ -11,12 +11,8 @@ import { mapToMovieEntry } from '../../_internal/mapToMovieEntry.ts';
 import { mapToRecommendationSource } from '../../_internal/mapToRecommendationSource.ts';
 import { mapToShowEntry } from '../../_internal/mapToShowEntry.ts';
 import { RecommendationsResponseSchema } from '../../models/RecommendationsResponse.ts';
-import {
-  RecommendedMovieSchema,
-} from '../recommendations/recommendedMoviesQuery.ts';
-import {
-  RecommendedShowSchema,
-} from '../recommendations/recommendedShowsQuery.ts';
+import { RecommendedMovieSchema } from '../recommendations/recommendedMoviesQuery.ts';
+import { RecommendedShowSchema } from '../recommendations/recommendedShowsQuery.ts';
 
 type RecommendedMediaParams = LimitParams & ApiParams & FilterParams;
 
@@ -25,9 +21,12 @@ const RecommendedMediaSchema = z.union([
   RecommendedMovieSchema,
 ]);
 
-const recommendedMediaRequest = async (
-  { fetch, limit, filter, filterOverride }: RecommendedMediaParams,
-) => {
+const recommendedMediaRequest = async ({
+  fetch,
+  limit,
+  filter,
+  filterOverride,
+}: RecommendedMediaParams) => {
   const filterParams = filterOverride?.movie ?? filterOverride?.show ?? filter;
   const searchParams = getRecommendedSearchParams({ limit, filterParams });
 
@@ -39,9 +38,9 @@ const recommendedMediaRequest = async (
 
   return response.ok
     ? {
-      body: RecommendationsResponseSchema.parse(await response.json()),
-      status: 200,
-    }
+        body: RecommendationsResponseSchema.parse(await response.json()),
+        status: 200,
+      }
     : { body: undefined, status: 200 };
 };
 
@@ -56,9 +55,7 @@ export const recommendedMediaQuery = defineQuery({
     InvalidateAction.HideRecommended('show'),
     InvalidateAction.HideRecommended('movie'),
   ],
-  dependencies: (
-    params: RecommendedMediaParams,
-  ) => [
+  dependencies: (params: RecommendedMediaParams) => [
     params.limit,
     params.filter?.watch_window,
     ...getGlobalFilterDependencies(

@@ -30,9 +30,8 @@ function mapRatedItemResponse(response: RatedItemResponse): RatedEntry {
     case 'show':
       return {
         ...common,
-        id:
-          assertDefined(response.show, 'Expected show in RatedItemResponse').ids
-            .trakt,
+        id: assertDefined(response.show, 'Expected show in RatedItemResponse')
+          .ids.trakt,
       };
     case 'episode':
       return {
@@ -54,28 +53,19 @@ function mapRatedItemResponse(response: RatedItemResponse): RatedEntry {
 }
 
 const currentUserRatedMoviesRequest = ({ fetch }: ApiParams) =>
-  api({ fetch })
-    .users
-    .ratings
-    .movies({
-      params: { id: 'me' },
-    });
+  api({ fetch }).users.ratings.movies({
+    params: { id: 'me' },
+  });
 
 const currentUserRatedShowsRequest = ({ fetch }: ApiParams) =>
-  api({ fetch })
-    .users
-    .ratings
-    .shows({
-      params: { id: 'me' },
-    });
+  api({ fetch }).users.ratings.shows({
+    params: { id: 'me' },
+  });
 
 const currentUserRatedEpisodesRequest = ({ fetch }: ApiParams) =>
-  api({ fetch })
-    .users
-    .ratings
-    .episodes({
-      params: { id: 'me' },
-    });
+  api({ fetch }).users.ratings.episodes({
+    params: { id: 'me' },
+  });
 
 const UserRatingsSchema = z.object({
   movies: z.map(z.number(), RatedMediaSchema),

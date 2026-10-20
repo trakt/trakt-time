@@ -13,9 +13,11 @@ type UseWhereToWatchProps = {
   slug: string;
 };
 
-const toStreamQuery = (
-  { type, slug, country }: UseWhereToWatchProps & { country: string },
-) =>
+const toStreamQuery = ({
+  type,
+  slug,
+  country,
+}: UseWhereToWatchProps & { country: string }) =>
   type === 'show'
     ? streamShowQuery({ slug, country })
     : streamMovieQuery({ slug, country });

@@ -23,16 +23,18 @@ function isSameEpisode(
     return false;
   }
 
-  return activityA.show.id === activityB.show.id &&
-    activityA.episode.id === activityB.episode.id;
+  return (
+    activityA.show.id === activityB.show.id &&
+    activityA.episode.id === activityB.episode.id
+  );
 }
 
 function isSimilarActivity(
   activityA: SocialActivity,
   activityB: SocialActivity,
 ): boolean {
-  const isSameMedia = isSameMovie(activityA, activityB) ||
-    isSameEpisode(activityA, activityB);
+  const isSameMedia =
+    isSameMovie(activityA, activityB) || isSameEpisode(activityA, activityB);
 
   if (!isSameMedia) return false;
 
@@ -50,25 +52,25 @@ export function coalesceSocialActivities(
 
   return coalescedActivities.reduce((acc, activity) => {
     const similarActivity = acc.find((currentActivity) =>
-      isSimilarActivity(currentActivity, activity)
+      isSimilarActivity(currentActivity, activity),
     );
 
     if (similarActivity) {
       const allUsers = [...activity.users, ...similarActivity.users];
-      const uniqueUsers = new Map(
-        allUsers.map((user) => [user.slug, user]),
-      );
+      const uniqueUsers = new Map(allUsers.map((user) => [user.slug, user]));
       similarActivity.users = Array.from(uniqueUsers.values());
 
       const currentRatings = ratingsMap.get(similarActivity) ?? [];
-      const ratings = activity.rating != null
-        ? [...currentRatings, activity.rating]
-        : currentRatings;
+      const ratings =
+        activity.rating != null
+          ? [...currentRatings, activity.rating]
+          : currentRatings;
       ratingsMap.set(similarActivity, ratings);
 
-      similarActivity.rating = ratings.length > 0
-        ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
-        : similarActivity.rating;
+      similarActivity.rating =
+        ratings.length > 0
+          ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
+          : similarActivity.rating;
 
       return acc;
     }

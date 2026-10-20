@@ -34,7 +34,10 @@ describe('toUpcomingWeeks', () => {
 
   it('folds items from earlier days into today', () => {
     const weeks = toUpcomingWeeks({
-      items: [{ id: 'late', day: '2026-09-25' }, { id: 'now', day: '2026-09-26' }],
+      items: [
+        { id: 'late', day: '2026-09-25' },
+        { id: 'now', day: '2026-09-26' },
+      ],
       toDayKey,
       today,
     });

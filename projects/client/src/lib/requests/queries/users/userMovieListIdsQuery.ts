@@ -14,12 +14,14 @@ export type ListIdResponse = z.infer<typeof ListIdResponseSchema>;
 
 export const mapToListId = (response: ListIdResponse): ListId => response;
 
-const userMovieListIdsRequest = async (
-  { fetch, slug }: UserMovieListIdsParams,
-) => {
-  const response = await rawApiFetch(
-    { fetch, path: `/v3/movies/${slug}/me/lists` },
-  );
+const userMovieListIdsRequest = async ({
+  fetch,
+  slug,
+}: UserMovieListIdsParams) => {
+  const response = await rawApiFetch({
+    fetch,
+    path: `/v3/movies/${slug}/me/lists`,
+  });
 
   const body = response.ok ? await response.json() : [];
 
@@ -31,9 +33,7 @@ const userMovieListIdsRequest = async (
 
 export const userMovieListIdsQuery = defineQuery({
   key: 'userMovieListIds',
-  invalidations: [
-    InvalidateAction.Listed('movie'),
-  ],
+  invalidations: [InvalidateAction.Listed('movie')],
   dependencies: (params) => [params.slug],
   request: userMovieListIdsRequest,
   mapper: (response) => response.body.map(mapToListId),
