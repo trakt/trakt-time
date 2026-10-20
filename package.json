@@ -1,0 +1,29 @@
+{
+  "name": "trakt-time-workspace",
+  "private": true,
+  "workspaces": [
+    "projects/client"
+  ],
+  "scripts": {
+    "reinstall": "bun install --force",
+    "install:frozen": "bun install --frozen-lockfile",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "client:dev": "cd projects/client && bun run dev",
+    "client:dev:contrib": "cd projects/client && bun run dev:contrib",
+    "client:pwa:screenshots": "cd projects/client && bun run pwa:screenshots"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15"
+  },
+  "trustedDependencies": [
+    "@firebase/util",
+    "core-js",
+    "esbuild",
+    "fsevents",
+    "msw",
+    "protobufjs",
+    "sharp",
+    "workerd"
+  ]
+}

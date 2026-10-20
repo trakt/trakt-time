@@ -45,12 +45,12 @@ jobs:
         with:
           token: ${{ steps.generate-token.outputs.token }}
 
-      - name: Setup Deno Environment
-        uses: ./.github/actions/setup-deno
+      - name: Setup Bun Environment
+        uses: ./.github/actions/setup-bun
 
       - name: Compile Paraglide Messages Once
         working-directory: projects/client
-        run: deno run -A npm:@inlang/paraglide-js compile --project ./i18n/project.inlang --outdir ./src/lib/paraglide
+        run: bun x paraglide-js compile --project ./i18n/project.inlang --outdir ./src/lib/paraglide
 
       - name: Decide Major Cadence
         id: cadence
@@ -72,7 +72,7 @@ jobs:
         working-directory: projects/client
         run: |
           set -euo pipefail
-          deno run -A npm:npm-check-updates@latest \
+          bun x npm-check-updates@latest \
             -p npm \
             --target minor \
             --jsonUpgraded > /tmp/minors.json
@@ -97,9 +97,9 @@ jobs:
         working-directory: projects/client
         run: |
           set -euo pipefail
-          deno run -A npm:npm-check-updates@latest \
+          bun x npm-check-updates@latest \
             -p npm --target latest  --jsonUpgraded > /tmp/all.json
-          deno run -A npm:npm-check-updates@latest \
+          bun x npm-check-updates@latest \
             -p npm --target minor   --jsonUpgraded > /tmp/minor.json
           # Majors = all-upgrades minus minor-upgrades (by key), computed
           # against the already-minor-bumped tree so we never re-offer a pin

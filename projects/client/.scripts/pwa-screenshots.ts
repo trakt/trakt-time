@@ -8,10 +8,10 @@
  * Run manually whenever the UI shifts:
  *
  *   # terminal 1
- *   deno task client:dev
+ *   bun run client:dev
  *
  *   # terminal 2 — once the dev server reports "ready"
- *   deno task client:pwa:screenshots
+ *   bun run client:pwa:screenshots
  *
  * The dev server URL can be overridden with PWA_SCREENSHOT_URL.
  */
