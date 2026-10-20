@@ -9,7 +9,7 @@ applyTo: "**"
 
 ## Tech Stack
 
-SvelteKit + TypeScript app (Svelte 5, runes mode) deployed to a single Cloudflare Worker via `@sveltejs/adapter-cloudflare`. Monorepo using Deno workspaces with the app at `projects/client/`. Worker config lives in `projects/client/wrangler.jsonc`; CI deploys on push to `main` (`.github/workflows/ci_cd.yml`). See [INFRASTRUCTURE.md](../../INFRASTRUCTURE.md) for operational detail.
+SvelteKit + TypeScript app (Svelte 5, runes mode) deployed to a single Cloudflare Worker via `@sveltejs/adapter-cloudflare`. Monorepo using Bun workspaces with the app at `projects/client/`. Worker config lives in `projects/client/wrangler.jsonc`; CI deploys on push to `main` (`.github/workflows/ci_cd.yml`). See [INFRASTRUCTURE.md](../../INFRASTRUCTURE.md) for operational detail.
 
 ## Project Structure
 
@@ -77,7 +77,7 @@ Internationalization uses Paraglide JS (Inlang). Messages are type-safe function
 
 ## Tooling
 
-- **Formatter**: Use `deno fmt`, not prettier.
+- **Formatter**: Use `bun run format` (Biome). Prettier is only for `.svelte`.
 - **Linter**: ESLint with TypeScript + Svelte plugins. Config at `eslint.config.js`.
 - **Build**: Vite + SvelteKit adapter-cloudflare. Paraglide generates i18n before build.
-- **Dev**: `deno task client:dev` starts the dev server.
+- **Dev**: `bun run client:dev` starts the dev server.
