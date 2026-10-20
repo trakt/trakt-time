@@ -18,7 +18,7 @@
     "test:unit": "vitest",
     "test:doctor": "vitest --run --reporter=dot",
     "test:cov": "vitest --coverage",
-    "pwa:screenshots": "deno run -A .scripts/pwa-screenshots.ts"
+    "pwa:screenshots": "bun .scripts/pwa-screenshots.ts"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20260702.1",

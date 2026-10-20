@@ -21,7 +21,7 @@ LOG_FILE="$(mktemp "${TMPDIR:-/tmp}/ssr-smoke.XXXXXX")"
 
 cd "$ROOT/projects/client"
 
-deno task dev --port "$PORT" --strictPort > "$LOG_FILE" 2>&1 &
+bun run dev --port "$PORT" --strictPort > "$LOG_FILE" 2>&1 &
 SERVER_PID=$!
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
 

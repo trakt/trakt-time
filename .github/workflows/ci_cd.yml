@@ -29,12 +29,12 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
-      - name: Set up Deno
-        uses: ./.github/actions/setup-deno
+      - name: Set up Bun
+        uses: ./.github/actions/setup-bun
 
       - name: Run vitest
         working-directory: projects/client
-        run: deno run -A npm:vitest --reporter=dot --reporter=github-actions
+        run: bun x vitest --reporter=dot --reporter=github-actions
 
       # vitest runs with browser resolve conditions, so server-only render
       # breakage (e.g. a dependency that stops returning a svelte store
@@ -62,8 +62,8 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
-      - name: Set up Deno
-        uses: ./.github/actions/setup-deno
+      - name: Set up Bun
+        uses: ./.github/actions/setup-bun
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -76,7 +76,7 @@ jobs:
         env:
           TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
           KLIPY_API_KEY: ${{ secrets.KLIPY_API_KEY }}
-        run: deno task build
+        run: bun run build
 
       - name: Deploy the worker via wrangler
         uses: cloudflare/wrangler-action@v3

@@ -87,7 +87,7 @@ export const manifest: Partial<ManifestOptions> = {
     },
   ],
   screenshots: [
-    // Captured by `deno task client:pwa:screenshots`. Always pulls from
+    // Captured by `bun run client:pwa:screenshots`. Always pulls from
     // unauth-friendly surfaces so the script doesn't need credentials.
     {
       type: 'image/webp',
