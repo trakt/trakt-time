@@ -14,6 +14,8 @@
 #     If it regresses at runtime, re-bisect the adopted set with full
 #     verify (check + tests in parallel) to isolate the offender.
 #   Phase 3 (build sanity): one `bun run build:doctor` on the survivors.
+#     If it fails, re-bisect the adopted set with build verify
+#     (check + build) to isolate the offender, then build once more.
 #
 # Per-probe cost is one verify, not one per package, so a clean 30-package
 # run finishes in ~1 probe instead of ~30. Worst case for K candidates
@@ -104,13 +106,14 @@ commit_baseline() {
 # VERIFY_MODE controls which checks each probe runs.
 #   fast  = install + check (typecheck only)         - used for phase-1 bisection
 #   full  = install + check + tests                  - used for phase-2 bisection
+#   build = install + check + build:doctor           - used for phase-3 bisection
 VERIFY_MODE="${VERIFY_MODE:-fast}"
 
 verify() {
   local label="$1"
   local log_file="$LOG_DIR/probe-$(printf '%03d' "$PROBE_COUNT")-${label}.log"
 
-  log "  ⤷ install + check $([ "$VERIFY_MODE" = "full" ] && echo "+ tests") (mode=$VERIFY_MODE, log: $log_file)"
+  log "  ⤷ install + check $([ "$VERIFY_MODE" = "full" ] && echo "+ tests")$([ "$VERIFY_MODE" = "build" ] && echo "+ build") (mode=$VERIFY_MODE, log: $log_file)"
   if ! (cd "$ROOT" && bun install) > "$log_file" 2>&1; then
     log "  ✗ install failed"
     return 1
@@ -123,6 +126,16 @@ verify() {
       return 1
     fi
     log "  ✓ verify passed (check)"
+    return 0
+  fi
+
+  if [ "$VERIFY_MODE" = "build" ]; then
+    if ! (cd "$CLIENT" && bun run check && bun run build:doctor) >> "$log_file" 2>&1; then
+      log "  ✗ check or build failed"
+      dump_probe_log "$log_file"
+      return 1
+    fi
+    log "  ✓ verify passed (check + build)"
     return 0
   fi
 
@@ -240,12 +253,30 @@ fi
 
 log ""
 log "▶ Phase 3: final build:doctor on adopted set"
-FINAL_BUILD_OK=0
-if (cd "$CLIENT" && bun run build:doctor) > "$LOG_DIR/final-build.log" 2>&1; then
-  log "  ✓ final build passed"
-else
+final_build() {
+  if (cd "$ROOT" && bun install && cd "$CLIENT" && bun run build:doctor) > "$LOG_DIR/final-build.log" 2>&1; then
+    log "  ✓ final build passed"
+    return 0
+  fi
   log "  ✗ final build failed (log: $LOG_DIR/final-build.log)"
+  tail -n 40 "$LOG_DIR/final-build.log" | sed 's/^/       /' >&2
+  return 1
+}
+
+FINAL_BUILD_OK=0
+if final_build; then
+  :
+elif [ ! -s /tmp/passing.txt ]; then
   FINAL_BUILD_OK=1
+else
+  ADOPTED_JSON=$(jq -nR '[inputs | split("=") | {(.[0]): .[1:] | join("=")}] | add // {}' < /tmp/passing.txt)
+  : > /tmp/passing.txt
+  reset_baseline_to_original
+  log ""
+  log "── re-bisecting $(echo "$ADOPTED_JSON" | jq 'length') previously-adopted pkg(s) with build"
+  VERIFY_MODE=build find_adoptable "$ADOPTED_JSON"
+  revert_to_baseline
+  final_build || FINAL_BUILD_OK=1
 fi
 
 ADOPTED_FINAL=$(count_lines /tmp/passing.txt)
