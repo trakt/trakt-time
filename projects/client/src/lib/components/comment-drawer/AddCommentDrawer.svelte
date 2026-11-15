@@ -1,6 +1,8 @@
 <script lang="ts">
   import CloseIcon from '$lib/components/icons/CloseIcon.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
+  import { ConfirmationType } from '$lib/features/confirmation/models/ConfirmationType.ts';
+  import { useConfirm } from '$lib/features/confirmation/useConfirm.ts';
   import GifButton from '$lib/features/gif-picker/GifButton.svelte';
   import { klipyCustomerId } from '$lib/features/gif-picker/klipyCustomerId.ts';
   import { reportGifShare } from '$lib/features/gif-picker/reportGifShare.ts';
@@ -9,6 +11,7 @@
   import { usePostComment } from '$lib/sections/summary/components/comments/_internal/usePostComment.ts';
   import * as m from '$lib/paraglide/messages.js';
   import type { CommentDraftGif } from './_internal/CommentDraftGif.ts';
+  import { hasCommentDraft } from './_internal/hasCommentDraft.ts';
   import SelectedGif from './_internal/SelectedGif.svelte';
   import { toCommentDraftGif } from './_internal/toCommentDraftGif.ts';
   import { toCommentGifParams } from './_internal/toCommentGifParams.ts';
@@ -24,6 +27,7 @@
   const { type, mediaId, title, isOpen, onClose }: Props = $props();
 
   const { postComment, isCommenting, error } = usePostComment();
+  const { confirm } = useConfirm();
 
   let comment = $state('');
   let isSpoiler = $state(false);
@@ -83,8 +87,17 @@
     onClose();
   }
 
+  function requestClose() {
+    if (!hasCommentDraft({ text: comment, gif })) {
+      onClose();
+      return;
+    }
+
+    confirm({ type: ConfirmationType.DiscardChanges, onConfirm: onClose })();
+  }
+
   function onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') onClose();
+    if (event.key === 'Escape') requestClose();
   }
 </script>
 
@@ -102,7 +115,7 @@
         type="button"
         class="composer-close"
         aria-label={m.button_text_cancel()}
-        onclick={onClose}
+        onclick={requestClose}
         disabled={$isCommenting}
       >
         <CloseIcon />
