@@ -281,6 +281,10 @@
       line-clamp: 4;
       -webkit-box-orient: vertical;
       overflow: hidden;
+
+      :global(*) {
+        margin-block: 0;
+      }
     }
 
     :global(p) {
