@@ -88,6 +88,9 @@ interface ConfirmationParamsMap {
     type: ConfirmationType.HideRecommendation;
     title: string;
   };
+  [ConfirmationType.DiscardChanges]: {
+    type: ConfirmationType.DiscardChanges;
+  };
 }
 
 export type ConfirmationParams<T extends ConfirmationType> =

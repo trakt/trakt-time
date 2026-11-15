@@ -8,6 +8,7 @@ type Confirmation = {
   message: string | Nil;
   detail?: string;
   buttonText: string;
+  cancelText?: string;
   operation: ConfirmationOperation;
 };
 
@@ -155,6 +156,13 @@ export function mapToConfirmation<T extends ConfirmationType>(
       return {
         buttonText: m.button_text_hide_recommendation(),
         message: m.warning_prompt_hide_recommendation({ title: props.title }),
+        operation: 'destructive',
+      };
+    case ConfirmationType.DiscardChanges:
+      return {
+        buttonText: m.button_text_discard(),
+        cancelText: m.button_text_keep_editing(),
+        message: m.warning_prompt_discard_changes(),
         operation: 'destructive',
       };
   }
