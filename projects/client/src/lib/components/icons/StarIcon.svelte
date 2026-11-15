@@ -12,7 +12,8 @@
     }
   });
 
-  const clipId = `starFill-${crypto.randomUUID()}`;
+  const uid = $props.id();
+  const clipId = `starFill-${uid}`;
 </script>
 
 <svg
