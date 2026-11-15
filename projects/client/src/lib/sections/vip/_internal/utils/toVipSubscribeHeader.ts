@@ -13,18 +13,10 @@ type ToVipSubscribeHeaderParams = {
   dealPlan: VipDealPlan | Nil;
 };
 
-function toWelcomeBackHeader(dealPlan: VipDealPlan | Nil): VipSubscribeHeader {
-  if (!dealPlan) {
-    return {
-      title: m.button_label_renew_vip(),
-      tagline: m.text_vip_get_insights(),
-    };
-  }
-
-  const prices = toDealPrices(dealPlan);
+function toWelcomeBackHeader(): VipSubscribeHeader {
   return {
-    title: m.header_vip_deal_welcome_back({ price: prices.price }),
-    tagline: m.text_vip_deal_welcome_back(prices),
+    title: m.button_label_renew_vip(),
+    tagline: m.text_vip_get_insights(),
   };
 }
 
@@ -49,7 +41,7 @@ export function toVipSubscribeHeader({
 }: ToVipSubscribeHeaderParams): VipSubscribeHeader {
   switch (mode) {
     case 'welcome-back':
-      return toWelcomeBackHeader(dealPlan);
+      return toWelcomeBackHeader();
     case 'paypal-switch':
       return toPaypalSwitchHeader(dealPlan);
     case 'subscribe':
