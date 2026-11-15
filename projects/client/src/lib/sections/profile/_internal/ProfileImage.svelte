@@ -4,6 +4,7 @@
   import * as m from '$lib/paraglide/messages.js';
   import CrossOriginImage from '$lib/features/image/components/CrossOriginImage.svelte';
   import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
+  import { removeAvatarRequest } from '$lib/requests/queries/users/removeAvatarRequest.ts';
   import { uploadAvatarRequest } from '$lib/requests/queries/users/uploadAvatarRequest.ts';
   import { useInvalidator } from '$lib/stores/useInvalidator.ts';
   import { fade } from 'svelte/transition';
@@ -71,18 +72,9 @@
     invalidate(InvalidateAction.User.Avatar);
   }
 
-  function generateTransparentAvatar(): string {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 1;
-    return canvas.toDataURL('image/png');
-  }
-
   async function handleRemovePhoto() {
     imageEdit.isUploading = true;
-    const success = await uploadAvatarRequest({
-      avatar: generateTransparentAvatar(),
-    });
+    const success = await removeAvatarRequest();
     imageEdit.isUploading = false;
     if (!success) return;
     invalidate(InvalidateAction.User.Avatar);
