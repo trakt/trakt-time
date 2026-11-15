@@ -9,12 +9,14 @@
     message,
     detail,
     buttonText,
+    cancelText,
     onAction,
     operation,
   }: {
     message: string;
     detail?: string;
     buttonText: string;
+    cancelText?: string;
     operation: ConfirmationOperation;
     onAction: (action: ConfirmationAction) => void;
   } = $props();
@@ -32,10 +34,10 @@
     <Button
       size="small"
       color="default"
-      label={m.button_text_cancel()}
+      label={cancelText ?? m.button_text_cancel()}
       onclick={() => onAction("cancel")}
     >
-      {m.button_text_cancel()}
+      {cancelText ?? m.button_text_cancel()}
     </Button>
     <Button
       size="small"

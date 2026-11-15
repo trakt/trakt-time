@@ -7,6 +7,7 @@ export type ConfirmationRequest = {
   message: string | Nil;
   detail?: string;
   buttonText: string;
+  cancelText?: string;
   operation: ConfirmationOperation;
 };
 
