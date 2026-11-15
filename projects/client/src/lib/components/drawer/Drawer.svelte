@@ -46,7 +46,9 @@
   const isMobile = useMedia(WellKnownMediaQuery.mobile);
   const slideAxis = $derived($isMobile ? "y" : "x");
 
+  const slideDuration = 150;
   let drawerElement = $state<HTMLElement | null>(null);
+  let isClosedByBrowser = $state(false);
 
   const markPresence = (isPresent: boolean) => {
     if (!drawerElement) return;
@@ -58,6 +60,8 @@
     isEnabled: () => $isMobile && hasAutoClose,
     isPresent: () => drawerElement?.dataset.present !== "false",
     onPop: () => onClose(),
+    onBrowserTransition: () => (isClosedByBrowser = true),
+    onKept: () => (isClosedByBrowser = false),
   });
 
   const { portal } = $derived(useDrawerPortal({ hasAutoClose, onClose }));
@@ -81,8 +85,13 @@
 <div
   bind:this={drawerElement}
   class={drawerClass}
+  class:is-closed-by-browser={isClosedByBrowser}
   data-size={size}
-  transition:slideEdge={{ duration: 150, axis: slideAxis }}
+  in:slideEdge={{ duration: slideDuration, axis: slideAxis }}
+  out:slideEdge={{
+    duration: isClosedByBrowser ? 0 : slideDuration,
+    axis: slideAxis,
+  }}
   use:portal
   use:trap
   use:appendClassList={classList}
@@ -196,6 +205,10 @@
 
     &[data-size="large"] {
       --drawer-size: var(--ni-480);
+    }
+
+    &.is-closed-by-browser {
+      visibility: hidden;
     }
 
     &:has(.trakt-drawer-drag-handle) {
