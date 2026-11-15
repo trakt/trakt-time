@@ -80,7 +80,10 @@
   </div>
   {#if $hasNextPage}
     {#key $pageCount}
-      <div class="gif-sentinel" use:whenInViewport={loadMore}></div>
+      <div
+        class="gif-sentinel"
+        use:whenInViewport={{ callback: loadMore, requiresObserver: true }}
+      ></div>
     {/key}
   {/if}
 {:else}
