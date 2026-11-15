@@ -3,6 +3,8 @@
   import LoaderIcon from '$lib/components/icons/LoaderIcon.svelte';
   import LoadingIndicator from '$lib/components/icons/LoadingIndicator.svelte';
   import InfiniteScrollTrigger from '$lib/components/infinite-scroll/InfiniteScrollTrigger.svelte';
+  import { ConfirmationType } from '$lib/features/confirmation/models/ConfirmationType.ts';
+  import { useConfirm } from '$lib/features/confirmation/useConfirm.ts';
   import GifButton from '$lib/features/gif-picker/GifButton.svelte';
   import { klipyCustomerId } from '$lib/features/gif-picker/klipyCustomerId.ts';
   import { reportGifShare } from '$lib/features/gif-picker/reportGifShare.ts';
@@ -17,6 +19,7 @@
   import { usePostComment } from '$lib/sections/summary/components/comments/_internal/usePostComment.ts';
   import { tick } from 'svelte';
   import type { CommentDraftGif } from './_internal/CommentDraftGif.ts';
+  import { hasCommentDraft } from './_internal/hasCommentDraft.ts';
   import SelectedGif from './_internal/SelectedGif.svelte';
   import { toCommentDraftGif } from './_internal/toCommentDraftGif.ts';
   import { toCommentGifParams } from './_internal/toCommentGifParams.ts';
@@ -40,6 +43,7 @@
   const fetchNextPage = $derived(repliesResult.fetchNextPage);
 
   const { postComment, isCommenting, error } = usePostComment();
+  const { confirm } = useConfirm();
 
   const deleteAction = $derived(
     useCommentDeleteAction({
@@ -71,6 +75,15 @@
     tick().then(() => textareaEl?.focus());
   });
 
+  function requestClose() {
+    if (!hasCommentDraft({ text: replyText, gif: replyGif })) {
+      onClose();
+      return;
+    }
+
+    confirm({ type: ConfirmationType.DiscardChanges, onConfirm: onClose })();
+  }
+
   async function submit() {
     if (!canSubmit) return;
 
@@ -99,7 +112,7 @@
   }
 </script>
 
-<FullScreenPanel title={m.header_thread()} {onClose}>
+<FullScreenPanel title={m.header_thread()} onClose={requestClose}>
   <div class="parent-wrap">
     <CommentCard {comment} {onDelete} />
   </div>
