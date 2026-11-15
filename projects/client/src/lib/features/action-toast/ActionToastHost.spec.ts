@@ -3,6 +3,17 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import ActionToastHost from './ActionToastHost.svelte';
 import { actionToastStore } from './_internal/actionToastStore.ts';
 
+function current() {
+  let value = null as unknown;
+  actionToastStore
+    .subscribe((next) => {
+      value = next;
+    })
+    .unsubscribe();
+
+  return value;
+}
+
 describe('component: ActionToastHost', () => {
   beforeAll(() => {
     Element.prototype.animate = vi.fn(() => ({
@@ -28,6 +39,15 @@ describe('component: ActionToastHost', () => {
     actionToastStore.notify({ message: 'Link copied' });
 
     expect(await screen.findByText('Link copied')).toBeInTheDocument();
+  });
+
+  it('should dismiss itself after the notified duration', async () => {
+    render(ActionToastHost);
+
+    actionToastStore.notify({ message: 'Brief', durationMs: 20 });
+
+    expect(await screen.findByText('Brief')).toBeInTheDocument();
+    await waitFor(() => expect(current()).toBeNull());
   });
 
   it('should run the action and dismiss the toast', async () => {

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy } from 'svelte';
   import { useUser } from '$lib/features/auth/stores/useUser.ts';
   import { latestAiredSeason, seasonMilestone } from '$lib/features/delight/delightRules.ts';
   import { useQuery } from '$lib/features/query/useQuery.ts';
@@ -46,7 +47,9 @@
     })?.id,
   );
 
-  const { offerWatchedUntilHere } = $derived(useWatchedUntilHere({ slug, showId }));
+  const { offerWatchedUntilHere, dispose } = $derived(useWatchedUntilHere({ slug, showId }));
+
+  onDestroy(() => dispose());
 
   async function checkMilestone(episode: EpisodeEntry) {
     const now = new Date();

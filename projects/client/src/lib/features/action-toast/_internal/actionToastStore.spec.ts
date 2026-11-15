@@ -42,6 +42,35 @@ describe('actionToastStore', () => {
     expect(second?.id).not.toBe(first?.id);
   });
 
+  it('should return the id of the notified toast', () => {
+    const id = actionToastStore.notify({ message: 'hello' });
+
+    expect(current()?.id).toBe(id);
+  });
+
+  it('should keep the duration of the notified toast', () => {
+    actionToastStore.notify({ message: 'hello', durationMs: 10_000 });
+
+    expect(current()?.durationMs).toBe(10_000);
+  });
+
+  it('should dismiss the toast matching the given id', () => {
+    const id = actionToastStore.notify({ message: 'first' });
+
+    actionToastStore.dismiss(id);
+
+    expect(current()).toBeNull();
+  });
+
+  it('should keep a newer toast when dismissing an older id', () => {
+    const olderId = actionToastStore.notify({ message: 'first' });
+    actionToastStore.notify({ message: 'second' });
+
+    actionToastStore.dismiss(olderId);
+
+    expect(current()?.message).toBe('second');
+  });
+
   it('should clear the toast on dismiss', () => {
     actionToastStore.notify({ message: 'hello' });
     actionToastStore.dismiss();

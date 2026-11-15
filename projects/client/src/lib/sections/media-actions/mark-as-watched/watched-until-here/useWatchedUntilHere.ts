@@ -1,8 +1,9 @@
+import { useActionToast } from '$lib/features/action-toast/useActionToast.ts';
 import { useAuth } from '$lib/features/auth/stores/useAuth.ts';
-import { ConfirmationType } from '$lib/features/confirmation/models/ConfirmationType.ts';
-import { useConfirm } from '$lib/features/confirmation/useConfirm.ts';
+import * as m from '$lib/paraglide/messages.js';
 import type { EpisodeEntry } from '$lib/requests/models/EpisodeEntry.ts';
 import type { Season } from '$lib/requests/models/Season.ts';
+import { time } from '$lib/utils/timing/time.ts';
 import { useShowEpisodeHistory } from '../_internal/useShowEpisodeHistory.ts';
 import {
   countSkippedEpisodes,
@@ -25,8 +26,10 @@ type EpisodeTarget = {
   number: number;
 };
 
+const OFFER_DURATION = time.seconds(10);
+
 export function useWatchedUntilHere(props: UseWatchedUntilHereProps) {
-  const { confirm } = useConfirm();
+  const { notify, dismiss } = useActionToast();
   const { isAuthorized } = useAuth();
   const { resolveWatched, fetchSeasonEpisodes, markEpisodesAsWatched } =
     useShowEpisodeHistory(props);
@@ -56,6 +59,9 @@ export function useWatchedUntilHere(props: UseWatchedUntilHereProps) {
     });
   };
 
+  let offerId: string | null = null;
+  let isDisposed = false;
+
   const offerWatchedUntilHere = async ({
     episode,
     currentSeasonEpisodes,
@@ -71,14 +77,23 @@ export function useWatchedUntilHere(props: UseWatchedUntilHereProps) {
       ...(await resolveWatched()),
     });
 
-    if (skippedCount === 0) return;
+    if (skippedCount === 0 || isDisposed) return;
 
-    confirm({
-      type: ConfirmationType.WatchedUntilHere,
-      title: episode.title,
-      onConfirm: () => fillSkipped(target),
-    })();
+    offerId = notify({
+      message: m.confirmation_title_watched_until_here(),
+      durationMs: OFFER_DURATION,
+      action: {
+        text: m.button_text_watched_until_here(),
+        label: m.button_label_watched_until_here({ title: episode.title }),
+        onAction: () => fillSkipped(target),
+      },
+    });
   };
 
-  return { offerWatchedUntilHere };
+  const dispose = () => {
+    isDisposed = true;
+    if (offerId) dismiss(offerId);
+  };
+
+  return { offerWatchedUntilHere, dispose };
 }
