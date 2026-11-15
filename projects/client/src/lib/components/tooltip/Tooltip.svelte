@@ -11,11 +11,14 @@
     delayDuration = 150,
     sideOffset = 8,
     disabled = false,
+    openOnTap = false,
   }: TooltipProps & ChildrenProps = $props();
 
   const isMouse = useMedia(WellKnownMediaQuery.mouse);
 
   let open = $state(false);
+
+  const isTapToggle = $derived(openOnTap && !disabled && !$isMouse);
 
   const tooltipClass = $derived(
     variant === "compact" ? "trakt-tooltip-compact" : "trakt-tooltip",
@@ -23,13 +26,18 @@
 </script>
 
 <Tooltip.Provider>
-  <Tooltip.Root {delayDuration} bind:open disabled={disabled ?? false}>
+  <Tooltip.Root
+    {delayDuration}
+    bind:open
+    disabled={disabled ?? false}
+    ignoreNonKeyboardFocus
+  >
     <Tooltip.Trigger>
       {#snippet child({ props })}
         <div
           {...props}
           class="trakt-tooltip-trigger"
-          onclick={!$isMouse ? () => (open = !open) : undefined}
+          onclick={isTapToggle ? () => (open = !open) : undefined}
         >
           {@render children()}
         </div>
