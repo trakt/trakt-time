@@ -1,6 +1,8 @@
+import { useActionToast } from '$lib/features/action-toast/useActionToast.ts';
 import { AnalyticsEvent } from '$lib/features/analytics/events/AnalyticsEvent.ts';
 import { useTrack } from '$lib/features/analytics/useTrack.ts';
 import { useNowPlaying } from '$lib/features/toast/useNowPlaying.ts';
+import * as m from '$lib/paraglide/messages.js';
 import { InvalidateAction } from '$lib/requests/models/InvalidateAction.ts';
 import { checkinEpisodeRequest } from '$lib/requests/queries/checkin/checkinEpisodeRequest.ts';
 import { checkinMovieRequest } from '$lib/requests/queries/checkin/checkinMovieRequest.ts';
@@ -53,6 +55,7 @@ export function useCheckIn(props: UseCheckInProps) {
   const isCheckingIn = new BehaviorSubject(false);
   const { invalidate } = useInvalidator();
   const { track } = useTrack(AnalyticsEvent.CheckIn);
+  const { notify } = useActionToast();
 
   const { nowPlaying } = useNowPlaying();
 
@@ -60,8 +63,8 @@ export function useCheckIn(props: UseCheckInProps) {
     throw new Error('Cannot check in multiple media items at once.');
   }
 
-  const checkin = async () => {
-    if (Array.isArray(props.media)) return;
+  const checkin = async (): Promise<boolean> => {
+    if (Array.isArray(props.media)) return false;
     if (type === 'show') {
       throw new Error('Cannot check in a show directly.');
     }
@@ -69,25 +72,33 @@ export function useCheckIn(props: UseCheckInProps) {
     isCheckingIn.next(true);
     track({ type, action: 'start' });
 
-    switch (type) {
-      case 'episode': {
-        const payload = mapToEpisodePayload({
-          episode: props.media,
-          show: props.show,
-        });
-        await checkinEpisodeRequest({ body: payload });
-        break;
+    try {
+      switch (type) {
+        case 'episode': {
+          const payload = mapToEpisodePayload({
+            episode: props.media,
+            show: props.show,
+          });
+          await checkinEpisodeRequest({ body: payload });
+          break;
+        }
+        case 'movie': {
+          const payload = mapToMoviePayload(props.media);
+          await checkinMovieRequest({ body: payload });
+          break;
+        }
       }
-      case 'movie': {
-        const payload = mapToMoviePayload(props.media);
-        await checkinMovieRequest({ body: payload });
-        break;
-      }
+
+      await invalidate(InvalidateAction.CheckIn);
+
+      return true;
+    } catch {
+      notify({ message: m.text_checkin_failed_title(), variant: 'error' });
+
+      return false;
+    } finally {
+      isCheckingIn.next(false);
     }
-
-    await invalidate(InvalidateAction.CheckIn);
-
-    isCheckingIn.next(false);
   };
 
   const isWatchable = hasAired({

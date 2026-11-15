@@ -57,7 +57,7 @@
   });
 
   async function checkInWithTicket() {
-    await checkin();
+    if (!(await checkin())) return;
     if (!(await claim())) return;
 
     vibrate(12);
