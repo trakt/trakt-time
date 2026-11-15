@@ -1,4 +1,5 @@
 import type { UniversalImportItem } from '../ImportTypes.ts';
+import { isPositionalItem } from '../isPositionalItem.ts';
 import type { FileParser } from './ParserInterface.ts';
 import { parseCsvText } from './utils/parseCsvText.ts';
 import { toImportISOString } from './utils/toImportISOString.ts';
@@ -277,12 +278,7 @@ function unzipExportTexts(buffer: ArrayBuffer): Entry[] {
 }
 
 function itemKey(item: UniversalImportItem): string {
-  if (
-    item.type === 'episode' &&
-    (item.showTvdb != null || item.showImdb != null) &&
-    item.season != null &&
-    item.episode != null
-  ) {
+  if (item.type === 'episode' && isPositionalItem(item)) {
     const showKey =
       item.showTvdb != null ? `tvdb-${item.showTvdb}` : `imdb-${item.showImdb}`;
     return [item.action, item.type, showKey, item.season, item.episode].join(
