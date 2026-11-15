@@ -1,6 +1,7 @@
 <script lang="ts">
   import { appendClassList } from "$lib/utils/actions/appendClassList";
   import { PLACEHOLDERS } from "$lib/utils/assets";
+  import { iffy } from "$lib/utils/function/iffy";
   import { writable } from "$lib/utils/store/WritableSubject.ts";
   import type { ImageProps } from "./ImageProps";
   import { resolveEnvironmentUri } from "./resolveEnvironmentUri";
@@ -19,6 +20,12 @@
   const response = $derived(writable({ uri: src }));
   const isImageLoaded = $derived(writable(false));
 
+  let lastSrc = iffy(() => src);
+
+  $effect(() => {
+    lastSrc = src;
+  });
+
   const isPlaceholder = $derived(PLACEHOLDERS.includes(src));
 </script>
 
@@ -31,7 +38,7 @@
   src={$response.uri}
   {alt}
   onerror={(ev) => {
-    resolveEnvironmentUri(src).then(response.set);
+    resolveEnvironmentUri(lastSrc).then(response.set);
     _onerror?.(ev);
   }}
   onload={function (ev) {
