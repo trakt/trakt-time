@@ -6,10 +6,10 @@ import {
   spoilerRenderer,
 } from './spoilerExtension.ts';
 
-function render(source: string, isCommentSpoiler = false) {
+function render(source: string, isShown = false) {
   const container = document.createElement('div');
   container.innerHTML = new Marked({
-    extensions: [spoilerExtension(isCommentSpoiler)],
+    extensions: [spoilerExtension(isShown)],
   }).parse(source, { gfm: true, breaks: true }) as string;
 
   return container;
@@ -30,7 +30,7 @@ describe('spoilerExtension', () => {
     );
   });
 
-  it('should render a plain span when the whole comment is a spoiler', () => {
+  it('should render a plain span when spoilers are shown', () => {
     expect(spoilerRenderer('test', true)).toBe('<span>test</span>');
   });
 

@@ -11,6 +11,7 @@
   import * as m from '$lib/paraglide/messages.js';
   import type { MediaComment } from '$lib/requests/models/MediaComment.ts';
   import { useCommentDeleteAction } from '$lib/sections/summary/components/comments/_internal/useCommentDeleteAction.ts';
+  import { toCommentWatchProps } from './toCommentWatchProps.ts';
   import { type MediaCommentsProps, useMediaComments } from './useMediaComments.ts';
 
   const SKELETON_COUNT = 4;
@@ -27,6 +28,7 @@
   ];
 
   const commentsResult = $derived(useMediaComments({ ...props, sort }));
+  const watchProps = $derived(toCommentWatchProps(props));
 
   const commentList = $derived(commentsResult.list);
   const isLoading = $derived(commentsResult.isLoading);
@@ -56,6 +58,7 @@
       {#each $commentList as comment (comment.key)}
         <CommentCard
           {comment}
+          {watchProps}
           onOpenThread={(c) => (threadComment = c)}
           {onDelete}
         />
@@ -98,6 +101,7 @@
 {#if threadComment}
   <CommentThreadPanel
     type={props.type}
+    {watchProps}
     comment={threadComment}
     onClose={() => (threadComment = null)}
   />

@@ -9,8 +9,14 @@ export type MediaCommentsProps = {
   mediaTitle: string;
   sort?: CommentSortType;
 } & (
-  | { type: 'movie' | 'show' }
-  | { type: 'episode'; season: number; episode: number }
+  | { type: 'movie' }
+  | { type: 'show'; episodeCount?: number }
+  | {
+      type: 'episode';
+      season: number;
+      episode: number;
+      show?: { id: number; title: string };
+    }
 );
 
 export function useMediaComments(props: MediaCommentsProps) {

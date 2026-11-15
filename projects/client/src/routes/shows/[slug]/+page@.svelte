@@ -285,6 +285,7 @@
         <CommentsSection
           type="show"
           {slug}
+          episodeCount={show.episode.count}
           mediaId={show.id}
           mediaTitle={intl?.title ?? show.title}
         />

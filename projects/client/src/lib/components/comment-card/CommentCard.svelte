@@ -10,18 +10,22 @@
   import type { MediaComment } from '$lib/requests/models/MediaComment.ts';
   import StarIcon from '$lib/components/icons/StarIcon.svelte';
   import { languageTag } from '$lib/features/i18n/index.ts';
+  import type { ExtendedMediaStoreProps } from '$lib/models/MediaStoreProps.ts';
+  import { useIsWatched } from '$lib/sections/media-actions/mark-as-watched/useIsWatched.ts';
   import { toCompactAge } from '$lib/utils/date/toCompactAge.ts';
   import { formatStars, toStarsFromUserRating } from '$lib/utils/rating/toStars.ts';
   import CommentGif from './_internal/CommentGif.svelte';
   import { revealSpoilers } from './_internal/revealSpoilers.ts';
+  import { toSpoilerVisibility } from './_internal/toSpoilerVisibility.ts';
 
   type Props = {
     comment: MediaComment;
+    watchProps: ExtendedMediaStoreProps;
     onOpenThread?: (comment: MediaComment) => void;
     onDelete?: (comment: MediaComment) => void;
   };
 
-  const { comment, onOpenThread, onDelete }: Props = $props();
+  const { comment, watchProps, onOpenThread, onDelete }: Props = $props();
 
   const { user } = useUser();
   const isOwn = $derived(
@@ -33,8 +37,19 @@
   let commentEl: HTMLElement | undefined = $state(undefined);
   let isOverflowing = $state(false);
 
+  const { isWatched } = $derived(useIsWatched(watchProps));
+  const visibility = $derived(
+    toSpoilerVisibility({
+      isSpoiler: comment.isSpoiler,
+      isWatched: $isWatched,
+      isRevealed: spoilerRevealed,
+    }),
+  );
+
   const marked = $derived(
-    new Marked({ extensions: [spoilerExtension(comment.isSpoiler)] }),
+    new Marked({
+      extensions: [spoilerExtension(visibility.showInlineSpoilers)],
+    }),
   );
 
   const displayName = $derived(comment.user.name.full || comment.user.username);
@@ -83,30 +98,42 @@
   </header>
 
   {#if hasText}
-    {#if comment.isSpoiler && !spoilerRevealed}
-      <button class="spoiler-btn" onclick={() => (spoilerRevealed = true)}>
-        <span class="spoiler-blur" aria-hidden="true">{comment.comment.slice(0, 140)}</span>
-        <span class="spoiler-label">{m.text_reveal_spoiler()}</span>
-      </button>
-    {:else}
+    <div class="comment-body">
       <div
         class="comment-text"
         class:clamped={!expanded}
+        class:is-blurred={visibility.isBlurred}
+        aria-hidden={visibility.isBlurred || undefined}
         bind:this={commentEl}
         use:revealSpoilers
       >
         {@html html}
       </div>
-      {#if !expanded && isOverflowing}
-        <button class="expand-btn" onclick={() => (expanded = true)}>more</button>
+      {#if visibility.isBlurred}
+        <button
+          type="button"
+          class="spoiler-cover"
+          onclick={() => (spoilerRevealed = true)}
+        >
+          <span class="spoiler-label">{m.text_reveal_spoiler()}</span>
+        </button>
       {/if}
+    </div>
+    {#if !expanded && isOverflowing}
+      <button
+        class="expand-btn"
+        class:is-hidden={visibility.isBlurred}
+        onclick={() => (expanded = true)}
+      >
+        more
+      </button>
     {/if}
   {/if}
 
   {#if comment.gif}
     <CommentGif
       gif={comment.gif}
-      isHidden={comment.isSpoiler && !spoilerRevealed}
+      isHidden={visibility.isBlurred}
       hasRevealLabel={!hasText}
       onReveal={() => (spoilerRevealed = true)}
     />
@@ -237,6 +264,17 @@
     color: var(--color-text-primary);
     word-break: break-word;
 
+    transition:
+      filter var(--transition-increment) ease-in-out,
+      opacity var(--transition-increment) ease-in-out;
+
+    &.is-blurred {
+      filter: blur(7px);
+      opacity: 0.6;
+      pointer-events: none;
+      user-select: none;
+    }
+
     &.clamped {
       display: -webkit-box;
       -webkit-line-clamp: 4;
@@ -300,38 +338,33 @@
     font-weight: 600;
     color: var(--trakttime-accent);
     cursor: pointer;
+
+    &.is-hidden {
+      visibility: hidden;
+    }
   }
 
-  .spoiler-btn {
+  .comment-body {
     position: relative;
+  }
+
+  .spoiler-cover {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: var(--ni-72);
-    padding: var(--gap-m);
-    overflow: hidden;
+    padding: 0;
     border: none;
-    border-radius: var(--trakttime-radius-card);
-    background: var(--color-card-background);
+    background: none;
     font: inherit;
     cursor: pointer;
-  }
-
-  .spoiler-blur {
-    position: absolute;
-    inset: var(--gap-m);
-    font-size: 1rem;
-    line-height: 1.5;
-    text-align: start;
-    color: var(--color-text-primary);
-    filter: blur(7px);
-    opacity: 0.6;
-    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .spoiler-label {
-    position: relative;
-    padding: var(--gap-xxs) var(--gap-s);
+    padding: 0 var(--gap-s);
+    line-height: 1.25rem;
     border-radius: var(--trakttime-radius-pill);
     background: var(--color-floating-background);
     font-size: 0.875rem;
