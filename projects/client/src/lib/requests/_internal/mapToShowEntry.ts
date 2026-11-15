@@ -2,7 +2,7 @@ import { MAX_DATE } from '$lib/utils/constants.ts';
 import { findDefined } from '$lib/utils/string/findDefined.ts';
 import { prependHttps } from '$lib/utils/url/prependHttps.ts';
 import { type ShowResponse } from '@trakt/api';
-import type { ShowEntry } from '../models/ShowEntry.ts';
+import { ShowEndingSchema, type ShowEntry } from '../models/ShowEntry.ts';
 import { mapToColors } from './mapToColors.ts';
 import { mapToCover } from './mapToCover.ts';
 import { mapToLogo } from './mapToLogo.ts';
@@ -11,7 +11,9 @@ import { mapToSocialMedia } from './mapToSocialMedia.ts';
 import { mapToTrailerUrl } from './mapToTrailerUrl.ts';
 import { mapToTraktRating } from './mapToTraktRating.ts';
 
-export function mapToShowEntry(show: ShowResponse): ShowEntry {
+type ShowResponseWithEnding = ShowResponse & { ending?: string | null };
+
+export function mapToShowEntry(show: ShowResponseWithEnding): ShowEntry {
   const poster = mapToPoster(show.images);
   const cover = mapToCover(show.images);
   const logo = mapToLogo(show.images);
@@ -22,6 +24,7 @@ export function mapToShowEntry(show: ShowResponse): ShowEntry {
   const episodeCount = show.aired_episodes ?? NaN;
   const totalRuntime = show.total_runtime ?? runtime * episodeCount;
   const effectiveReleaseDate = new Date(show.first_aired ?? MAX_DATE);
+  const ending = ShowEndingSchema.safeParse(show.ending).data;
 
   return {
     id: show.ids.trakt,
@@ -74,5 +77,6 @@ export function mapToShowEntry(show: ShowResponse): ShowEntry {
         : undefined,
     homepage: prependHttps(show.homepage),
     socialMedia: mapToSocialMedia(show),
+    ...(ending ? { ending } : {}),
   };
 }

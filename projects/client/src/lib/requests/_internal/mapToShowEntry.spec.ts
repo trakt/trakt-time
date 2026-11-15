@@ -174,4 +174,24 @@ describe('mapToShowEntry', () => {
 
     expect(entry.trailer).toBeUndefined();
   });
+
+  it('maps a concluded ending', () => {
+    expect(mapToShowEntry({ ...fullShow, ending: 'concluded' }).ending).toBe(
+      'concluded',
+    );
+  });
+
+  it('maps an open ending', () => {
+    expect(mapToShowEntry({ ...fullShow, ending: 'open' }).ending).toBe('open');
+  });
+
+  it('omits the ending when it is null, missing or unknown', () => {
+    expect(
+      mapToShowEntry({ ...fullShow, ending: null }).ending,
+    ).toBeUndefined();
+    expect(mapToShowEntry(fullShow).ending).toBeUndefined();
+    expect(
+      mapToShowEntry({ ...fullShow, ending: 'cliffhanger' }).ending,
+    ).toBeUndefined();
+  });
 });

@@ -50,4 +50,36 @@ describe('toMediaDetails', () => {
 
     expect(runtime?.value).toBe('2h 46m');
   });
+
+  describe('ending', () => {
+    const withEnding = (ending: 'concluded' | 'open' | null | undefined) =>
+      toMediaDetails({
+        ...base,
+        media: { runtime: 55, country: null, languages: null },
+        releaseDate: new Date(2022, 1, 18),
+        ending,
+      });
+
+    it('shows Complete for a concluded show after the release date', () => {
+      const details = withEnding('concluded');
+
+      expect(details.map((d) => d.label)).toEqual([
+        'Release date',
+        'Ending',
+        'Runtime',
+      ]);
+      expect(details.find((d) => d.label === 'Ending')?.value).toBe('Complete');
+    });
+
+    it('shows Unresolved for an open show', () => {
+      expect(withEnding('open').find((d) => d.label === 'Ending')?.value).toBe(
+        'Unresolved',
+      );
+    });
+
+    it('hides the row when the ending is null or missing', () => {
+      expect(withEnding(null).map((d) => d.label)).not.toContain('Ending');
+      expect(withEnding(undefined).map((d) => d.label)).not.toContain('Ending');
+    });
+  });
 });
