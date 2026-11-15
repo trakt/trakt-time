@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/query-core';
+import { QueryClient, QueryObserver } from '@tanstack/query-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const idb = vi.hoisted(() => ({
@@ -88,6 +88,64 @@ describe('util: createIdbPersister', () => {
         expect.objectContaining({ clonedAt: expect.any(Date) }),
         expect.anything(),
       );
+    });
+  });
+
+  describe('when a restored query is stale', () => {
+    async function restoreStale(queryFn: () => Promise<unknown>) {
+      idb.get.mockResolvedValue(persistedQuery);
+      const persister = await importPersister();
+      const client = new QueryClient({
+        defaultOptions: {
+          queries: { persister: persister.persisterFn, retry: false },
+        },
+      });
+
+      const observer = new QueryObserver(client, {
+        queryKey: ['movie'],
+        queryFn,
+      });
+      const listener = vi.fn();
+      const unsubscribe = observer.subscribe(listener);
+      await vi.waitFor(() => expect(queryFn).toHaveBeenCalled());
+
+      return { client, listener, unsubscribe };
+    }
+
+    it('should refetch it in the background', async () => {
+      const queryFn = vi.fn().mockResolvedValue({ title: 'Heretic (2024)' });
+
+      const { client, listener, unsubscribe } = await restoreStale(queryFn);
+
+      await vi.waitFor(() =>
+        expect(client.getQueryData(['movie'])).toEqual({
+          title: 'Heretic (2024)',
+        }),
+      );
+      unsubscribe();
+
+      expect(listener).toHaveBeenCalledWith(
+        expect.objectContaining({ data: persistedQuery.state.data }),
+      );
+      expect(queryFn).toHaveBeenCalledOnce();
+    });
+
+    it('should not leave a failed refetch unhandled', async () => {
+      const unhandled = vi.fn();
+      process.on('unhandledRejection', unhandled);
+      const queryFn = vi
+        .fn()
+        .mockRejectedValue(new TypeError('Failed to fetch'));
+
+      const { client, unsubscribe } = await restoreStale(queryFn);
+      await vi.waitFor(() =>
+        expect(client.getQueryState(['movie'])?.status).toBe('error'),
+      );
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      process.off('unhandledRejection', unhandled);
+      unsubscribe();
+
+      expect(unhandled).not.toHaveBeenCalled();
     });
   });
 });

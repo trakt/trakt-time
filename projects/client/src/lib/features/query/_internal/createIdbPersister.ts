@@ -1,6 +1,8 @@
 import { error } from '$lib/utils/console/print.ts';
+import { NOOP_FN } from '$lib/utils/constants.ts';
 import { monitor } from '$lib/utils/perf/monitor.ts';
 import { time } from '$lib/utils/timing/time.ts';
+import { notifyManager } from '@tanstack/query-core';
 import {
   type AsyncStorage,
   experimental_createQueryPersister,
@@ -82,6 +84,32 @@ const deserialize = (value: StoredQuery): PersistedQuery => {
   return value;
 };
 
+type PersisterFn = ReturnType<
+  typeof experimental_createQueryPersister
+>['persisterFn'];
+
+function refetchStaleRestores(persisterFn: PersisterFn): PersisterFn {
+  return async (queryFn, context, query) => {
+    let hasFetched = false;
+    const data = await persisterFn(
+      (fetchContext) => {
+        hasFetched = true;
+        return queryFn(fetchContext);
+      },
+      context,
+      query,
+    );
+
+    if (!hasFetched) {
+      notifyManager.schedule(() => {
+        if (query.isStale()) query.fetch().catch(NOOP_FN);
+      });
+    }
+
+    return data;
+  };
+}
+
 /**
  * Per-query IDB persister via TanStack's experimental_createQueryPersister.
  * Each query writes to its own IDB key, so writes never serialize the whole
@@ -89,11 +117,17 @@ const deserialize = (value: StoredQuery): PersistedQuery => {
  * subscribes.
  */
 export function createIdbPersister() {
-  return experimental_createQueryPersister<StoredQuery>({
+  const persister = experimental_createQueryPersister<StoredQuery>({
     storage: createIdbStorage(),
     serialize,
     deserialize,
     buster: BUSTER,
     maxAge: MAX_AGE_MS,
+    refetchOnRestore: false,
   });
+
+  return {
+    ...persister,
+    persisterFn: refetchStaleRestores(persister.persisterFn),
+  };
 }
