@@ -2,6 +2,7 @@ import type { UniversalImportItem } from '../ImportTypes.ts';
 import type { FileParser } from './ParserInterface.ts';
 import { parseCsvText } from './utils/parseCsvText.ts';
 import { toImportISOString } from './utils/toImportISOString.ts';
+import { toInt } from './utils/toInt.ts';
 import { toEpisodeIds } from './utils/toEpisodeIds.ts';
 import { unzipCsvTexts } from './utils/unzipCsvTexts.ts';
 
@@ -72,12 +73,6 @@ const RATING_ID_TO_SCORE: Record<number, number> = {
   29: 8, // great
   3: 10, // wow
 };
-
-function toInt(value?: string): number | undefined {
-  if (!value) return undefined;
-  const n = parseInt(value, 10);
-  return isNaN(n) ? undefined : n;
-}
 
 function firstOf(...values: (string | undefined)[]): string | undefined {
   return values.find((value) => value != null && value !== '');
