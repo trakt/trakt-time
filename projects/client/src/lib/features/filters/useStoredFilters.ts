@@ -1,5 +1,6 @@
 import { goto } from '$app/navigation';
 import { page } from '$app/state';
+import { safeJsonParse } from '$lib/utils/json/safeJsonParse.ts';
 import { safeLocalStorage } from '$lib/utils/storage/safeStorage.ts';
 import { BehaviorSubject } from 'rxjs';
 import { AnalyticsEvent } from '../analytics/events/AnalyticsEvent.ts';
@@ -28,7 +29,7 @@ export function createStoredFiltersStore(
   initialFilters: StoredFilter,
 ) {
   const filters = new BehaviorSubject<StoredFilter>(
-    JSON.parse(safeLocalStorage.getItem(key) ?? JSON.stringify(initialFilters)),
+    safeJsonParse(safeLocalStorage.getItem(key), initialFilters),
   );
 
   return {
