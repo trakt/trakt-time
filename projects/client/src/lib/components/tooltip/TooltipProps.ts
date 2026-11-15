@@ -7,4 +7,5 @@ export type TooltipProps = {
   delayDuration?: number;
   sideOffset?: number;
   disabled?: boolean;
+  openOnTap?: boolean;
 };
