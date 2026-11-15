@@ -1,21 +1,19 @@
 <script lang="ts">
   import Button from '$lib/components/buttons/Button.svelte';
-  import { useUser } from '$lib/features/auth/stores/useUser.ts';
   import { ConfirmationType } from '$lib/features/confirmation/models/ConfirmationType.ts';
   import { useConfirm } from '$lib/features/confirmation/useConfirm.ts';
   import { getLocale } from '$lib/features/i18n/index.ts';
   import * as m from '$lib/paraglide/messages.js';
   import type { VipSubscription } from '$lib/requests/models/VipSubscription.ts';
-  import { toLinkParts } from '$lib/utils/string/toLinkParts.ts';
   import { toHumanDay } from '$lib/utils/formatting/date/toHumanDay.ts';
   import { UrlBuilder } from '$lib/utils/url/UrlBuilder.ts';
   import { useVip } from './useVip.ts';
+  import VipFailureAlert from './VipFailureAlert.svelte';
 
   type SubscriptionFailure = 'missing' | 'manage' | 'cancel';
 
   const { subscription }: { subscription: VipSubscription } = $props();
 
-  const { user } = useUser();
   const { manageSubscription, cancelSubscription, isFetching } = useVip();
 
   const isStripe = $derived(subscription.gateway === 'stripe');
@@ -39,7 +37,6 @@
   }
 
   const failureCopy = $derived(toFailureCopy(failure));
-  const failureMessage = $derived(toLinkParts(failureCopy.message));
 
   async function reportFailure<T>(
     request: () => Promise<T>,
@@ -138,16 +135,7 @@
 </div>
 
 {#if failure}
-  <div class="vip-subscription-failure" role="alert">
-    <strong>{failureCopy.title}</strong>
-    <p>
-      {failureMessage.before}{#if failureMessage.label}<a
-          href={UrlBuilder.og.support($user.slug)}
-          target="_blank"
-          rel="noopener noreferrer">{failureMessage.label}</a
-        >{/if}{failureMessage.after}
-    </p>
-  </div>
+  <VipFailureAlert title={failureCopy.title} message={failureCopy.message} />
 {/if}
 
 <style lang="scss">
@@ -155,27 +143,5 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--gap-s);
-  }
-
-  .vip-subscription-failure {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-xxs);
-
-    padding: var(--gap-s) var(--gap-m);
-    border-radius: var(--border-radius-m);
-    background: color-mix(in srgb, var(--color-background-red) 12%, transparent);
-    border: var(--ni-1) solid var(--color-background-red);
-    color: var(--color-text-primary);
-
-    p {
-      margin: 0;
-      font-size: 0.8125rem;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: underline;
-    }
   }
 </style>

@@ -1,7 +1,9 @@
 <script lang="ts">
+  import * as m from '$lib/paraglide/messages.js';
   import { VIP_PLANS } from './_internal/constants/index.ts';
   import PlanCard from './_internal/PlanCard.svelte';
   import { useVip } from './_internal/useVip.ts';
+  import VipFailureAlert from './_internal/VipFailureAlert.svelte';
   import VipFeatureList from './_internal/VipFeatureList.svelte';
   import VipHeader from './_internal/VipHeader.svelte';
   import type { VipPlan } from './_internal/models/VipPlan.ts';
@@ -19,15 +21,22 @@
     toVipSubscribeHeader({ mode, dealPlan: findTwoYearDealPlan(activePlans) }),
   );
 
+  let hasFailed = $state(false);
+
   const onSelect = async (plan: VipPlan) => {
     if ($isFetching) {
       return;
     }
 
-    const url = await startCheckout(plan);
-    if (url) {
-      globalThis.window.location.href = url;
+    hasFailed = false;
+
+    const url = await startCheckout(plan).catch(() => null);
+    if (!url) {
+      hasFailed = true;
+      return;
     }
+
+    globalThis.window.location.href = url;
   };
 </script>
 
@@ -44,6 +53,13 @@
       />
     {/each}
   </div>
+
+  {#if hasFailed}
+    <VipFailureAlert
+      title={m.text_vip_checkout_failed_title()}
+      message={m.text_vip_subscription_failed_message()}
+    />
+  {/if}
 
   <VipFeatureList />
 </div>
