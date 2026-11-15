@@ -288,6 +288,7 @@
         {slug}
         {season}
         episode={episodeNum}
+        show={show ? { id: show.id, title: show.title } : undefined}
         mediaId={episode.id}
         mediaTitle={intl?.title ?? episode.title}
       />

@@ -11,6 +11,7 @@
   import FullScreenPanel from '$lib/components/panel/FullScreenPanel.svelte';
   import RenderFor from '$lib/guards/RenderFor.svelte';
   import * as m from '$lib/paraglide/messages.js';
+  import type { ExtendedMediaStoreProps } from '$lib/models/MediaStoreProps.ts';
   import type { ExtendedMediaType } from '$lib/requests/models/ExtendedMediaType.ts';
   import type { MediaComment } from '$lib/requests/models/MediaComment.ts';
   import { toCommentErrorMessage } from '$lib/sections/summary/components/comments/_internal/toCommentErrorMessage.ts';
@@ -28,11 +29,12 @@
 
   type Props = {
     type: ExtendedMediaType;
+    watchProps: ExtendedMediaStoreProps;
     comment: MediaComment;
     onClose: () => void;
   };
 
-  const { type, comment, onClose }: Props = $props();
+  const { type, watchProps, comment, onClose }: Props = $props();
 
   const repliesResult = $derived(
     useCommentReplies({ id: comment.id, limit: 20 }),
@@ -114,7 +116,7 @@
 
 <FullScreenPanel title={m.header_thread()} onClose={requestClose}>
   <div class="parent-wrap">
-    <CommentCard {comment} {onDelete} />
+    <CommentCard {comment} {watchProps} {onDelete} />
   </div>
 
   {#if $list.length > 0}
@@ -125,7 +127,7 @@
     <ul class="replies-list">
       {#each $list as reply (reply.key)}
         <li class="reply-item">
-          <CommentCard comment={reply} {onDelete} />
+          <CommentCard comment={reply} {watchProps} {onDelete} />
         </li>
       {/each}
     </ul>
