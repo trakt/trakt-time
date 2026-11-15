@@ -18,7 +18,8 @@
   );
 
   const checkinHandler = async () => {
-    await checkin();
+    if (!(await checkin())) return;
+
     onCheckIn?.();
   };
 </script>
