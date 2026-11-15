@@ -20,6 +20,6 @@
       goto(url, { replaceState: true, keepFocus: true, noScroll: true });
     };
 
-    confirmCheckout(sessionId).finally(cleanUrl);
+    confirmCheckout(sessionId).then(cleanUrl, () => undefined);
   });
 </script>
