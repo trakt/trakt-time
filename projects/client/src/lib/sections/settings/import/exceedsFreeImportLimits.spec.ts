@@ -15,7 +15,13 @@ const limits = {
   totalNotes: limit(100),
 } satisfies UserLimits;
 
-const counts = { history: 10, watchlist: 10, ratings: 500, list: 10 };
+const counts = {
+  history: 10,
+  watchlist: 10,
+  ratings: 500,
+  list: 10,
+  favorites: 0,
+};
 
 describe('exceedsFreeImportLimits', () => {
   it('stays within limits when every count fits', () => {
