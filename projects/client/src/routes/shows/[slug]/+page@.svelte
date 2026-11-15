@@ -86,6 +86,7 @@
         media: show,
         releaseDate: show.airDate,
         network: show.network,
+        ending: show.ending,
         locale: getLocale(),
         language: locale,
       })
