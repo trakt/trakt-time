@@ -14,6 +14,7 @@ import {
   SHOW_IDS,
   toEpisodeIdPriority,
 } from './pickIds.ts';
+import { isPositionalItem } from '../isPositionalItem.ts';
 
 type HistoryEntry =
   | { ids: ResolvedIds; watched_at?: string }
@@ -39,16 +40,6 @@ function toHistoryShow(item: UniversalImportItem): HistoryEntry | null {
 
 function hasEpisodeId(item: UniversalImportItem): boolean {
   return pickIds(item.ids, toEpisodeIdPriority(item)) != null;
-}
-
-function isPositional(
-  item: UniversalImportItem,
-): item is UniversalImportItem & { season: number; episode: number } {
-  return (
-    (item.showTvdb != null || item.showImdb != null) &&
-    item.season != null &&
-    item.episode != null
-  );
 }
 
 type PositionalEpisode = { number: number; watched_at?: string };
@@ -103,7 +94,7 @@ export function buildHistoryPayload(
 
   const preferPositional = episodeMatch === 'positional';
   const positionalEpisodes = episodeItems
-    .filter(isPositional)
+    .filter(isPositionalItem)
     .filter((item) => preferPositional || !hasEpisodeId(item));
   const positionalSet = new Set<UniversalImportItem>(positionalEpisodes);
   const idEpisodes = episodeItems.filter(
