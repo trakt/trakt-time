@@ -3,11 +3,19 @@ import type {
   CrewMember,
   MediaCrew,
 } from '$lib/requests/models/MediaCrew.ts';
+import { prependHttps } from '$lib/utils/url/prependHttps.ts';
 import type { CastResponse, CrewResponse, PeopleResponse } from '@trakt/api';
 import { mapToHeadshot } from './mapToHeadshot.ts';
+import { mediumUrl } from './mediumUrl.ts';
+import { thumbUrl } from './thumbUrl.ts';
 
-type PeopleResponseWithGuestStars = PeopleResponse & {
-  guest_stars?: CastResponse[] | null;
+type CastResponseWithCharacterImage = CastResponse & {
+  character_image?: string | null;
+};
+
+type PeopleResponseWithGuestStars = Omit<PeopleResponse, 'cast'> & {
+  cast?: CastResponseWithCharacterImage[] | null;
+  guest_stars?: CastResponseWithCharacterImage[] | null;
 };
 
 export const EMPTY_CREW: Readonly<MediaCrew> = {
@@ -35,11 +43,30 @@ function toCrewMember(crewResponse: CrewResponse): CrewMember {
   };
 }
 
-function toCastMember(castResponse: CastResponse): CastMember {
+function toCastHeadshot(
+  castResponse: CastResponseWithCharacterImage,
+): CastMember['headshot'] {
+  const characterImage = castResponse.character_image?.trim();
+
+  if (!characterImage) {
+    return mapToHeadshot(castResponse.person.images);
+  }
+
+  return {
+    url: {
+      medium: prependHttps(mediumUrl(characterImage) ?? characterImage),
+      thumb: prependHttps(thumbUrl(characterImage) ?? characterImage),
+    },
+  };
+}
+
+function toCastMember(
+  castResponse: CastResponseWithCharacterImage,
+): CastMember {
   return {
     ...toMember(castResponse),
     characterName: castResponse.characters.at(0) ?? '',
-    headshot: mapToHeadshot(castResponse.person.images),
+    headshot: toCastHeadshot(castResponse),
   };
 }
 
