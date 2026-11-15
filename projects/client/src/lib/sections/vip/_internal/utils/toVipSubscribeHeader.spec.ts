@@ -22,11 +22,11 @@ describe('toVipSubscribeHeader', () => {
     expect(header.title).to.equal('Unlock more with Trakt');
   });
 
-  it('should lead with the deal price for returning members', () => {
+  it('should keep the renewal copy for returning members despite a deal', () => {
     const header = toVipSubscribeHeader({ mode: 'welcome-back', dealPlan });
 
-    expect(header.title).to.equal('Get 2 years of VIP for $49.99');
-    expect(header.tagline).to.contain('then auto-renews at $69.99');
+    expect(header.title).to.equal('Renew Subscription');
+    expect(header.tagline).not.to.contain('auto-renews');
   });
 
   it('should fall back to renewal copy when there is no deal', () => {

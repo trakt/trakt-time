@@ -7,6 +7,7 @@
   import { useAuth } from '$lib/features/auth/stores/useAuth.ts';
   import { useVip } from '$lib/sections/vip/_internal/useVip.ts';
   import { isPaypalGateway } from '$lib/sections/vip/_internal/utils/isPaypalGateway.ts';
+  import { toVipRenewMode } from '$lib/sections/vip/_internal/utils/toVipRenewMode.ts';
   import VipSubscribe from '$lib/sections/vip/VipSubscribe.svelte';
   import * as m from '$lib/paraglide/messages.js';
 
@@ -14,6 +15,7 @@
   const { subscription, isLoading } = useVip();
 
   const isPaypal = $derived(isPaypalGateway($subscription?.gateway));
+  const mode = $derived(toVipRenewMode($subscription));
   const canResubscribe = $derived($subscription?.isCancelled || isPaypal);
 
   $effect(() => {
@@ -30,7 +32,7 @@
   {#if !$isAuthorized}
     <LoginGate {login} />
   {:else if !$isLoading && canResubscribe}
-    <VipSubscribe mode={isPaypal ? 'paypal-switch' : 'welcome-back'} />
+    <VipSubscribe {mode} />
   {/if}
 </div>
 
