@@ -1,4 +1,5 @@
 import '$lib/polyfills/at.ts';
+import '$lib/polyfills/findLastIndex.ts';
 import '$lib/polyfills/toSorted.ts';
 import { safeSessionStorage } from '$lib/utils/storage/safeStorage.ts';
 import type { HandleClientError } from '@sveltejs/kit';
