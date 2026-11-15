@@ -32,11 +32,13 @@
 
   async function toggle() {
     if ($isListUpdating) return;
-    pending = !effectiveAdded;
-    if (effectiveAdded) {
+    const wasAdded = effectiveAdded;
+    pending = !wasAdded;
+    if (wasAdded) {
       await removeFromList();
     } else {
-      await addToList();
+      const isAdded = await addToList();
+      if (!isAdded) pending = null;
     }
   }
 </script>

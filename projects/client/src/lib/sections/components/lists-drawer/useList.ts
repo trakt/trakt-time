@@ -1,3 +1,5 @@
+import { toListLimitMessage } from '$lib/features/action-toast/toListLimitMessage.ts';
+import { useActionToast } from '$lib/features/action-toast/useActionToast.ts';
 import { AnalyticsEvent } from '$lib/features/analytics/events/AnalyticsEvent.ts';
 import { useTrack } from '$lib/features/analytics/useTrack.ts';
 import type { MediaStoreProps } from '$lib/models/MediaStoreProps.ts';
@@ -16,6 +18,7 @@ export function useList(props: UseListProps) {
   const media = Array.isArray(props.media) ? props.media : [props.media];
   const isListUpdating = new BehaviorSubject(false);
   const { invalidate } = useInvalidator();
+  const { notify } = useActionToast();
 
   const { track } = useTrack(AnalyticsEvent.List);
   const ids = media.map(({ id }) => id);
@@ -23,13 +26,13 @@ export function useList(props: UseListProps) {
 
   const addToList = async () => {
     if (type === 'episode') {
-      return;
+      return false;
     }
 
     isListUpdating.next(true);
     track({ action: 'add' });
 
-    await addToListRequest({
+    const result = await addToListRequest({
       listId: props.list.id,
       userId: props.list.ownerId,
       body,
@@ -37,6 +40,13 @@ export function useList(props: UseListProps) {
     await invalidate(InvalidateAction.Listed(type));
 
     isListUpdating.next(false);
+
+    const limitMessage = toListLimitMessage(result);
+    if (limitMessage != null) {
+      notify({ message: limitMessage, variant: 'error' });
+    }
+
+    return result.status === 'added';
   };
 
   const removeFromList = async () => {
