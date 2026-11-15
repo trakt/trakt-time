@@ -37,7 +37,7 @@
       message={toast.message}
       action={snackbarAction}
       variant={toast.variant}
-      durationMs={ACTION_TOAST_DURATION}
+      durationMs={toast.durationMs ?? ACTION_TOAST_DURATION}
       onDismiss={dismiss}
     />
   {/key}
