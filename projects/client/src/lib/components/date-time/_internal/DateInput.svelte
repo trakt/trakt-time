@@ -4,6 +4,7 @@
   import CalendarIcon from "../../icons/CalendarIcon.svelte";
   import type { DateInputProps } from "./DateInputProps.ts";
   import { formatDateInputValue } from "./formatDateInputValue.ts";
+  import { openDatePicker } from "./openDatePicker.ts";
 
   const {
     type,
@@ -20,7 +21,7 @@
   let inputElement: HTMLInputElement;
   function pickerOnClick(node: HTMLElement) {
     const handler = () => {
-      inputElement.showPicker();
+      openDatePicker(inputElement);
     };
 
     node.addEventListener("click", handler);
