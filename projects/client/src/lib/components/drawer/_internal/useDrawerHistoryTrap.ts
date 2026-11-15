@@ -7,6 +7,8 @@ type DrawerHistoryTrapProps = {
   isEnabled: () => boolean;
   isPresent: () => boolean;
   onPop: () => void;
+  onBrowserTransition: () => void;
+  onKept: () => void;
 };
 
 const nextFrame = () =>
@@ -25,6 +27,8 @@ export function useDrawerHistoryTrap({
   isEnabled,
   isPresent,
   onPop,
+  onBrowserTransition,
+  onKept,
 }: DrawerHistoryTrapProps) {
   let trapId: string | undefined;
   let isMounted = false;
@@ -37,9 +41,10 @@ export function useDrawerHistoryTrap({
       whenDismissSettles().then(() => {
         if (!isMounted || !isPresent()) return;
 
+        onKept();
         arm();
       });
-    });
+    }, onBrowserTransition);
   };
 
   beforeNavigate((navigation) => {
