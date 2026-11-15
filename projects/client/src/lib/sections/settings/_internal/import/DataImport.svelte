@@ -65,7 +65,13 @@
     matchProcessedCount: 0,
     matchTotalCount: 0,
     error: null,
-    selectedActions: { history: true, watchlist: true, ratings: true, list: true },
+    selectedActions: {
+      history: true,
+      watchlist: true,
+      ratings: true,
+      list: true,
+      favorites: true,
+    },
     episodeMatch: DEFAULT_EPISODE_MATCH_MODE,
   };
 
@@ -84,6 +90,7 @@
     watchlist: importState.items.filter((i) => i.action === 'watchlist').length,
     ratings: importState.items.filter((i) => i.action === 'ratings').length,
     list: importState.items.filter((i) => i.action === 'list').length,
+    favorites: importState.items.filter((i) => i.action === 'favorites').length,
   });
 
   const actionRows = $derived<
@@ -110,6 +117,11 @@
         count: counts.list,
         label: m.import_summary_list({ count: counts.list }),
       },
+      {
+        action: 'favorites' as const,
+        count: counts.favorites,
+        label: m.import_summary_favorites({ count: counts.favorites }),
+      },
     ].filter((row) => row.count > 0),
   );
 
@@ -133,6 +145,7 @@
         watchlist: importState.selectedActions.watchlist ? counts.watchlist : 0,
         ratings: importState.selectedActions.ratings ? counts.ratings : 0,
         list: importState.selectedActions.list ? counts.list : 0,
+        favorites: importState.selectedActions.favorites ? counts.favorites : 0,
       },
       limits: $limits,
     });
@@ -212,6 +225,8 @@
       await invalidate(InvalidateAction.Rated('movie'));
       await invalidate(InvalidateAction.Listed('show'));
       await invalidate(InvalidateAction.Listed('movie'));
+      await invalidate(InvalidateAction.Favorited('show'));
+      await invalidate(InvalidateAction.Favorited('movie'));
     }
   }
 

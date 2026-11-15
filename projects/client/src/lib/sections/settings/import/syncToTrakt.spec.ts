@@ -22,6 +22,7 @@ afterAll(() => server.close());
 
 const HISTORY_URL = 'http://localhost/sync/history';
 const WATCHLIST_URL = 'http://localhost/sync/watchlist';
+const FAVORITES_URL = 'http://localhost/sync/favorites';
 
 const watched_at = '2024-01-02T03:04:05.000Z';
 
@@ -197,7 +198,7 @@ describe('syncToTrakt', () => {
     });
   });
 
-  describe('watchlist not found', () => {
+  describe('watchlist and favorites not found', () => {
     it('should report not found watchlist items as unresolved', async () => {
       const show: UniversalImportItem = {
         action: 'watchlist',
@@ -211,6 +212,22 @@ describe('syncToTrakt', () => {
       const result = await syncToTrakt([show], callbacks());
 
       expect(result.unresolved).toEqual([show]);
+    });
+
+    it('should send favorites and report the ones Trakt does not know', async () => {
+      const favorite: UniversalImportItem = {
+        action: 'favorites',
+        type: 'show',
+        ids: { tvdb: 800 },
+      };
+      const bodies = respondInOrder(FAVORITES_URL, [
+        created({ not_found: { shows: [{ ids: { tvdb: 800 } }] } }),
+      ]);
+
+      const result = await syncToTrakt([favorite], callbacks());
+
+      expect(bodies).toEqual([{ movies: [], shows: [{ ids: { tvdb: 800 } }] }]);
+      expect(result.unresolved).toEqual([favorite]);
     });
   });
 

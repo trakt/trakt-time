@@ -243,16 +243,20 @@ function parseFollowedShowWatchlist(
     });
 }
 
+type MoviesByUuid = ReadonlyMap<string, TrackingV1Row>;
+
+function toMoviesByUuid(v1Rows: TrackingV1Row[]): MoviesByUuid {
+  return new Map(
+    v1Rows.flatMap((row) =>
+      row.entity_type === 'movie' && row.uuid ? [[row.uuid, row] as const] : [],
+    ),
+  );
+}
+
 function parseRatingVotes(
   ratingRows: RatingVoteRow[],
-  v1Rows: TrackingV1Row[],
+  moviesByUuid: MoviesByUuid,
 ): UniversalImportItem[] {
-  const moviesByUuid = new Map(
-    v1Rows
-      .filter((row) => row.entity_type === 'movie' && row.uuid)
-      .map((row) => [row.uuid, row]),
-  );
-
   const byUuid = new Map<string, UniversalImportItem>();
 
   for (const row of ratingRows) {
@@ -280,7 +284,10 @@ function parseRatingVotes(
   return [...byUuid.values()];
 }
 
-const LIST_OBJECT_RE = /id:(\d+)\s+type:(\w+)/g;
+const LIST_ENTRY_SEPARATOR = 'map[';
+const LIST_ENTRY_TYPE_RE = /(?:^|\s)type:(\w+)/;
+const LIST_ENTRY_ID_RE = /(?:^|\s)id:(\d+)/;
+const LIST_ENTRY_UUID_RE = /(?:^|\s)uuid:([\w-]+)/;
 
 const COLLECTION_S_KEY = 'collection';
 const FAVORITES_S_KEY_PREFIX = 'favorite-';
@@ -303,7 +310,48 @@ function toCollectionListNames(
   );
 }
 
-function parseListRows(listRows: ListRow[]): UniversalImportItem[] {
+type ListEntryItem = Pick<
+  UniversalImportItem,
+  'type' | 'ids' | 'title' | 'year'
+>;
+
+function toListEntryItem(
+  entry: string,
+  moviesByUuid: MoviesByUuid,
+): ListEntryItem | null {
+  const type = entry.match(LIST_ENTRY_TYPE_RE)?.at(1);
+  if (!type) return null;
+
+  const tvdbId = toInt(entry.match(LIST_ENTRY_ID_RE)?.at(1));
+  if (tvdbId) {
+    return { type: type === 'movie' ? 'movie' : 'show', ids: { tvdb: tvdbId } };
+  }
+  if (type !== 'movie') return null;
+
+  const uuid = entry.match(LIST_ENTRY_UUID_RE)?.at(1);
+  const tracked = uuid ? moviesByUuid.get(uuid) : undefined;
+  if (!tracked) return null;
+
+  const title = toMovieTitle(tracked);
+  if (!title) return null;
+
+  return { type: 'movie', ids: {}, title, year: toYear(tracked.release_date) };
+}
+
+function toListEntryItems(
+  objects: string,
+  moviesByUuid: MoviesByUuid,
+): ListEntryItem[] {
+  return objects
+    .split(LIST_ENTRY_SEPARATOR)
+    .slice(1)
+    .flatMap((entry) => toListEntryItem(entry, moviesByUuid) ?? []);
+}
+
+function parseListRows(
+  listRows: ListRow[],
+  moviesByUuid: MoviesByUuid,
+): UniversalImportItem[] {
   const collectionNames = toCollectionListNames(listRows);
 
   return listRows.flatMap((row) => {
@@ -313,22 +361,25 @@ function parseListRows(listRows: ListRow[]): UniversalImportItem[] {
     if (!listName || !row.objects) return [];
 
     const listIsPublic = row.is_public === 'true';
-    return [...row.objects.matchAll(LIST_OBJECT_RE)].flatMap(
-      ([, id, type]): UniversalImportItem[] => {
-        const tvdbId = toInt(id);
-        if (tvdbId == null) return [];
-        return [
-          {
-            action: 'list',
-            type: type === 'movie' ? 'movie' : 'show',
-            ids: { tvdb: tvdbId },
-            listName,
-            listIsPublic,
-          },
-        ];
-      },
+    return toListEntryItems(row.objects, moviesByUuid).map(
+      (entry): UniversalImportItem => ({
+        ...entry,
+        action: 'list',
+        listName,
+        listIsPublic,
+      }),
     );
   });
+}
+
+function parseFavoriteRows(
+  listRows: ListRow[],
+  moviesByUuid: MoviesByUuid,
+): UniversalImportItem[] {
+  return listRows
+    .filter((row) => row.s_key?.startsWith(FAVORITES_S_KEY_PREFIX))
+    .flatMap((row) => toListEntryItems(row.objects ?? '', moviesByUuid))
+    .map((entry): UniversalImportItem => ({ ...entry, action: 'favorites' }));
 }
 
 function toPlayKey(item: UniversalImportItem): string | null {
@@ -410,8 +461,10 @@ function parseGdprRows({
     watchlistedShowIds,
   );
 
-  const ratings = parseRatingVotes(ratingRows, v1Rows);
-  const lists = parseListRows(listRows);
+  const moviesByUuid = toMoviesByUuid(v1Rows);
+  const ratings = parseRatingVotes(ratingRows, moviesByUuid);
+  const lists = parseListRows(listRows, moviesByUuid);
+  const favorites = parseFavoriteRows(listRows, moviesByUuid);
 
   return [
     ...episodes,
@@ -420,6 +473,7 @@ function parseGdprRows({
     ...followedWatchlist,
     ...ratings,
     ...lists,
+    ...favorites,
   ];
 }
 
