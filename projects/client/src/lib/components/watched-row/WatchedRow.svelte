@@ -6,6 +6,7 @@
   import { of } from 'rxjs';
   import type { MarkAsWatchedStoreProps } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
   import { useMarkAsWatched } from '$lib/sections/media-actions/mark-as-watched/useMarkAsWatched.ts';
+  import { useWatchProgress } from '$lib/sections/media-actions/mark-as-watched/_internal/useWatchProgress.ts';
   import * as m from '$lib/paraglide/messages.js';
 
   type Props = { watchedProps: MarkAsWatchedStoreProps; title: string };
@@ -13,6 +14,13 @@
 
   const { markAsWatched, removeWatched, isWatched, isMarkingAsWatched, isWatchable } =
     $derived(useMarkAsWatched(watchedProps));
+  const { progress } = $derived(useWatchProgress(watchedProps));
+
+  const fill = $derived.by(() => {
+    if ($progress === undefined) return undefined;
+
+    return $isWatched ? 100 : $progress;
+  });
 
   const caughtUpShow = $derived(
     watchedProps.type === 'show' && !Array.isArray(watchedProps.media)
@@ -54,6 +62,11 @@
       : m.button_label_mark_as_watched({ title })}
     type="button"
   >
+    {#if fill !== undefined}
+      <span class="progress-track" aria-hidden="true">
+        <span class="progress-fill" style:width="{fill}%"></span>
+      </span>
+    {/if}
     <TrackIcon state={$isWatched ? 'watched' : 'unwatched'} />
     <span>
       {#if isShowingCaughtUp}
@@ -67,6 +80,8 @@
 
 <style lang="scss">
   .watched-pill {
+    position: relative;
+    isolation: isolate;
     flex: 1;
     display: inline-flex;
     align-items: center;
@@ -85,8 +100,19 @@
     -webkit-tap-highlight-color: transparent;
     transition:
       border-color var(--transition-increment) ease-in-out,
-      background var(--transition-increment) ease-in-out,
       color var(--transition-increment) ease-in-out;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: calc(-1 * var(--border-thickness-xs));
+      z-index: -1;
+      border-radius: inherit;
+      background: var(--trakttime-gradient);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-increment) ease-in-out;
+    }
 
     :global(svg) {
       width: var(--ni-18);
@@ -95,19 +121,45 @@
 
     &.is-watched {
       border-color: transparent;
-      background: var(--trakttime-gradient);
       color: var(--trakttime-accent-foreground);
+      transition-delay: var(--transition-duration-short);
+
+      &::before {
+        opacity: 1;
+        transition-delay: var(--transition-duration-short);
+      }
     }
 
     &.is-caught-up {
-      border-color: transparent;
-      background: var(--green-600);
       color: var(--shade-10);
+
+      &::before {
+        background: var(--green-600);
+      }
     }
 
     &:disabled {
       opacity: 0.6;
       cursor: default;
     }
+  }
+
+  .progress-track {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    border-radius: inherit;
+    background: color-mix(in srgb, var(--trakttime-accent) 14%, transparent);
+    pointer-events: none;
+  }
+
+  .progress-fill {
+    display: block;
+    height: 100%;
+    border-start-end-radius: var(--trakttime-radius-pill);
+    border-end-end-radius: var(--trakttime-radius-pill);
+    background: color-mix(in srgb, var(--trakttime-accent) 38%, transparent);
+    transition: width var(--transition-duration-short) ease-in-out;
   }
 </style>
