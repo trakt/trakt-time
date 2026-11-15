@@ -10,6 +10,7 @@
   import { onMount, type Snippet } from "svelte";
   import ActionButton from "../buttons/ActionButton.svelte";
   import CloseIcon from "../icons/CloseIcon.svelte";
+  import { useDrawerHistoryTrap } from "./_internal/useDrawerHistoryTrap";
   import { useDrawerPortal } from "./_internal/useDrawerPortal";
   import { verticalDrag } from "./_internal/verticalDrag";
 
@@ -45,6 +46,20 @@
   const isMobile = useMedia(WellKnownMediaQuery.mobile);
   const slideAxis = $derived($isMobile ? "y" : "x");
 
+  let drawerElement = $state<HTMLElement | null>(null);
+
+  const markPresence = (isPresent: boolean) => {
+    if (!drawerElement) return;
+
+    drawerElement.dataset.present = String(isPresent);
+  };
+
+  useDrawerHistoryTrap({
+    isEnabled: () => $isMobile && hasAutoClose,
+    isPresent: () => drawerElement?.dataset.present !== "false",
+    onPop: () => onClose(),
+  });
+
   const { portal } = $derived(useDrawerPortal({ hasAutoClose, onClose }));
 
   const trap = $derived((element: HTMLElement) => {
@@ -64,13 +79,18 @@
 </script>
 
 <div
+  bind:this={drawerElement}
   class={drawerClass}
   data-size={size}
   transition:slideEdge={{ duration: 150, axis: slideAxis }}
   use:portal
   use:trap
   use:appendClassList={classList}
-  onintrostart={() => isOpening.set(true)}
+  onintrostart={() => {
+    isOpening.set(true);
+    markPresence(true);
+  }}
+  onoutrostart={() => markPresence(false)}
   onintroend={() => {
     isOpening.set(false);
     onOpened?.();

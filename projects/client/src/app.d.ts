@@ -191,6 +191,7 @@ declare global {
     // interface PageData {}
     interface PageState {
       preservedFilters?: Record<string, string>;
+      drawerTraps?: string[];
     }
     // interface Platform {}
   }
